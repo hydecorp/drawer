@@ -1,66 +1,27 @@
 <template id="x-sidebar-template">
-  <div class="layout">
-    <div class="backdrop"></div>
-    <div class="sidebar">
+  <div class="y-layout">
+    <div class="y-backdrop"></div>
+    <div class="y-sidebar">
       <slot></slot>
     </div>
   </div>
 
+  <style src="sidebar.css"></style>
+
   <style>
+    /* TODO: how to include styles as file? */
+    @import "/lib/sidebar.css" ;
+
     :host {
-      /*width: 18rem;
-      height: 100%;*/
-    }
-
-    .backdrop {
-      display: block;
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: #000;
-      opacity: 0;
-      z-index: 0;
-      pointer-events: none;
-      will-change: opacity;
-    }
-
-    .open > .backdrop {
-      pointer-events: all;
-    }
-
-    .sidebar {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      top: 0;
-      left: -18rem;
-      width: 18rem;
-      z-index: 1;
-      overflow-x: hidden;
-      overflow-y: auto;
-      will-change: transform, scroll;
-
-      background: var(--bg, #f8f8f8);
-    }
-
-    .open > .sidebar {
 
     }
 
-    /*.content {
-      margin-left: 18rem;
+    .y-sidebar {
+      background: var(--bg, #e8e8e8);
     }
-
-    .active > .content {
-      margin-left: 0;
-    }
-
-    .open > .content {
-
-    }*/
   </style>
 </template>
 
+<script src="sidebar-core.js"></script>
 <script src="sidebar.js"></script>
+<!-- <script>fetch('/lib/sidebar.css').then(r => r.text()).then(t => console.log(t))</script> -->

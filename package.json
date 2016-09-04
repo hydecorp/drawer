@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -r lib",
-    "copy": "mkdir -p lib; cp src/*.html lib",
+    "copy": "mkdir -p lib; cp src/*.html lib & cp src/*.css lib",
     "build": "babel src -d lib; npm run copy",
-    "watch": "babel src -w -d lib & npm run copy; onchange 'src/*.html' -- npm run copy",
+    "watch": "babel src -w -d lib & npm run copy; onchange 'src/*.html' 'src/*.css' -- npm run copy",
     "serve": "http-server -s",
     "dev": "npm run serve & npm run watch",
     "lint": "eslint src"
