@@ -1,0 +1,26 @@
+{
+  "name": "y-sidebar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -r lib",
+    "copy": "mkdir -p lib; cp src/*.html lib",
+    "build": "babel src -d lib; npm run copy",
+    "watch": "babel src -w -d lib & npm run copy; onchange 'src/*.html' -- npm run copy",
+    "serve": "http-server -s",
+    "dev": "npm run serve & npm run watch",
+    "lint": "eslint src"
+  },
+  "author": "Florian Klampfer <f.klampfer@gmail.com> (http://qwtel.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "cash-cp": "^0.2.0",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-react": "^6.2.0",
+    "http-server": "^0.9.0"
+  }
+}

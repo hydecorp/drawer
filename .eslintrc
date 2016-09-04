@@ -1,0 +1,12 @@
+{
+  "extends": "eslint-config-airbnb",
+  "env": {
+      "browser": true
+  },
+  "globals": {
+    "customElements": true
+  },
+  "rules": {
+    "import/no-unresolved": [2, { ignore: ['customElements'] }]
+  }
+}
