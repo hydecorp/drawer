@@ -12,7 +12,7 @@ export default class SidebarV0 extends SidebarCore {
     const instance = document
       .querySelector('link[href$="sidebar-v0.html"]')
       .import
-      .getElementById('x-sidebar-template')
+      .getElementById('y-sidebar-template')
       .content
       .cloneNode(true);
 

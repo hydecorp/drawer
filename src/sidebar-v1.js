@@ -12,13 +12,14 @@ export default class SidebarV1 extends SidebarCore {
     const instance = document
       .querySelector('link[href$="sidebar-v1.html"]')
       .import
-      .getElementById('x-sidebar-template')
+      .getElementById('y-sidebar-template')
       .content
       .cloneNode(true);
 
     el.shadowRoot.appendChild(instance);
 
     this.el = el.shadowRoot;
+    // super(el.shadowRoot);
   }
 }
 
