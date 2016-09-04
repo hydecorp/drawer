@@ -52,7 +52,7 @@ const transformProperty = browerCapabilities.transform;
 // new Tap(backdrop);
 // new Tap(menu);
 
-class Sidebar {
+export default class Sidebar {
   constructor(el) {
     this.el = el;
     this.cacheDOMElements();

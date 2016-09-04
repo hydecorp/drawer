@@ -2,7 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Released under MIT license
  */
-class YSidebar extends HTMLElement {
+import Sidebar from './sidebar-core';
+
+export default class YSidebar extends HTMLElement {
   connectedCallback() {
     this.setupShadowDOM();
     this.sidebar = new Sidebar(this.shadowRoot);

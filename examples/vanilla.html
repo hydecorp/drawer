@@ -35,9 +35,11 @@
     <aside id="sidebar">
       <nav>
         <ul>
-          <li><a href="#">Item 1</a></li>
-          <li><a href="#">Item 2</a></li>
-          <li><a href="#">Item 3</a></li>
+          <li><a href="/examples/core">Core</a></li>
+          <li><a href="/examples/vanilla">Vanilla JS function</a></li>
+          <li><a href="/examples/jquery">jQuery Plugin</a></li>
+          <li><a href="/examples/v0">WebComponents v0</a></li>
+          <li><a href="/examples/v1">WebComponents v1 <small>(Danger Zone)</small></a></li>
         </ul>
       </nav>
       <p name="menu">
@@ -45,11 +47,9 @@
       </p>
     </aside>
 
-    <script src="/lib/sidebar-core.js"></script>
     <script src="/lib/sidebar-vanilla.js"></script>
-
     <script>
-      var sidebar = ySidebar(document.getElementById('sidebar'));
+      var sidebar = ySidebarVanilla.default(document.getElementById('sidebar'));
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {

@@ -2,7 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Released under MIT license
  */
-function ySidebar(el) {
+import Sidebar from './sidebar-core';
+
+export default function (el) {
   const layout = document.createElement('div');
   layout.classList.add('y-layout');
 
