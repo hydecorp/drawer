@@ -36,6 +36,7 @@ const TOUCHING = 'TOUCHING';
 const START_ANIMATING = 'START_ANIMATING';
 const ANIMATING = 'ANIMATING';
 
+// TODO: make configureable
 const DURATION = 200;
 const MAX_OPACITY = 0.67;
 const VELOCITY_THRESHOLD = 0.33;
@@ -52,14 +53,18 @@ const transformProperty = browerCapabilities.transform;
 // new Tap(backdrop);
 // new Tap(menu);
 
-export default class Sidebar {
+export default class SidebarCore {
   constructor(el) {
-    this.el = el;
+    this.setupDOM(el);
     this.cacheDOMElements();
     this.resetProperties();
     this.bindCallbacks();
     this.addEventListeners();
     this.onResize();
+  }
+
+  setupDOM(el) {
+    this.el = el;
   }
 
   cacheDOMElements() {

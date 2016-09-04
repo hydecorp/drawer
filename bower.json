@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "webcomponentsjs": "^0.7.22"
+    "webcomponentsjs": "^0.7.22",
+    "jquery": "^3.1.0"
   }
 }

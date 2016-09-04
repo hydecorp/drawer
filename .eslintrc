@@ -4,9 +4,7 @@
       "browser": true
   },
   "globals": {
+    "$": true,
     "customElements": true
-  },
-  "rules": {
-    "import/no-unresolved": [2, { ignore: ['customElements'] }]
   }
 }

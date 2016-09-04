@@ -54,7 +54,8 @@
 
     <script src="/lib/sidebar-core.js"></script>
     <script>
-      var sidebar = new ySidebarCore.default(document.getElementById('sidebar'));
+      var SidebarCore = y.sidebar.core.default;
+      var sidebar = new SidebarCore(document.getElementById('sidebar'));
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {

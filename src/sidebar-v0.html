@@ -1,0 +1,23 @@
+<template id="x-sidebar-template">
+  <div class="y-layout">
+    <div class="y-backdrop"></div>
+    <div class="y-sidebar">
+      <content id="y-content" select="*"></content>
+    </div>
+  </div>
+
+  <style>
+    /* TODO: how to include styles as file? */
+    @import "/lib/sidebar.css" ;
+
+    :host {
+
+    }
+
+    .y-sidebar {
+      background: var(--bg, #e8e8e8);
+    }
+  </style>
+</template>
+
+<script src="sidebar-v0.js"></script>

@@ -4,27 +4,28 @@
  */
 import SidebarCore from './sidebar-core';
 
-export default class SidebarV1 extends SidebarCore {
+export default class SidebarV0 extends SidebarCore {
   setupDOM(el) {
-    el.attachShadow({ mode: 'open' });
+    const shadowRoot = el.createShadowRoot();
 
     // TODO: better why to get template?
     const instance = document
-      .querySelector('link[href$="sidebar-v1.html"]')
+      .querySelector('link[href$="sidebar-v0.html"]')
       .import
       .getElementById('x-sidebar-template')
       .content
       .cloneNode(true);
 
-    el.shadowRoot.appendChild(instance);
+    shadowRoot.appendChild(instance);
 
-    this.el = el.shadowRoot;
+    this.el = shadowRoot;
+    // super(shadowRoot);
   }
 }
 
-window.customElements.define('y-sidebar-v1', class extends HTMLElement {
-  connectedCallback() {
-    this.sidebar = new SidebarV1(this);
+document.registerElement('y-sidebar', class extends HTMLElement {
+  createdCallback() {
+    this.sidebar = new SidebarV0(this);
   }
 
   // attributeChangedCallback(attrName, oldVal, newVal) {
