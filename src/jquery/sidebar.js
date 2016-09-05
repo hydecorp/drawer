@@ -1,11 +1,6 @@
 /* eslint func-names: ["error", "never"] */
 
-/**
- * Copyright (c) 2016 Florian Klampfer
- * Released under MIT license
- */
-
-import SidebarCore from './sidebar-core';
+import SidebarCore from '../core/sidebar';
 
 export default class SidebarJQuery extends SidebarCore {
   setupDOM(el) {

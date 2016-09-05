@@ -1,8 +1,4 @@
-/**
- * Copyright (c) 2016 Florian Klampfer
- * Released under MIT license
- */
-import SidebarCore from './sidebar-core';
+import SidebarCore from '../core/sidebar';
 
 export default class SidebarV0 extends SidebarCore {
   setupDOM(el) {
@@ -10,7 +6,7 @@ export default class SidebarV0 extends SidebarCore {
 
     // TODO: better why to get template?
     const instance = document
-      .querySelector('link[href$="sidebar-v0.html"]')
+      .querySelector('link[href$="v0/sidebar.html"]')
       .import
       .getElementById('y-sidebar-template')
       .content
