@@ -6,7 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -r lib",
     "mkdirs": "mkdir -p lib/core lib/vanilla lib/jquery lib/v0 lib/v1",
-    "copy": "npm run mkdirs; cp src/v0/*.html lib/v0 & cp src/v1/*.html lib/v1 & cp src/*.css lib",
+    "copy:html": "cp src/v0/*.html lib/v0 & cp src/v1/*.html lib/v1",
+    "copy:css": "cp src/*.css lib",
+    "copy": "npm run mkdirs; npm run copy:html & npm run copy:css",
     "build:core": "browserify src/core/sidebar.js -o lib/core/sidebar.js -t babelify -s y.sidebar.core",
     "build:vanilla": "browserify src/vanilla/sidebar.js -o lib/vanilla/sidebar.js -t babelify -s y.sidebar.vanilla",
     "build:jquery": "browserify src/jquery/sidebar.js -o lib/jquery/sidebar.js -t babelify -s y.sidebar.jquery",
@@ -18,7 +20,8 @@
     "watch:jquery": "watchify src/jquery/sidebar.js -o lib/jquery/sidebar.js -t babelify -s y.sidebar.jquery",
     "watch:v0": "watchify src/v0/sidebar.js -o lib/v0/sidebar.js -t babelify -s y.sidebar.v0",
     "watch:v1": "watchify src/v1/sidebar.js -o lib/v1/sidebar.js -t babelify -s y.sidebar.v1",
-    "watch": "npm run watch:core & npm run watch:vanilla & npm run watch:jquery & npm run watch:v0 & npm run watch:v1 & onchange 'src/*.html' 'src/*.css' -- npm run copy",
+    "watch:files": "onchange 'src/**/*.html' -- npm run copy:html & onchange 'src/**/*.css' -- npm run copy:css",
+    "watch": "npm run build; npm run watch:files & npm run watch:core & npm run watch:vanilla & npm run watch:jquery & npm run watch:v0 & npm run watch:v1",
     "serve": "http-server -s",
     "dev": "npm run serve & npm run watch",
     "lint": "eslint src",
@@ -37,6 +40,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.1",
     "eslint-plugin-react": "^6.2.0",
     "http-server": "^0.9.0",
+    "onchange": "^3.0.0",
     "watchify": "^3.7.0"
   }
 }
