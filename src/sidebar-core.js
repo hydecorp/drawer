@@ -1,7 +1,19 @@
-// Just return a value to define the module export.
-// This example returns an object, but the module
-// can return a function as the exported value.
-// helpers
+/*
+ * Adapted from Ratchet's sliders.js
+ * http://goratchet.com/components#sliders
+ *
+ * Adapted from Brad Birdsall's Swipe
+ * https://github.com/thebird/Swipe
+ *
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT (https://github.com/qwtel/y-sidebar)
+ */
+
+/**
+ * Just return a value to define the module export.
+ * This example returns an object, but the module
+ * can return a function as the exported value.
+ */
 function getBrowserCapabilities() {
   const styles = window.getComputedStyle(document.documentElement, '');
   const pre = (Array.prototype.slice
@@ -26,10 +38,6 @@ function linearTween(t, b, c, d) {
   return ((c * t) / d) + b;
 }
 
-/**
- * Copyright (c) 2016 Florian Klampfer
- * Released under MIT license
- */
 const IDLE = 'IDLE';
 const START_TOUCHING = 'START_TOUCHING';
 const TOUCHING = 'TOUCHING';
@@ -290,6 +298,7 @@ export default class SidebarCore {
     this.requestAnimationLoop();
   }
 
+  // FIXME
   jumpTo(menuOpen) {
     this.state = IDLE;
     this.menuOpen = menuOpen;
@@ -316,76 +325,103 @@ export default class SidebarCore {
   onAnimationFrame(time) {
     switch (this.state) {
       case START_TOUCHING: {
-        this.sliderWidth = this.getMovableSliderWidth();
-        this.state = TOUCHING;
+        this.onStartTouching(time);
         this.onAnimationFrame(time); // jump to next case block
         break;
       }
 
       case TOUCHING: {
-        const timeDiff = time - this.lastTime;
-
-        if (timeDiff > 0) {
-          const pageXDiff = this.pageX - this.lastPageX;
-          this.velocity = ((VELOCITY_LINEAR_COMBINATION * pageXDiff) / timeDiff)
-                          + ((1 - VELOCITY_LINEAR_COMBINATION) * this.velocity);
-        }
-
-        this.updateTranslateX();
-        this.updateDOM(this.translateX, this.sliderWidth);
-
-        this.lastTime = time;
-        this.lastPageX = this.pageX;
-        this.lastPageY = this.pageY;
-
-        requestAnimationFrame(this.onAnimationFrame);
+        this.onTouching(time);
         break;
       }
 
       case START_ANIMATING: {
-        this.sliderWidth = this.getMovableSliderWidth();
-
-        this.updateTranslateX();
-
-        this.animationStartX = this.translateX;
-        this.animationEndX = this.menuOpen * this.sliderWidth;
-        this.animationChangeInValue = this.animationEndX - this.animationStartX;
-        this.animationStartTime = time;
-
-        this.state = ANIMATING;
+        this.onStartAnimating(time);
         this.onAnimationFrame(time); // jump to next case block
         break;
       }
 
       case ANIMATING: {
-        const t = time - this.animationStartTime;
-        if (t < DURATION) {
-          this.startTranslateX = linearTween(t, this.animationStartX, this.animationChangeInValue,
-            DURATION);
-          requestAnimationFrame(this.onAnimationFrame);
-        } else {
-          // end animation
-          this.startTranslateX = this.animationEndX;
-          this.animationFrameRequested = false;
-          this.velocity = 0;
-
-          if (this.menuOpen === 1) {
-            this.layout.classList.add('y-open');
-            // document.body.style.overflowY = 'hidden'
-            // this.backdrop.style.pointerEvents = 'all';
-          } else {
-            this.layout.classList.remove('y-open');
-            // document.body.style.overflowY = "";
-            // this.backdrop.style.pointerEvents = 'none';
-          }
-        }
-
-        this.updateDOM(this.startTranslateX, this.sliderWidth);
+        this.onAnimating(time);
         break;
       }
 
-      default:
+      default: {
         break;
+      }
+    }
+  }
+
+  onStartTouching() {
+    this.sliderWidth = this.getMovableSliderWidth();
+    this.state = TOUCHING;
+  }
+
+  onTouching(time) {
+    const timeDiff = time - this.lastTime;
+
+    if (timeDiff > 0) {
+      const pageXDiff = this.pageX - this.lastPageX;
+      this.velocity = ((VELOCITY_LINEAR_COMBINATION * pageXDiff) / timeDiff) +
+                      ((1 - VELOCITY_LINEAR_COMBINATION) * this.velocity);
+    }
+
+    this.updateTranslateX();
+    this.updateDOM(this.translateX, this.sliderWidth);
+
+    this.lastTime = time;
+    this.lastPageX = this.pageX;
+    this.lastPageY = this.pageY;
+
+    requestAnimationFrame(this.onAnimationFrame);
+  }
+
+  onStartAnimating(time) {
+    this.sliderWidth = this.getMovableSliderWidth();
+
+    this.updateTranslateX();
+
+    this.animationStartX = this.translateX;
+    this.animationEndX = this.menuOpen * this.sliderWidth;
+    this.animationChangeInValue = this.animationEndX - this.animationStartX;
+    this.animationStartTime = time;
+
+    this.state = ANIMATING;
+  }
+
+  onAnimating(time) {
+    const timeInAnimation = time - this.animationStartTime;
+
+    if (timeInAnimation < DURATION) {
+      this.onAnimatingCont(timeInAnimation);
+    } else {
+      this.onAnimatingEnd();
+    }
+
+    this.updateDOM(this.startTranslateX, this.sliderWidth);
+  }
+
+  onAnimatingCont(timeInAnimation) {
+    const startValue = this.animationStartX;
+    const changeInValue = this.animationChangeInValue;
+    this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue, DURATION);
+    requestAnimationFrame(this.onAnimationFrame);
+  }
+
+  onAnimatingEnd() {
+    // end animation
+    this.startTranslateX = this.animationEndX;
+    this.animationFrameRequested = false;
+    this.velocity = 0;
+
+    if (this.menuOpen === 1) {
+      this.layout.classList.add('y-open');
+      // document.body.style.overflowY = 'hidden'
+      // this.backdrop.style.pointerEvents = 'all';
+    } else {
+      this.layout.classList.remove('y-open');
+      // document.body.style.overflowY = "";
+      // this.backdrop.style.pointerEvents = 'none';
     }
   }
 
