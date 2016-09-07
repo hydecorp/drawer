@@ -19,7 +19,6 @@ export default class Sidebar extends SidebarCore {
 
     el.appendChild(layout);
 
-    this.el = el;
-    // super(el);
+    return el;
   }
 }

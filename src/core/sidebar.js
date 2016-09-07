@@ -9,7 +9,7 @@
  * Licensed under MIT (https://github.com/qwtel/y-sidebar)
  */
 
-/**
+/*
  * Just return a value to define the module export.
  * This example returns an object, but the module
  * can return a function as the exported value.
@@ -39,7 +39,6 @@ function linearTween(t, b, c, d) {
 }
 
 const IDLE = 'IDLE';
-const START_TOUCHING = 'START_TOUCHING';
 const TOUCHING = 'TOUCHING';
 const START_ANIMATING = 'START_ANIMATING';
 const ANIMATING = 'ANIMATING';
@@ -63,7 +62,7 @@ const transformProperty = browerCapabilities.transform;
 
 export default class SidebarCore {
   constructor(el) {
-    this.setupDOM(el);
+    this.el = this.setupDOM(el);
     this.cacheDOMElements();
     this.resetProperties();
     this.bindCallbacks();
@@ -72,7 +71,7 @@ export default class SidebarCore {
   }
 
   setupDOM(el) {
-    this.el = el;
+    return el;
   }
 
   cacheDOMElements() {
@@ -116,9 +115,9 @@ export default class SidebarCore {
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
 
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
+    // this.onMouseDown = this.onMouseDown.bind(this);
+    // this.onMouseMove = this.onMouseMove.bind(this);
+    // this.onMouseUp = this.onMouseUp.bind(this);
 
     this.onBackdropClick = this.onBackdropClick.bind(this);
 
@@ -127,7 +126,7 @@ export default class SidebarCore {
 
   addEventListeners() {
     document.addEventListener('touchstart', this.onTouchStart);
-    document.addEventListener('mousedown', this.onMouseDown);
+    // document.addEventListener('mousedown', this.onMouseDown);
 
     this.backdrop.addEventListener('click', this.onBackdropClick);
 
@@ -185,6 +184,7 @@ export default class SidebarCore {
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
       if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+        this.prepInteraction();
         document.addEventListener('touchmove', this.onTouchMove, { passive: true });
         document.addEventListener('touchend', this.onTouchEnd, { passive: true });
       }
@@ -192,17 +192,17 @@ export default class SidebarCore {
   }
 
   // TODO: DRY
-  onMouseDown(e) {
-    this.isScrolling = undefined;
-
-    this.startX = this.pageX = this.lastPageX = e.pageX;
-    this.startY = this.pageY = this.lastPageY = e.pageY;
-
-    if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
-      document.addEventListener('mousemove', this.onMouseMove, { passive: true });
-      document.addEventListener('mouseup', this.onMouseUp, { passive: true });
-    }
-  }
+  // onMouseDown(e) {
+  //   this.isScrolling = undefined;
+  //
+  //   this.startX = this.pageX = this.lastPageX = e.pageX;
+  //   this.startY = this.pageY = this.lastPageY = e.pageY;
+  //
+  //   if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+  //     document.addEventListener('mousemove', this.onMouseMove, { passive: true });
+  //     document.addEventListener('mouseup', this.onMouseUp, { passive: true });
+  //   }
+  // }
 
   // TODO: DRY
   onTouchMove(e) {
@@ -213,7 +213,7 @@ export default class SidebarCore {
     if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
       this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
       if (!this.isScrolling) {
-        this.state = START_TOUCHING;
+        this.state = TOUCHING;
         this.requestAnimationLoop();
       }
     }
@@ -224,22 +224,22 @@ export default class SidebarCore {
   }
 
   // TODO: DRY
-  onMouseMove(e) {
-    this.pageX = e.pageX;
-    this.pageY = e.pageY;
-
-    if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
-      this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
-      if (!this.isScrolling) {
-        this.state = START_TOUCHING;
-        this.requestAnimationLoop();
-      }
-    }
-
-    if (this.isScrolling && !this.menuOpen) return;
-
-    this.startedMoving = true;
-  }
+  // onMouseMove(e) {
+  //   this.pageX = e.pageX;
+  //   this.pageY = e.pageY;
+  //
+  //   if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
+  //     this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
+  //     if (!this.isScrolling) {
+  //       this.state = TOUCHING;
+  //       this.requestAnimationLoop();
+  //     }
+  //   }
+  //
+  //   if (this.isScrolling && !this.menuOpen) return;
+  //
+  //   this.startedMoving = true;
+  // }
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
@@ -271,30 +271,37 @@ export default class SidebarCore {
   }
 
   // TODO: DRY
-  onMouseUp() {
-    if (this.isScrolling) {
-      return;
-    }
-
-    if (this.startedMoving) {
-      this.updateMenuOpen();
-    }
-
-    this.state = START_ANIMATING;
-    this.startedMoving = false;
-
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
-  }
+  // onMouseUp() {
+  //   if (this.isScrolling) {
+  //     return;
+  //   }
+  //
+  //   if (this.startedMoving) {
+  //     this.updateMenuOpen();
+  //   }
+  //
+  //   this.state = START_ANIMATING;
+  //   this.startedMoving = false;
+  //
+  //   document.removeEventListener('mousemove', this.onMouseMove);
+  //   document.removeEventListener('mouseup', this.onMouseUp);
+  // }
 
   onBackdropClick(e) {
     e.preventDefault();
     this.close();
   }
 
+  prepInteraction() {
+    this.sidebar.style.willChange = 'transform';
+    this.backdrop.style.willChange = 'opacity';
+    this.sliderWidth = this.getMovableSliderWidth();
+  }
+
   animateTo(menuOpen) {
-    this.state = START_ANIMATING;
+    this.prepInteraction();
     this.menuOpen = menuOpen;
+    this.state = START_ANIMATING;
     this.requestAnimationLoop();
   }
 
@@ -324,12 +331,6 @@ export default class SidebarCore {
 
   onAnimationFrame(time) {
     switch (this.state) {
-      case START_TOUCHING: {
-        this.onStartTouching(time);
-        this.onAnimationFrame(time); // jump to next case block
-        break;
-      }
-
       case TOUCHING: {
         this.onTouching(time);
         break;
@@ -352,11 +353,6 @@ export default class SidebarCore {
     }
   }
 
-  onStartTouching() {
-    this.sliderWidth = this.getMovableSliderWidth();
-    this.state = TOUCHING;
-  }
-
   onTouching(time) {
     const timeDiff = time - this.lastTime;
 
@@ -377,8 +373,6 @@ export default class SidebarCore {
   }
 
   onStartAnimating(time) {
-    this.sliderWidth = this.getMovableSliderWidth();
-
     this.updateTranslateX();
 
     this.animationStartX = this.translateX;
@@ -420,6 +414,11 @@ export default class SidebarCore {
       // this.backdrop.style.pointerEvents = 'all';
     } else {
       this.layout.classList.remove('y-open');
+      // only remove the styles when closing the sidebar,
+      // since we eitehr expect a navigation (page reload)
+      // or closing the sidebar again, ie more changes
+      this.sidebar.style.willChange = '';
+      this.backdrop.style.willChange = '';
       // document.body.style.overflowY = "";
       // this.backdrop.style.pointerEvents = 'none';
     }

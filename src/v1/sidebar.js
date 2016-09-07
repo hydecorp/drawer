@@ -14,8 +14,7 @@ export default class SidebarV1 extends SidebarCore {
 
     el.shadowRoot.appendChild(instance);
 
-    this.el = el.shadowRoot;
-    // super(el.shadowRoot);
+    return el.shadowRoot;
   }
 }
 

@@ -11,8 +11,7 @@ export default class SidebarJQuery extends SidebarCore {
       .append($('<div class="y-sidebar"/>').append($el.children().detach()))
       .appendTo($el);
 
-    this.el = el;
-    // super(el);
+    return el;
   }
 }
 

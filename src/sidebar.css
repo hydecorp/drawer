@@ -9,7 +9,6 @@
   opacity: 0;
   z-index: 0;
   pointer-events: none;
-  will-change: opacity;
 }
 
 .y-open > .y-backdrop {
@@ -26,7 +25,6 @@
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  will-change: transform, scroll;
   background: #f8f8f8;
 }
 
