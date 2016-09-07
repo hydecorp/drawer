@@ -1,4 +1,5 @@
 import SidebarCore from '../core/sidebar';
+import SidebarHTMLElement from '../webcomponents';
 
 export default class SidebarV0 extends SidebarCore {
   setupDOM(el) {
@@ -18,44 +19,9 @@ export default class SidebarV0 extends SidebarCore {
   }
 }
 
-function isTruthyAttrVal(v) {
-  return v != null && v !== 'false' && v !== 'null' && v !== 'undefined';
-}
-
-document.registerElement('y-sidebar', class extends HTMLElement {
+document.registerElement('y-sidebar-v0', class extends SidebarHTMLElement {
   createdCallback() {
     this.sidebar = new SidebarV0(this);
-
-    for (const attr of this.attributes) {
-      this.attributeChangedCallback(attr.name, undefined, attr.value);
-    }
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    switch (attrName) {
-      case 'menu-open': {
-        if (isTruthyAttrVal(newVal)) {
-          this.open();
-        } else {
-          this.close();
-        }
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }
-
-  open(opts) {
-    this.sidebar.open(opts);
-  }
-
-  close(opts) {
-    this.sidebar.close(opts);
-  }
-
-  toggle(opts) {
-    this.sidebar.toggle(opts);
+    this.reflectAttributeChanges();
   }
 });

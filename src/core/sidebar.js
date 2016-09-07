@@ -6,7 +6,7 @@
  * https://github.com/thebird/Swipe
  *
  * Copyright (c) 2016 Florian Klampfer
- * Licensed under MIT (https://github.com/qwtel/y-sidebar)
+ * Licensed under MIT
  */
 
 /*
@@ -53,13 +53,6 @@ const browerCapabilities = getBrowserCapabilities();
 // const transformPrefix = browerCapabilities.prefix;
 const transformProperty = browerCapabilities.transform;
 
-// TODO: don't ployfill as part of the component
-// polyfillRequestAnimationFrame();
-
-// TODO: tap component!?
-// new Tap(backdrop);
-// new Tap(menu);
-
 export default class SidebarCore {
   constructor(el) {
     this.el = this.setupDOM(el);
@@ -67,7 +60,6 @@ export default class SidebarCore {
     this.resetProperties();
     this.bindCallbacks();
     this.addEventListeners();
-    this.onResize();
   }
 
   setupDOM(el) {
@@ -90,7 +82,7 @@ export default class SidebarCore {
     this.isScrolling = undefined;
     this.startedMoving = false;
     this.state = IDLE;
-    this.menuOpen = 0;
+    this.menuOpenProp = 0;
     this.velocity = 0;
     this.startTranslateX = 0;
     this.translateX = 0;
@@ -107,9 +99,23 @@ export default class SidebarCore {
     // this.screenWidth;
   }
 
+  set menuOpen(menuOpen) {
+    const oldMenuOpen = this.menuOpen;
+    this.menuOpenProp = menuOpen;
+
+    if (menuOpen !== oldMenuOpen) {
+      this.el.dispatchEvent(new CustomEvent('menuopenchange', {
+        detail: menuOpen,
+      }));
+    }
+  }
+
+  get menuOpen() {
+    return this.menuOpenProp;
+  }
+
   bindCallbacks() {
     // TODO: property initializers?
-    this.onResize = this.onResize.bind(this);
 
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
@@ -125,13 +131,9 @@ export default class SidebarCore {
   }
 
   addEventListeners() {
-    document.addEventListener('touchstart', this.onTouchStart);
-    // document.addEventListener('mousedown', this.onMouseDown);
-
+    document.addEventListener('touchstart', this.onTouchStart, { passive: true });
+    // document.addEventListener('mousedown', this.onMouseDown, { passive: true});
     this.backdrop.addEventListener('click', this.onBackdropClick);
-
-    window.addEventListener('resize', this.onResize);
-    window.addEventListener('orientationchange', this.onResize);
   }
 
   requestAnimationLoop() {
@@ -287,8 +289,7 @@ export default class SidebarCore {
   //   document.removeEventListener('mouseup', this.onMouseUp);
   // }
 
-  onBackdropClick(e) {
-    e.preventDefault();
+  onBackdropClick() {
     this.close();
   }
 
@@ -414,6 +415,7 @@ export default class SidebarCore {
       // this.backdrop.style.pointerEvents = 'all';
     } else {
       this.layout.classList.remove('y-open');
+
       // only remove the styles when closing the sidebar,
       // since we eitehr expect a navigation (page reload)
       // or closing the sidebar again, ie more changes
@@ -427,24 +429,6 @@ export default class SidebarCore {
   updateDOM(translateX, sliderWidth) {
     this.sidebar.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
     this.backdrop.style.opacity = MAX_OPACITY * (translateX / sliderWidth);
-  }
-
-  enableSlider() {
-    this.layout.classList.add('y-active');
-    // this._jumpTo(0);
-  }
-
-  disableSlider() {
-    this.layout.classList.remove('y-active');
-    // this._jumpTo(1);
-  }
-
-  onResize() {
-    if (window.matchMedia('(min-width: 48em)').matches) {
-      this.disableSlider();
-    } else {
-      this.enableSlider();
-    }
   }
 
   open(opts) {
