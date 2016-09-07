@@ -82,7 +82,7 @@ export default class SidebarCore {
     this.isScrolling = undefined;
     this.startedMoving = false;
     this.state = IDLE;
-    this.menuOpenProp = 0;
+    this.menuOpen = 0;
     this.velocity = 0;
     this.startTranslateX = 0;
     this.translateX = 0;
@@ -99,19 +99,19 @@ export default class SidebarCore {
     // this.screenWidth;
   }
 
-  set menuOpen(menuOpen) {
+  set isMenuOpen(isMenuOpen) {
     const oldMenuOpen = this.menuOpen;
-    this.menuOpenProp = menuOpen;
+    this.menuOpen = isMenuOpen ? 1 : 0;
 
-    if (menuOpen !== oldMenuOpen) {
+    if (this.menuOpen !== oldMenuOpen) {
       this.el.dispatchEvent(new CustomEvent('menuopenchange', {
-        detail: menuOpen,
+        detail: isMenuOpen,
       }));
     }
   }
 
-  get menuOpen() {
-    return this.menuOpenProp;
+  get isMenuOpen() {
+    return this.menuOpen === 1;
   }
 
   bindCallbacks() {
@@ -185,7 +185,7 @@ export default class SidebarCore {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.isMenuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         document.addEventListener('touchmove', this.onTouchMove, { passive: true });
         document.addEventListener('touchend', this.onTouchEnd, { passive: true });
@@ -220,7 +220,7 @@ export default class SidebarCore {
       }
     }
 
-    if (this.isScrolling && !this.menuOpen) return;
+    if (this.isScrolling && !this.isMenuOpen) return;
 
     this.startedMoving = true;
   }
@@ -245,13 +245,13 @@ export default class SidebarCore {
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
-      this.menuOpen = 1;
+      this.isMenuOpen = true;
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
-      this.menuOpen = 0;
+      this.isMenuOpen = false;
     } else if (this.translateX >= this.sliderWidth) {
-      this.menuOpen = 1;
+      this.isMenuOpen = true;
     } else {
-      this.menuOpen = 0;
+      this.isMenuOpen = false;
     }
   }
 
@@ -301,7 +301,7 @@ export default class SidebarCore {
 
   animateTo(menuOpen) {
     this.prepInteraction();
-    this.menuOpen = menuOpen;
+    this.isMenuOpen = menuOpen === 1;
     this.state = START_ANIMATING;
     this.requestAnimationLoop();
   }
@@ -309,7 +309,7 @@ export default class SidebarCore {
   // FIXME
   jumpTo(menuOpen) {
     this.state = IDLE;
-    this.menuOpen = menuOpen;
+    this.isMenuOpen = menuOpen === 1;
     this.sliderWidth = this.getMovableSliderWidth();
     this.startTranslateX = menuOpen * this.sliderWidth;
     this.updateDOM(this.startTranslateX, this.sliderWidth);
@@ -409,7 +409,7 @@ export default class SidebarCore {
     this.animationFrameRequested = false;
     this.velocity = 0;
 
-    if (this.menuOpen === 1) {
+    if (this.isMenuOpen) {
       this.layout.classList.add('y-open');
       // document.body.style.overflowY = 'hidden'
       // this.backdrop.style.pointerEvents = 'all';
@@ -450,7 +450,7 @@ export default class SidebarCore {
   }
 
   toggle(opts) {
-    if (this.menuOpen === 1) {
+    if (this.isMenuOpen) {
       this.close(opts);
     } else {
       this.open(opts);
