@@ -1,11 +1,10 @@
 {
   "name": "y-sidebar",
   "description": "",
-  "main": "index.js",
   "authors": [
     "Florian Klampfer <f.klampfer@gmail.com> (http://qwtel.com)"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "",
   "ignore": [
     "**/.*",
