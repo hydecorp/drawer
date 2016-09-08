@@ -19,12 +19,7 @@ function plugin(option, ...args) {
   return this.each(function () {
     const $this = $(this);
     const data = $this.data('y.sidebar');
-    const options = $.extend(
-      {},
-      SidebarCore.DEFAULTS,
-      $this.data(),
-      typeof option === 'object' && option
-    );
+    const options = $.extend({}, $this.data(), typeof option === 'object' && option);
     const action = typeof option === 'string' ? option : null;
 
     if (!data) $this.data('y.sidebar', new SidebarJQuery(this, options));

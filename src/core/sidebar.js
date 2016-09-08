@@ -54,12 +54,16 @@ const browerCapabilities = getBrowserCapabilities();
 const transformProperty = browerCapabilities.transform;
 
 export default class SidebarCore {
-  constructor(el) {
+  constructor(el, options) {
+    this.options = Object.assign({}, SidebarCore.DEFAULTS, options);
+
     this.el = this.setupDOM(el);
     this.cacheDOMElements();
     this.resetProperties();
     this.bindCallbacks();
     this.addEventListeners();
+
+    this.jumpTo(this.options.menuOpen);
   }
 
   setupDOM(el) {
@@ -82,7 +86,7 @@ export default class SidebarCore {
     this.isScrolling = undefined;
     this.startedMoving = false;
     this.state = IDLE;
-    this.menuOpen = 0;
+    this.menuOpenProp = false;
     this.velocity = 0;
     this.startTranslateX = 0;
     this.translateX = 0;
@@ -99,19 +103,19 @@ export default class SidebarCore {
     // this.screenWidth;
   }
 
-  set isMenuOpen(isMenuOpen) {
-    const oldMenuOpen = this.menuOpen;
-    this.menuOpen = isMenuOpen ? 1 : 0;
+  set menuOpen(menuOpen) {
+    const oldMenuOpen = this.menuOpenProp;
+    this.menuOpenProp = menuOpen;
 
-    if (this.menuOpen !== oldMenuOpen) {
+    if (menuOpen !== oldMenuOpen) {
       this.el.dispatchEvent(new CustomEvent('menuopenchange', {
-        detail: isMenuOpen,
+        detail: menuOpen,
       }));
     }
   }
 
-  get isMenuOpen() {
-    return this.menuOpen === 1;
+  get menuOpen() {
+    return this.menuOpenProp;
   }
 
   bindCallbacks() {
@@ -185,7 +189,7 @@ export default class SidebarCore {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.isMenuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         document.addEventListener('touchmove', this.onTouchMove, { passive: true });
         document.addEventListener('touchend', this.onTouchEnd, { passive: true });
@@ -220,7 +224,7 @@ export default class SidebarCore {
       }
     }
 
-    if (this.isScrolling && !this.isMenuOpen) return;
+    if (this.isScrolling && !this.menuOpen) return;
 
     this.startedMoving = true;
   }
@@ -245,13 +249,13 @@ export default class SidebarCore {
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
-      this.isMenuOpen = true;
+      this.menuOpen = true;
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
-      this.isMenuOpen = false;
+      this.menuOpen = false;
     } else if (this.translateX >= this.sliderWidth) {
-      this.isMenuOpen = true;
+      this.menuOpen = true;
     } else {
-      this.isMenuOpen = false;
+      this.menuOpen = false;
     }
   }
 
@@ -301,18 +305,21 @@ export default class SidebarCore {
 
   animateTo(menuOpen) {
     this.prepInteraction();
-    this.isMenuOpen = menuOpen === 1;
+    this.menuOpen = menuOpen;
     this.state = START_ANIMATING;
     this.requestAnimationLoop();
   }
 
   // FIXME
   jumpTo(menuOpen) {
-    this.state = IDLE;
-    this.isMenuOpen = menuOpen === 1;
-    this.sliderWidth = this.getMovableSliderWidth();
-    this.startTranslateX = menuOpen * this.sliderWidth;
-    this.updateDOM(this.startTranslateX, this.sliderWidth);
+    requestAnimationFrame(() => {
+      this.state = IDLE;
+      this.menuOpen = menuOpen;
+      this.sliderWidth = this.getMovableSliderWidth();
+      this.startTranslateX = menuOpen * this.sliderWidth;
+      this.endAnimating();
+      this.updateDOM(this.startTranslateX, this.sliderWidth);
+    });
   }
 
   /**
@@ -376,16 +383,20 @@ export default class SidebarCore {
   onStartAnimating(time) {
     this.updateTranslateX();
 
-    this.animationStartX = this.translateX;
-    this.animationEndX = this.menuOpen * this.sliderWidth;
-    this.animationChangeInValue = this.animationEndX - this.animationStartX;
-    this.animationStartTime = time;
+    // store all animation related data in this object,
+    // delete after animation is completed
+    const animation = {};
+    animation.startX = this.translateX;
+    animation.endX = (this.menuOpen ? 1 : 0) * this.sliderWidth;
+    animation.changeInValue = animation.endX - animation.startX;
+    animation.startTime = time;
+    this.animation = animation;
 
     this.state = ANIMATING;
   }
 
   onAnimating(time) {
-    const timeInAnimation = time - this.animationStartTime;
+    const timeInAnimation = time - this.animation.startTime;
 
     if (timeInAnimation < DURATION) {
       this.onAnimatingCont(timeInAnimation);
@@ -397,19 +408,24 @@ export default class SidebarCore {
   }
 
   onAnimatingCont(timeInAnimation) {
-    const startValue = this.animationStartX;
-    const changeInValue = this.animationChangeInValue;
+    const startValue = this.animation.startX;
+    const changeInValue = this.animation.changeInValue;
     this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue, DURATION);
     requestAnimationFrame(this.onAnimationFrame);
   }
 
   onAnimatingEnd() {
     // end animation
-    this.startTranslateX = this.animationEndX;
+    this.startTranslateX = this.animation.endX;
+    delete this.animation;
+    this.endAnimating();
+  }
+
+  endAnimating() {
     this.animationFrameRequested = false;
     this.velocity = 0;
 
-    if (this.isMenuOpen) {
+    if (this.menuOpen) {
       this.layout.classList.add('y-open');
       // document.body.style.overflowY = 'hidden'
       // this.backdrop.style.pointerEvents = 'all';
@@ -450,10 +466,15 @@ export default class SidebarCore {
   }
 
   toggle(opts) {
-    if (this.isMenuOpen) {
+    if (this.menuOpen) {
       this.close(opts);
     } else {
       this.open(opts);
     }
   }
 }
+
+
+SidebarCore.DEFAULTS = Object.freeze({
+  menuOpen: false,
+});

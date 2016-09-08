@@ -50,7 +50,9 @@
     <script src="/lib/vanilla/sidebar.js"></script>
     <script>
       var Sidebar = y.sidebar.vanilla.default;
-      var sidebar = new Sidebar(document.getElementById('sidebar'));
+
+      var aside = document.getElementById('sidebar');
+      var sidebar = new Sidebar(aside/*, { menuOpen: true }*/);
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {

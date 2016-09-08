@@ -1,13 +1,21 @@
-function isTruthyAttrVal(v) {
-  return v != null &&
-         v !== 'false' &&
-         v !== 'null' &&
-         v !== 'undefined' &&
-         v !== '0';
-}
+// function isTruthyAttrVal(v) {
+//   return v != null &&
+//          v !== 'false' &&
+//          v !== 'null' &&
+//          v !== 'undefined' &&
+//          v !== '0';
+// }
 
 // TODO: can these tasks be automated!?
 export default class SidebarHTMLElement extends HTMLElement {
+  createdConnected(Ctor) {
+    this.sidebar = new Ctor(this, {
+      menuOpen: this.getAttribute('menu-open') != null,
+    });
+
+    this.reflectAttributeChanges();
+  }
+
   reflectAttributeChanges() {
     this.addEventListener('menuopenchange', ({ detail }) => {
       // HACK: Since JS is single threaded, we can set the silent flag here to break the
@@ -31,7 +39,7 @@ export default class SidebarHTMLElement extends HTMLElement {
 
     switch (attrName) {
       case 'menu-open': {
-        if (isTruthyAttrVal(newVal)) {
+        if (newVal != null) {
           this.open();
         } else {
           this.close();
@@ -57,3 +65,12 @@ export default class SidebarHTMLElement extends HTMLElement {
     this.sidebar.toggle(opts);
   }
 }
+
+// TODO: better why to get template?
+SidebarHTMLElement.getTemplateInstance = (version) =>
+  document
+    .querySelector(`link[href$="${version}/sidebar.html"]`)
+    .import
+    .getElementById('y-sidebar-template')
+    .content
+    .cloneNode(true);
