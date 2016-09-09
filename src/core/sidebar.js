@@ -9,11 +9,6 @@
  * Licensed under MIT
  */
 
-/*
- * Just return a value to define the module export.
- * This example returns an object, but the module
- * can return a function as the exported value.
- */
 function getBrowserCapabilities() {
   const styles = window.getComputedStyle(document.documentElement, '');
   const pre = (Array.prototype.slice
@@ -54,16 +49,18 @@ const browerCapabilities = getBrowserCapabilities();
 const transformProperty = browerCapabilities.transform;
 
 export default class SidebarCore {
-  constructor(el, options) {
-    this.options = Object.assign({}, SidebarCore.DEFAULTS, options);
+  constructor(el, props) {
+    const prps = this.props = Object.assign({}, SidebarCore.DEFAULTS, props);
 
     this.el = this.setupDOM(el);
     this.cacheDOMElements();
     this.resetProperties();
     this.bindCallbacks();
-    this.addEventListeners();
 
-    this.jumpTo(this.options.menuOpen);
+    if (!prps.disabled) {
+      this.enable();
+      this.jumpTo(prps.menuOpen);
+    }
   }
 
   setupDOM(el) {
@@ -77,6 +74,8 @@ export default class SidebarCore {
   }
 
   resetProperties() {
+    // priviate variables
+    // TODO: make inaccessible
     this.startX = 0;
     this.startY = 0;
     this.pageX = 0;
@@ -86,7 +85,6 @@ export default class SidebarCore {
     this.isScrolling = undefined;
     this.startedMoving = false;
     this.state = IDLE;
-    this.menuOpenProp = false;
     this.velocity = 0;
     this.startTranslateX = 0;
     this.translateX = 0;
@@ -104,18 +102,34 @@ export default class SidebarCore {
   }
 
   set menuOpen(menuOpen) {
-    const oldMenuOpen = this.menuOpenProp;
-    this.menuOpenProp = menuOpen;
+    this.propSetter('menuOpen', menuOpen);
+  }
 
-    if (menuOpen !== oldMenuOpen) {
-      this.el.dispatchEvent(new CustomEvent('menuopenchange', {
-        detail: menuOpen,
+  get menuOpen() {
+    return this.propGetter('menuOpen');
+  }
+
+  set disabled(disabled) {
+    this.propSetter('disabled', disabled);
+  }
+
+  get disabled() {
+    return this.propGetter('disabled');
+  }
+
+  propSetter(prop, newVal) {
+    const oldVal = this.props[prop];
+    this.props[prop] = newVal;
+
+    if (newVal !== oldVal) {
+      this.el.dispatchEvent(new CustomEvent(`${prop}change`, {
+        detail: newVal,
       }));
     }
   }
 
-  get menuOpen() {
-    return this.menuOpenProp;
+  propGetter(prop) {
+    return this.props[prop];
   }
 
   bindCallbacks() {
@@ -138,6 +152,12 @@ export default class SidebarCore {
     document.addEventListener('touchstart', this.onTouchStart, { passive: true });
     // document.addEventListener('mousedown', this.onMouseDown, { passive: true});
     this.backdrop.addEventListener('click', this.onBackdropClick);
+  }
+
+  removeEventListeners() {
+    document.removeEventListener('touchstart', this.onTouchStart);
+    // document.addEventListener('mousedown', this.onMouseDown, { passive: true});
+    this.backdrop.removeEventListener('click', this.onBackdropClick);
   }
 
   requestAnimationLoop() {
@@ -447,34 +467,50 @@ export default class SidebarCore {
     this.backdrop.style.opacity = MAX_OPACITY * (translateX / sliderWidth);
   }
 
-  open(opts) {
-    const options = Object.assign({ animate: true }, opts);
-    if (options.animate) {
-      this.animateTo(1);
-    } else {
-      this.jumpTo(1);
+  open(options) {
+    if (!this.props.disabled) {
+      const opts = Object.assign({ animate: true }, options);
+      if (opts.animate) {
+        this.animateTo(1);
+      } else {
+        this.jumpTo(1);
+      }
     }
   }
 
-  close(opts) {
-    const options = Object.assign({ animate: true }, opts);
-    if (options.animate) {
-      this.animateTo(0);
-    } else {
-      this.jumpTo(0);
+  close(options) {
+    if (!this.props.disabled) {
+      const opts = Object.assign({ animate: true }, options);
+      if (opts.animate) {
+        this.animateTo(0);
+      } else {
+        this.jumpTo(0);
+      }
     }
   }
 
-  toggle(opts) {
+  toggle(options) {
     if (this.menuOpen) {
-      this.close(opts);
+      this.close(options);
     } else {
-      this.open(opts);
+      this.open(options);
     }
+  }
+
+  disable() {
+    this.jumpTo(0);
+    this.removeEventListeners();
+    this.disabled = true;
+  }
+
+
+  enable() {
+    this.addEventListeners();
+    this.disabled = false;
   }
 }
 
-
 SidebarCore.DEFAULTS = Object.freeze({
   menuOpen: false,
+  disabled: false,
 });

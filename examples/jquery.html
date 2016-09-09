@@ -33,7 +33,7 @@
     </main>
 
     <aside id="sidebar">
-    <!-- <aside id="sidebar" data-menu-open="true"> -->
+    <!-- <aside id="sidebar" data-menu-open="true" data-disabled="true"> -->
       <nav>
         <ul>
           <li><a href="/examples/core">Core</a></li>
@@ -52,7 +52,10 @@
     <script src="/lib/jquery/sidebar.js"></script>
     <script>
       $(function () {
-        $sidebar = $('#sidebar').sidebar(/*{ menuOpen: true }*/);
+        $sidebar = $('#sidebar').sidebar({
+          // menuOpen: true,
+          // disabled: true,
+        });
 
         $('#menu').click(function (e) {
           e.preventDefault();

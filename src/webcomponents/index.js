@@ -1,16 +1,9 @@
-// function isTruthyAttrVal(v) {
-//   return v != null &&
-//          v !== 'false' &&
-//          v !== 'null' &&
-//          v !== 'undefined' &&
-//          v !== '0';
-// }
-
 // TODO: can these tasks be automated!?
 export default class SidebarHTMLElement extends HTMLElement {
   createdConnected(Ctor) {
     this.sidebar = new Ctor(this, {
       menuOpen: this.getAttribute('menu-open') != null,
+      disabled: this.getAttribute('disabled') != null,
     });
 
     this.reflectAttributeChanges();
@@ -18,31 +11,38 @@ export default class SidebarHTMLElement extends HTMLElement {
 
   reflectAttributeChanges() {
     this.addEventListener('menuopenchange', ({ detail }) => {
-      // HACK: Since JS is single threaded, we can set the silent flag here to break the
-      // event cicle. Not strictly speaking necessary, since it's also broken inside SidebarCore.
-      this.silenthack = true;
-
       if (detail) {
-        this.setAttribute('menu-open', 'menu-open');
+        this.setAttribute('menu-open', '');
       } else {
         this.removeAttribute('menu-open');
+      }
+    });
+
+    this.addEventListener('disabledchange', ({ detail }) => {
+      if (detail) {
+        this.setAttribute('disabled', '');
+      } else {
+        this.removeAttribute('disabled');
       }
     });
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
-    // HACK: See above
-    if (this.silenthack) {
-      this.silenthack = false;
-      return;
-    }
-
     switch (attrName) {
       case 'menu-open': {
         if (newVal != null) {
           this.open();
         } else {
           this.close();
+        }
+        break;
+      }
+
+      case 'disabled': {
+        if (newVal != null) {
+          this.disable();
+        } else {
+          this.enable();
         }
         break;
       }
@@ -63,6 +63,14 @@ export default class SidebarHTMLElement extends HTMLElement {
 
   toggle(opts) {
     this.sidebar.toggle(opts);
+  }
+
+  disable() {
+    this.sidebar.disable();
+  }
+
+  enable() {
+    this.sidebar.enable();
   }
 }
 

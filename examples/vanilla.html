@@ -52,7 +52,10 @@
       var Sidebar = y.sidebar.vanilla.default;
 
       var aside = document.getElementById('sidebar');
-      var sidebar = new Sidebar(aside/*, { menuOpen: true }*/);
+      var sidebar = new Sidebar(aside, {
+        // menuOpen: true,
+        // disabled: true,
+      });
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {
