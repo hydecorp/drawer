@@ -15,11 +15,11 @@
     "build:v0": "browserify src/v0/sidebar.js -o lib/v0/sidebar.js -t babelify -s y.sidebar.v0",
     "build:v1": "browserify src/v1/sidebar.js -o lib/v1/sidebar.js -t babelify -s y.sidebar.v1",
     "build": "npm run copy; npm run build:core & npm run build:vanilla & npm run build:jquery & npm run build:v0 & npm run build:v1",
-    "watch:core": "watchify src/core/sidebar.js -o lib/core/sidebar.js -t babelify -s y.sidebar.core",
-    "watch:vanilla": "watchify src/vanilla/sidebar.js -o lib/vanilla/sidebar.js -t babelify -s y.sidebar.vanilla",
-    "watch:jquery": "watchify src/jquery/sidebar.js -o lib/jquery/sidebar.js -t babelify -s y.sidebar.jquery",
-    "watch:v0": "watchify src/v0/sidebar.js -o lib/v0/sidebar.js -t babelify -s y.sidebar.v0",
-    "watch:v1": "watchify src/v1/sidebar.js -o lib/v1/sidebar.js -t babelify -s y.sidebar.v1",
+    "watch:core": "watchify --debug src/core/sidebar.js -o lib/core/sidebar.js -t babelify -s y.sidebar.core",
+    "watch:vanilla": "watchify --debug src/vanilla/sidebar.js -o lib/vanilla/sidebar.js -t babelify -s y.sidebar.vanilla",
+    "watch:jquery": "watchify --debug src/jquery/sidebar.js -o lib/jquery/sidebar.js -t babelify -s y.sidebar.jquery",
+    "watch:v0": "watchify --debug src/v0/sidebar.js -o lib/v0/sidebar.js -t babelify -s y.sidebar.v0",
+    "watch:v1": "watchify --debug src/v1/sidebar.js -o lib/v1/sidebar.js -t babelify -s y.sidebar.v1",
     "watch:files": "onchange 'src/**/*.html' -- npm run copy:html & onchange 'src/**/*.css' -- npm run copy:css",
     "watch": "npm run build; npm run watch:files & npm run watch:core & npm run watch:vanilla & npm run watch:jquery & npm run watch:v0 & npm run watch:v1",
     "serve": "http-server -s",
@@ -45,5 +45,8 @@
     "http-server": "^0.9.0",
     "onchange": "^3.0.0",
     "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "kebab-case": "^1.0.0"
   }
 }

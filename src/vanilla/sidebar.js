@@ -1,6 +1,11 @@
-import SidebarCore from '../core/sidebar';
+import sidebarCore from '../core/sidebar';
 
-export default class Sidebar extends SidebarCore {
+export default class Sidebar extends sidebarCore() {
+  constructor(el, props) {
+    super();
+    this.initComponent(el, props);
+  }
+
   setupDOM(el) {
     const layout = document.createElement('div');
     layout.classList.add('y-layout');

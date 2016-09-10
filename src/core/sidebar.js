@@ -8,6 +8,7 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+import componentCore from '../component/componentCore';
 
 function getBrowserCapabilities() {
   const styles = window.getComputedStyle(document.documentElement, '');
@@ -33,6 +34,13 @@ function linearTween(t, b, c, d) {
   return ((c * t) / d) + b;
 }
 
+function pageDist(p1, p2) {
+  return Math.sqrt(
+    Math.pow(p1.pageX - p2.pageX, 2) +
+    Math.pow(p1.pageY - p2.pageY, 2)
+  );
+}
+
 const IDLE = 'IDLE';
 const TOUCHING = 'TOUCHING';
 const START_ANIMATING = 'START_ANIMATING';
@@ -48,23 +56,28 @@ const browerCapabilities = getBrowserCapabilities();
 // const transformPrefix = browerCapabilities.prefix;
 const transformProperty = browerCapabilities.transform;
 
-export default class SidebarCore {
-  constructor(el, props) {
-    const prps = this.props = Object.assign({}, SidebarCore.DEFAULTS, props);
 
-    this.el = this.setupDOM(el);
+const DEFAULTS = Object.freeze({
+  menuOpen: false,
+  disabled: false,
+});
+
+export default (SuperClass) => class extends componentCore(SuperClass) {
+  initComponent(el, props) {
+    super.initComponent(el, props);
+
     this.cacheDOMElements();
     this.resetProperties();
     this.bindCallbacks();
 
-    if (!prps.disabled) {
+    if (!this.disabled) {
       this.enable();
-      this.jumpTo(prps.menuOpen);
+      this.jumpTo(this.menuOpen);
     }
   }
 
-  setupDOM(el) {
-    return el;
+  defaults() {
+    return DEFAULTS;
   }
 
   cacheDOMElements() {
@@ -89,47 +102,8 @@ export default class SidebarCore {
     this.startTranslateX = 0;
     this.translateX = 0;
     this.animationFrameRequested = false;
-
-    // this.animationStartTime;
-    // this.animationStartX;
-    // this.animationEndX;
-    // this.animationChangeInValue;
-    // this.lastTime;
-    // this.timeDiff;
-
+    // this.lastTime = 0;
     // this.sliderWidth;
-    // this.screenWidth;
-  }
-
-  set menuOpen(menuOpen) {
-    this.propSetter('menuOpen', menuOpen);
-  }
-
-  get menuOpen() {
-    return this.propGetter('menuOpen');
-  }
-
-  set disabled(disabled) {
-    this.propSetter('disabled', disabled);
-  }
-
-  get disabled() {
-    return this.propGetter('disabled');
-  }
-
-  propSetter(prop, newVal) {
-    const oldVal = this.props[prop];
-    this.props[prop] = newVal;
-
-    if (newVal !== oldVal) {
-      this.el.dispatchEvent(new CustomEvent(`${prop}change`, {
-        detail: newVal,
-      }));
-    }
-  }
-
-  propGetter(prop) {
-    return this.props[prop];
   }
 
   bindCallbacks() {
@@ -149,14 +123,14 @@ export default class SidebarCore {
   }
 
   addEventListeners() {
-    document.addEventListener('touchstart', this.onTouchStart, { passive: true });
-    // document.addEventListener('mousedown', this.onMouseDown, { passive: true});
+    document.addEventListener('touchstart', this.onTouchStart);
+    // document.addEventListener('mousedown', this.onMouseDown);
     this.backdrop.addEventListener('click', this.onBackdropClick);
   }
 
   removeEventListeners() {
     document.removeEventListener('touchstart', this.onTouchStart);
-    // document.addEventListener('mousedown', this.onMouseDown, { passive: true});
+    // document.addEventListener('mousedown', this.onMouseDown);
     this.backdrop.removeEventListener('click', this.onBackdropClick);
   }
 
@@ -167,21 +141,19 @@ export default class SidebarCore {
     }
   }
 
-  distanceToLastTouch(p) {
-    return Math.sqrt(
-      Math.pow(this.pageX - p.pageX, 2) +
-      Math.pow(this.pageY - p.pageY, 2)
-    );
-  }
-
   getNearestTouch(touches) {
-    return Array.prototype.reduce.call(touches, (acc, touch) => {
-      const dist = this.distanceToLastTouch(touch);
-      return (dist < acc.dist) ? { dist, touch } : acc;
-    }, {
-      dist: Number.POSITIVE_INFINITY,
-      touch: null,
-    }).touch;
+    let nearestTouch = null;
+    let minDist = Number.POSITIVE_INFINITY;
+
+    for (const touch of touches) {
+      const dist = pageDist(this, touch);
+      if (dist < minDist) {
+        minDist = dist;
+        nearestTouch = touch;
+      }
+    }
+
+    return nearestTouch;
   }
 
   // TODO: generic solution for disabling the slider
@@ -211,8 +183,8 @@ export default class SidebarCore {
 
       if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
-        document.addEventListener('touchmove', this.onTouchMove, { passive: true });
-        document.addEventListener('touchend', this.onTouchEnd, { passive: true });
+        document.addEventListener('touchmove', this.onTouchMove);
+        document.addEventListener('touchend', this.onTouchEnd);
       }
     }
   }
@@ -225,8 +197,8 @@ export default class SidebarCore {
   //   this.startY = this.pageY = this.lastPageY = e.pageY;
   //
   //   if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
-  //     document.addEventListener('mousemove', this.onMouseMove, { passive: true });
-  //     document.addEventListener('mouseup', this.onMouseUp, { passive: true });
+  //     document.addEventListener('mousemove', this.onMouseMove);
+  //     document.addEventListener('mouseup', this.onMouseUp);
   //   }
   // }
 
@@ -246,6 +218,9 @@ export default class SidebarCore {
 
     if (this.isScrolling && !this.menuOpen) return;
 
+    // TODO: add overflow hidden to body instead?
+    e.preventDefault();
+
     this.startedMoving = true;
   }
 
@@ -255,7 +230,8 @@ export default class SidebarCore {
   //   this.pageY = e.pageY;
   //
   //   if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
-  //     this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
+  //     this.isScrolling =
+  //       Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
   //     if (!this.isScrolling) {
   //       this.state = TOUCHING;
   //       this.requestAnimationLoop();
@@ -332,9 +308,10 @@ export default class SidebarCore {
 
   // FIXME
   jumpTo(menuOpen) {
+    this.state = IDLE;
+    this.menuOpen = menuOpen;
+
     requestAnimationFrame(() => {
-      this.state = IDLE;
-      this.menuOpen = menuOpen;
       this.sliderWidth = this.getMovableSliderWidth();
       this.startTranslateX = menuOpen * this.sliderWidth;
       this.endAnimating();
@@ -467,50 +444,35 @@ export default class SidebarCore {
     this.backdrop.style.opacity = MAX_OPACITY * (translateX / sliderWidth);
   }
 
-  open(options) {
-    if (!this.props.disabled) {
-      const opts = Object.assign({ animate: true }, options);
-      if (opts.animate) {
-        this.animateTo(1);
-      } else {
-        this.jumpTo(1);
-      }
+  open() {
+    if (!this.disabled) {
+      this.animateTo(true);
     }
   }
 
-  close(options) {
-    if (!this.props.disabled) {
-      const opts = Object.assign({ animate: true }, options);
-      if (opts.animate) {
-        this.animateTo(0);
-      } else {
-        this.jumpTo(0);
-      }
+  close() {
+    if (!this.disabled) {
+      this.animateTo(false);
     }
   }
 
-  toggle(options) {
+  toggle() {
     if (this.menuOpen) {
-      this.close(options);
+      this.close();
     } else {
-      this.open(options);
+      this.open();
     }
   }
 
   disable() {
-    this.jumpTo(0);
+    this.jumpTo(false);
     this.removeEventListeners();
     this.disabled = true;
   }
 
-
   enable() {
+    this.jumpTo(this.menuOpen);
     this.addEventListeners();
     this.disabled = false;
   }
-}
-
-SidebarCore.DEFAULTS = Object.freeze({
-  menuOpen: false,
-  disabled: false,
-});
+};
