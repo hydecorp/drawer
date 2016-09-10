@@ -2,7 +2,7 @@ import addJQueryComponent from '../component/addJQueryComponent';
 
 import sidebarCore from '../core/sidebar';
 
-export default class SidebarJQuery extends sidebarCore() {
+addJQueryComponent($, 'sidebar', class extends sidebarCore() {
   constructor(el, props) {
     super();
     this.initComponent(el, props);
@@ -18,6 +18,4 @@ export default class SidebarJQuery extends sidebarCore() {
 
     return el;
   }
-}
-
-addJQueryComponent($, 'sidebar', SidebarJQuery);
+});

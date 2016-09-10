@@ -1,6 +1,6 @@
 import kebabCase from 'kebab-case';
 
-export default (Component) => class extends Component {
+export default (SuperClass = HTMLElement) => class extends SuperClass {
   createdConnected() {
     this.initComponent(this, this.getPropsFromAttributes());
     this.reflectAttributeChanges();

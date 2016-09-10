@@ -2,7 +2,7 @@ import htmlElement from '../component/htmlElement';
 
 import sidebarCore from '../core/sidebar';
 
-export default (SuperClass = HTMLElement) => class extends sidebarCore(htmlElement(SuperClass)) {
+export default class SidebarHTMLElement extends sidebarCore(htmlElement(HTMLElement)) {
   // TODO: better why to get template?
   getTemplateInstance(filename) {
     return document
@@ -39,4 +39,4 @@ export default (SuperClass = HTMLElement) => class extends sidebarCore(htmlEleme
       }
     }
   }
-};
+}

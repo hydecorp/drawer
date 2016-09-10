@@ -1,6 +1,6 @@
-import sidebarHTMLElement from '../webcomponents/sidebarHTMLElement';
+import SidebarHTMLElement from '../webcomponents/SidebarHTMLElement';
 
-export default class SidebarV0 extends sidebarHTMLElement() {
+document.registerElement('y-sidebar-v0', class extends SidebarHTMLElement {
   setupDOM(el) {
     const shadowRoot = el.createShadowRoot();
     const instance = this.getTemplateInstance('v0/sidebar');
@@ -11,6 +11,4 @@ export default class SidebarV0 extends sidebarHTMLElement() {
   createdCallback() {
     this.createdConnected();
   }
-}
-
-document.registerElement('y-sidebar-v0', SidebarV0);
+});
