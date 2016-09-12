@@ -107,8 +107,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   bindCallbacks() {
-    // TODO: property initializers?
-
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
@@ -181,8 +179,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      // if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
-      if (this.menuOpen || (!this.menuOpen && this.pageX < window.innerWidth / 3)) {
+      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         document.addEventListener('touchmove', this.onTouchMove);
         document.addEventListener('touchend', this.onTouchEnd);
@@ -217,9 +214,10 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       }
     }
 
-    if (this.isScrolling && !this.menuOpen) return;
+    if (this.isScrolling && !this.menuOpen) {
+      return;
+    }
 
-    // TODO: add overflow hidden to body instead?
     e.preventDefault();
 
     this.startedMoving = true;
