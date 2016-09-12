@@ -248,7 +248,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       this.menuOpen = true;
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
       this.menuOpen = false;
-    } else if (this.translateX >= this.sliderWidth) {
+    } else if (this.translateX >= this.sliderWidth / 2) {
       this.menuOpen = true;
     } else {
       this.menuOpen = false;
