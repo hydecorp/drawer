@@ -140,18 +140,16 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   getNearestTouch(touches) {
-    let nearestTouch = null;
-    let minDist = Number.POSITIVE_INFINITY;
-
-    for (const touch of touches) {
+    return Array.prototype.reduce.call(touches, (acc, touch) => {
       const dist = pageDist(this, touch);
-      if (dist < minDist) {
-        minDist = dist;
-        nearestTouch = touch;
-      }
-    }
-
-    return nearestTouch;
+      return (dist < acc.dist) ? {
+        dist,
+        touch,
+      } : acc;
+    }, {
+      dist: Number.POSITIVE_INFINITY,
+      touch: null,
+    }).touch;
   }
 
   // TODO: generic solution for disabling the slider
