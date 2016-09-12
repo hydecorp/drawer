@@ -2,12 +2,7 @@
   <head>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"></meta>
-
-    <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
-    <script src="https://npmcdn.com/skatejs-web-components/dist/index-with-deps.min.js"></script>
-
-    <link rel="import" href="/lib/v1/sidebar.html">
-
+    <link rel="stylesheet" href="lib/sidebar.css"></link>
     <style>
       a {
         text-decoration: none;
@@ -15,10 +10,6 @@
 
       main {
         max-width: 640px;
-      }
-
-      y-sidebar-layout {
-        --bg: #e8e8e8;
       }
     </style>
   </head>
@@ -41,26 +32,30 @@
       <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
     </main>
 
-    <aside>
-      <y-sidebar-v1 id="sidebar">
-      <!-- <y-sidebar-v1 id="sidebar" menu-open> -->
-        <nav>
-          <ul>
-            <li><a href="/examples/core">Core</a></li>
-            <li><a href="/examples/vanilla">Vanilla JS function</a></li>
-            <li><a href="/examples/jquery">jQuery Plugin</a></li>
-            <li><a href="/examples/v0">WebComponents v0</a></li>
-            <li><a href="/examples/v1">WebComponents v1 <small>(Danger Zone)</small></a></li>
-          </ul>
-        </nav>
-        <p>
-          <small>&copy; 2016</small>
-        </p>
-      </y-sidebar-v1>
+    <aside id="sidebar">
+      <nav>
+        <ul>
+          <li><a href="core">Core</a></li>
+          <li><a href="vanilla">Vanilla JS function</a></li>
+          <li><a href="jquery">jQuery Plugin</a></li>
+          <li><a href="v0">WebComponents v0</a></li>
+          <li><a href="v1">WebComponents v1 <small>(Danger Zone)</small></a></li>
+        </ul>
+      </nav>
+      <p>
+        <small>&copy; 2016</small>
+      </p>
     </aside>
 
+    <script src="lib/vanilla/sidebar.js"></script>
     <script>
-      var sidebar = document.getElementById('sidebar');
+      var Sidebar = y.sidebar.vanilla.default;
+
+      var aside = document.getElementById('sidebar');
+      var sidebar = new Sidebar(aside, {
+        // menuOpen: true,
+        // disabled: true,
+      });
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {
