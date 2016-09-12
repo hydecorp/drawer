@@ -181,7 +181,8 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      // if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.menuOpen || (!this.menuOpen && this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         document.addEventListener('touchmove', this.onTouchMove);
         document.addEventListener('touchend', this.onTouchEnd);
@@ -363,7 +364,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
     if (timeDiff > 0) {
       const pageXDiff = this.pageX - this.lastPageX;
-      this.velocity = ((VELOCITY_LINEAR_COMBINATION * pageXDiff) / timeDiff) +
+      this.velocity = (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
                       ((1 - VELOCITY_LINEAR_COMBINATION) * this.velocity);
     }
 

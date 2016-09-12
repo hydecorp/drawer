@@ -9,6 +9,7 @@
   opacity: 0;
   z-index: 0;
   pointer-events: none;
+  transform: translate3d(0,0,0);
 }
 
 .y-open > .y-backdrop {
@@ -26,11 +27,12 @@
   overflow-x: hidden;
   overflow-y: auto;
   background: #f8f8f8;
+  transform: translate3d(0,0,0);
 }
 
-.y-open > .y-sidebar {
+/*.y-open > .y-sidebar {
 
-}
+}*/
 
 /*.y-content {
   margin-left: 18rem;
