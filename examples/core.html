@@ -54,7 +54,8 @@
 
     <script src="/lib/core/sidebar.js"></script>
     <script>
-      var SidebarCore = y.sidebar.core.default();
+      var sidebarCore = y.sidebar.core.default;
+      var SidebarCore = sidebarCore();
       var sidebar = new SidebarCore();
       sidebar.initComponent(document.getElementById('sidebar'), {
         // menuOpen: true,

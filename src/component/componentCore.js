@@ -15,9 +15,9 @@ function propGetter(prop) {
   return this[propsSymbol][prop];
 }
 
-class NoOp {}
+class Mix {}
 
-export default (SuperClass = NoOp) => class extends SuperClass {
+export default (SuperClass = Mix) => class extends SuperClass {
   initComponent(el, props) {
     this[propsSymbol] = Object.assign({}, this.defaults(), props);
 
