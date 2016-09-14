@@ -216,7 +216,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       return;
     }
 
-    e.preventDefault();
+    // e.preventDefault();
 
     this.startedMoving = true;
   }
@@ -291,6 +291,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   prepInteraction() {
+    document.body.style.overflowY = 'hidden';
     this.sidebar.style.willChange = 'transform';
     this.backdrop.style.willChange = 'opacity';
     this.sliderWidth = this.getMovableSliderWidth();
@@ -420,10 +421,12 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.velocity = 0;
 
     if (this.menuOpen) {
+      document.body.style.overflowY = 'hidden';
       this.layout.classList.add('y-open');
-      // document.body.style.overflowY = 'hidden'
+
       // this.backdrop.style.pointerEvents = 'all';
     } else {
+      document.body.style.overflowY = '';
       this.layout.classList.remove('y-open');
 
       // only remove the styles when closing the sidebar,
@@ -431,7 +434,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       // or closing the sidebar again, ie more changes
       this.sidebar.style.willChange = '';
       this.backdrop.style.willChange = '';
-      // document.body.style.overflowY = "";
+
       // this.backdrop.style.pointerEvents = 'none';
     }
   }
