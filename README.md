@@ -1,3 +1,3 @@
-# Y Sidebar
+# Y Drawer
 
-A JS sidebar that begs the question: Y?
+A JS drawer that begs the question: Y?
