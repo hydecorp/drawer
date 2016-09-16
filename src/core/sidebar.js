@@ -87,7 +87,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     // this.onMouseUp = this.onMouseUp.bind(this);
 
     this.onBackdropClick = this.onBackdropClick.bind(this);
-
     this.onAnimationFrame = this.onAnimationFrame.bind(this);
   }
 
@@ -96,8 +95,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     document.addEventListener('touchmove', this.onTouchMove, { passive: false });
     document.addEventListener('touchend', this.onTouchEnd, { passive: false });
 
-    // document.addEventListener('mousedown', this.onMouseDown, { passive: false });
-
     this.backdrop.addEventListener('click', this.onBackdropClick);
   }
 
@@ -105,8 +102,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     document.removeEventListener('touchstart', this.onTouchStart, { passive: false });
     document.removeEventListener('touchmove', this.onTouchMove, { passive: false });
     document.removeEventListener('touchend', this.onTouchEnd, { passive: false });
-
-    // document.addEventListener('mousedown', this.onMouseDown);
 
     this.backdrop.removeEventListener('click', this.onBackdropClick);
   }
@@ -132,23 +127,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }).touch;
   }
 
-  // TODO: generic solution for disabling the slider
-  // isCodeBlock(path) {
-  //   for (let i = 0; i < path.length; i++) {
-  //     const node = path[i];
-  //     const classList = node.classList;
-  //
-  //     if (classList && (classList.contains('highlight') ||
-  //                       classList.contains('katex-display'))
-  //                   && node.scrollLeft > 0) {
-  //       return true;
-  //     }
-  //   }
-  //
-  //   return false;
-  // }
-
-  // TODO: DRY
   onTouchStart(e) {
     if (e.touches.length === 1) {
       this.isScrolling = undefined;
@@ -160,25 +138,11 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         this.touching = true;
+        this.state = TOUCHING;
       }
     }
   }
 
-  // TODO: DRY
-  // onMouseDown(e) {
-  //   this.isScrolling = undefined;
-  //
-  //   this.startX = this.pageX = this.lastPageX = e.pageX;
-  //   this.startY = this.pageY = this.lastPageY = e.pageY;
-  //
-  //   if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
-  //     this.prepInteraction();
-  //     document.addEventListener('mousemove', this.onMouseMove, { passive: false });
-  //     document.addEventListener('mouseup', this.onMouseUp);
-  //   }
-  // }
-
-  // TODO: DRY
   onTouchMove(e) {
     if (this.touching) {
       const touch = this.getNearestTouch(e.touches);
@@ -203,28 +167,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }
   }
 
-  // TODO: DRY
-  // onMouseMove(e) {
-  //   this.pageX = e.pageX;
-  //   this.pageY = e.pageY;
-  //
-  //   if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
-  //     this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
-  //     if (!this.isScrolling) {
-  //       this.state = TOUCHING;
-  //       this.requestAnimationLoop();
-  //     }
-  //   }
-  //
-  //   if (this.isScrolling && !this.menuOpen) {
-  //     return;
-  //   }
-  //
-  //   e.preventDefault();
-  //
-  //   this.startedMoving = true;
-  // }
-
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
       this.menuOpen = true;
@@ -237,7 +179,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }
   }
 
-  // TODO: DRY
   onTouchEnd(e) {
     if (this.touching) {
       if (this.isScrolling || e.touches.length > 0) {
@@ -262,23 +203,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }
   }
 
-  // TODO: DRY
-  // onMouseUp() {
-  //   if (this.isScrolling) {
-  //     return;
-  //   }
-  //
-  //   if (this.startedMoving) {
-  //     this.updateMenuOpen();
-  //   }
-  //
-  //   this.state = START_ANIMATING;
-  //   this.startedMoving = false;
-  //
-  //   document.removeEventListener('mousemove', this.onMouseMove);
-  //   document.removeEventListener('mouseup', this.onMouseUp);
-  // }
-
   onBackdropClick() {
     this.close();
   }
@@ -297,7 +221,6 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.requestAnimationLoop();
   }
 
-  // FIXME
   jumpTo(menuOpen) {
     this.state = IDLE;
     this.menuOpen = menuOpen;
@@ -310,10 +233,9 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     });
   }
 
-  /**
-    * Since part of the slider could be always visible,
-    * the width that is "movable" is less than the complete slider width.
-    */
+  // Since part of the slider could be visible,
+  // the width that is "movable" is less than the complete slider width
+  // and given by
   getMovableSliderWidth() {
     return -this.sidebar.offsetLeft;
   }
@@ -465,7 +387,3 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.disabled = false;
   }
 };
-
-// document.addEventListener('touchmove', function(e) {
-//   e.preventDefault();
-// });
