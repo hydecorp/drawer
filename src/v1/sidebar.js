@@ -1,4 +1,8 @@
-import htmlElement from '../component/htmlElement';
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
+import htmlElement from 'vanilla-component/src/htmlElement';
 
 import sidebarCore from '../core/sidebar';
 

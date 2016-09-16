@@ -1,4 +1,9 @@
-import defineJQueryComponent from '../component/defineJQueryComponent';
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
+/* eslint-disable no-unresolved */
+import defineJQueryComponent from 'vanilla-component/src/defineJQueryComponent';
 
 import sidebarCore from '../core/sidebar';
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
 import sidebarCore from '../core/sidebar';
 
 export default class Sidebar extends sidebarCore() {
