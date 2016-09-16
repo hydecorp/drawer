@@ -51,6 +51,18 @@
   },
   "dependencies": {
     "camel-case": "^3.0.0",
-    "param-case": "^2.1.0"
-  }
+    "param-case": "^2.1.0",
+    "vanilla-component": "^0.1.0"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwtel/y-drawer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qwtel/y-drawer/issues"
+  },
+  "homepage": "http://qwtel.com/y-drawer"
 }

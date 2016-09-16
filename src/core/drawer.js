@@ -8,7 +8,6 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-/* eslint-disable no-unresolved */
 import componentCore from 'vanilla-component/src/componentCore';
 
 import { getBrowserCapabilities, linearTween, pageDist } from '../common';

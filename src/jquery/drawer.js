@@ -2,7 +2,6 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-/* eslint-disable no-unresolved */
 import defineJQueryComponent from 'vanilla-component/src/defineJQueryComponent';
 
 import drawerCore from '../core/drawer';

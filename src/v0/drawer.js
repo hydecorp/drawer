@@ -2,7 +2,6 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-/* eslint-disable no-unresolved */
 import htmlElement from 'vanilla-component/src/htmlElement';
 
 import drawerCore from '../core/drawer';
