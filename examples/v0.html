@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- @include examples/includes/head-content.html -->
+
+    <script src="webcomponents.js"></script>
+
+    <link rel="import" href="dist/v0/sidebar.html">
+  </head>
+  <body>
+    <main>
+      <a id="menu" href="#sidebar">☰</a>
+      
+      <!-- @include examples/includes/lorem-ipsum.html -->
+    </main>
+
+    <aside>
+      <y-sidebar id="sidebar">
+        <!-- @include examples/includes/drawer-content.html -->
+      </y-sidebar>
+    </aside>
+
+    <script>
+      var sidebar = document.getElementById('sidebar');
+
+      document.getElementById('menu')
+        .addEventListener('click', function (e) {
+          e.preventDefault();
+          sidebar.toggle();
+        });
+    </script>
+  </body>
+</html>

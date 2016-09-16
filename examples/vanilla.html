@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- @include examples/includes/head-content.html -->
+
+    <link rel="stylesheet" href="dist/sidebar.css"></link>
+  </head>
+  <body>
+    <main>
+      <a id="menu" href="#sidebar">☰</a>
+      
+      <!-- @include examples/includes/lorem-ipsum.html -->
+    </main>
+
+    <aside id="sidebar">
+      <!-- @include examples/includes/drawer-content.html -->
+    </aside>
+
+    <!-- <script src="bower_components/core.js/client/shim.min.js"></script> -->
+    <script src="dist/vanilla/sidebar.js"></script>
+    <script>
+      var Sidebar = y.sidebar.vanilla.default;
+
+      var aside = document.getElementById('sidebar');
+      var sidebar = new Sidebar(aside, {
+        // menuOpen: true,
+        // disabled: true,
+      });
+
+      document.getElementById('menu')
+        .addEventListener('click', function (e) {
+          e.preventDefault();
+          sidebar.toggle();
+        });
+    </script>
+  </body>
+</html>

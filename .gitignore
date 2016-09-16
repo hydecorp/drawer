@@ -1,5 +1,11 @@
 .DS_Store
 node_modules
 bower_components
-lib
-exp.js
+dist
+src/exp.js
+./index.html
+./core.html
+./vanilla.html
+./jquery.html
+./v0.html
+./v1.html
