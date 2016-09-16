@@ -25,7 +25,7 @@ const browerCapabilities = getBrowserCapabilities();
 // const transformPrefix = browerCapabilities.prefix;
 const transformProperty = browerCapabilities.transform;
 
-// ~ mixin sidebarCore with componentCore { ...
+// ~ mixin drawerCore with componentCore { ...
 export default (C) => class extends componentCore(C) {
 
   // @override
@@ -45,7 +45,7 @@ export default (C) => class extends componentCore(C) {
   cacheDOMElements() {
     this.layout = this.el.querySelector('.y-layout');
     this.backdrop = this.el.querySelector('.y-backdrop');
-    this.sidebar = this.el.querySelector('.y-sidebar');
+    this.drawer = this.el.querySelector('.y-drawer');
   }
 
   resetProperties() {
@@ -200,7 +200,7 @@ export default (C) => class extends componentCore(C) {
 
   prepInteraction() {
     // document.body.style.overflowY = 'hidden';
-    this.sidebar.style.willChange = 'transform';
+    this.drawer.style.willChange = 'transform';
     this.backdrop.style.willChange = 'opacity';
     this.sliderWidth = this.getMovableSliderWidth();
   }
@@ -230,7 +230,7 @@ export default (C) => class extends componentCore(C) {
   // the width that is "movable" is less than the complete slider width
   // and given by
   getMovableSliderWidth() {
-    return -this.sidebar.offsetLeft;
+    return -this.drawer.offsetLeft;
   }
 
   updateTranslateX() {
@@ -335,16 +335,16 @@ export default (C) => class extends componentCore(C) {
       // document.body.style.overflowY = '';
       this.backdrop.style.pointerEvents = '';
 
-      // only remove the styles when closing the sidebar,
+      // only remove the styles when closing the drawer,
       // since we eitehr expect a navigation (page reload)
-      // or closing the sidebar again, ie more changes
-      this.sidebar.style.willChange = '';
+      // or closing the drawer again, ie more changes
+      this.drawer.style.willChange = '';
       this.backdrop.style.willChange = '';
     }
   }
 
   updateDOM(translateX, sliderWidth) {
-    this.sidebar.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
+    this.drawer.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
     this.backdrop.style.opacity = this.maxOpacity * (translateX / sliderWidth);
   }
 

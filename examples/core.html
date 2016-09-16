@@ -3,31 +3,31 @@
   <head>
     <!-- @include examples/includes/head-content.html -->
 
-    <link rel="stylesheet" href="dist/sidebar.css"></link>
+    <link rel="stylesheet" href="dist/drawer.css"></link>
   </head>
   <body>
     <main>
-      <a id="menu" href="#sidebar">☰</a>
+      <a id="menu" href="#drawer">☰</a>
 
       <!-- @include examples/includes/lorem-ipsum.html -->
     </main>
 
-    <aside id="sidebar">
+    <aside id="drawer">
       <div class="y-layout">
         <div class="y-backdrop"></div>
-        <div class="y-sidebar">
+        <div class="y-drawer">
           <!-- @include examples/includes/drawer-content.html -->
         </div>
       </div>
     </aside>
 
     <!-- <script src="bower_components/core.js/client/shim.min.js"></script> -->
-    <script src="dist/core/sidebar.js"></script>
+    <script src="dist/core/drawer.js"></script>
     <script>
-      var sidebarCore = y.sidebar.core.default;
-      var SidebarCore = sidebarCore();
-      var sidebar = new SidebarCore();
-      sidebar.initComponent(document.getElementById('sidebar'), {
+      var drawerCore = y.drawer.core.default;
+      var DrawerCore = drawerCore();
+      var drawer = new DrawerCore();
+      drawer.initComponent(document.getElementById('drawer'), {
         // menuOpen: true,
         // disabled: true,
       });
@@ -35,7 +35,7 @@
       document.getElementById('menu')
         .addEventListener('click', function (e) {
           e.preventDefault();
-          sidebar.toggle();
+          drawer.toggle();
         });
     </script>
   </body>

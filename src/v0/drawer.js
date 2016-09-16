@@ -5,9 +5,9 @@
 /* eslint-disable no-unresolved */
 import htmlElement from 'vanilla-component/src/htmlElement';
 
-import sidebarCore from '../core/sidebar';
+import drawerCore from '../core/drawer';
 
-document.registerElement('y-sidebar', class extends sidebarCore(htmlElement(HTMLElement)) {
+document.registerElement('y-drawer', class extends drawerCore(htmlElement(HTMLElement)) {
   createdCallback() {
     this.createdConnected();
   }
@@ -23,9 +23,9 @@ document.registerElement('y-sidebar', class extends sidebarCore(htmlElement(HTML
   getTemplateInstance() {
     // TODO: better why to get template?
     return document
-      .querySelector('link[href$="v0/sidebar.html"]')
+      .querySelector('link[href$="v0/drawer.html"]')
       .import
-      .getElementById('y-sidebar-template')
+      .getElementById('y-drawer-template')
       .content
       .cloneNode(true);
   }

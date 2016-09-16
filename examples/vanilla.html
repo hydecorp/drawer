@@ -3,26 +3,26 @@
   <head>
     <!-- @include examples/includes/head-content.html -->
 
-    <link rel="stylesheet" href="dist/sidebar.css"></link>
+    <link rel="stylesheet" href="dist/drawer.css"></link>
   </head>
   <body>
     <main>
-      <a id="menu" href="#sidebar">☰</a>
+      <a id="menu" href="#drawer">☰</a>
 
       <!-- @include examples/includes/lorem-ipsum.html -->
     </main>
 
-    <aside id="sidebar">
+    <aside id="drawer">
       <!-- @include examples/includes/drawer-content.html -->
     </aside>
 
     <!-- <script src="bower_components/core.js/client/shim.min.js"></script> -->
-    <script src="dist/vanilla/sidebar.js"></script>
+    <script src="dist/vanilla/drawer.js"></script>
     <script>
-      var Sidebar = y.sidebar.vanilla.default;
+      var Drawer = y.drawer.vanilla.default;
 
-      var aside = document.getElementById('sidebar');
-      var sidebar = new Sidebar(aside, {
+      var aside = document.getElementById('drawer');
+      var drawer = new Drawer(aside, {
         // menuOpen: true,
         // disabled: true,
       });
@@ -30,7 +30,7 @@
       document.getElementById('menu')
         .addEventListener('click', function (e) {
           e.preventDefault();
-          sidebar.toggle();
+          drawer.toggle();
         });
     </script>
   </body>

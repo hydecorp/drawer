@@ -2,9 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import sidebarCore from '../core/sidebar';
+import drawerCore from '../core/drawer';
 
-export default class Sidebar extends sidebarCore() {
+export default class Drawer extends drawerCore() {
   constructor(el, props) {
     super();
     this.initComponent(el, props);
@@ -18,14 +18,14 @@ export default class Sidebar extends sidebarCore() {
     const backdrop = document.createElement('div');
     backdrop.classList.add('y-backdrop');
 
-    const sidebar = document.createElement('div');
-    sidebar.classList.add('y-sidebar');
+    const drawer = document.createElement('div');
+    drawer.classList.add('y-drawer');
     while (el.children.length > 0) {
-      sidebar.appendChild(el.children[0]);
+      drawer.appendChild(el.children[0]);
     }
 
     layout.appendChild(backdrop);
-    layout.appendChild(sidebar);
+    layout.appendChild(drawer);
 
     el.appendChild(layout);
 

@@ -1,7 +1,7 @@
 {
   "extends": "eslint-config-airbnb",
   "env": {
-      "browser": true
+    "browser": true
   },
   "globals": {
     "$": true,

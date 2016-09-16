@@ -3,32 +3,32 @@
   <head>
     <!-- @include examples/includes/head-content.html -->
 
-    <link rel="stylesheet" href="dist/sidebar.css"></link>
+    <link rel="stylesheet" href="dist/drawer.css"></link>
   </head>
   <body>
     <main>
-      <a id="menu" href="#sidebar">☰</a>
+      <a id="menu" href="#drawer">☰</a>
 
       <!-- @include examples/includes/lorem-ipsum.html -->
     </main>
 
-    <aside id="sidebar">
+    <aside id="drawer">
       <!-- @include examples/includes/drawer-content.html -->
     </aside>
 
     <!-- <script src="bower_components/core.js/client/shim.min.js"></script> -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="dist/jquery/sidebar.js"></script>
+    <script src="dist/jquery/drawer.js"></script>
     <script>
       $(function () {
-        $sidebar = $('#sidebar').sidebar({
+        $drawer = $('#drawer').drawer({
           // menuOpen: true,
           // disabled: true,
         });
 
         $('#menu').click(function (e) {
           e.preventDefault();
-          $sidebar.sidebar('toggle');
+          $drawer.drawer('toggle');
         });
       });
     </script>

@@ -5,9 +5,9 @@
 /* eslint-disable no-unresolved */
 import defineJQueryComponent from 'vanilla-component/src/defineJQueryComponent';
 
-import sidebarCore from '../core/sidebar';
+import drawerCore from '../core/drawer';
 
-defineJQueryComponent($, 'sidebar', class extends sidebarCore() {
+defineJQueryComponent($, 'drawer', class extends drawerCore() {
   constructor(el, props) {
     super();
     this.initComponent(el, props);
@@ -19,7 +19,7 @@ defineJQueryComponent($, 'sidebar', class extends sidebarCore() {
 
     $('<div class="y-layout" />')
       .append($('<div class="y-backdrop" />'))
-      .append($('<div class="y-sidebar" />').append($el.children().detach()))
+      .append($('<div class="y-drawer" />').append($el.children().detach()))
       .appendTo($el);
 
     return el;

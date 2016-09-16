@@ -4,9 +4,9 @@
  */
 import htmlElement from 'vanilla-component/src/htmlElement';
 
-import sidebarCore from '../core/sidebar';
+import drawerCore from '../core/drawer';
 
-customElements.define('y-sidebar', class extends sidebarCore(htmlElement(HTMLElement)) {
+customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLElement)) {
   connectedCallback() {
     this.createdConnected();
   }
@@ -14,7 +14,7 @@ customElements.define('y-sidebar', class extends sidebarCore(htmlElement(HTMLEle
   // @override
   setupDOM(el) {
     el.attachShadow({ mode: 'open' });
-    const instance = this.getTemplateInstance('v1/sidebar');
+    const instance = this.getTemplateInstance('v1/drawer');
     el.shadowRoot.appendChild(instance);
     return el.shadowRoot;
   }
@@ -22,9 +22,9 @@ customElements.define('y-sidebar', class extends sidebarCore(htmlElement(HTMLEle
   getTemplateInstance() {
     // TODO: better why to get template?
     return document
-      .querySelector('link[href$="v1/sidebar.html"]')
+      .querySelector('link[href$="v1/drawer.html"]')
       .import
-      .getElementById('y-sidebar-template')
+      .getElementById('y-drawer-template')
       .content
       .cloneNode(true);
   }

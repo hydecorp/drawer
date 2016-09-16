@@ -6,28 +6,28 @@
     <script src="webcomponents.js"></script>
     <script src="https://npmcdn.com/skatejs-web-components/dist/index-with-deps.min.js"></script>
 
-    <link rel="import" href="dist/v1/sidebar.html">
+    <link rel="import" href="dist/v1/drawer.html">
   </head>
   <body>
     <main>
-      <a id="menu" href="#sidebar">☰</a>
+      <a id="menu" href="#drawer">☰</a>
 
       <!-- @include examples/includes/lorem-ipsum.html -->
     </main>
 
     <aside>
-      <y-sidebar id="sidebar">
+      <y-drawer id="drawer">
         <!-- @include examples/includes/drawer-content.html -->
-      </y-sidebar>
+      </y-drawer>
     </aside>
 
     <script>
-      var sidebar = document.getElementById('sidebar');
+      var drawer = document.getElementById('drawer');
 
       document.getElementById('menu')
         .addEventListener('click', function (e) {
           e.preventDefault();
-          sidebar.toggle();
+          drawer.toggle();
         });
     </script>
   </body>
