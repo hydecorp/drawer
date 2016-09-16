@@ -6,7 +6,7 @@
     "test": "echo \"Warning: no test specified\" && exit 0",
     "clean": "rm -rf dist",
     "mkdirs": "mkdir -p dist/core dist/vanilla dist/jquery dist/v0 dist/v1",
-    "copy:examples": "bin/preprocess examples/core.html -o core.html & bin/preprocess examples/vanilla.html -o vanilla.html & bin/preprocess examples/jquery.html -o jquery.html & bin/preprocess examples/v0.html -o v0.html & bin/preprocess examples/v1.html -o v1.html",
+    "copy:examples": "bin/preprocess examples/index.html -o index.html & bin/preprocess examples/core.html -o core.html & bin/preprocess examples/vanilla.html -o vanilla.html & bin/preprocess examples/jquery.html -o jquery.html & bin/preprocess examples/v0.html -o v0.html & bin/preprocess examples/v1.html -o v1.html",
     "copy:html": "bin/preprocess src/v0/sidebar.html -o dist/v0/sidebar.html & bin/preprocess src/v1/sidebar.html -o dist/v1/sidebar.html",
     "copy:css": "cp src/*.css dist",
     "copy": "npm run mkdirs; npm run copy:html & npm run copy:css & npm run copy:examples",

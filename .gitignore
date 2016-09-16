@@ -3,9 +3,9 @@ node_modules
 bower_components
 dist
 src/exp.js
-./index.html
-./core.html
-./vanilla.html
-./jquery.html
-./v0.html
-./v1.html
+/index.html
+/core.html
+/vanilla.html
+/jquery.html
+/v0.html
+/v1.html
