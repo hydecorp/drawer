@@ -6,6 +6,7 @@ export default class Sidebar extends sidebarCore() {
     this.initComponent(el, props);
   }
 
+  // @override
   setupDOM(el) {
     const layout = document.createElement('div');
     layout.classList.add('y-layout');

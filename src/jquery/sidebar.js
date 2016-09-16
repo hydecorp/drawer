@@ -1,13 +1,14 @@
-import addJQueryComponent from '../component/addJQueryComponent';
+import defineJQueryComponent from '../component/defineJQueryComponent';
 
 import sidebarCore from '../core/sidebar';
 
-addJQueryComponent($, 'sidebar', class extends sidebarCore() {
+defineJQueryComponent($, 'sidebar', class extends sidebarCore() {
   constructor(el, props) {
     super();
     this.initComponent(el, props);
   }
 
+  // @override
   setupDOM(el) {
     const $el = $(el);
 

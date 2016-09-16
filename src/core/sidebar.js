@@ -16,9 +16,6 @@ const TOUCHING = 'TOUCHING';
 const START_ANIMATING = 'START_ANIMATING';
 const ANIMATING = 'ANIMATING';
 
-// TODO: make configureable
-const DURATION = 200;
-const MAX_OPACITY = 0.67;
 const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
 
@@ -26,13 +23,10 @@ const browerCapabilities = getBrowserCapabilities();
 // const transformPrefix = browerCapabilities.prefix;
 const transformProperty = browerCapabilities.transform;
 
+// ~ mixin sidebarCore with componentCore { ...
+export default (C) => class extends componentCore(C) {
 
-const DEFAULTS = Object.freeze({
-  menuOpen: false,
-  disabled: false,
-});
-
-export default (SuperClass) => class extends componentCore(SuperClass) {
+  // @override
   initComponent(el, props) {
     super.initComponent(el, props);
 
@@ -42,12 +36,8 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
     if (!this.disabled) {
       this.enable();
-      this.jumpTo(this.menuOpen);
+      this.jumpTo(this.state.menuOpen);
     }
-  }
-
-  defaults() {
-    return DEFAULTS;
   }
 
   cacheDOMElements() {
@@ -67,7 +57,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.lastPageY = 0;
     this.isScrolling = undefined;
     this.startedMoving = false;
-    this.state = IDLE;
+    this.loopState = IDLE;
     this.velocity = 0;
     this.startTranslateX = 0;
     this.translateX = 0;
@@ -78,38 +68,33 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   bindCallbacks() {
-    this.onTouchStart = this.onTouchStart.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this);
-    this.onTouchEnd = this.onTouchEnd.bind(this);
-
-    // this.onMouseDown = this.onMouseDown.bind(this);
-    // this.onMouseMove = this.onMouseMove.bind(this);
-    // this.onMouseUp = this.onMouseUp.bind(this);
-
-    this.onBackdropClick = this.onBackdropClick.bind(this);
-    this.onAnimationFrame = this.onAnimationFrame.bind(this);
+    this.touchStartCallback = this.touchStartCallback.bind(this);
+    this.touchMoveCallback = this.touchMoveCallback.bind(this);
+    this.touchEndCallback = this.touchEndCallback.bind(this);
+    this.backdropClickCallback = this.backdropClickCallback.bind(this);
+    this.animationFrameCallback = this.animationFrameCallback.bind(this);
   }
 
   addEventListeners() {
-    document.addEventListener('touchstart', this.onTouchStart, { passive: false });
-    document.addEventListener('touchmove', this.onTouchMove, { passive: false });
-    document.addEventListener('touchend', this.onTouchEnd, { passive: false });
+    document.addEventListener('touchstart', this.touchStartCallback, { passive: false });
+    document.addEventListener('touchmove', this.touchMoveCallback, { passive: false });
+    document.addEventListener('touchend', this.touchEndCallback, { passive: false });
 
-    this.backdrop.addEventListener('click', this.onBackdropClick);
+    this.backdrop.addEventListener('click', this.backdropClickCallback);
   }
 
   removeEventListeners() {
-    document.removeEventListener('touchstart', this.onTouchStart, { passive: false });
-    document.removeEventListener('touchmove', this.onTouchMove, { passive: false });
-    document.removeEventListener('touchend', this.onTouchEnd, { passive: false });
+    document.removeEventListener('touchstart', this.touchStartCallback, { passive: false });
+    document.removeEventListener('touchmove', this.touchMoveCallback, { passive: false });
+    document.removeEventListener('touchend', this.touchEndCallback, { passive: false });
 
-    this.backdrop.removeEventListener('click', this.onBackdropClick);
+    this.backdrop.removeEventListener('click', this.backdropClickCallback);
   }
 
   requestAnimationLoop() {
     if (!this.animationFrameRequested) {
       this.animationFrameRequested = true;
-      requestAnimationFrame(this.onAnimationFrame);
+      requestAnimationFrame(this.animationFrameCallback);
     }
   }
 
@@ -127,7 +112,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }).touch;
   }
 
-  onTouchStart(e) {
+  touchStartCallback(e) {
     if (e.touches.length === 1) {
       this.isScrolling = undefined;
 
@@ -135,15 +120,15 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.state.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         this.touching = true;
-        this.state = TOUCHING;
+        this.loopState = TOUCHING;
       }
     }
   }
 
-  onTouchMove(e) {
+  touchMoveCallback(e) {
     if (this.touching) {
       const touch = this.getNearestTouch(e.touches);
       this.pageX = touch.pageX;
@@ -152,7 +137,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
       if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
         this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
         if (!this.isScrolling) {
-          this.state = TOUCHING;
+          this.loopState = TOUCHING;
           this.requestAnimationLoop();
         }
       }
@@ -169,17 +154,21 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
-      this.menuOpen = true;
+      // this.menuOpen = true;
+      this.setState('menuOpen', true);
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
-      this.menuOpen = false;
+      // this.menuOpen = false;
+      this.setState('menuOpen', false);
     } else if (this.translateX >= this.sliderWidth / 2) {
-      this.menuOpen = true;
+      // this.menuOpen = true;
+      this.setState('menuOpen', true);
     } else {
-      this.menuOpen = false;
+      // this.menuOpen = false;
+      this.setState('menuOpen', false);
     }
   }
 
-  onTouchEnd(e) {
+  touchEndCallback(e) {
     if (this.touching) {
       if (this.isScrolling || e.touches.length > 0) {
         return;
@@ -189,7 +178,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
         this.updateMenuOpen();
       }
 
-      if (this.menuOpen) {
+      if (this.state.menuOpen) {
         // this.layout.classList.add('y-open');
         this.backdrop.style.pointerEvents = 'all';
       } else {
@@ -197,13 +186,13 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
         this.backdrop.style.pointerEvents = '';
       }
 
-      this.state = START_ANIMATING;
+      this.loopState = START_ANIMATING;
       this.startedMoving = false;
       this.touching = false;
     }
   }
 
-  onBackdropClick() {
+  backdropClickCallback() {
     this.close();
   }
 
@@ -216,14 +205,16 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
   animateTo(menuOpen) {
     this.prepInteraction();
-    this.menuOpen = menuOpen;
-    this.state = START_ANIMATING;
+    // this.menuOpen = menuOpen;
+    this.setState('menuOpen', menuOpen);
+    this.loopState = START_ANIMATING;
     this.requestAnimationLoop();
   }
 
   jumpTo(menuOpen) {
-    this.state = IDLE;
-    this.menuOpen = menuOpen;
+    this.loopState = IDLE;
+    // this.menuOpen = menuOpen;
+    this.setState('menuOpen', menuOpen);
 
     requestAnimationFrame(() => {
       this.sliderWidth = this.getMovableSliderWidth();
@@ -247,21 +238,21 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     return deltaX;
   }
 
-  onAnimationFrame(time) {
-    switch (this.state) {
+  animationFrameCallback(time) {
+    switch (this.loopState) {
       case TOUCHING: {
-        this.onTouching(time);
+        this.touchingFrame(time);
         break;
       }
 
       case START_ANIMATING: {
-        this.onStartAnimating(time);
-        this.onAnimationFrame(time); // jump to next case block
+        this.startAnimatingFrame(time);
+        this.animationFrameCallback(time); // jump to next case block
         break;
       }
 
       case ANIMATING: {
-        this.onAnimating(time);
+        this.animatingFrame(time);
         break;
       }
 
@@ -271,7 +262,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     }
   }
 
-  onTouching(time) {
+  touchingFrame(time) {
     const timeDiff = time - this.lastTime;
 
     if (timeDiff > 0) {
@@ -287,44 +278,44 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.lastPageX = this.pageX;
     this.lastPageY = this.pageY;
 
-    requestAnimationFrame(this.onAnimationFrame);
+    requestAnimationFrame(this.animationFrameCallback);
   }
 
-  onStartAnimating(time) {
+  startAnimatingFrame(time) {
     this.updateTranslateX();
 
     // store all animation related data in this object,
     // delete after animation is completed
     const animation = {};
     animation.startX = this.translateX;
-    animation.endX = (this.menuOpen ? 1 : 0) * this.sliderWidth;
+    animation.endX = (this.state.menuOpen ? 1 : 0) * this.sliderWidth;
     animation.changeInValue = animation.endX - animation.startX;
     animation.startTime = time;
     this.animation = animation;
 
-    this.state = ANIMATING;
+    this.loopState = ANIMATING;
   }
 
-  onAnimating(time) {
+  animatingFrame(time) {
     const timeInAnimation = time - this.animation.startTime;
 
-    if (timeInAnimation < DURATION) {
-      this.onAnimatingCont(timeInAnimation);
+    if (timeInAnimation < this.duration) {
+      this.animatingCont(timeInAnimation);
     } else {
-      this.onAnimatingEnd();
+      this.animatingEnd();
     }
 
     this.updateDOM(this.startTranslateX, this.sliderWidth);
   }
 
-  onAnimatingCont(timeInAnimation) {
+  animatingCont(timeInAnimation) {
     const startValue = this.animation.startX;
     const changeInValue = this.animation.changeInValue;
-    this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue, DURATION);
-    requestAnimationFrame(this.onAnimationFrame);
+    this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue, this.duration);
+    requestAnimationFrame(this.animationFrameCallback);
   }
 
-  onAnimatingEnd() {
+  animatingEnd() {
     // end animation
     this.startTranslateX = this.animation.endX;
     delete this.animation;
@@ -335,12 +326,12 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.animationFrameRequested = false;
     this.velocity = 0;
 
-    if (this.menuOpen) {
+    if (this.state.menuOpen) {
       // document.body.style.overflowY = 'hidden';
-      // this.backdrop.style.pointerEvents = 'all';
+      this.backdrop.style.pointerEvents = 'all';
     } else {
       // document.body.style.overflowY = '';
-      // this.backdrop.style.pointerEvents = '';
+      this.backdrop.style.pointerEvents = '';
 
       // only remove the styles when closing the sidebar,
       // since we eitehr expect a navigation (page reload)
@@ -352,17 +343,47 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
   updateDOM(translateX, sliderWidth) {
     this.sidebar.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
-    this.backdrop.style.opacity = MAX_OPACITY * (translateX / sliderWidth);
+    this.backdrop.style.opacity = this.maxOpacity * (translateX / sliderWidth);
+  }
+
+  // @override
+  defaults() {
+    return {
+      menuOpen: false,
+      disabled: false,
+      duration: 200,
+      maxOpacity: 0.67,
+    };
+  }
+
+  // @override
+  hooks() {
+    return {
+      menuOpen: (mO) => {
+        if (mO === true) {
+          this.open();
+        } else {
+          this.close();
+        }
+      },
+      disabled: (d) => {
+        if (d === true) {
+          this.disable();
+        } else {
+          this.enable();
+        }
+      },
+    };
   }
 
   open() {
-    if (!this.disabled) {
+    if (!this.state.disabled) {
       this.animateTo(true);
     }
   }
 
   close() {
-    if (!this.disabled) {
+    if (!this.state.disabled) {
       this.animateTo(false);
     }
   }
@@ -378,12 +399,14 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   disable() {
     this.jumpTo(false);
     this.removeEventListeners();
-    this.disabled = true;
+    // this.disabled = true;
+    this.setState('disabled', true);
   }
 
   enable() {
-    this.jumpTo(this.menuOpen);
+    this.jumpTo(this.state.menuOpen);
     this.addEventListeners();
-    this.disabled = false;
+    // this.disabled = false;
+    this.setState('disabled', false);
   }
 };

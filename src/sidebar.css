@@ -10,11 +10,12 @@
   z-index: 0;
   pointer-events: none;
   transform: translate3d(0,0,0);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.y-open > .y-backdrop {
+/*.y-open > .y-backdrop {
   pointer-events: all;
-}
+}*/
 
 .y-sidebar {
   position: fixed;

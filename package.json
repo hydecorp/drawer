@@ -47,6 +47,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "kebab-case": "^1.0.0"
+    "camel-case": "^3.0.0",
+    "param-case": "^2.1.0"
   }
 }
