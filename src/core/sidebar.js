@@ -248,6 +248,14 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
         this.updateMenuOpen();
       }
 
+      if (this.menuOpen) {
+        // this.layout.classList.add('y-open');
+        this.backdrop.style.pointerEvents = 'all';
+      } else {
+        // this.layout.classList.remove('y-open');
+        this.backdrop.style.pointerEvents = '';
+      }
+
       this.state = START_ANIMATING;
       this.startedMoving = false;
       this.touching = false;
@@ -407,20 +415,16 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
     if (this.menuOpen) {
       // document.body.style.overflowY = 'hidden';
-      this.layout.classList.add('y-open');
-
       // this.backdrop.style.pointerEvents = 'all';
     } else {
       // document.body.style.overflowY = '';
-      this.layout.classList.remove('y-open');
+      // this.backdrop.style.pointerEvents = '';
 
       // only remove the styles when closing the sidebar,
       // since we eitehr expect a navigation (page reload)
       // or closing the sidebar again, ie more changes
       this.sidebar.style.willChange = '';
       this.backdrop.style.willChange = '';
-
-      // this.backdrop.style.pointerEvents = 'none';
     }
   }
 
