@@ -28,6 +28,7 @@
   overflow-y: auto;
   background: #f8f8f8;
   transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
 }
 
 /*.y-open > .y-sidebar {

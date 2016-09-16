@@ -49,8 +49,8 @@ const ANIMATING = 'ANIMATING';
 // TODO: make configureable
 const DURATION = 200;
 const MAX_OPACITY = 0.67;
-const VELOCITY_THRESHOLD = 0.33;
-const VELOCITY_LINEAR_COMBINATION = 0.6;
+const VELOCITY_THRESHOLD = 0.2;
+const VELOCITY_LINEAR_COMBINATION = 0.8;
 
 const browerCapabilities = getBrowserCapabilities();
 // const transformPrefix = browerCapabilities.prefix;
@@ -61,6 +61,17 @@ const DEFAULTS = Object.freeze({
   menuOpen: false,
   disabled: false,
 });
+
+// function contains(target, className) {
+//   let t = target;
+//   while (t != null) {
+//     if (t.classList && t.classList.contains(className)) {
+//       return true;
+//     }
+//     t = t.parentNode;
+//   }
+//   return false;
+// }
 
 export default (SuperClass) => class extends componentCore(SuperClass) {
   initComponent(el, props) {
@@ -102,6 +113,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.startTranslateX = 0;
     this.translateX = 0;
     this.animationFrameRequested = false;
+    this.touching = false;
     // this.lastTime = 0;
     // this.sliderWidth;
   }
@@ -121,14 +133,22 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   addEventListeners() {
-    document.addEventListener('touchstart', this.onTouchStart);
-    // document.addEventListener('mousedown', this.onMouseDown);
+    document.addEventListener('touchstart', this.onTouchStart, { passive: false });
+    document.addEventListener('touchmove', this.onTouchMove, { passive: false });
+    document.addEventListener('touchend', this.onTouchEnd, { passive: false });
+
+    // document.addEventListener('mousedown', this.onMouseDown, { passive: false });
+
     this.backdrop.addEventListener('click', this.onBackdropClick);
   }
 
   removeEventListeners() {
-    document.removeEventListener('touchstart', this.onTouchStart);
+    document.removeEventListener('touchstart', this.onTouchStart, { passive: false });
+    document.removeEventListener('touchmove', this.onTouchMove, { passive: false });
+    document.removeEventListener('touchend', this.onTouchEnd, { passive: false });
+
     // document.addEventListener('mousedown', this.onMouseDown);
+
     this.backdrop.removeEventListener('click', this.onBackdropClick);
   }
 
@@ -140,6 +160,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   getNearestTouch(touches) {
+    if (touches.length === 1) return touches[0];
     return Array.prototype.reduce.call(touches, (acc, touch) => {
       const dist = pageDist(this, touch);
       return (dist < acc.dist) ? {
@@ -179,8 +200,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
       if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
-        document.addEventListener('touchmove', this.onTouchMove);
-        document.addEventListener('touchend', this.onTouchEnd);
+        this.touching = true;
       }
     }
   }
@@ -193,32 +213,35 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   //   this.startY = this.pageY = this.lastPageY = e.pageY;
   //
   //   if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
-  //     document.addEventListener('mousemove', this.onMouseMove);
+  //     this.prepInteraction();
+  //     document.addEventListener('mousemove', this.onMouseMove, { passive: false });
   //     document.addEventListener('mouseup', this.onMouseUp);
   //   }
   // }
 
   // TODO: DRY
   onTouchMove(e) {
-    const touch = this.getNearestTouch(e.touches);
-    this.pageX = touch.pageX;
-    this.pageY = touch.pageY;
+    if (this.touching) {
+      const touch = this.getNearestTouch(e.touches);
+      this.pageX = touch.pageX;
+      this.pageY = touch.pageY;
 
-    if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
-      this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
-      if (!this.isScrolling) {
-        this.state = TOUCHING;
-        this.requestAnimationLoop();
+      if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
+        this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
+        if (!this.isScrolling) {
+          this.state = TOUCHING;
+          this.requestAnimationLoop();
+        }
       }
+
+      if (this.isScrolling) {
+        return;
+      }
+
+      e.preventDefault();
+
+      this.startedMoving = true;
     }
-
-    if (this.isScrolling && !this.menuOpen) {
-      return;
-    }
-
-    // e.preventDefault();
-
-    this.startedMoving = true;
   }
 
   // TODO: DRY
@@ -227,15 +250,18 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   //   this.pageY = e.pageY;
   //
   //   if (typeof this.isScrolling === 'undefined' && this.startedMoving) {
-  //     this.isScrolling =
-  //       Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
+  //     this.isScrolling = Math.abs(this.startY - this.pageY) > Math.abs(this.startX - this.pageX);
   //     if (!this.isScrolling) {
   //       this.state = TOUCHING;
   //       this.requestAnimationLoop();
   //     }
   //   }
   //
-  //   if (this.isScrolling && !this.menuOpen) return;
+  //   if (this.isScrolling && !this.menuOpen) {
+  //     return;
+  //   }
+  //
+  //   e.preventDefault();
   //
   //   this.startedMoving = true;
   // }
@@ -254,19 +280,19 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
 
   // TODO: DRY
   onTouchEnd(e) {
-    if (this.isScrolling || e.touches.length > 0) {
-      return;
+    if (this.touching) {
+      if (this.isScrolling || e.touches.length > 0) {
+        return;
+      }
+
+      if (this.startedMoving) {
+        this.updateMenuOpen();
+      }
+
+      this.state = START_ANIMATING;
+      this.startedMoving = false;
+      this.touching = false;
     }
-
-    if (this.startedMoving) {
-      this.updateMenuOpen();
-    }
-
-    this.state = START_ANIMATING;
-    this.startedMoving = false;
-
-    document.removeEventListener('touchmove', this.onTouchMove);
-    document.removeEventListener('touchend', this.onTouchEnd);
   }
 
   // TODO: DRY
@@ -291,7 +317,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
   }
 
   prepInteraction() {
-    document.body.style.overflowY = 'hidden';
+    // document.body.style.overflowY = 'hidden';
     this.sidebar.style.willChange = 'transform';
     this.backdrop.style.willChange = 'opacity';
     this.sliderWidth = this.getMovableSliderWidth();
@@ -421,12 +447,12 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.velocity = 0;
 
     if (this.menuOpen) {
-      document.body.style.overflowY = 'hidden';
+      // document.body.style.overflowY = 'hidden';
       this.layout.classList.add('y-open');
 
       // this.backdrop.style.pointerEvents = 'all';
     } else {
-      document.body.style.overflowY = '';
+      // document.body.style.overflowY = '';
       this.layout.classList.remove('y-open');
 
       // only remove the styles when closing the sidebar,
@@ -476,3 +502,7 @@ export default (SuperClass) => class extends componentCore(SuperClass) {
     this.disabled = false;
   }
 };
+
+// document.addEventListener('touchmove', function(e) {
+//   e.preventDefault();
+// });
