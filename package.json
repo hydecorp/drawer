@@ -57,6 +57,18 @@
   "directories": {
     "example": "examples"
   },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/qwtel/y-drawer.git"
