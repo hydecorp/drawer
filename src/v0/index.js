@@ -2,9 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import htmlElement from 'vanilla-component/src/htmlElement';
+import htmlElement from 'y-component/src/htmlElement';
 
-import drawerCore from '../core/drawer';
+import drawerCore from '../core';
 
 document.registerElement('y-drawer', class extends drawerCore(htmlElement(HTMLElement)) {
   createdCallback() {
@@ -22,7 +22,7 @@ document.registerElement('y-drawer', class extends drawerCore(htmlElement(HTMLEl
   getTemplateInstance() {
     // TODO: better why to get template?
     return document
-      .querySelector('link[href$="v0/drawer.html"]')
+      .querySelector('link[href$="v0/index.html"]')
       .import
       .getElementById('y-drawer-template')
       .content

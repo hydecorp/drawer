@@ -2,9 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import htmlElement from 'vanilla-component/src/htmlElement';
+import htmlElement from 'y-component/src/htmlElement';
 
-import drawerCore from '../core/drawer';
+import drawerCore from '../core';
 
 customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLElement)) {
   connectedCallback() {
@@ -14,7 +14,7 @@ customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLEleme
   // @override
   setupDOM(el) {
     el.attachShadow({ mode: 'open' });
-    const instance = this.getTemplateInstance('v1/drawer');
+    const instance = this.getTemplateInstance();
     el.shadowRoot.appendChild(instance);
     return el.shadowRoot;
   }
@@ -22,7 +22,7 @@ customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLEleme
   getTemplateInstance() {
     // TODO: better why to get template?
     return document
-      .querySelector('link[href$="v1/drawer.html"]')
+      .querySelector('link[href$="v1/index.html"]')
       .import
       .getElementById('y-drawer-template')
       .content

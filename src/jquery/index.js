@@ -2,9 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import defineJQueryComponent from 'vanilla-component/src/defineJQueryComponent';
+import defineJQueryComponent from 'y-component/src/defineJQueryComponent';
 
-import drawerCore from '../core/drawer';
+import drawerCore from '../core';
 
 defineJQueryComponent($, 'drawer', class extends drawerCore() {
   constructor(el, props) {

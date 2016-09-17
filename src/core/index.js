@@ -8,7 +8,7 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import componentCore from 'vanilla-component/src/componentCore';
+import componentCore from 'y-component/src/componentCore';
 
 import { getBrowserCapabilities, linearTween, pageDist } from '../common';
 

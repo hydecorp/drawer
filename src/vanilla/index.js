@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import drawerCore from '../core/drawer';
+import drawerCore from '../core';
 
 export default class Drawer extends drawerCore() {
   constructor(el, props) {
