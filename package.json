@@ -1,6 +1,6 @@
 {
   "name": "y-drawer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A vanilla drawer component.",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",

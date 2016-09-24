@@ -35,10 +35,9 @@ export default (C) => class extends componentCore(C) {
     this.resetProperties();
     this.bindCallbacks();
 
-    if (!this.disabled) {
-      this.enable();
-      this.jumpTo(this.state.menuOpen);
-    }
+    this.jumpTo(this.menuOpen);
+    if (!this.disabled) this.enable();
+    if (this.noBackdrop) this.backdrop.styles.display = 'none';
   }
 
   cacheDOMElements() {
@@ -64,8 +63,8 @@ export default (C) => class extends componentCore(C) {
     this.translateX = 0;
     this.animationFrameRequested = false;
     this.touching = false;
-    // this.lastTime = 0;
-    // this.sliderWidth;
+    this.lastTime = undefined;
+    this.sliderWidth = undefined;
   }
 
   bindCallbacks() {
@@ -121,7 +120,7 @@ export default (C) => class extends componentCore(C) {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.state.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         this.touching = true;
         this.loopState = TOUCHING;
@@ -179,7 +178,7 @@ export default (C) => class extends componentCore(C) {
         this.updateMenuOpen();
       }
 
-      if (this.state.menuOpen) {
+      if (this.menuOpen) {
         // this.layout.classList.add('y-open');
         this.backdrop.style.pointerEvents = 'all';
       } else {
@@ -289,7 +288,7 @@ export default (C) => class extends componentCore(C) {
     // delete after animation is completed
     const animation = {};
     animation.startX = this.translateX;
-    animation.endX = (this.state.menuOpen ? 1 : 0) * this.sliderWidth;
+    animation.endX = (this.menuOpen ? 1 : 0) * this.sliderWidth;
     animation.changeInValue = animation.endX - animation.startX;
     animation.startTime = time;
     this.animation = animation;
@@ -327,7 +326,7 @@ export default (C) => class extends componentCore(C) {
     this.animationFrameRequested = false;
     this.velocity = 0;
 
-    if (this.state.menuOpen) {
+    if (this.menuOpen) {
       // document.body.style.overflowY = 'hidden';
       this.backdrop.style.pointerEvents = 'all';
     } else {
@@ -354,6 +353,7 @@ export default (C) => class extends componentCore(C) {
       disabled: false,
       duration: 200,
       maxOpacity: 0.67,
+      noBackdrop: false,
     };
   }
 
@@ -374,17 +374,24 @@ export default (C) => class extends componentCore(C) {
           this.enable();
         }
       },
+      noBackdrop: (b) => {
+        if (b === true) {
+          this.backdrop.style.display = 'none';
+        } else {
+          this.backdrop.style.display = '';
+        }
+      },
     };
   }
 
   open() {
-    if (!this.state.disabled) {
+    if (!this.disabled) {
       this.animateTo(true);
     }
   }
 
   close() {
-    if (!this.state.disabled) {
+    if (!this.disabled) {
       this.animateTo(false);
     }
   }
@@ -398,14 +405,14 @@ export default (C) => class extends componentCore(C) {
   }
 
   disable() {
-    this.jumpTo(false);
+    // this.jumpTo(false);
     this.removeEventListeners();
     // this.disabled = true;
     this.setState('disabled', true);
   }
 
   enable() {
-    this.jumpTo(this.state.menuOpen);
+    // this.jumpTo(this.menuOpen);
     this.addEventListeners();
     // this.disabled = false;
     this.setState('disabled', false);
