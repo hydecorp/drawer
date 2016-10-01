@@ -12,8 +12,7 @@ export default class Drawer extends drawerCore() {
 
   // @override
   setupDOM(el) {
-    const layout = document.createElement('div');
-    layout.classList.add('y-layout');
+    if (!el) throw Error('No element provided');
 
     const backdrop = document.createElement('div');
     backdrop.classList.add('y-backdrop');
@@ -24,10 +23,8 @@ export default class Drawer extends drawerCore() {
       drawer.appendChild(el.children[0]);
     }
 
-    layout.appendChild(backdrop);
-    layout.appendChild(drawer);
-
-    el.appendChild(layout);
+    el.appendChild(backdrop);
+    el.appendChild(drawer);
 
     return el;
   }

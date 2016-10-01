@@ -16,10 +16,11 @@ defineJQueryComponent($, 'drawer', class extends drawerCore() {
   setupDOM(el) {
     const $el = $(el);
 
-    $('<div class="y-layout" />')
+    const children = $el.children().detach();
+
+    $el
       .append($('<div class="y-backdrop" />'))
-      .append($('<div class="y-drawer" />').append($el.children().detach()))
-      .appendTo($el);
+      .append($('<div class="y-drawer" />').append(children));
 
     return el;
   }

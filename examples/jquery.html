@@ -21,12 +21,9 @@
     <script src="dist/jquery/index.js"></script>
     <script>
       $(function () {
-        $drawer = $('#drawer').drawer({
-          // menuOpen: true,
-          // disabled: true,
-        });
+        $drawer = $(drawer).drawer();
 
-        $('#menu').click(function (e) {
+        $(menu).click(function (e) {
           e.preventDefault();
           $drawer.drawer('toggle');
         });

@@ -6,7 +6,7 @@ import htmlElement from 'y-component/src/htmlElement';
 
 import drawerCore from '../core';
 
-customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLElement)) {
+export default class HTMLYDrawerElement extends drawerCore(htmlElement(HTMLElement)) {
   connectedCallback() {
     this.createdConnected();
   }
@@ -21,11 +21,12 @@ customElements.define('y-drawer', class extends drawerCore(htmlElement(HTMLEleme
 
   getTemplateInstance() {
     // TODO: better why to get template?
-    return document
-      .querySelector('link[href$="v1/index.html"]')
-      .import
-      .getElementById('y-drawer-template')
+    return (
+      document.getElementById('y-drawer-template') ||
+      document.querySelector('link[href$="v1/index.html"]')
+        .import
+        .getElementById('y-drawer-template'))
       .content
       .cloneNode(true);
   }
-});
+}

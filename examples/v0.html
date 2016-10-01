@@ -3,8 +3,6 @@
   <head>
     <!-- @include examples/includes/head-content.html -->
 
-    <script src="webcomponents.js"></script>
-
     <link rel="import" href="dist/v0/index.html">
   </head>
   <body>
@@ -21,13 +19,10 @@
     </aside>
 
     <script>
-      var drawer = document.getElementById('drawer');
-
-      document.getElementById('menu')
-        .addEventListener('click', function (e) {
-          e.preventDefault();
-          drawer.toggle();
-        });
+      menu.addEventListener('click', function (e) {
+        e.preventDefault();
+        drawer.toggle();
+      });
     </script>
   </body>
 </html>

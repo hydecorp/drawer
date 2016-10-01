@@ -11,6 +11,7 @@
   pointer-events: none;
   transform: translate3d(0,0,0);
   -webkit-tap-highlight-color: transparent;
+  contain: content;
 }
 
 .y-drawer {
@@ -26,4 +27,10 @@
   background: #f8f8f8;
   transform: translate3d(0,0,0);
   -webkit-overflow-scrolling: touch;
+  contain: content;
+}
+
+.y-drawer.y-open {
+  left: 0;
+  transform: translate3d(0,0,0)!important;
 }

@@ -1,7 +1,7 @@
 {
   "name": "y-drawer",
   "version": "0.1.0",
-  "description": "A vanilla drawer component.",
+  "description": "Y drawer component?",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
     "clean": "rm -rf dist",

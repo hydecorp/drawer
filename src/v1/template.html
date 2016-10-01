@@ -1,0 +1,18 @@
+<template id="y-drawer-template">
+  <div class="y-backdrop"></div>
+  <div class="y-drawer">
+    <slot></slot>
+  </div>
+
+  <style>
+    <!-- @include ../drawer.css -->
+
+    :host {
+
+    }
+
+    .y-drawer {
+      background: var(--bg, #e8e8e8);
+    }
+  </style>
+</template>

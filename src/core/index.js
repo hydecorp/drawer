@@ -37,7 +37,7 @@ export default (C) => class extends componentCore(C) {
 
     this.jumpTo(this.menuOpen);
     if (!this.disabled) this.enable();
-    if (this.noBackdrop) this.backdrop.styles.display = 'none';
+    if (this.noBackdrop) this.backdrop.style.display = 'none';
   }
 
   cacheDOMElements() {
@@ -200,7 +200,7 @@ export default (C) => class extends componentCore(C) {
     // document.body.style.overflowY = 'hidden';
     this.drawer.style.willChange = 'transform';
     this.backdrop.style.willChange = 'opacity';
-    this.sliderWidth = this.getMovableSliderWidth();
+    this.drawer.classList.remove('y-open');
   }
 
   animateTo(menuOpen) {
@@ -215,6 +215,7 @@ export default (C) => class extends componentCore(C) {
     this.loopState = IDLE;
     // this.menuOpen = menuOpen;
     this.setState('menuOpen', menuOpen);
+    this.prepInteraction();
 
     requestAnimationFrame(() => {
       this.sliderWidth = this.getMovableSliderWidth();
@@ -247,6 +248,7 @@ export default (C) => class extends componentCore(C) {
 
       case START_ANIMATING: {
         this.startAnimatingFrame(time);
+        this.loopState = ANIMATING;
         this.animationFrameCallback(time); // jump to next case block
         break;
       }
@@ -292,8 +294,6 @@ export default (C) => class extends componentCore(C) {
     animation.changeInValue = animation.endX - animation.startX;
     animation.startTime = time;
     this.animation = animation;
-
-    this.loopState = ANIMATING;
   }
 
   animatingFrame(time) {
@@ -329,6 +329,7 @@ export default (C) => class extends componentCore(C) {
     if (this.menuOpen) {
       // document.body.style.overflowY = 'hidden';
       this.backdrop.style.pointerEvents = 'all';
+      this.drawer.classList.add('y-open');
     } else {
       // document.body.style.overflowY = '';
       this.backdrop.style.pointerEvents = '';
@@ -358,7 +359,7 @@ export default (C) => class extends componentCore(C) {
   }
 
   // @override
-  hooks() {
+  sideEffects() {
     return {
       menuOpen: (mO) => {
         if (mO === true) {
@@ -380,20 +381,17 @@ export default (C) => class extends componentCore(C) {
         } else {
           this.backdrop.style.display = '';
         }
+        this.setState('noBackdrop', b);
       },
     };
   }
 
   open() {
-    if (!this.disabled) {
-      this.animateTo(true);
-    }
+    this.animateTo(true);
   }
 
   close() {
-    if (!this.disabled) {
-      this.animateTo(false);
-    }
+    this.animateTo(false);
   }
 
   toggle() {
@@ -405,14 +403,12 @@ export default (C) => class extends componentCore(C) {
   }
 
   disable() {
-    // this.jumpTo(false);
     this.removeEventListeners();
     // this.disabled = true;
     this.setState('disabled', true);
   }
 
   enable() {
-    // this.jumpTo(this.menuOpen);
     this.addEventListeners();
     // this.disabled = false;
     this.setState('disabled', false);

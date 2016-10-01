@@ -1,22 +1,5 @@
-<template id="y-drawer-template">
-  <div class="y-layout">
-    <div class="y-backdrop"></div>
-    <div class="y-drawer">
-      <content select="*"></content>
-    </div>
-  </div>
-
-  <style>
-    <!-- @include src/drawer.css -->
-
-    :host {
-
-    }
-
-    .y-drawer {
-      background: var(--bg, #e8e8e8);
-    }
-  </style>
-</template>
-
+<!-- @include src/v0/template.html -->
 <script src="index.js"></script>
+<script>
+  document.registerElement('y-drawer', y.drawer.v0.default);
+</script>

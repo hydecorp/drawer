@@ -21,17 +21,12 @@
     <script>
       var Drawer = y.drawer.vanilla.default;
 
-      var aside = document.getElementById('drawer');
-      var drawer = new Drawer(aside, {
-        // menuOpen: true,
-        // disabled: true,
-      });
+      var drawerObj = new Drawer(drawer);
 
-      document.getElementById('menu')
-        .addEventListener('click', function (e) {
-          e.preventDefault();
-          drawer.toggle();
-        });
+      menu.addEventListener('click', function (e) {
+        e.preventDefault();
+        drawerObj.toggle();
+      });
     </script>
   </body>
 </html>
