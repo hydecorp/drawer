@@ -19,8 +19,8 @@ defineJQueryComponent($, 'drawer', class extends drawerCore() {
     const children = $el.children().detach();
 
     $el
-      .append($('<div class="y-backdrop" />'))
-      .append($('<div class="y-drawer" />').append(children));
+      .append($('<div class="y-drawer-scrim" />'))
+      .append($('<div class="y-drawer-content" />').append(children));
 
     return el;
   }

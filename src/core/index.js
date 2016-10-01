@@ -35,15 +35,14 @@ export default (C) => class extends componentCore(C) {
     this.resetProperties();
     this.bindCallbacks();
 
-    this.jumpTo(this.menuOpen);
-    if (!this.disabled) this.enable();
-    if (this.noBackdrop) this.backdrop.style.display = 'none';
+    this.jumpTo(this.opened);
+    if (!this.persistent) this.addEventListeners();
+    if (this.persistent) this.scrim.style.display = 'none';
   }
 
   cacheDOMElements() {
-    this.layout = this.el.querySelector('.y-layout');
-    this.backdrop = this.el.querySelector('.y-backdrop');
-    this.drawer = this.el.querySelector('.y-drawer');
+    this.scrim = this.el.querySelector('.y-drawer-scrim');
+    this.content = this.el.querySelector('.y-drawer-content');
   }
 
   resetProperties() {
@@ -71,7 +70,7 @@ export default (C) => class extends componentCore(C) {
     this.touchStartCallback = this.touchStartCallback.bind(this);
     this.touchMoveCallback = this.touchMoveCallback.bind(this);
     this.touchEndCallback = this.touchEndCallback.bind(this);
-    this.backdropClickCallback = this.backdropClickCallback.bind(this);
+    this.scrimClickCallback = this.scrimClickCallback.bind(this);
     this.animationFrameCallback = this.animationFrameCallback.bind(this);
   }
 
@@ -80,7 +79,7 @@ export default (C) => class extends componentCore(C) {
     document.addEventListener('touchmove', this.touchMoveCallback, { passive: false });
     document.addEventListener('touchend', this.touchEndCallback, { passive: false });
 
-    this.backdrop.addEventListener('click', this.backdropClickCallback);
+    this.scrim.addEventListener('click', this.scrimClickCallback);
   }
 
   removeEventListeners() {
@@ -88,7 +87,7 @@ export default (C) => class extends componentCore(C) {
     document.removeEventListener('touchmove', this.touchMoveCallback, { passive: false });
     document.removeEventListener('touchend', this.touchEndCallback, { passive: false });
 
-    this.backdrop.removeEventListener('click', this.backdropClickCallback);
+    this.scrim.removeEventListener('click', this.scrimClickCallback);
   }
 
   requestAnimationLoop() {
@@ -120,7 +119,7 @@ export default (C) => class extends componentCore(C) {
       this.startX = this.pageX = this.lastPageX = touch.pageX;
       this.startY = this.pageY = this.lastPageY = touch.pageY;
 
-      if (this.menuOpen || (this.pageX < window.innerWidth / 3)) {
+      if (this.opened || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
         this.touching = true;
         this.loopState = TOUCHING;
@@ -154,17 +153,17 @@ export default (C) => class extends componentCore(C) {
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
-      // this.menuOpen = true;
-      this.setState('menuOpen', true);
+      // this.opened = true;
+      this.setState('opened', true);
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
-      // this.menuOpen = false;
-      this.setState('menuOpen', false);
+      // this.opened = false;
+      this.setState('opened', false);
     } else if (this.translateX >= this.sliderWidth / 2) {
-      // this.menuOpen = true;
-      this.setState('menuOpen', true);
+      // this.opened = true;
+      this.setState('opened', true);
     } else {
-      // this.menuOpen = false;
-      this.setState('menuOpen', false);
+      // this.opened = false;
+      this.setState('opened', false);
     }
   }
 
@@ -178,12 +177,10 @@ export default (C) => class extends componentCore(C) {
         this.updateMenuOpen();
       }
 
-      if (this.menuOpen) {
-        // this.layout.classList.add('y-open');
-        this.backdrop.style.pointerEvents = 'all';
+      if (this.opened) {
+        this.scrim.style.pointerEvents = 'all';
       } else {
-        // this.layout.classList.remove('y-open');
-        this.backdrop.style.pointerEvents = '';
+        this.scrim.style.pointerEvents = '';
       }
 
       this.loopState = START_ANIMATING;
@@ -192,44 +189,33 @@ export default (C) => class extends componentCore(C) {
     }
   }
 
-  backdropClickCallback() {
+  scrimClickCallback() {
     this.close();
   }
 
   prepInteraction() {
-    // document.body.style.overflowY = 'hidden';
-    this.drawer.style.willChange = 'transform';
-    this.backdrop.style.willChange = 'opacity';
-    this.drawer.classList.remove('y-open');
+    this.content.style.willChange = 'transform';
+    this.scrim.style.willChange = 'opacity';
+    this.content.classList.remove('y-drawer-opened');
+    this.sliderWidth = this.getMovableSliderWidth();
   }
 
-  animateTo(menuOpen) {
+  animateTo(opened) {
     this.prepInteraction();
-    // this.menuOpen = menuOpen;
-    this.setState('menuOpen', menuOpen);
+    this.setState('opened', opened);
     this.loopState = START_ANIMATING;
     this.requestAnimationLoop();
   }
 
-  jumpTo(menuOpen) {
-    this.loopState = IDLE;
-    // this.menuOpen = menuOpen;
-    this.setState('menuOpen', menuOpen);
+  jumpTo(opened) {
     this.prepInteraction();
-
+    this.setState('opened', opened);
+    this.loopState = IDLE;
     requestAnimationFrame(() => {
-      this.sliderWidth = this.getMovableSliderWidth();
-      this.startTranslateX = menuOpen * this.sliderWidth;
+      this.startTranslateX = opened * this.sliderWidth;
       this.endAnimating();
       this.updateDOM(this.startTranslateX, this.sliderWidth);
     });
-  }
-
-  // Since part of the slider could be visible,
-  // the width that is "movable" is less than the complete slider width
-  // and given by
-  getMovableSliderWidth() {
-    return -this.drawer.offsetLeft;
   }
 
   updateTranslateX() {
@@ -290,7 +276,7 @@ export default (C) => class extends componentCore(C) {
     // delete after animation is completed
     const animation = {};
     animation.startX = this.translateX;
-    animation.endX = (this.menuOpen ? 1 : 0) * this.sliderWidth;
+    animation.endX = (this.opened ? 1 : 0) * this.sliderWidth;
     animation.changeInValue = animation.endX - animation.startX;
     animation.startTime = time;
     this.animation = animation;
@@ -299,7 +285,7 @@ export default (C) => class extends componentCore(C) {
   animatingFrame(time) {
     const timeInAnimation = time - this.animation.startTime;
 
-    if (timeInAnimation < this.duration) {
+    if (timeInAnimation < this.transitionDuration) {
       this.animatingCont(timeInAnimation);
     } else {
       this.animatingEnd();
@@ -311,7 +297,8 @@ export default (C) => class extends componentCore(C) {
   animatingCont(timeInAnimation) {
     const startValue = this.animation.startX;
     const changeInValue = this.animation.changeInValue;
-    this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue, this.duration);
+    this.startTranslateX = linearTween(timeInAnimation, startValue, changeInValue,
+      this.transitionDuration);
     requestAnimationFrame(this.animationFrameCallback);
   }
 
@@ -326,91 +313,80 @@ export default (C) => class extends componentCore(C) {
     this.animationFrameRequested = false;
     this.velocity = 0;
 
-    if (this.menuOpen) {
+    if (this.opened) {
       // document.body.style.overflowY = 'hidden';
-      this.backdrop.style.pointerEvents = 'all';
-      this.drawer.classList.add('y-open');
+      this.scrim.style.pointerEvents = 'all';
+      this.content.classList.add('y-drawer-opened');
     } else {
       // document.body.style.overflowY = '';
-      this.backdrop.style.pointerEvents = '';
+      this.scrim.style.pointerEvents = '';
 
       // only remove the styles when closing the drawer,
       // since we eitehr expect a navigation (page reload)
       // or closing the drawer again, ie more changes
-      this.drawer.style.willChange = '';
-      this.backdrop.style.willChange = '';
+      this.content.style.willChange = '';
+      this.scrim.style.willChange = '';
     }
   }
 
   updateDOM(translateX, sliderWidth) {
-    this.drawer.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
-    this.backdrop.style.opacity = this.maxOpacity * (translateX / sliderWidth);
+    this.content.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
+    this.scrim.style.opacity = translateX / sliderWidth;
   }
 
   // @override
   defaults() {
     return {
-      menuOpen: false,
-      disabled: false,
-      duration: 200,
-      maxOpacity: 0.67,
-      noBackdrop: false,
+      opened: false,
+      transitionDuration: 200,
+      persistent: false,
     };
   }
 
   // @override
   sideEffects() {
     return {
-      menuOpen: (mO) => {
+      opened: (mO) => {
         if (mO === true) {
           this.open();
         } else {
           this.close();
         }
       },
-      disabled: (d) => {
+      persistent: (d) => {
         if (d === true) {
-          this.disable();
+          this.scrim.style.display = 'none';
+          this.removeEventListeners();
+          this.setState('persistent', true);
         } else {
-          this.enable();
+          this.scrim.style.display = '';
+          this.addEventListeners();
+          this.setState('persistent', false);
         }
-      },
-      noBackdrop: (b) => {
-        if (b === true) {
-          this.backdrop.style.display = 'none';
-        } else {
-          this.backdrop.style.display = '';
-        }
-        this.setState('noBackdrop', b);
       },
     };
-  }
-
-  open() {
-    this.animateTo(true);
   }
 
   close() {
     this.animateTo(false);
   }
 
+  getMovableSliderWidth() {
+    // Since part of the slider could be visible,
+    // the width that is "movable" is less than the complete slider width
+    // and given by
+    return -this.content.offsetLeft;
+  }
+
+  open() {
+    this.animateTo(true);
+  }
+
   toggle() {
-    if (this.menuOpen) {
+    if (this.opened) {
       this.close();
     } else {
       this.open();
     }
-  }
-
-  disable() {
-    this.removeEventListeners();
-    // this.disabled = true;
-    this.setState('disabled', true);
-  }
-
-  enable() {
-    this.addEventListeners();
-    // this.disabled = false;
-    this.setState('disabled', false);
   }
 };

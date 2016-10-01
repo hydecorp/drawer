@@ -1,36 +1,38 @@
-.y-backdrop {
+.y-drawer-scrim {
   display: block;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: #000;
   opacity: 0;
   z-index: 0;
   pointer-events: none;
   transform: translate3d(0,0,0);
   -webkit-tap-highlight-color: transparent;
   contain: content;
+
+  background: rgba(0, 0, 0, 0.67);
 }
 
-.y-drawer {
+.y-drawer-content {
   position: fixed;
   left: 0;
   bottom: 0;
   top: 0;
-  left: -18rem;
-  width: 18rem;
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #f8f8f8;
   transform: translate3d(0,0,0);
   -webkit-overflow-scrolling: touch;
   contain: content;
+
+  left: -18rem;
+  width: 18rem;
+  background: #e8e8e8;
 }
 
-.y-drawer.y-open {
-  left: 0;
+.y-drawer-content.y-drawer-opened {
+  left: 0!important;
   transform: translate3d(0,0,0)!important;
 }

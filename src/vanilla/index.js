@@ -14,17 +14,17 @@ export default class Drawer extends drawerCore() {
   setupDOM(el) {
     if (!el) throw Error('No element provided');
 
-    const backdrop = document.createElement('div');
-    backdrop.classList.add('y-backdrop');
+    const scrim = document.createElement('div');
+    scrim.classList.add('y-drawer-scrim');
 
-    const drawer = document.createElement('div');
-    drawer.classList.add('y-drawer');
+    const content = document.createElement('div');
+    content.classList.add('y-drawer-content');
     while (el.children.length > 0) {
-      drawer.appendChild(el.children[0]);
+      content.appendChild(el.children[0]);
     }
 
-    el.appendChild(backdrop);
-    el.appendChild(drawer);
+    el.appendChild(scrim);
+    el.appendChild(content);
 
     return el;
   }

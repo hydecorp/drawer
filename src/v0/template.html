@@ -1,6 +1,6 @@
 <template id="y-drawer-template">
-  <div class="y-backdrop"></div>
-  <div class="y-drawer">
+  <div class="y-drawer-scrim"></div>
+  <div class="y-drawer-content">
     <content select="*"></content>
   </div>
 
@@ -11,8 +11,15 @@
 
     }
 
-    .y-drawer {
-      background: var(--bg, #e8e8e8);
+    .y-drawer-content {
+      @apply --y-drawer-content-container;
+      width: var(--y-drawer-width, 18rem);
+      left: calc(-1 * var(--y-drawer-left, var(--y-drawer-width, 18rem)));
+      background: var(--y-drawer-background, #e8e8e8);
+    }
+
+    .y-drawer-scrim {
+      background: var(--y-drawer-scrim-background, rgba(0, 0, 0, 0.67));
     }
   </style>
 </template>
