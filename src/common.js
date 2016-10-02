@@ -1,16 +1,3 @@
-function getBrowserCapabilities() {
-  const styles = window.getComputedStyle(document.documentElement, '');
-  const pre = (Array.prototype.slice
-      .call(styles)
-      .join('')
-      .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
-    )[1];
-  return {
-    prefix: `-${pre}-`,
-    transform: `${pre[0].toUpperCase() + pre.substr(1)}Transform`,
-  };
-}
-
 /**
   * @param t current time
   * @param b start value
@@ -40,4 +27,4 @@ function contains(target, className) {
   return false;
 }
 
-export { getBrowserCapabilities, linearTween, pageDist, contains };
+export { linearTween, pageDist, contains };

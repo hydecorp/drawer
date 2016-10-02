@@ -10,7 +10,7 @@
  */
 import componentCore from 'y-component/src/componentCore';
 
-import { getBrowserCapabilities, linearTween, pageDist } from '../common';
+import { linearTween, pageDist } from '../common';
 
 const IDLE = 'IDLE';
 const TOUCHING = 'TOUCHING';
@@ -19,10 +19,6 @@ const ANIMATING = 'ANIMATING';
 
 const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
-
-const browerCapabilities = getBrowserCapabilities();
-// const transformPrefix = browerCapabilities.prefix;
-const transformProperty = browerCapabilities.transform;
 
 // ~ mixin drawerCore with componentCore { ...
 export default (C) => class extends componentCore(C) {
@@ -327,7 +323,7 @@ export default (C) => class extends componentCore(C) {
   }
 
   updateDOM(translateX, sliderWidth) {
-    this.content.style[transformProperty] = `translate3d(${translateX}px,0,0)`;
+    this.content.style.transform = `translate3d(${translateX}px,0,0)`;
     this.scrim.style.opacity = translateX / sliderWidth;
   }
 
