@@ -1,0 +1,12 @@
+<!-- @include dist/webcomponent/template-v0.html -->
+<!-- @include dist/webcomponent/template-v1.html -->
+<script src="index.js"></script>
+<script>
+(function(window, document) {
+  if ('customElements' in window) {
+    customElements.define('y-drawer', y.drawer.webcomponent.default);
+  } else if ('registerElement' in document) {
+    document.registerElement('y-drawer', y.drawer.webcomponent.default);
+  }
+}(window, document));
+</script>

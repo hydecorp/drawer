@@ -153,16 +153,12 @@ export default (C) => class extends componentCore(C) {
 
   updateMenuOpen() {
     if (this.velocity > VELOCITY_THRESHOLD) {
-      // this.opened = true;
       this.setState('opened', true);
     } else if (this.velocity < -VELOCITY_THRESHOLD) {
-      // this.opened = false;
       this.setState('opened', false);
     } else if (this.translateX >= this.sliderWidth / 2) {
-      // this.opened = true;
       this.setState('opened', true);
     } else {
-      // this.opened = false;
       this.setState('opened', false);
     }
   }
@@ -290,6 +286,7 @@ export default (C) => class extends componentCore(C) {
     } else {
       this.animatingEnd();
     }
+    // asdf
 
     this.updateDOM(this.startTranslateX, this.sliderWidth);
   }

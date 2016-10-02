@@ -4,5 +4,4 @@ node_modules
 /core.html
 /vanilla.html
 /jquery.html
-/v0.html
-/v1.html
+/webcomponent.html
