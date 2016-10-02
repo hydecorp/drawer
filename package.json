@@ -1,6 +1,6 @@
 {
   "name": "y-drawer",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Y drawer component?",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
@@ -75,5 +75,6 @@
   "bugs": {
     "url": "https://github.com/qwtel/y-drawer/issues"
   },
-  "homepage": "http://qwtel.com/y-drawer"
+  "homepage": "http://qwtel.com/y-drawer",
+  "main": "src/core/index.js"
 }
