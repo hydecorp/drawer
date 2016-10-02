@@ -21,7 +21,7 @@ const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
 
 // ~ mixin drawerCore with componentCore { ...
-export default (C) => class extends componentCore(C) {
+export default C => class extends componentCore(C) {
 
   // @override
   initComponent(el, props) {

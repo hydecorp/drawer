@@ -6,5 +6,8 @@
   "globals": {
     "$": true,
     "customElements": true
+  },
+  "rules": {
+    "class-methods-use-this": "off"
   }
 }
