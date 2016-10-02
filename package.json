@@ -1,6 +1,6 @@
 {
   "name": "y-drawer",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Y drawer component?",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
@@ -49,7 +49,7 @@
     "watchify": "3.7.0"
   },
   "dependencies": {
-    "y-component": "2.0.1"
+    "y-component": "2.0.2"
   },
   "directories": {
     "example": "examples"
