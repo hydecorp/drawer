@@ -2,6 +2,8 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import htmlElement from 'y-component/src/htmlElement';
 
 import drawerCore from '../core';

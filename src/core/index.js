@@ -8,6 +8,8 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import componentCore from 'y-component/src/componentCore';
 
 import { linearTween, pageDist } from '../common';
@@ -34,6 +36,12 @@ export default C => class extends componentCore(C) {
     this.jumpTo(this.opened);
     if (!this.persistent) this.addEventListeners();
     if (this.persistent) this.scrim.style.display = 'none';
+
+    this.getEl().dispatchEvent(new Event('y-drawer-attached'));
+  }
+
+  setupDOM(el) {
+    return el;
   }
 
   cacheDOMElements() {
@@ -320,6 +328,8 @@ export default C => class extends componentCore(C) {
       this.content.style.willChange = '';
       this.scrim.style.willChange = '';
     }
+
+    this.getEl().dispatchEvent(new Event('y-drawer-transitioned'));
   }
 
   updateDOM(translateX, sliderWidth) {

@@ -2,6 +2,8 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import drawerCore from '../core';
 
 export default class Drawer extends drawerCore() {

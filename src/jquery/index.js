@@ -2,11 +2,13 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import defineJQueryComponent from 'y-component/src/defineJQueryComponent';
 
 import drawerCore from '../core';
 
-defineJQueryComponent($, 'drawer', class extends drawerCore() {
+defineJQueryComponent('y-drawer', class extends drawerCore() {
   constructor(el, props) {
     super();
     this.initComponent(el, props);
