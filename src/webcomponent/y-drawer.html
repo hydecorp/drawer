@@ -1,12 +1,17 @@
-<!-- @include dist/webcomponent/template-v0.html -->
-<!-- @include dist/webcomponent/template-v1.html -->
-<script src="index.js"></script>
+<template id="y-drawer-template-v0">
+  <!-- @include ./template-v0.html -->
+</template>
+<template id="y-drawer-template-v1">
+  <!-- @include ./template-v1.html -->
+</template>
+<script src="y-drawer.js"></script>
 <script>
-(function(window, document) {
-  if ('customElements' in window) {
-    customElements.define('y-drawer', y.drawer.webcomponent.default);
-  } else if ('registerElement' in document) {
-    document.registerElement('y-drawer', y.drawer.webcomponent.default);
-  }
-}(window, document));
+  (function(window, document) {
+    var HTMLYDrawerElement = yDrawer.webcomponent.default;
+    if ('customElements' in window) {
+      customElements.define('y-drawer', HTMLYDrawerElement);
+    } else if ('registerElement' in document) {
+      document.registerElement('y-drawer', HTMLYDrawerElement);
+    }
+  }(window, document));
 </script>

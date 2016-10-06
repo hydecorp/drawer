@@ -5,3 +5,4 @@ node_modules
 /vanilla.html
 /jquery.html
 /webcomponent.html
+src/webcomponent/index.pre.js

@@ -16,14 +16,6 @@ function hasShadowDOMV1() {
   return 'attachShadow' in document.body;
 }
 
-function getTemplateInstance(version) {
-  const template = document.getElementById(`y-drawer-template-${version}`) ||
-    document.querySelector('link[href$="y-drawer.html"]')
-      .import
-      .getElementById(`y-drawer-template-${version}`);
-  return template.content.cloneNode(true);
-}
-
 export default class HTMLYDrawerElement extends htmlElement(drawerCore(HTMLElement)) {
   connectedCallback() {
     this.createdConnected();
@@ -33,16 +25,26 @@ export default class HTMLYDrawerElement extends htmlElement(drawerCore(HTMLEleme
     this.createdConnected();
   }
 
+  getTemplateInstance(version) {
+    const name = 'y-drawer';
+    return document
+        .querySelector(`link[href$="${name}.html"]`)
+        .import
+        .getElementById(`${name}-template-${version}`)
+        .content
+        .cloneNode(true);
+  }
+
   // @override
   setupDOM(el) {
     if (hasShadowDOMV1()) {
       el.attachShadow({ mode: 'open' });
-      const instance = getTemplateInstance('v1');
+      const instance = this.getTemplateInstance('v1');
       el.shadowRoot.appendChild(instance);
       return el.shadowRoot;
     } else if (hasShadowDOMV0()) {
       const shadowRoot = el.createShadowRoot();
-      const instance = getTemplateInstance('v0');
+      const instance = this.getTemplateInstance('v0');
       shadowRoot.appendChild(instance);
       return shadowRoot;
     }
