@@ -10,34 +10,43 @@
  */
 
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
-import componentCore from 'y-component/src/componentCore';
+import componentCore from 'y-component/src/component-core';
 
 import { linearTween, pageDist } from '../common';
 
-const IDLE = 'IDLE';
-const TOUCHING = 'TOUCHING';
-const START_ANIMATING = 'START_ANIMATING';
-const ANIMATING = 'ANIMATING';
+const Symbol = global.Symbol || (x => `_${x}`);
+
+const IDLE = Symbol('idle');
+const TOUCHING = Symbol('touching');
+const START_ANIMATING = Symbol('startAnimating');
+const ANIMATING = Symbol('animating');
 
 const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
+
+const def = Object.defineProperty.bind(Object);
 
 // ~ mixin drawerCore with componentCore { ...
 export default C => class extends componentCore(C) {
 
   // @override
-  initComponent(el, props) {
-    super.initComponent(el, props);
+  componentName() {
+    return 'y-drawer';
+  }
+
+  // @override
+  setupComponent(el, props) {
+    super.setupComponent(el, props);
 
     this.cacheDOMElements();
-    this.resetProperties();
+    this.defProperties();
     this.bindCallbacks();
 
     this.jumpTo(this.opened);
     if (!this.persistent) this.addEventListeners();
     if (this.persistent) this.scrim.style.display = 'none';
 
-    this.getEl().dispatchEvent(new Event('y-drawer-attached'));
+    return this;
   }
 
   setupDOM(el) {
@@ -45,37 +54,36 @@ export default C => class extends componentCore(C) {
   }
 
   cacheDOMElements() {
-    this.scrim = this.el.querySelector('.y-drawer-scrim');
-    this.content = this.el.querySelector('.y-drawer-content');
+    def(this, 'scrim', { value: this.root.querySelector('.y-drawer-scrim') });
+    def(this, 'content', { value: this.root.querySelector('.y-drawer-content') });
   }
 
-  resetProperties() {
-    // priviate variables
-    // TODO: make inaccessible
-    this.startX = 0;
-    this.startY = 0;
-    this.pageX = 0;
-    this.pageY = 0;
-    this.lastPageX = 0;
-    this.lastPageY = 0;
-    this.isScrolling = undefined;
-    this.startedMoving = false;
-    this.loopState = IDLE;
-    this.velocity = 0;
-    this.startTranslateX = 0;
-    this.translateX = 0;
-    this.animationFrameRequested = false;
-    this.touching = false;
-    this.lastTime = undefined;
-    this.sliderWidth = undefined;
+  defProperties() {
+    def(this, 'startX', { value: 0, writable: true });
+    def(this, 'startY', { value: 0, writable: true });
+    def(this, 'pageX', { value: 0, writable: true });
+    def(this, 'pageY', { value: 0, writable: true });
+    def(this, 'lastPageX', { value: 0, writable: true });
+    def(this, 'lastPageY', { value: 0, writable: true });
+    def(this, 'isScrolling', { writable: true });
+    def(this, 'startedMoving', { value: false, writable: true });
+    def(this, 'loopState', { value: IDLE, writable: true });
+    def(this, 'velocity', { value: 0, writable: true });
+    def(this, 'startTranslateX', { value: 0, writable: true });
+    def(this, 'translateX', { value: 0, writable: true });
+    def(this, 'animationFrameRequested', { value: false, writable: true });
+    def(this, 'touching', { value: false, writable: true });
+    def(this, 'lastTime', { writable: true });
+    def(this, 'sliderWidth', { writable: true });
+    def(this, 'animation', { writable: true, configurable: true });
   }
 
   bindCallbacks() {
-    this.touchStartCallback = this.touchStartCallback.bind(this);
-    this.touchMoveCallback = this.touchMoveCallback.bind(this);
-    this.touchEndCallback = this.touchEndCallback.bind(this);
-    this.scrimClickCallback = this.scrimClickCallback.bind(this);
-    this.animationFrameCallback = this.animationFrameCallback.bind(this);
+    def(this, 'touchStartCallback', { value: this.touchStartCallback.bind(this) });
+    def(this, 'touchMoveCallback', { value: this.touchMoveCallback.bind(this) });
+    def(this, 'touchEndCallback', { value: this.touchEndCallback.bind(this) });
+    def(this, 'scrimClickCallback', { value: this.scrimClickCallback.bind(this) });
+    def(this, 'animationFrameCallback', { value: this.animationFrameCallback.bind(this) });
   }
 
   addEventListeners() {
@@ -200,6 +208,13 @@ export default C => class extends componentCore(C) {
     this.sliderWidth = this.getMovableSliderWidth();
   }
 
+  getMovableSliderWidth() {
+    // Since part of the slider could be visible,
+    // the width that is "movable" is less than the complete slider width
+    // and given by
+    return -this.content.offsetLeft;
+  }
+
   animateTo(opened) {
     this.prepInteraction();
     this.setState('opened', opened);
@@ -290,7 +305,6 @@ export default C => class extends componentCore(C) {
     } else {
       this.animatingEnd();
     }
-    // asdf
 
     this.updateDOM(this.startTranslateX, this.sliderWidth);
   }
@@ -312,6 +326,7 @@ export default C => class extends componentCore(C) {
 
   endAnimating() {
     this.animationFrameRequested = false;
+    this.loopState = IDLE;
     this.velocity = 0;
 
     if (this.opened) {
@@ -329,7 +344,7 @@ export default C => class extends componentCore(C) {
       this.scrim.style.willChange = '';
     }
 
-    this.getEl().dispatchEvent(new Event('y-drawer-transitioned'));
+    this.fireEvent('transitioned');
   }
 
   updateDOM(translateX, sliderWidth) {
@@ -349,40 +364,25 @@ export default C => class extends componentCore(C) {
   // @override
   sideEffects() {
     return {
-      opened: (mO) => {
-        if (mO === true) {
-          this.open();
-        } else {
-          this.close();
-        }
+      opened: (o) => {
+        if (o === true) this.open();
+        else this.close();
       },
       persistent: (d) => {
-        if (d === true) {
-          this.scrim.style.display = 'none';
-          this.removeEventListeners();
-          this.setState('persistent', true);
-        } else {
-          this.scrim.style.display = '';
-          this.addEventListeners();
-          this.setState('persistent', false);
-        }
+        if (d === true) this.persist();
+        else this.unpersist();
       },
     };
   }
 
   close() {
     this.animateTo(false);
-  }
-
-  getMovableSliderWidth() {
-    // Since part of the slider could be visible,
-    // the width that is "movable" is less than the complete slider width
-    // and given by
-    return -this.content.offsetLeft;
+    return this;
   }
 
   open() {
     this.animateTo(true);
+    return this;
   }
 
   toggle() {
@@ -391,5 +391,18 @@ export default C => class extends componentCore(C) {
     } else {
       this.open();
     }
+    return this;
+  }
+
+  persist() {
+    this.scrim.style.display = 'none';
+    this.removeEventListeners();
+    this.setState('persistent', true);
+  }
+
+  unpersist() {
+    this.scrim.style.display = '';
+    this.addEventListeners();
+    this.setState('persistent', false);
   }
 };

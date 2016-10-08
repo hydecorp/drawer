@@ -55,7 +55,6 @@
     "watchify": "3.7.0"
   },
   "dependencies": {
-    "y-component": "3.0.0"
   },
   "directories": {
     "example": "examples"

@@ -9,7 +9,7 @@ import drawerCore from '../core';
 export default class Drawer extends drawerCore() {
   constructor(el, props) {
     super();
-    this.initComponent(el, props);
+    this.setupComponent(el, props);
   }
 
   // @override
