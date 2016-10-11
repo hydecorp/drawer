@@ -8,11 +8,32 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
+
 import componentCore from 'y-component/src/component-core';
 
 import { linearTween, pageDist } from '../common';
+
+// const JS_FEATURES = [
+//   'fn/array/for-each',
+//   'fn/function/bind',
+//   'fn/number/constructor',
+//   'fn/object/assign',
+//   'fn/object/define-property',
+//   'fn/object/keys',
+//   'fn/array/reduce',
+// ];
+//
+// const MODERNIZR_TESTS = [
+//   'customevent',
+//   'eventlistener',
+//   'queryselector',
+//   'requestanimationframe',
+//   'classlist',
+//   'opacity',
+//   'csstransforms',
+//   'csspointerevents',
+// ];
 
 const Symbol = global.Symbol || (x => `_${x}`);
 
@@ -26,7 +47,6 @@ const VELOCITY_LINEAR_COMBINATION = 0.8;
 
 const def = Object.defineProperty.bind(Object);
 
-// ~ mixin drawerCore with componentCore { ...
 export default C => class extends componentCore(C) {
 
   // @override
@@ -348,7 +368,7 @@ export default C => class extends componentCore(C) {
   }
 
   updateDOM(translateX, sliderWidth) {
-    this.content.style.transform = `translate3d(${translateX}px,0,0)`;
+    this.content.style.transform = `translateX(${translateX}px)`;
     this.scrim.style.opacity = translateX / sliderWidth;
   }
 
