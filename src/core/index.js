@@ -50,7 +50,7 @@ const def = Object.defineProperty.bind(Object);
 export default C => class extends componentCore(C) {
 
   // @override
-  componentName() {
+  getComponentName() {
     return 'y-drawer';
   }
 
