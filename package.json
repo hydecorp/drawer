@@ -2,8 +2,8 @@
   "name": "y-drawer",
   "version": "4.0.0",
   "description": "Y drawer?",
-  "config" : {
-    "port" : "8080"
+  "config": {
+    "port": "8080"
   },
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
@@ -55,6 +55,7 @@
     "watchify": "3.7.0"
   },
   "dependencies": {
+    "y-component": "4.0.0"
   },
   "directories": {
     "example": "examples"
