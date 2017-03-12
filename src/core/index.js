@@ -148,8 +148,12 @@ export default C => class extends componentCore(C) {
       this.isScrolling = undefined;
 
       const touch = e.touches[0];
-      this.startX = this.pageX = this.lastPageX = touch.pageX;
-      this.startY = this.pageY = this.lastPageY = touch.pageY;
+      this.startX = touch.pageX;
+      this.startY = touch.pageY;
+      this.pageX = touch.pageX;
+      this.pageY = touch.pageY;
+      this.lastPageX = touch.pageX;
+      this.lastPageY = touch.pageY;
 
       if (this.opened || (this.pageX < window.innerWidth / 3)) {
         this.prepInteraction();
