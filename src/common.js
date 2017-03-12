@@ -10,10 +10,7 @@ function linearTween(t, b, c, d) {
 }
 
 function pageDist(p1, p2) {
-  return Math.sqrt(
-    Math.pow(p1.pageX - p2.pageX, 2) +
-    Math.pow(p1.pageY - p2.pageY, 2)
-  );
+  return Math.sqrt(((p1.pageX - p2.pageX) ** 2) + ((p1.pageY - p2.pageY) ** 2));
 }
 
 function contains(target, className) {
