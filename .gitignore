@@ -6,4 +6,5 @@ node_modules
 /jquery.html
 /webcomponent.html
 dist
+src/vanilla/index.js
 src/webcomponent/index.js

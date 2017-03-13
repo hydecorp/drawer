@@ -6,11 +6,11 @@
 import HTMLYDrawerElement from './y-drawer';
 
 const templateV1 = `
-  <!-- @include ./template-v1.html -->
+<!-- @include ./template-v1.html -->
 `;
 
 const templateV0 = `
-  <!-- @include ./template-v0.html -->
+<!-- @include ./template-v0.html -->
 `;
 
 function fragmentFromString(strHTML) {

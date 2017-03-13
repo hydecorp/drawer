@@ -15,7 +15,7 @@
     "copy:html:index": "preprocess src/webcomponent/$npm_package_name.html --src-dir src/webcomponent -o dist/webcomponent/$npm_package_name.html",
     "copy:html": "npm run copy:html:template & npm run copy:html:index",
     "copy:css": "cp src/*.css dist",
-    "preprocess:js": "preprocess src/webcomponent/index.pre.js --src-dir src/webcomponent -o src/webcomponent/index.js ",
+    "preprocess:js": "preprocess src/vanilla/index.pre.js --src-dir src/vanilla -o src/vanilla/index.js & preprocess src/webcomponent/index.pre.js --src-dir src/webcomponent -o src/webcomponent/index.js & wait",
     "build": "npm run copy && (npm run build:core & npm run build:vanilla & npm run build:webcomponent & npm run build:webcomponent2 & wait)",
     "build:core": "browserify src/core/index.js -g babelify -s $npm_package_name.core | uglifyjs -c -o dist/core/index.js",
     "build:vanilla": "browserify src/vanilla/index.js -g babelify -s $npm_package_name.vanilla | uglifyjs -c -o dist/vanilla/index.js ",

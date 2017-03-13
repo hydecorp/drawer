@@ -6,6 +6,16 @@
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import drawerCore from '../core';
 
+const style = `
+<style>
+<!-- @include ../drawer.css -->
+</style>`;
+
+
+function fragmentFromString(strHTML) {
+  return document.createRange().createContextualFragment(strHTML);
+}
+
 export default class Drawer extends drawerCore() {
   constructor(el, props) {
     super();
@@ -27,6 +37,9 @@ export default class Drawer extends drawerCore() {
 
     el.appendChild(scrim);
     el.appendChild(content);
+
+    const ref = document.getElementsByTagName('style')[0];
+    ref.parentNode.insertBefore(fragmentFromString(style), ref);
 
     return el;
   }
