@@ -55,6 +55,29 @@ export default C => class extends componentCore(C) {
   }
 
   // @override
+  defaults() {
+    return {
+      opened: false,
+      transitionDuration: 200,
+      persistent: false,
+    };
+  }
+
+  // @override
+  sideEffects() {
+    return {
+      opened: (o) => {
+        if (o === true) this.open();
+        else this.close();
+      },
+      persistent: (d) => {
+        if (d === true) this.persist();
+        else this.unpersist();
+      },
+    };
+  }
+
+  // @override
   setupComponent(el, props) {
     super.setupComponent(el, props);
 
@@ -67,10 +90,6 @@ export default C => class extends componentCore(C) {
     if (this.persistent) this.scrim.style.display = 'none';
 
     return this;
-  }
-
-  setupDOM(el) {
-    return el;
   }
 
   cacheDOMElements() {
@@ -250,11 +269,9 @@ export default C => class extends componentCore(C) {
     this.prepInteraction();
     this.setState('opened', opened);
     this.loopState = IDLE;
-    requestAnimationFrame(() => {
-      this.startTranslateX = opened * this.sliderWidth;
-      this.endAnimating();
-      this.updateDOM(this.startTranslateX, this.sliderWidth);
-    });
+    this.startTranslateX = opened * this.sliderWidth;
+    this.endAnimating();
+    this.updateDOM(this.startTranslateX, this.sliderWidth);
   }
 
   updateTranslateX() {
@@ -371,29 +388,6 @@ export default C => class extends componentCore(C) {
   updateDOM(translateX, sliderWidth) {
     this.content.style.transform = `translateX(${translateX}px)`;
     this.scrim.style.opacity = translateX / sliderWidth;
-  }
-
-  // @override
-  defaults() {
-    return {
-      opened: false,
-      transitionDuration: 200,
-      persistent: false,
-    };
-  }
-
-  // @override
-  sideEffects() {
-    return {
-      opened: (o) => {
-        if (o === true) this.open();
-        else this.close();
-      },
-      persistent: (d) => {
-        if (d === true) this.persist();
-        else this.unpersist();
-      },
-    };
   }
 
   close() {
