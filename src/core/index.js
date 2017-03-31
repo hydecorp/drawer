@@ -1,13 +1,6 @@
-/*
- * Adapted from Ratchet's sliders.js
- * http://goratchet.com/components#sliders
- *
- * Adapted from Brad Birdsall's Swipe
- * https://github.com/thebird/Swipe
- *
- * Copyright (c) 2016 Florian Klampfer
- * Licensed under MIT
- */
+// Copyright (c) 2017 Florian Klampfer
+// Licensed under MIT
+
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 
 import componentCore from 'y-component/src/component-core';

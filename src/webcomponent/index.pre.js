@@ -1,7 +1,5 @@
-/*
- * Copyright (c) 2016 Florian Klampfer
- * Licensed under MIT
- */
+// Copyright (c) 2017 Florian Klampfer
+// Licensed under MIT
 
 import HTMLYDrawerElement from './y-drawer';
 
