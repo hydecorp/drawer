@@ -360,13 +360,10 @@ export default C => class extends componentCore(C) {
     } else {
       // document.body.style.overflowY = '';
       this.scrim.style.pointerEvents = '';
-
-      // only remove the styles when closing the drawer,
-      // since we eitehr expect a navigation (page reload)
-      // or closing the drawer again, ie more changes
-      this.content.style.willChange = '';
-      this.scrim.style.willChange = '';
     }
+
+    this.content.style.willChange = '';
+    this.scrim.style.willChange = '';
 
     this.fireEvent('transitioned');
   }
