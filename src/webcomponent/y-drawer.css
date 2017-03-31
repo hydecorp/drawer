@@ -1,14 +1,16 @@
-:host {
+@media screen {
+  :host {
 
-}
+  }
 
-.y-drawer-content {
-  @apply --y-drawer-content-container;
-  width: var(--y-drawer-width, 18rem);
-  left: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 18rem)));
-  background: var(--y-drawer-background, #e8e8e8);
-}
+  .y-drawer-content {
+    @apply --y-drawer-content-container;
+    width: var(--y-drawer-width, 18rem);
+    left: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 18rem)));
+    background: var(--y-drawer-background, #e8e8e8);
+  }
 
-.y-drawer-scrim {
-  background: var(--y-drawer-scrim-background, rgba(0, 0, 0, 0.67));
+  .y-drawer-scrim {
+    background: var(--y-drawer-scrim-background, rgba(0, 0, 0, 0.67));
+  }
 }
