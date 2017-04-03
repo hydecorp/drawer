@@ -1,6 +1,6 @@
 {
   "name": "y-drawer",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Y drawer?",
   "config": {
     "port": "8080"
@@ -54,7 +54,7 @@
     "watchify": "3.9.0"
   },
   "dependencies": {
-    "y-component": "4.0.0"
+    "y-component": "6.0.0"
   },
   "directories": {
     "example": "examples"
