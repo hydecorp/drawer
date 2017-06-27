@@ -15,10 +15,6 @@
 
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 
-import componentCore from 'y-component/src/component-core';
-
-import { linearTween, pageDist } from '../common';
-
 // const JS_FEATURES = [
 //   'fn/array/for-each',
 //   'fn/function/bind',
@@ -40,6 +36,12 @@ import { linearTween, pageDist } from '../common';
 //   'csspointerevents',
 // ];
 
+import componentCore from 'y-component/src/component-core';
+import { Observable } from 'rxjs';
+// import { animationFrame } from 'rxjs/scheduler/animationFrame';
+
+import { linearTween, pageDist } from '../common';
+
 const Symbol = global.Symbol || (x => `_${x}`);
 
 const IDLE = Symbol('idle');
@@ -50,7 +52,11 @@ const ANIMATING = Symbol('animating');
 const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
 
-const def = Object.defineProperty.bind(Object);
+function pauseWith(pauser$) {
+  return this.withLatestFrom(pauser$)
+      .filter(([, paused]) => paused === false)
+      .map(([x]) => x);
+}
 
 export default C => class extends componentCore(C) {
 
@@ -94,48 +100,171 @@ export default C => class extends componentCore(C) {
     if (!this.persistent) this.addEventListeners();
     if (this.persistent) this.scrim.style.display = 'none';
 
+    this.setupObservables();
+
     return this;
   }
 
   cacheDOMElements() {
-    def(this, 'scrim', { value: this.root.querySelector('.y-drawer-scrim') });
-    def(this, 'content', { value: this.root.querySelector('.y-drawer-content') });
+    this.scrim = this.root.querySelector('.y-drawer-scrim');
+    this.content = this.root.querySelector('.y-drawer-content');
   }
 
   defProperties() {
-    def(this, 'startX', { value: 0, writable: true });
-    def(this, 'startY', { value: 0, writable: true });
-    def(this, 'pageX', { value: 0, writable: true });
-    def(this, 'pageY', { value: 0, writable: true });
-    def(this, 'lastPageX', { value: 0, writable: true });
-    def(this, 'lastPageY', { value: 0, writable: true });
-    def(this, 'isScrolling', { writable: true });
-    def(this, 'startedMoving', { value: false, writable: true });
-    def(this, 'loopState', { value: IDLE, writable: true });
-    def(this, 'velocity', { value: 0, writable: true });
-    def(this, 'startTranslateX', { value: 0, writable: true });
-    def(this, 'translateX', { value: 0, writable: true });
-    def(this, 'animationFrameRequested', { value: false, writable: true });
-    def(this, 'touching', { value: false, writable: true });
-    def(this, 'lastTime', { writable: true });
-    def(this, 'sliderWidth', { writable: true });
-    def(this, 'animation', { writable: true, configurable: true });
+    this.startX = 0;
+    this.startY = 0;
+    this.pageX = 0;
+    this.pageY = 0;
+    this.lastPageX = 0;
+    this.lastPageY = 0;
+    this.isScrolling = true;
+    this.startedMoving = false;
+    this.loopState = IDLE;
+    this.velocity = 0;
+    this.startTranslateX = 0;
+    this.translateX = 0;
+    this.animationFrameRequested = false;
+    this.touching = false;
+    this.lastTime = true;
+    this.sliderWidth = true;
+    this.animation = true;
   }
 
   bindCallbacks() {
-    def(this, 'touchStartCallback', { value: this.touchStartCallback.bind(this) });
-    def(this, 'touchMoveCallback', { value: this.touchMoveCallback.bind(this) });
-    def(this, 'touchEndCallback', { value: this.touchEndCallback.bind(this) });
-    def(this, 'scrimClickCallback', { value: this.scrimClickCallback.bind(this) });
-    def(this, 'animationFrameCallback', { value: this.animationFrameCallback.bind(this) });
+    this.touchStartCallback = this.touchStartCallback.bind(this);
+    this.touchMoveCallback = this.touchMoveCallback.bind(this);
+    this.touchEndCallback = this.touchEndCallback.bind(this);
+    this.scrimClickCallback = this.scrimClickCallback.bind(this);
+    this.animationFrameCallback = this.animationFrameCallback.bind(this);
   }
 
   addEventListeners() {
-    document.addEventListener('touchstart', this.touchStartCallback, { passive: false });
-    document.addEventListener('touchmove', this.touchMoveCallback, { passive: false });
-    document.addEventListener('touchend', this.touchEndCallback, { passive: false });
+    // document.addEventListener('touchstart', this.touchStartCallback, { passive: false });
+    // document.addEventListener('touchmove', this.touchMoveCallback, { passive: false });
+    // document.addEventListener('touchend', this.touchEndCallback, { passive: false });
+    //
+    // this.scrim.addEventListener('click', this.scrimClickCallback);
+  }
 
-    this.scrim.addEventListener('click', this.scrimClickCallback);
+  setupObservables() {
+    const touchend$ = Observable.fromEvent(document, 'touchend').share();
+    const close$ = Observable.fromEvent(this.scrim, 'click');
+
+    const touchstart$ = Observable.fromEvent(document, 'touchstart')
+      .filter(({ touches }) => touches.length === 1) // TODO: necessary?
+      .map(({ touches: [touch], timeStamp }) => Object.assign(touch, {
+        timeStamp,
+        sliderWidth: this.getMovableSliderWidth(),
+      }))
+      .share();
+
+    // TODO: rename
+    // basically means this is a touch in the right region, that MIGHT trigger sliding
+    const touching$ = touchstart$
+      .map(({ pageX }) => /* this.opened || */ pageX > window.innerWidth / 3)
+      .do(this.prepInteraction.bind(this));
+
+    // const sliding$ = TODO
+
+    const touchmove$ = pauseWith.call(Observable.fromEvent(document, 'touchmove'), touching$)
+      // .do(x => console.log(x))
+      .map(({ touches, timeStamp }) =>
+        Object.assign(
+          Array.prototype.find.call(touches, t => t.identifier === 0),
+          { timeStamp },
+        ),
+      )
+      .share();
+
+    const translateX$ = touchmove$
+      .withLatestFrom(touchstart$)
+      .map(([{ pageX }, { pageX: startX, sliderWidth }]) => {
+        const deltaX = pageX - startX;
+        let translateX = /* this.startTranslateX */ 0 + deltaX;
+        translateX = Math.max(0, Math.min(sliderWidth, translateX));
+        return [translateX, sliderWidth];
+      })
+      .share();
+
+    const velocity$ = touchmove$
+      .pairwise()
+      .scan((velocity, [{ pageX: lastPageX, timeStamp: lastTimeStamp },
+                        { pageX, timeStamp }]) => {
+        const pageXDiff = pageX - lastPageX;
+        const timeDiff = timeStamp - lastTimeStamp;
+        return (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
+               ((1 - VELOCITY_LINEAR_COMBINATION) * velocity);
+      }, 0);
+      // .do(v => console.log(v))
+
+    const opened$ = touchend$
+      .withLatestFrom(velocity$, translateX$)
+      .map(([, velocity, [translateX, sliderWidth]]) => {
+        if (velocity > VELOCITY_THRESHOLD) {
+          return true;
+        } else if (velocity < -VELOCITY_THRESHOLD) {
+          return false;
+        } else if (translateX >= sliderWidth / 2) {
+          return true;
+        }
+        return false;
+      })
+      // .do(opened => this.setStateKV('opened', opened))
+
+    const anim$ = opened$
+      .withLatestFrom(translateX$)
+      .switchMap(([opened, [translateX, sliderWidth]]) => {
+        const animStartX = translateX;
+        const animEndX = (opened ? 1 : 0) * sliderWidth;
+        const animChangeInValue = animEndX - animStartX;
+        const transitionDuration = this.transitionDuration;
+        let animStartTime;
+
+
+        return Observable.create((observer) => {
+          const id = requestAnimationFrame(function f(time) {
+            animStartTime = animStartTime || time; // TODO: this seems a bit hacky
+
+            const timeInAnimation = time - animStartTime;
+
+            if (timeInAnimation < transitionDuration) {
+              const startValue = animStartX;
+              const changeInValue = animChangeInValue;
+
+              observer.next([
+                linearTween(timeInAnimation, startValue, changeInValue, transitionDuration),
+                sliderWidth,
+              ]);
+
+              requestAnimationFrame(f);
+            } else {
+              observer.next([animEndX, sliderWidth]);
+              observer.complete();
+            }
+          });
+
+          return () => { cancelAnimationFrame(id); };
+        })
+        .do(null, null, () => {
+          if (opened) {
+            // document.body.style.overflowY = 'hidden';
+            this.scrim.style.pointerEvents = 'all';
+            this.content.classList.add('y-drawer-opened');
+          } else {
+            // document.body.style.overflowY = '';
+            this.scrim.style.pointerEvents = '';
+          }
+
+          this.content.style.willChange = '';
+          this.scrim.style.willChange = '';
+
+          this.fireEvent('transitioned');
+        });
+      })
+
+    translateX$.merge(anim$)
+      .do(args => this.updateDOM(...args))
+      .subscribe();
   }
 
   removeEventListeners() {
