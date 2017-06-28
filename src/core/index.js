@@ -53,10 +53,28 @@ const ANIMATING = Symbol('animating');
 const VELOCITY_THRESHOLD = 0.2;
 const VELOCITY_LINEAR_COMBINATION = 0.8;
 
-function pauseWith(pauser$) {
-  return this.withLatestFrom(pauser$)
-      .filter(([, paused]) => paused === false)
-      .map(([x]) => x);
+// function pauseWith(pauser$) {
+//   return this.withLatestFrom(pauser$)
+//       .filter(([, paused]) => paused === false)
+//       .map(([x]) => x);
+// }
+
+function createTween(tween, b, c, d, s) {
+  let animStartTime;
+  return Observable.create((observer) => {
+    const id = requestAnimationFrame(function sampleTween(time) {
+      animStartTime = animStartTime || time;
+      const timeInAnimation = time - animStartTime;
+      if (timeInAnimation < d) {
+        observer.next(tween(timeInAnimation, b, c, d, s));
+        requestAnimationFrame(sampleTween);
+      } else {
+        observer.next(tween(d, b, c, d, s));
+        observer.complete();
+      }
+    });
+    return () => { cancelAnimationFrame(id); };
+  });
 }
 
 export default C => class extends componentCore(C) {
@@ -70,8 +88,9 @@ export default C => class extends componentCore(C) {
   defaults() {
     return {
       opened: false,
-      transitionDuration: 2000,
+      transitionDuration: 250,
       persistent: false,
+      nativeMargin: 0,
     };
   }
 
@@ -148,232 +167,136 @@ export default C => class extends componentCore(C) {
   }
 
   setupObservables() {
-    // const touchend$ = Observable.fromEvent(document, 'touchend').share();
     // const close$ = Observable.fromEvent(this.scrim, 'click');
 
-    this.translateX$ = Observable.defer(() => Observable.fromEvent(document, 'touchstart')
-      .filter(({ touches }) => touches.length === 1) // TODO: necessary?
-      .map(({ touches: [touch], timeStamp }) => Object.assign(touch, {
-        sliderWidth: this.getMovableSliderWidth(),
-        velocity: 0,
-        timeStamp,
-      }))
-      .withLatestFrom(this.translateX$.startWith({ translateX: 0, opened: false }))
-      .filter(([{ pageX }, { opened }]) => opened || pageX < window.innerWidth / 3)
-      .do(this.prepInteraction.bind(this))
-      .switchMap(([initialTouch, { translateX: startTranslateX }]) => {
-        const { pageX: startX, sliderWidth } = initialTouch;
+    // TODO: recalculate on change!? let user provide width?
+    const sliderWidth = this.getMovableSliderWidth();
 
-        const $1 = Observable.fromEvent(document, 'touchmove')
-          .map(({ touches, timeStamp }) => Object.assign(
-            Array.prototype.find.call(touches, t => t.identifier === 0),
-            { sliderWidth, timeStamp },
-          ))
-          .map((touch) => {
-            const { pageX } = touch;
+    this.translateX$ = Observable.defer(() =>
+      Observable.fromEvent(document, 'touchstart', { passive: true })
+        .filter(({ touches }) => touches.length === 1)
+        .map(({ touches: [touch] }) => touch)
+        .withLatestFrom(this.translateX$.startWith({ translateX: 0, opened: false }))
+        .filter(([{ pageX }, { opened }]) => this.isInSlideRange(pageX, sliderWidth, opened))
+        .do(this.prepInteraction.bind(this))
+        .switchMap(([startTouch, { translateX: startTranslateX }]) => {
+          const { pageX: startX, pageY: startY } = startTouch;
 
-            const deltaX = pageX - startX;
-            let translateX = startTranslateX + deltaX;
-            translateX = Math.max(0, Math.min(sliderWidth, translateX));
+          const isScrolling$ = Observable.defer(() => this.touchmove$
+            .first()
+            .map(({ pageX, pageY }) => Math.abs(startY - pageY) > Math.abs(startX - pageX))
+            .startWith(undefined));
 
-            return Object.assign(touch, { translateX });
-          })
-          .share();
+          const touchend$ = Observable.fromEvent(document, 'touchend', { passive: true })
+            .withLatestFrom(isScrolling$)
+            .filter(([e, isScrolling]) => !isScrolling || e.touches.length === 0)
+            .share();
 
-        const opened$ = $1
-          .startWith(initialTouch)
-          .pairwise()
-          .map(([prevTouch, touch]) => {
-            const { pageX: lastPageX, timeStamp: lastTimeStamp, velocity: prevVelocity }
-              = prevTouch;
-            const { pageX, timeStamp } = touch;
+          this.touchmove$ = Observable.fromEvent(document, 'touchmove', { passive: true })
+            .map(({ touches }) => Array.prototype.find.call(touches, t => t.identifier === 0))
+            .withLatestFrom(isScrolling$)
+            .filter(([, isScrolling]) => !isScrolling)
+            .map(([snowball]) => {
+              const { pageX } = snowball;
 
-            const pageXDiff = pageX - lastPageX;
-            const timeDiff = timeStamp - lastTimeStamp;
-            const velocity = (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
-                             ((1 - VELOCITY_LINEAR_COMBINATION) * prevVelocity);
+              const deltaX = pageX - startX;
+              let translateX = startTranslateX + deltaX;
+              translateX = Math.max(0, Math.min(sliderWidth, translateX));
 
-            return Object.assign(touch, { velocity });
-          })
-          .map((touch) => {
-            const { velocity, translateX } = touch;
+              return Object.assign(snowball, { translateX });
+            })
+            .takeUntil(touchend$)
+            .share();
 
-            if (velocity > VELOCITY_THRESHOLD) {
-              return Object.assign(touch, { opened: true });
-            } else if (velocity < -VELOCITY_THRESHOLD) {
-              return Object.assign(touch, { opened: false });
-            } else if (translateX >= sliderWidth / 2) {
-              return Object.assign(touch, { opened: true });
-            }
-            return Object.assign(touch, { opened: false });
-          });
+          const velocity$ = this.touchmove$
+            .startWith(startTouch)
+            .timestamp()
+            .pairwise()
+            .scan(this.velocityReducer.bind(this), 0);
 
-        const $2 = Observable.fromEvent(document, 'touchend')
-          .filter(e => /* this.isScrolling || */ e.touches.length === 0)
-          .withLatestFrom(opened$)
-          .mergeMap(([, touch]) => { // TODO: complete obs when anim is complete?
-            const { translateX, opened } = touch;
-            const animStartX = translateX;
-            const animEndX = (opened ? 1 : 0) * sliderWidth;
-            const animChangeInValue = animEndX - animStartX;
+          const anim$ = touchend$
+            .withLatestFrom(this.touchmove$, velocity$)
+            .map(([, snowball, velocity]) => {
+              const { translateX } = snowball;
+              const opened = this.calcOpened(velocity, translateX, sliderWidth);
+              return Object.assign(snowball, { opened });
+            })
+            .do(() => {
+              // if (this.touching) {
+              //   if (this.isScrolling || e.touches.length > 0) {
+              //     return;
+              //   }
+              // if (this.startedMoving) {
+              //   this.updateMenuOpen();
+              // }
+              if (this.opened) {
+                this.scrim.style.pointerEvents = 'all';
+              } else {
+                this.scrim.style.pointerEvents = '';
+              }
+              // }
+            })
+            .first() // TODO: better way to close the outer observable?
+            // .merge(this.openedChanged$
+            //   .withLatestFrom(this.translateX$))
+            //   .map(([opened, { translateX }]) => ({ translateX, opened }))
+            .mergeMap((snowball) => {
+              const { translateX, opened } = snowball;
 
-            return this.createAnimation(animStartX, animChangeInValue, animEndX)
-              .map(x => Object.assign(touch, { translateX: x }));
-          });
+              const endTranslateX = (opened ? 1 : 0) * sliderWidth;
+              const diffTranslateX = endTranslateX - translateX;
 
-        return Observable.merge($1.takeUntil($2), $2)
-      })
-    )
-    .share();
+              return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
+                .map(sample => Object.assign(snowball, { translateX: sample }))
+                .do(null, null, this.cleanupInteraction.bind(this, opened));
+            });
+
+          return Observable.merge(this.touchmove$, anim$);
+            // .do(null, () => console.error('aborted?'), () => console.log('$1 + $2 finished'));
+        }),
+      )
+      .share();
 
     this.translateX$
-      .do(({ translateX, sliderWidth }) => this.updateDOM(translateX, sliderWidth))
-      .subscribe(null, err => console.error(err));
-
-    // // TODO: rename
-    // // basically means this is a touch in the right region, that MIGHT trigger sliding
-    // const touching$ = touchstart$
-    //   .map(({ pageX }) => /* this.opened || */ pageX > window.innerWidth / 3)
-    //   .do(this.prepInteraction.bind(this));
-    //
-    // // const sliding$ = TODO
-    //
-    // const touchmove$ = pauseWith.call(Observable.fromEvent(document, 'touchmove'), touching$)
-    //   // .do(x => console.log(x))
-    //   .map(({ touches, timeStamp }) =>
-    //     Object.assign(
-    //       Array.prototype.find.call(touches, t => t.identifier === 0),
-    //       { timeStamp },
-    //     ),
-    //   )
-    //   .share();
-    //
-    // const translateX$ = touchmove$
-    //   .withLatestFrom(touchstart$)
-    //   .map(([{ pageX }, { pageX: startX, sliderWidth }]) => {
-    //     const deltaX = pageX - startX;
-    //     let translateX = /* this.startTranslateX */ 0 + deltaX;
-    //     translateX = Math.max(0, Math.min(sliderWidth, translateX));
-    //     return [translateX, sliderWidth];
-    //   })
-    //   .share();
-    //
-    // const velocity$ = touchmove$
-    //   .pairwise()
-    //   .scan((velocity, [{ pageX: lastPageX, timeStamp: lastTimeStamp },
-    //                     { pageX, timeStamp }]) => {
-    //     const pageXDiff = pageX - lastPageX;
-    //     const timeDiff = timeStamp - lastTimeStamp;
-    //     return (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
-    //            ((1 - VELOCITY_LINEAR_COMBINATION) * velocity);
-    //   }, 0);
-    //   // .do(v => console.log(v))
-    //
-    // const opened$ = touchend$
-    //   .withLatestFrom(velocity$, translateX$)
-    //   .map(([, velocity, [translateX, sliderWidth]]) => {
-    //     if (velocity > VELOCITY_THRESHOLD) {
-    //       return true;
-    //     } else if (velocity < -VELOCITY_THRESHOLD) {
-    //       return false;
-    //     } else if (translateX >= sliderWidth / 2) {
-    //       return true;
-    //     }
-    //     return false;
-    //   })
-    //   // .do(opened => this.setStateKV('opened', opened))
-    //
-    // const anim$ = opened$
-    //   .withLatestFrom(translateX$)
-    //   .switchMap(([opened, [translateX, sliderWidth]]) => {
-    //     const animStartX = translateX;
-    //     const animEndX = (opened ? 1 : 0) * sliderWidth;
-    //     const animChangeInValue = animEndX - animStartX;
-    //     const transitionDuration = this.transitionDuration;
-    //     let animStartTime;
-    //
-    //
-    //     return Observable.create((observer) => {
-    //       const id = requestAnimationFrame(function f(time) {
-    //         animStartTime = animStartTime || time; // TODO: this seems a bit hacky
-    //
-    //         const timeInAnimation = time - animStartTime;
-    //
-    //         if (timeInAnimation < transitionDuration) {
-    //           const startValue = animStartX;
-    //           const changeInValue = animChangeInValue;
-    //
-    //           observer.next([
-    //             linearTween(timeInAnimation, startValue, changeInValue, transitionDuration),
-    //             sliderWidth,
-    //           ]);
-    //
-    //           requestAnimationFrame(f);
-    //         } else {
-    //           observer.next([animEndX, sliderWidth]);
-    //           observer.complete();
-    //         }
-    //       });
-    //
-    //       return () => { cancelAnimationFrame(id); };
-    //     })
-    //     .do(null, null, () => {
-    //       if (opened) {
-    //         // document.body.style.overflowY = 'hidden';
-    //         this.scrim.style.pointerEvents = 'all';
-    //         this.content.classList.add('y-drawer-opened');
-    //       } else {
-    //         // document.body.style.overflowY = '';
-    //         this.scrim.style.pointerEvents = '';
-    //       }
-    //
-    //       this.content.style.willChange = '';
-    //       this.scrim.style.willChange = '';
-    //
-    //       this.fireEvent('transitioned');
-    //     });
-    //   })
-    //
-    // translateX$.merge(anim$)
-    //   .do(args => this.updateDOM(...args))
-    //   .subscribe();
+      .do(({ translateX }) => this.updateDOM(translateX, sliderWidth))
+      .do(null, e => console.error(e))
+      .catch((e, c) => c)
+      .subscribe();
   }
 
-  createAnimation(animStartX, animChangeInValue, animEndX) {
-    const transitionDuration = this.transitionDuration;
-    let animStartTime;
+  isInSlideRange(pageX, sliderWidth, opened) {
+    return opened || (pageX > this.nativeMargin && pageX < sliderWidth);
+  }
 
-    return Observable.create((observer) => {
-      const id = requestAnimationFrame(function f(time) {
-        animStartTime = animStartTime || time; // TODO: this seems a bit hacky
+  velocityReducer(velocity, [prevSnowball, snowball]) {
+    const { value: { pageX: lastPageX }, timestamp: lastTimestamp } = prevSnowball;
+    const { value: { pageX }, timestamp } = snowball;
 
-        const timeInAnimation = time - animStartTime;
+    const pageXDiff = pageX - lastPageX;
+    const timeDiff = timestamp - lastTimestamp;
 
-        if (timeInAnimation < transitionDuration) {
-          const startValue = animStartX;
-          const changeInValue = animChangeInValue;
+    return (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
+           ((1 - VELOCITY_LINEAR_COMBINATION) * velocity);
+  }
 
-          observer.next(
-            linearTween(timeInAnimation, startValue, changeInValue, transitionDuration),
-          );
-
-          requestAnimationFrame(f);
-        } else {
-          observer.next(animEndX);
-          observer.complete();
-        }
-      });
-
-      return () => { cancelAnimationFrame(id); };
-    });
+  // TODO: rename
+  calcOpened(velocity, translateX, sliderWidth) {
+    if (velocity > VELOCITY_THRESHOLD) {
+      return true;
+    } else if (velocity < -VELOCITY_THRESHOLD) {
+      return false;
+    } else if (translateX >= sliderWidth / 2) {
+      return true;
+    }
+    return false;
   }
 
   removeEventListeners() {
-    document.removeEventListener('touchstart', this.touchStartCallback, { passive: false });
-    document.removeEventListener('touchmove', this.touchMoveCallback, { passive: false });
-    document.removeEventListener('touchend', this.touchEndCallback, { passive: false });
-
-    this.scrim.removeEventListener('click', this.scrimClickCallback);
+    // // document.removeEventListener('touchstart', this.touchStartCallback, { passive: false });
+    // // document.removeEventListener('touchmove', this.touchMoveCallback, { passive: false });
+    // // document.removeEventListener('touchend', this.touchEndCallback, { passive: false });
+    // //
+    // this.scrim.removeEventListener('click', this.scrimClickCallback);
   }
 
   requestAnimationLoop() {
@@ -483,7 +406,23 @@ export default C => class extends componentCore(C) {
     this.content.style.willChange = 'transform';
     this.scrim.style.willChange = 'opacity';
     this.content.classList.remove('y-drawer-opened');
-    this.sliderWidth = this.getMovableSliderWidth();
+    // this.sliderWidth = this.getMovableSliderWidth();
+  }
+
+  cleanupInteraction(opened) {
+    if (opened) {
+      // document.body.style.overflowY = 'hidden';
+      this.scrim.style.pointerEvents = 'all';
+      this.content.classList.add('y-drawer-opened');
+    } else {
+      // document.body.style.overflowY = '';
+      this.scrim.style.pointerEvents = '';
+    }
+
+    this.content.style.willChange = '';
+    this.scrim.style.willChange = '';
+
+    this.fireEvent('transitioned');
   }
 
   getMovableSliderWidth() {
