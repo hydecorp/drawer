@@ -13,22 +13,56 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { Observable } from 'rxjs/Observable';
+
 /**
-  * @param t current time
-  * @param b start value
-  * @param c change in value
-  * @param d duration
-  * @returns {number}
-  */
-function linearTween(t, b, c, d) {
+ * Creates an observable that emits samples from an easing function on every animation frame
+ * for a duration `d` ms.
+ *
+ * The first emitted value will be a sample form the easing function at `t = 0`,
+ * and the last emitted value is guaranteed to be the easing function at `t = d`.
+ *
+ * It can be used with any of [Robert Penner's easing functions](http://robertpenner.com/easing/),
+ * i.e. functions with a signature of `(t, b, c, d, s)`, where
+ * `t`: current time, `b`: beginning value, `c`: change in value, `d`: total duration, `s`: optional
+ *
+ * @param {function(t: number, b: number, c: number, d: number, [s]: number): number} easingFunction
+ * - the easing fuction to sample from; can use any of Robert Penner's easing functions
+ * @param {number} b - beginning value and 2nd parameter of the easing function
+ * @param {number} c - change in value (or end value) and 3rd parameter of the easing function
+ * @param {number} d - total duration of the tween in ms and 4th parameter of the easing function
+ * @param {number} [s] - 5th parameter of the easing function (optional)
+ * @return {Observable<number>}
+ * - an observable emitting samples of the easing function on animation frames for `d` ms
+ */
+export function createTween(easingFunction, b, c, d, s) {
+  return Observable.create((observer) => {
+    let startTime;
+    let id = requestAnimationFrame(function sample(time) {
+      startTime = startTime || time;
+      const t = time - startTime;
+      if (t < d) {
+        observer.next(easingFunction(t, b, c, d, s));
+        id = requestAnimationFrame(sample);
+      } else {
+        observer.next(easingFunction(d, b, c, d, s));
+        observer.complete();
+        id = null;
+      }
+    });
+    return () => { if (id) { cancelAnimationFrame(id); } };
+  });
+}
+
+export function linearTween(t, b, c, d) {
   return ((c * t) / d) + b;
 }
 
-function pageDist(p1, p2) {
+export function pageDist(p1, p2) {
   return Math.sqrt(((p1.pageX - p2.pageX) ** 2) + ((p1.pageY - p2.pageY) ** 2));
 }
 
-function contains(target, className) {
+export function contains(target, className) {
   let t = target;
   while (t != null) {
     if (t.classList && t.classList.contains(className)) {
@@ -38,5 +72,3 @@ function contains(target, className) {
   }
   return false;
 }
-
-export { linearTween, pageDist, contains };

@@ -1,4 +1,5 @@
 {
   "presets": ["es2015", "es2016"],
-  "only": ["src"]
+  "plugins": ["transform-function-bind"],
+  "only": ["src"],
 }
