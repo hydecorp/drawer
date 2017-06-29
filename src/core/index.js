@@ -13,8 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions,
-no-console, max-len */
+/* eslint-disable
+import/no-extraneous-dependencies,
+import/no-unresolved,
+import/extensions,
+no-console,
+max-len,
+*/
 
 // const JS_FEATURES = [
 //   'fn/array/find',
@@ -182,12 +187,12 @@ export default C => class extends componentCore(C) {
       Observable::fromEvent(document, 'touchstart', { passive: true })
         ::pauseWith(this.persistent$::startWith(false))
         ::filter(({ touches }) => touches.length === 1)
-        ::map(({ touches: [touch] }) => touch)
+        ::map(({ touches }) => touches[0])
         ::withLatestFrom(this.translateX$::startWith({ translateX: 0, opened: false }))
         ::filter(([{ pageX }, { opened }]) => this.isInSlideRange(pageX, sliderWidth, opened))
         ::effect(::this.prepInteraction)
         ::switchMap(([startTouch, { translateX: startTranslateX }]) => {
-          const { pageX: startX, pageY: startY } = startTouch;
+          const { pageX: startX, pageY: startY, identifier: startIdentifier } = startTouch;
 
           const isScrolling$ = Observable::defer(() => this.touchmove$
             ::first()
@@ -196,11 +201,11 @@ export default C => class extends componentCore(C) {
 
           const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
             ::withLatestFrom(isScrolling$)
-            ::filter(([e, isScrolling]) => !isScrolling || e.touches.length === 0)
+            ::filter(([e, isScrolling]) => !isScrolling && e.touches.length === 0)
             ::share();
 
           this.touchmove$ = Observable::fromEvent(document, 'touchmove', { passive: true })
-            ::map(({ touches }) => touches::find(t => t.identifier === 0))
+            ::map(({ touches }) => touches::find(t => t.identifier === startIdentifier))
             ::withLatestFrom(isScrolling$)
             ::filter(([, isScrolling]) => !isScrolling)
             ::map(([snowball]) => {
@@ -260,8 +265,7 @@ export default C => class extends componentCore(C) {
       ::share();
 
     this.translateX$
-      ::effect(({ translateX }) => this.updateDOM(translateX, sliderWidth))
-      ::effect(null, e => console.error(e))
+      ::effect(({ translateX }) => this.updateDOM(translateX, sliderWidth), ::console.error)
       ::recover((e, c) => c)
       .subscribe();
   }
