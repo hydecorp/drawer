@@ -19,7 +19,6 @@ import/no-unresolved,
 import/extensions,
 no-else-return,
 no-console,
-max-len,
 */
 
 // const JS_FEATURES = [
@@ -50,19 +49,20 @@ import { Subject } from 'rxjs/Subject';
 import { defer } from 'rxjs/observable/defer';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
-import { never } from 'rxjs/observable/never';
+// import { never } from 'rxjs/observable/never';
 
 import { _catch as recover } from 'rxjs/operator/catch';
 import { _do as effect } from 'rxjs/operator/do';
 import { filter } from 'rxjs/operator/filter';
-import { first } from 'rxjs/operator/first';
 import { map } from 'rxjs/operator/map';
 import { mergeMap } from 'rxjs/operator/mergeMap';
 import { pairwise } from 'rxjs/operator/pairwise';
 import { scan } from 'rxjs/operator/scan';
 import { share } from 'rxjs/operator/share';
+import { skipWhile } from 'rxjs/operator/skipWhile';
 import { startWith } from 'rxjs/operator/startWith';
 import { switchMap } from 'rxjs/operator/switchMap';
+import { take } from 'rxjs/operator/take';
 import { takeUntil } from 'rxjs/operator/takeUntil';
 import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
@@ -80,6 +80,13 @@ import { createTween, linearTween } from '../common';
 
 const VELOCITY_THRESHOLD = 0.2; // px/ms
 const VELOCITY_LINEAR_COMBINATION = 0.8;
+const SLIDE_THRESHOLD = 10;
+
+const abs = ::Math.abs;
+const sqrt = ::Math.sqrt;
+const min = ::Math.min;
+const max = ::Math.max;
+const assign = ::Object.assign;
 
 // function pauseWith(pauser$) {
 //   return this::withLatestFrom(pauser$)
@@ -87,9 +94,9 @@ const VELOCITY_LINEAR_COMBINATION = 0.8;
 //       ::map(([x]) => x);
 // }
 
-function pauseWith(pauser$) {
-  return pauser$::switchMap(paused => (paused ? Observable::never() : this));
-}
+// function pauseWith(pauser$) {
+//   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
+// }
 
 function cacheDOMElements() {
   this.scrim = this.root.querySelector('.y-drawer-scrim');
@@ -127,7 +134,7 @@ function calcOpened(velocity, translateX, sliderWidth) {
 function calcTranslateX(startX, pageX, startTranslateX, sliderWidth) {
   const deltaX = pageX - startX;
   const translateX = startTranslateX + deltaX;
-  return Math.max(0, Math.min(sliderWidth, translateX));
+  return max(0, min(sliderWidth, translateX));
 }
 
 function prepInteraction() {
@@ -169,6 +176,7 @@ function setupObservables() {
   const { find } = Array.prototype;
 
   // const scrimClick$ = Observable::fromEvent(this.scrim, 'click');
+  // window.addEventListener('touchmove', () => {});
 
   this.opened$ = new Subject();
   this.persistent$ = new Subject();
@@ -176,9 +184,26 @@ function setupObservables() {
   // TODO: recalculate on change!? let user provide width?
   const sliderWidth = this::getMovableSliderWidth();
 
+  // TODO: only do htis on iOS / when preventDefault is enabled
+  // NOTE: it is important to keep a permanent subscription to `touchmove`,
+  // as `preventDefault` will not work on iOS if it is called on a
+  // event from a subscription that occured after `touchstart`.
+  // yeah, this is strange...
+  const tm$ = Observable::fromEvent(document, 'touchmove', { passive: !this.preventDefault })
+    ::share();
+  // TODO: find better way to ensure that touchmove never get's unsubscribed
+  tm$.subscribe(() => {});
+
+  const te$ = Observable::fromEvent(document, 'touchend', { passive: !this.preventDefault })
+    ::share();
+  // TODO: find better way to ensure that touchend never get's unsubscribed
+  te$.subscribe(() => {});
+
   this.translateX$ = Observable::defer(() =>
-    Observable::fromEvent(document, 'touchstart', { passive: true })
-      ::pauseWith(this.persistent$::startWith(false))
+    Observable::fromEvent(document, 'touchstart', {
+      passive: !this.preventDefault,
+    })
+      // ::pauseWith(this.persistent$::startWith(false))
       ::filter(({ touches }) => touches.length === 1)
       ::map(({ touches }) => touches[0])
       ::withLatestFrom(this.translateX$::startWith({ translateX: 0, opened: false }))
@@ -187,40 +212,60 @@ function setupObservables() {
       ::switchMap(([startTouch, { translateX: startTranslateX }]) => {
         const { pageX: startX, pageY: startY, identifier: startIdentifier } = startTouch;
 
-        const isScrolling$ = Observable::defer(() => this.touchmove$
-          ::first()
-          ::map(({ pageX, pageY }) => Math.abs(startY - pageY) > Math.abs(startX - pageX))
-          ::startWith(undefined));
-
-        const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
-          ::withLatestFrom(isScrolling$)
-          ::filter(([e, isScrolling]) => !isScrolling && e.touches.length === 0)
+        const touchmove$ = tm$
+          ::map(e => assign(e.touches::find(t => t.identifier === startIdentifier), { e }))
           ::share();
 
-        this.touchmove$ = Observable::fromEvent(document, 'touchmove', { passive: true })
-          ::map(({ touches }) => touches::find(t => t.identifier === startIdentifier))
+        const isScrolling$ = touchmove$
+          ::skipWhile(({ pageX, pageY }) =>
+            sqrt((abs(startY - pageY) ** 2) + (abs(startX - pageX) ** 2)) < SLIDE_THRESHOLD)
+          ::take(1)
+          ::map(({ pageX, pageY }) => abs(startY - pageY) > abs(startX - pageX))
+          ::startWith(undefined)
+          ::share();
+
+        isScrolling$
+          ::effect((isScrolling) => {
+            if (isScrolling === false) {
+              document.body.style.overflowY = 'hidden';
+              document.body.classList.add('modal-open');
+            }
+          })
+          .subscribe();
+
+        const touchend$ = te$::withLatestFrom(isScrolling$)
+          ::filter(([e, isScrolling]) => isScrolling === false && e.touches.length === 0)
+          ::share();
+
+        // TODO: rename
+        const touchmove2$ = touchmove$::takeUntil(touchend$)
           ::withLatestFrom(isScrolling$)
-          ::filter(([, isScrolling]) => !isScrolling)
+          ::effect(([{ e }, isScrolling]) => {
+            if (isScrolling === false) {
+              console.log('preventDefault');
+              e.preventDefault();
+            }
+          })
+          ::filter(([, isScrolling]) => isScrolling === false)
           ::map(([snowball]) => {
             const { pageX } = snowball;
             const translateX = this::calcTranslateX(startX, pageX, startTranslateX, sliderWidth);
-            return Object.assign(snowball, { translateX });
+            return assign(snowball, { translateX });
           })
-          ::takeUntil(touchend$)
           ::share();
 
-        const velocity$ = this.touchmove$
-          ::startWith(startTouch)
+        const velocity$ = touchmove2$::startWith(startTouch)
           ::timestamp()
           ::pairwise()
           ::scan(this::velocityReducer, 0);
 
         const anim$ = touchend$
-          ::withLatestFrom(this.touchmove$, velocity$)
+          ::withLatestFrom(touchmove2$::startWith(null), velocity$::startWith(null))
+          ::filter(([, a, b]) => a != null && b != null)
           ::map(([, snowball, velocity]) => {
             const { translateX } = snowball;
             const opened = this::calcOpened(velocity, translateX, sliderWidth);
-            return Object.assign(snowball, { opened });
+            return assign(snowball, { opened });
           })
           ::effect(() => {
             // if (this.touching) {
@@ -240,7 +285,7 @@ function setupObservables() {
           // ::merge(this.opened$
           //   ::withLatestFrom(this.translateX$))
           //   ::map(([opened, { translateX }]) => ({ translateX, opened }))
-          ::first() // TODO: better way to close the outer observable?
+          ::take(1) // TODO: better way to close the outer observable?
           ::mergeMap((snowball) => {
             const { translateX, opened } = snowball;
 
@@ -248,11 +293,17 @@ function setupObservables() {
             const diffTranslateX = endTranslateX - translateX;
 
             return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
-              ::map(sample => Object.assign(snowball, { translateX: sample }))
-              ::effect(null, null, () => this::cleanupInteraction(opened));
+              ::map(sample => assign(snowball, { translateX: sample }))
+              ::effect(null, null, () => this::cleanupInteraction(opened))
+              ::effect(null, null, () => {
+                if (!opened) {
+                  document.body.style.overflowY = '';
+                  document.body.classList.remove('modal-open');
+                }
+              });
           });
 
-        return Observable::merge(this.touchmove$, anim$);
+        return Observable::merge(touchmove2$, anim$);
       }),
     )
     ::share();
@@ -552,6 +603,7 @@ export default C => class extends componentCore(C) {
       transitionDuration: 250,
       persistent: false,
       nativeMargin: 0,
+      preventDefault: true,
     };
   }
 
