@@ -94,13 +94,16 @@ const min = ::Math.min;
 const max = ::Math.max;
 const assign = ::Object.assign;
 
+// Like `filter`, but takes a stream of booleans instead of a predicate.
+// Similar to `pauseable`, but will not unsubscribe from the source observable.
+// NOTE: Writing a custom observabele would probably be a more efficient way of doing this
 function filterWith(p$) {
   return this::withLatestFrom(p$)
       ::filter(([, p]) => p)
       ::map(([x]) => x);
 }
 
-// function pauseWith(pauser$) {
+// function pauseable(pauser$) {
 //   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
 // }
 
@@ -120,7 +123,7 @@ function cacheDOMElements() {
 //          ((1 - VELOCITY_LINEAR_COMBINATION) * velocity);
 // }
 
-function isInSlideRange(clientX, drawerWidth, opened) {
+function isInRange(clientX, drawerWidth, opened) {
   return opened || (clientX > this.edgeMargin && clientX < drawerWidth / 2);
 }
 
@@ -212,17 +215,18 @@ function setupObservables() {
   const scrimVisible$ = Observable::defer(() =>
     temp.translateX$::map(translateX => translateX > 0)::startWith(false));
 
-  // TODO: rename
-  const touching$ = touchstart$
+  // indicates whether the touch positon is within the range (x-axis)
+  // from where to open the drawer.
+  const inRange$ = touchstart$
     ::withLatestFrom(scrimVisible$)
-    ::map(([{ clientX }, scrimVisible]) => this::isInSlideRange(clientX, drawerWidth, scrimVisible))
-    ::effect((touching) => { if (touching) { this::prepInteraction(); } })
+    ::map(([{ clientX }, scrimVisible]) => this::isInRange(clientX, drawerWidth, scrimVisible))
+    ::effect((inRange) => { if (inRange) { this::prepInteraction(); } })
     ::share();
 
   const touchmove$ = Observable::fromEvent(document, 'touchmove', {
     passive: !this.preventDefault,
   })
-    ::filterWith(touching$)
+    ::filterWith(inRange$)
     ::withLatestFrom(touchstart$)
     ::map(([e, { identifier: startIdentifier }]) =>
       // TODO: what if the finger is no longer available?
@@ -232,7 +236,7 @@ function setupObservables() {
   const touchend$ = Observable::fromEvent(document, 'touchend', {
     passive: !this.preventDefault,
   })
-    ::filterWith(touching$)
+    ::filterWith(inRange$)
     ::filter(({ touches }) => touches.length === 0)
     ::share();
 
@@ -293,10 +297,10 @@ function setupObservables() {
       (x - prevX) / (time - prevTime))
     ::startWith(0);
 
-  const willOpen$ =
-    touchend$::withLatestFrom(temp.translateX$, velocity$)
-      ::map(([, translateX, velocity]) =>
-        this::calcWillOpen(velocity, translateX, drawerWidth));
+  const willOpen$ = touchend$
+    ::withLatestFrom(temp.translateX$, velocity$)
+    ::map(([, translateX, velocity]) =>
+      this::calcWillOpen(velocity, translateX, drawerWidth));
 
   // TODO: make it clearer what is happenign here
   // temp.anim$ = Observable::merge(

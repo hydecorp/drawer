@@ -4,14 +4,6 @@
     <!-- @include examples/includes/head-content.html -->
 
     <link rel="stylesheet" href="dist/drawer.css"></link>
-    <style>
-      /*html, body { margin: 0; padding: 0; position: relative; height: 100%; }*/
-      .modal-open {
-        position: relative;
-        overflow: hidden;
-        height: 100%;
-      }
-    </style>
   </head>
   <body>
     <main>
@@ -21,14 +13,40 @@
     </main>
 
     <aside id="drawer">
-      <!-- @include examples/includes/drawer-content.html -->
+      <nav>
+        <ul>
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+          <!-- @include examples/includes/drawer-content.html -->
+        </ul>
+      </nav>
     </aside>
 
     <script src="dist/vanilla/index.js"></script>
     <script>
       var Drawer = yDrawer.vanilla.default;
 
-      var drawerObj = new Drawer(drawer);
+      var drawerObj = new Drawer(drawer, {
+        preventDefault: true,
+        edgeMargin: 15
+      });
 
       menu.addEventListener('click', function (e) {
         e.preventDefault();
