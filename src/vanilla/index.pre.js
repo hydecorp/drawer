@@ -1,4 +1,4 @@
-// Copyright (C) 2017  Florian Klampfer
+// Copyright (c) 2017 Florian Klampfer
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ const style = `
 <style>
 <!-- @include ../drawer.css -->
 </style>`;
-
 
 function fragmentFromString(strHTML) {
   return document.createRange().createContextualFragment(strHTML);
