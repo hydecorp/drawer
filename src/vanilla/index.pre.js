@@ -14,7 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
-import drawerCore from '../core';
+import drawerMixin from '../core';
 
 const style = `
 <style>
@@ -26,7 +26,7 @@ function fragmentFromString(strHTML) {
   return document.createRange().createContextualFragment(strHTML);
 }
 
-export default class Drawer extends drawerCore() {
+export default class Drawer extends drawerMixin() {
   constructor(el, props) {
     super();
     this.setupComponent(el, props);

@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "rxjs": "^5.4.1",
-    "y-component": "^6.1.0"
+    "y-component": "^7.0.0"
   },
   "directories": {
     "example": "examples"
@@ -73,6 +73,9 @@
           ],
           "plugins": [
             "transform-function-bind"
+          ],
+          "only": [
+            "src"
           ]
         }
       ]

@@ -43,6 +43,8 @@ no-console,
 //   'csspointerevents',
 // ];
 
+import { componentMixin } from 'y-component';
+
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -72,8 +74,6 @@ import { take } from 'rxjs/operator/take';
 import { takeUntil } from 'rxjs/operator/takeUntil';
 import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
-
-import componentCore from 'y-component/src/component-core';
 
 import { createTween, linearTween } from '../common';
 
@@ -324,7 +324,7 @@ function setupObservables() {
     .subscribe();
 }
 
-export default C => class extends componentCore(C) {
+export default C => class extends componentMixin(C) {
 
   // @override
   getComponentName() {
