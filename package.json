@@ -33,7 +33,7 @@
     "start": "npm run dev",
     "prepare": "npm run lint && npm run test && npm run clean && npm run build"
   },
-  "author": "Florian Klampfer <f.klampfer@gmail.com> (http://qwtel.com)",
+  "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com)",
   "license": "GPL-3.0",
   "devDependencies": {
     "babel-eslint": "^7.2.3",
