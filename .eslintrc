@@ -2,13 +2,19 @@
   "parser": "babel-eslint",
   "extends": "eslint-config-airbnb",
   "env": {
-    "browser": true
+    "browser": true,
   },
   "globals": {
     "$": true,
-    "customElements": true
+    "customElements": true,
   },
   "rules": {
     "class-methods-use-this": "off"
-  }
+    "no-else-return": "off",
+    "no-multi-assign": "off",
+    "no-console": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+  },
 }

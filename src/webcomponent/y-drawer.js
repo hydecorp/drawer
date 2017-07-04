@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import { customElementMixin, CustomElement } from 'y-component';
 import drawerMixin from '../core';
 
