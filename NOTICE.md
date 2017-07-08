@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Licenses
+Parts of this program are provided under separate licenses.
+
 ### ratchet
 This software also uses portions of the ratchet project,
 which is MIT licensed with the following copyright
@@ -43,7 +45,7 @@ which is Apache-2.0 licensed with the following copyright
 No substantial changes to the software were made.
 No `NOTICE` file was provided.
 
-Find [a copy of the Apache 2.0 License](licenses/Apache-2.0.md)
+Find a copy of the [Apache License](licenses/Apache-2.0.md)
 as part of this distribution.
 
 ### camelcase
