@@ -26,7 +26,7 @@
       <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
     </main>
 
-    <y-drawer id="drawerEl" edge-margin="10" prevent-default>
+    <y-drawer id="drawerEl" mouse-events>
       <aside>
         <ul>
           <li><a href="../mixin/index.html">Mixin Example</a></li>
@@ -143,6 +143,12 @@
     </y-drawer>
 
     <script>
+      var ua = navigator.userAgent.toLowerCase();
+      var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
+
+      drawerEl.preventDefault = isSafari;
+      drawerEl.edgeMargin = isSafari ? 15 : 0;
+
       menuEl.addEventListener('click', function (e) {
         e.preventDefault();
         drawerEl.toggle();

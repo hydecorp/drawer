@@ -145,10 +145,15 @@
     <script src="../../dist/mixin/y-drawer.js"></script>
     <script>
       var drawerMixin = yDrawer.drawerMixin;
+
+      var ua = navigator.userAgent.toLowerCase();
+      var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
+
       var Drawer = drawerMixin();
       var drawer = new Drawer().setupComponent(drawerEl, {
-        preventDefault: true,
-        edgeMargin: 15
+        preventDefault: isSafari,
+        edgeMargin: isSafari ? 15 : 0,
+        mouseEvents: true
       });
 
       menuEl.addEventListener('click', function (e) {

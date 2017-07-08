@@ -51,7 +51,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { _do as effect } from 'rxjs/operator/do';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
-// import { mapTo } from 'rxjs/operator/mapTo';
+import { mapTo } from 'rxjs/operator/mapTo';
 import { mergeMap } from 'rxjs/operator/mergeMap';
 import { merge as mergeWith } from 'rxjs/operator/merge';
 import { pairwise } from 'rxjs/operator/pairwise';
@@ -59,7 +59,7 @@ import { repeatWhen } from 'rxjs/operator/repeatWhen';
 import { sample } from 'rxjs/operator/sample';
 // import { scan } from 'rxjs/operator/scan';
 import { share } from 'rxjs/operator/share';
-// import { skipWhile } from 'rxjs/operator/skipWhile';
+import { skipWhile } from 'rxjs/operator/skipWhile';
 import { startWith } from 'rxjs/operator/startWith';
 // import { switchMap } from 'rxjs/operator/switchMap';
 import { take } from 'rxjs/operator/take';
@@ -81,7 +81,7 @@ const OPENED = Symbol('persistent$');
 
 const VELOCITY_THRESHOLD = 0.2; // px/ms
 // const VELOCITY_LINEAR_COMBINATION = 0.8;
-// const SLIDE_THRESHOLD = 30;
+const SLIDE_THRESHOLD = 30;
 
 const abs = ::Math.abs;
 // const sqrt = ::Math.sqrt;
@@ -98,6 +98,8 @@ function filterWith(p$) {
       ::map(([x]) => x);
 }
 
+// Similar to `filterWith`, but will unsubscribe for the source observable
+// when `pauser$` emits `true`, and re-subscribe when `pauser$` emits `false`.
 // function pauseable(pauser$) {
 //   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
 // }
@@ -188,9 +190,91 @@ function updateDOM(translateX, drawerWidth) {
   this.scrim.style.opacity = translateX / drawerWidth;
 }
 
-function setupObservables() {
+function getStartObservable() {
+  const touchstart$ = Observable::fromEvent(document, 'touchstart', {
+    passive: !this.preventDefault,
+  })
+    ::filter(({ touches }) => touches.length === 1)
+    ::map(({ touches }) => touches[0]);
+
+  if (this.mouseEvents) {
+    const mousedown$ = Observable::fromEvent(document, 'mousedown', {
+      passive: !this.preventDefault,
+    });
+
+    return touchstart$::mergeWith(mousedown$);
+  } else {
+    return touchstart$;
+  }
+}
+
+function getMoveObservable(start$, end$) {
   const { find } = Array.prototype;
 
+  const touchmove$ = Observable::fromEvent(document, 'touchmove', {
+    passive: !this.preventDefault,
+  })
+    ::withLatestFrom(start$)
+    ::map(([e, { identifier: startIdentifier }]) =>
+      // TODO: what if the finger is no longer available?
+      assign(e.touches::find(t => t.identifier === startIdentifier), { e }));
+
+  if (this.mouseEvents) {
+    const mousemove$ = Observable::fromEvent(document, 'mousemove', {
+      passive: !this.preventDefault,
+    })
+      ::filterWith(start$::mapTo(true)::mergeWith(end$::mapTo(false)))
+      ::map(e => assign(e, { e }));
+
+    return touchmove$::mergeWith(mousemove$);
+  } else {
+    return touchmove$;
+  }
+}
+
+function getEndObservable() {
+  const touchend$ = Observable::fromEvent(document, 'touchend', {
+    passive: !this.preventDefault,
+  })
+    ::filter(({ touches }) => touches.length === 0);
+
+  if (this.mouseEvents) {
+    const mouseup$ = Observable::fromEvent(document, 'mouseup', {
+      passive: !this.preventDefault,
+    });
+
+    return touchend$::mergeWith(mouseup$);
+  } else {
+    return touchend$;
+  }
+}
+
+function getIsSlidingObservable(move$, start$) {
+  if (!this.preventDefault) {
+    return move$::withLatestFrom(start$)
+      ::skipWhile(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
+        abs(startY - clientY) < SLIDE_THRESHOLD && abs(startX - clientX) < SLIDE_THRESHOLD)
+      ::map(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
+        abs(startX - clientX) >= abs(startY - clientY));
+  } else {
+    // Logic needs to be slightly different when using preventDefault:
+    // iOS Safari will ignore any call to preventDefault except the one on the first move event,
+    // so we have to make a decision on the first move event.
+    // Luckily, Safari will not fire a move event until the thumb has travelled a minium distance,
+    // so that the decision is not (too) random.
+    return move$::withLatestFrom(start$)
+      ::map(([{ clientX, clientY, e }, { clientX: startX, clientY: startY }]) => {
+        const isSliding = abs(startX - clientX) >= abs(startY - clientY);
+        if (isSliding) {
+          if (this.preventDefault) e.preventDefault();
+          if (this.scrollContainer) this.scrollContainer.style.overflowY = 'hidden';
+        }
+        return isSliding;
+      });
+  }
+}
+
+function setupObservables() {
   // const scrimClick$ = Observable::fromEvent(this.scrim, 'click');
 
   const opened$ = this[OPENED] = new Subject();
@@ -205,11 +289,7 @@ function setupObservables() {
   const drawerWidth = this::getMovableDrawerWidth();
   this.scrollContainer = document.querySelector(this.scrollContainerSelector);
 
-  const touchstart$ = Observable::fromEvent(document, 'touchstart', {
-    passive: !this.preventDefault,
-  })
-    ::filter(({ touches }) => touches.length === 1)
-    ::map(({ touches }) => touches[0])
+  const start$ = this::getStartObservable()
     ::share();
 
   // as long as the scrim is visible, the user can still "catch" the drawer mid-animation
@@ -218,76 +298,47 @@ function setupObservables() {
 
   // indicates whether the touch positon is within the range (x-axis)
   // from where to open the drawer.
-  const inRange$ = touchstart$
+  const inRange$ = start$
     ::withLatestFrom(scrimVisible$)
     ::map(([{ clientX }, scrimVisible]) => this::isInRange(clientX, drawerWidth, scrimVisible))
     ::effect((inRange) => { if (inRange) { this::prepInteraction(); } })
     ::share();
 
-  const touchmove$ = Observable::fromEvent(document, 'touchmove', {
-    passive: !this.preventDefault,
-  })
+  const end$ = this::getEndObservable()
     ::filterWith(inRange$)
-    ::withLatestFrom(touchstart$)
-    ::map(([e, { identifier: startIdentifier }]) =>
-      // TODO: what if the finger is no longer available?
-      assign(e.touches::find(t => t.identifier === startIdentifier), { e }))
     ::share();
 
-  const touchend$ = Observable::fromEvent(document, 'touchend', {
-    passive: !this.preventDefault,
-  })
+  const move$ = this::getMoveObservable(start$, end$)
     ::filterWith(inRange$)
-    ::filter(({ touches }) => touches.length === 0)
     ::share();
 
-  // const isSliding$ = touchmove$
-  //   ::withLatestFrom(touchstart$)
-  //   ::skipWhile(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-  //     abs(startY - clientY) < SLIDE_THRESHOLD && abs(startX - clientX) < SLIDE_THRESHOLD)
-  //   ::take(1)
-  //   ::map(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-  //     abs(startX - clientX) > abs(startY - clientY))
-  //   ::startWith(undefined)
-  //   ::repeatWhen(() => touchend$)
-  //   ::share();
-
-  const isSliding$ = touchmove$
-    ::withLatestFrom(touchstart$)
-    ::map(([{ clientX, clientY, e }, { clientX: startX, clientY: startY }]) => {
-      const isSliding = abs(startX - clientX) > abs(startY - clientY);
-      if (isSliding) {
-        if (this.preventDefault) e.preventDefault();
-        if (this.scrollContainer) this.scrollContainer.style.overflowY = 'hidden';
-      }
-      return isSliding;
-    })
+  const isSliding$ = this::getIsSlidingObservable(move$, start$)
     ::take(1)
     ::startWith(undefined)
-    ::repeatWhen(() => touchend$)
+    ::repeatWhen(() => end$)
     ::share();
 
   // const isScrolling$ = isSliding$::map(x => (x === undefined ? undefined : !x));
 
-  // const startedMoving$ = touchmove$
+  // const startedMoving$ = move$
   //   ::take(1)
   //   ::mapTo(true)
   //   ::startWith(false)
-  //   ::repeatWhen(() => touchstart$)
+  //   ::repeatWhen(() => start$)
   //   ::share();
 
   temp.translateX$ = Observable::defer(() =>
-    touchmove$
+    move$
       ::filterWith(isSliding$)
       ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
-      ::withLatestFrom(touchstart$, temp.startTranslateX$)
+      ::withLatestFrom(start$, temp.startTranslateX$)
       ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
         this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth))
       ::mergeWith(temp.anim$))
     ::share();
 
   temp.startTranslateX$ = temp.translateX$
-    ::sample(touchstart$)
+    ::sample(start$)
     ::startWith(0);
 
   const velocity$ = temp.translateX$
@@ -298,17 +349,17 @@ function setupObservables() {
       (x - prevX) / (time - prevTime))
     ::startWith(0);
 
-  const willOpen$ = touchend$
+  const willOpen$ = end$
     ::withLatestFrom(temp.translateX$, velocity$)
     ::map(([, translateX, velocity]) =>
       this::calcWillOpen(velocity, translateX, drawerWidth));
 
   // TODO: make it clearer what is happenign here
   // temp.anim$ = Observable::merge(
-  //     touchend$::filterWith(isSliding$),
+  //     end$::filterWith(isSliding$),
   //     isScrolling$::filter(isScrolling => isScrolling === true),
   //   )
-  temp.anim$ = touchend$
+  temp.anim$ = end$
     ::withLatestFrom(temp.translateX$, willOpen$)
     ::mergeMap(([, translateX, willOpen]) => {
       const endTranslateX = (willOpen ? 1 : 0) * drawerWidth;
@@ -316,7 +367,7 @@ function setupObservables() {
       return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
         ::effect(null, null, () => this::cleanupAnimation(willOpen))
         // ::effect(null, null, () => { if (willOpen === false) this.opened$.next(false); })
-        ::takeUntil(touchstart$);
+        ::takeUntil(start$);
     });
 
   temp.translateX$
@@ -338,9 +389,10 @@ export function drawerMixin(C) {
         opened: false,
         transitionDuration: 250,
         persistent: false,
+        scrollContainerSelector: 'body',
         edgeMargin: 0,
         preventDefault: false,
-        scrollContainerSelector: 'body',
+        mouseEvents: false,
       };
     }
 

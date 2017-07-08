@@ -142,9 +142,13 @@
     <script src="https://unpkg.com/jquery@3"></script>
     <script src="../../dist/jquery/y-drawer.js"></script>
     <script>
+      var ua = navigator.userAgent.toLowerCase();
+      var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
+
       $('#drawerEl').drawer({
-        preventDefault: true,
-        edgeMargin: 15
+        preventDefault: isSafari,
+        edgeMargin: isSafari ? 15 : 0,
+        mouseEvents: true
       });
 
       $('#menuEl').click(function (e) {
