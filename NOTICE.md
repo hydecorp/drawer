@@ -22,7 +22,7 @@ which is MIT licensed with the following copyright
 
 > Copyright (c) 2015 connors and other contributors
 
-Find [a copy of the MIT license](/y-drawer/licenses/MIT/)
+Find a copy of the [MIT license](licenses/MIT.md)
 as part of this distribution.
 
 ### Swipe
@@ -31,19 +31,19 @@ which is MIT licensed with the following copyright
 
 > Copyright (c) 2013 Brad Birdsall
 
-Find [a copy of the MIT license](/y-drawer/licenses/MIT/)
+Find a copy of the [MIT license](licenses/MIT.md)
 as part of this distribution.
 
 ### rxjs
 This software also uses portions of the rxjs project,
-which is APACHE-2.0 licensed with the following copyright
+which is Apache-2.0 licensed with the following copyright
 
 > Copyright (c) 2015-2017 Google, Inc., Netflix, Inc., Microsoft Corp. and contributors
 
 No substantial changes to the software were made.
 No `NOTICE` file was provided.
 
-Find [a copy of the Apache 2.0 License](/y-drawer/licenses/Apache-2.0/)
+Find [a copy of the Apache 2.0 License](licenses/Apache-2.0.md)
 as part of this distribution.
 
 ### camelcase
@@ -52,7 +52,7 @@ which is MIT licensed with the following copyright
 
 > Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
-Find [a copy of the MIT license](/y-drawer/licenses/MIT/)
+Find a copy of the [MIT license](licenses/MIT.md)
 as part of this distribution.
 
 ### decamelize
@@ -61,5 +61,5 @@ which is MIT licensed with the following copyright
 
 > Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
-Find [a copy of the MIT license](/y-drawer/licenses/MIT/)
+Find a copy of the [MIT license](licenses/MIT.md)
 as part of this distribution.
