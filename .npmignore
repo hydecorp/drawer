@@ -1,8 +1,6 @@
+.git
 .DS_Store
+_site
 node_modules
-/index.html
-/core.html
-/vanilla.html
-/jquery.html
-/webcomponent.html
-src/webcomponent/index.pre.js
+_config.yml
+Gemfile*

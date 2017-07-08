@@ -1,3 +1,7 @@
-# Y Drawer?
+# y-drawer
 
-A JS drawer that begs the question: Y?
+## Examples
+* [Mixin Example](example/mixin/index.html)
+* [Vanilla JS Example](example/vanilla/index.html)
+* [jQuery Example](example/jquery/index.html)
+* [WebComponent HTML Import Example](example/jquery/index.html)

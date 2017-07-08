@@ -9,12 +9,13 @@
     "customElements": true,
   },
   "rules": {
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
     "no-else-return": "off",
     "no-multi-assign": "off",
     "no-console": "off",
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
     "import/extensions": "off",
+    "import/prefer-default-export": "off",
   },
 }

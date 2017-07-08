@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Florian Klampfer
+// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 //   'csspointerevents',
 // ];
 
-import { componentMixin } from 'y-component';
+import { componentMixin } from 'y-component/src/component';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -69,7 +69,10 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 import { createTween, linearTween } from '../common';
 
-// const Symbol = global.Symbol || (x => `_${x}`);
+// TODO: find better way of hiding?
+const Symbol = global.Symbol || (x => `_${x}`);
+const PERSISTENT = Symbol('persistent$');
+const OPENED = Symbol('persistent$');
 //
 // const IDLE = Symbol('idle');
 // const TOUCHING = Symbol('touching');
@@ -100,6 +103,8 @@ function filterWith(p$) {
 // }
 
 function cacheDOMElements() {
+  // TODO: not enumerable?
+  // TODO: symbol?
   this.scrim = this.root.querySelector('.y-drawer-scrim');
   this.content = this.root.querySelector('.y-drawer-content');
 }
@@ -188,13 +193,17 @@ function setupObservables() {
 
   // const scrimClick$ = Observable::fromEvent(this.scrim, 'click');
 
-  this.opened$ = new Subject();
-  this.persistent$ = new Subject();
+  const opened$ = this[OPENED] = new Subject();
+  // const persistent$ = this[PERSISTENT] = new Subject();
 
+  opened$.subscribe(::console.log);
+
+  // TODO: rename -- or -- find better solution for "circut breaker"
   const temp = {};
 
   // TODO: recalculate on change. let user provide width?
   const drawerWidth = this::getMovableDrawerWidth();
+  this.scrollContainer = document.querySelector(this.scrollContainerSelector);
 
   const touchstart$ = Observable::fromEvent(document, 'touchstart', {
     passive: !this.preventDefault,
@@ -316,93 +325,93 @@ function setupObservables() {
     .subscribe();
 }
 
-export default C => class extends componentMixin(C) {
-
-  // @override
-  getComponentName() {
-    return 'y-drawer';
-  }
-
-  // @override
-  defaults() {
-    return {
-      opened: false,
-      transitionDuration: 250,
-      persistent: false,
-      edgeMargin: 0,
-      preventDefault: false,
-      scrollContainer: document.body,
-    };
-  }
-
-  // @override
-  sideEffects() {
-    return {
-      opened: x => this.opened$.next(x),
-      persistent: x => this.persistent$.next(x),
-    };
-  }
-
-  // @override
-  setupComponent(el, props) {
-    super.setupComponent(el, props);
-
-    this::cacheDOMElements();
-    this::setupObservables();
-    // this.defProperties();
-    // this.bindCallbacks();
-
-    // this.jumpTo(this.opened);
-    // if (!this.persistent) this.addEventListeners();
-    if (this.persistent) this.scrim.style.display = 'none';
-
-    return this;
-  }
-
-  close() {
-    this.animateTo(false);
-    return this;
-  }
-
-  open() {
-    this.animateTo(true);
-    return this;
-  }
-
-  toggle() {
-    if (this.opened) {
-      this.close();
-    } else {
-      this.open();
+export function drawerMixin(C) {
+  return class extends componentMixin(C) {
+    // @override
+    getComponentName() {
+      return 'y-drawer';
     }
-    return this;
-  }
 
-  persist() {
-    this.scrim.style.display = 'none';
-    // this.removeEventListeners();
-    this.setState('persistent', true);
-  }
+    // @override
+    defaults() {
+      return {
+        opened: false,
+        transitionDuration: 250,
+        persistent: false,
+        edgeMargin: 0,
+        preventDefault: false,
+        scrollContainerSelector: 'body',
+      };
+    }
 
-  unpersist() {
-    this.scrim.style.display = '';
-    // this.addEventListeners();
-    this.setState('persistent', false);
-  }
+    // @override
+    sideEffects() {
+      return {
+        opened: x => this[OPENED].next(x),
+        persistent: x => this[PERSISTENT].next(x),
+      };
+    }
 
-  animateTo() {
-    // this.prepInteraction();
-    // this.setState('opened', opened);
-    // this.loopState = START_ANIMATING;
-    // this.requestAnimationLoop();
-  }
+    // @override
+    setupComponent(el, props) {
+      super.setupComponent(el, props);
 
-  jumpTo() {
-    // this.prepInteraction();
-    // this.setState('opened', opened);
-    // this.loopState = IDLE;
-    // this.startTranslateX = opened * this.drawerWidth;
-    // this.endAnimating();
-    // this.updateDOM(this.startTranslateX, this.drawerWidth);
-  }
-};
+      this::cacheDOMElements();
+      this::setupObservables();
+      // this.defProperties();
+      // this.bindCallbacks();
+
+      // this.jumpTo(this.opened);
+      // if (!this.persistent) this.addEventListeners();
+      if (this.persistent) this.scrim.style.display = 'none';
+
+      return this;
+    }
+
+    open() {
+      this.opened = true;
+      return this;
+    }
+
+    close() {
+      this.opened = false;
+      return this;
+    }
+
+    toggle() {
+      if (this.opened) {
+        this.close();
+      } else {
+        this.open();
+      }
+      return this;
+    }
+
+    persist() {
+      this.persistent = true;
+      return this;
+    }
+
+    unpersist() {
+      this.persistent = false;
+      return this;
+    }
+
+    // animateTo(opened) {
+    //   this.opened = !!opened;
+    //   // this.prepInteraction();
+    //   // this.setState('opened', opened);
+    //   // this.loopState = START_ANIMATING;
+    //   // this.requestAnimationLoop();
+    // }
+
+    // jumpTo() {
+      // this.prepInteraction();
+      // this.setState('opened', opened);
+      // this.loopState = IDLE;
+      // this.startTranslateX = opened * this.drawerWidth;
+      // this.endAnimating();
+      // this.updateDOM(this.startTranslateX, this.drawerWidth);
+    // }
+  };
+}

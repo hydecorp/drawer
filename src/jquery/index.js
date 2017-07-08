@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Florian Klampfer
+// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,7 +13,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { customElementMixin, CustomElement } from 'y-component';
-import drawerMixin from '../core';
+import { defineJQueryComponent } from 'y-component/src/define-jquery-component';
 
-export default class extends customElementMixin(drawerMixin(CustomElement)) {}
+import { drawerMixin } from '../mixin';
+import '../style.css';
+
+defineJQueryComponent('drawer', class extends drawerMixin() {
+  constructor(el, props) {
+    super();
+    this.setupComponent(el, props);
+  }
+
+  // @override
+  setupDOM(el) {
+    const $el = $(el);
+
+    // TODO: ....
+    $('<div />')
+      .append($('<div class="y-drawer-scrim" />'))
+      .append($('<div class="y-drawer-content" />').append($el.children().detach()))
+      .appendTo($el);
+
+    return el;
+  }
+});
+
+// export ???

@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Florian Klampfer
+// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,18 +13,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import drawerMixin from '../core';
+import { drawerMixin } from '../mixin';
+import '../style.css';
 
-const style = `
-<style>
-<!-- @include ../drawer.css -->
-</style>`;
-
-function fragmentFromString(strHTML) {
-  return document.createRange().createContextualFragment(strHTML);
-}
-
-export default class Drawer extends drawerMixin() {
+export class Drawer extends drawerMixin() {
   constructor(el, props) {
     super();
     this.setupComponent(el, props);
@@ -45,9 +37,6 @@ export default class Drawer extends drawerMixin() {
 
     el.appendChild(scrim);
     el.appendChild(content);
-
-    const ref = document.getElementsByTagName('style')[0];
-    ref.parentNode.insertBefore(fragmentFromString(style), ref);
 
     return el;
   }

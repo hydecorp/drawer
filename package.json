@@ -2,64 +2,56 @@
   "name": "y-drawer",
   "version": "7.0.0",
   "description": "Y another drawer?",
-  "config": {
-    "port": "8080"
-  },
+  "main": "./src/mixin/index.js",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
-    "clean": "rm -rf dist src/webcomponent/index.js core.html vanilla.html webcomponent.html",
-    "mkdirs": "mkdir -p dist/core dist/vanilla dist/webcomponent",
-    "copy": "npm run mkdirs && (npm run copy:html & npm run copy:css & npm run copy:examples & npm run preprocess:js & wait)",
-    "copy:examples": "preprocess examples/core.html -o core.html & preprocess examples/vanilla.html -o vanilla.html & preprocess examples/webcomponent.html -o webcomponent.html",
-    "copy:html:template": "preprocess src/webcomponent/template-v0.html --src-dir src/webcomponent -o dist/webcomponent/template-v0.html & preprocess src/webcomponent/template-v1.html --src-dir src/webcomponent -o dist/webcomponent/template-v1.html & wait",
-    "copy:html:index": "preprocess src/webcomponent/$npm_package_name.html --src-dir src/webcomponent -o dist/webcomponent/$npm_package_name.html",
-    "copy:html": "npm run copy:html:template & npm run copy:html:index",
-    "copy:css": "cp src/*.css dist",
-    "preprocess:js": "preprocess src/vanilla/index.pre.js --src-dir src/vanilla -o src/vanilla/index.js & preprocess src/webcomponent/index.pre.js --src-dir src/webcomponent -o src/webcomponent/index.js & wait",
-    "build": "npm run copy && (npm run build:core & npm run build:vanilla & npm run build:webcomponent & wait)",
-    "build:core": "browserify src/core/index.js -g babelify -s $npm_package_name.core | uglifyjs -c -o dist/core/index.js",
-    "build:vanilla": "browserify src/vanilla/index.js -g babelify -s $npm_package_name.vanilla | uglifyjs -c -o dist/vanilla/index.js ",
-    "build:webcomponent": "browserify src/webcomponent/$npm_package_name.js -g babelify -s $npm_package_name.webcomponent | uglifyjs -c -o dist/webcomponent/$npm_package_name.js",
-    "watch": "npm run copy && (npm run watch:files & npm run watch:core & npm run watch:vanilla & npm run watch:webcomponent)",
-    "watch:core": "watchify -d src/core/index.js -o dist/core/index.js -g babelify -s $npm_package_name.core",
-    "watch:vanilla": "watchify -d src/vanilla/index.js -o dist/vanilla/index.js -g babelify -s $npm_package_name.vanilla",
-    "watch:webcomponent": "watchify -d src/webcomponent/$npm_package_name.js -o dist/webcomponent/$npm_package_name.js -g babelify -s $npm_package_name.webcomponent",
-    "watch:files": "onchange 'src/**/*.html' -- npm run copy:html & onchange 'src/**/*.css' -- npm run copy:css & onchange 'src/**/*.pre.js' -- npm run preprocess:js & onchange 'examples/**/*' -- npm run copy:examples",
-    "serve": "http-server -s -p $npm_package_config_port",
-    "dev": "npm run serve & npm run watch",
-    "lint": "eslint src",
-    "start": "npm run dev",
+    "clean": "rm -rf dist",
+    "build": "npm run build:dev & npm run build:prod & wait",
+    "build:prod": "webpack --env prod --display-optimization-bailout",
+    "build:dev": "webpack --env dev",
+    "watch": "webpack --progress --colors --watch --env dev",
+    "lint": "eslint src webpack.config.js",
     "prepare": "npm run lint && npm run test && npm run clean && npm run build"
   },
-  "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com)",
+  "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
+    "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
     "babel-plugin-transform-function-bind": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
-    "babelify": "^7.3.0",
-    "browserify": "^14.4.0",
-    "cash": "^0.8.0",
+    "camelcase": "^4.1.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-loader": "^1.8.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
     "eslint-plugin-react": "^7.1.0",
-    "http-server": "^0.10.0",
-    "onchange": "^3.2.1",
-    "optimist": "^0.6.1",
-    "preprocess-cli-2": "^2.0.0",
-    "uglify-js": "^3.0.19",
-    "watchify": "^3.9.0"
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.29.0",
+    "raw-loader": "^0.5.1",
+    "underscore-template-loader": "^0.7.3",
+    "webpack": "^3.1.0",
+    "webpack-merge": "^4.1.0",
+    "yargs": "^8.0.2"
   },
   "dependencies": {
-    "rxjs": "^5.4.1",
-    "y-component": "^7.0.0"
+    "rxjs": "^5.4.1"
   },
   "directories": {
-    "example": "examples"
+    "lib": "./src",
+    "example": "./example"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwtel/y-drawer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qwtel/y-drawer/issues"
+  },
+  "homepage": "http://qwtel.com/y-drawer",
   "browserify": {
     "transform": [
       [
@@ -73,19 +65,12 @@
             "transform-function-bind"
           ],
           "only": [
-            "src"
+            "./src",
+            "y-component",
+            "camelcase"
           ]
         }
       ]
     ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/qwtel/y-drawer.git"
-  },
-  "bugs": {
-    "url": "https://github.com/qwtel/y-drawer/issues"
-  },
-  "homepage": "http://qwtel.com/y-drawer",
-  "main": "src/core/index.js"
+  }
 }
