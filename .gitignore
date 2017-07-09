@@ -36,3 +36,4 @@ _site
 
 # eclude dist from git, not npm
 dist
+es5

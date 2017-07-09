@@ -17,7 +17,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const { name: filename } = require('./package.json');
 
-const min = env === 'prod' ? '.min' : '';
+const min = env === 'lite' ? '-lite.min' : env === 'prod' ? '.min' : ''; // eslint-disable-line
 const library = camelcase(filename);
 const banner = String.prototype.trim.call(`
 Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
@@ -47,6 +47,17 @@ function envConfig() {
         ],
       };
 
+    // same as prod, but does not bundle core-js polyfills
+    case 'lite':
+      return {
+        externals: [/core-js/],
+        plugins: [
+          new BannerPlugin({ banner }),
+          new EnvironmentPlugin({ DEBUG: false }),
+          new UglifyJsPlugin(),
+        ],
+      };
+
     default:
       return {
         devtool: 'source-map',
@@ -60,6 +71,9 @@ function envConfig() {
 const baseConfig = merge({
   output: {
     filename: `${filename}${min}.js`,
+    library,
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
   },
   module: {
     rules: [
@@ -71,11 +85,6 @@ const baseConfig = merge({
         //   test: /node_modules/,
         //   exclude: /(y-component|camelcase)/,
         // },
-      },
-      {
-        test: /(\.jsx|\.js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
       },
       {
         test: /\.ejs/,
@@ -92,14 +101,6 @@ const baseConfig = merge({
     new ModuleConcatenationPlugin(),
   ],
 }, envConfig());
-
-const umdLibraryConfig = {
-  output: {
-    library,
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
-  },
-};
 
 const cssFileLoaderConfig = {
   module: {
@@ -125,7 +126,7 @@ const cssRawLoaderConfig = {
 
 const config = [
   // Mixin
-  merge(baseConfig, umdLibraryConfig, {
+  merge(baseConfig, {
     entry: r('./src/mixin/index.js'),
     output: {
       path: r('./dist/mixin'),
@@ -133,7 +134,7 @@ const config = [
   }),
 
   // Vanilla JS
-  merge(baseConfig, umdLibraryConfig, cssFileLoaderConfig, {
+  merge(baseConfig, cssFileLoaderConfig, {
     entry: r('./src/vanilla/index.js'),
     output: {
       path: r('./dist/vanilla'),
@@ -146,13 +147,13 @@ const config = [
     output: {
       path: r('./dist/jquery'),
     },
-    externals: {
+    externals: [{
       jquery: 'jQuery',
-    },
+    }],
   }),
 
   // // React
-  // merge(baseConfig, umdLibraryConfig, cssFileLoaderConfig, {
+  // merge(baseConfig, cssFileLoaderConfig, {
   //   entry: r('./src/react/index.jsx'),
   //   output: {
   //     path: r('./dist/react'),
@@ -163,7 +164,7 @@ const config = [
   // }),
 
   // WebComponent Standalone
-  merge(baseConfig, umdLibraryConfig, cssRawLoaderConfig, {
+  merge(baseConfig, cssRawLoaderConfig, {
     entry: r('./src/webcomponent/index.js'),
     output: {
       path: r('./dist/webcomponent'),
