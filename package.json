@@ -2,14 +2,15 @@
   "name": "y-drawer",
   "version": "7.0.0",
   "description": "Y another drawer?",
-  "main": "./src/mixin/index.js",
+  "main": "./lib/mixin/index.js",
+  "browser": "./dist/vanilla/y-drawer.min.js",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
-    "clean": "rm -rf ./dist ./es5",
-    "build": "npm run build:dev & npm run build:prod & npm run build:lite & npm run build:es5 & wait",
-    "build:es5": "babel src --out-dir es5",
+    "clean": "rm -rf ./dist ./lib",
+    "build": "npm run build:dev & npm run build:prod & npm run build:lite & npm run build:lib & wait",
+    "build:lib": "babel src --out-dir lib",
     "build:prod": "webpack --env prod --display-optimization-bailout",
-    "build:lite": "webpack --env lite --display-optimization-bailout",
+    "build:lite": "webpack --env lite",
     "build:dev": "webpack --env dev",
     "watch": "webpack --progress --colors --watch --env dev",
     "lint": "eslint src webpack.config.js",
@@ -43,7 +44,7 @@
     "rxjs": "^5.4.1"
   },
   "directories": {
-    "lib": "./src",
+    "lib": "./lib",
     "example": "./example"
   },
   "repository": {
