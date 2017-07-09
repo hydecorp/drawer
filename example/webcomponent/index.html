@@ -6,12 +6,17 @@
     <title>WebComponent HTML Import Example | y-drawer</title>
     <style>main { max-width: 640px; }</style>
 
+    <!-- A webcomponents polyfill to ensure Templates, HTML Imports, Custom Elements and Shadow (Shady) DOM works -->
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@1"></script>
+
+    <!-- Import y-drawer from dist/webcomonent -->
     <link rel="import" href="../../dist/webcomponent/y-drawer.html">
   </head>
   <body>
     <main>
-      <a id="menuEl">☰</a>
+      <!-- A button that we will use to toggle the drawer.
+      Neat trick: Set href to the id of the drawer, so that there is a fallback behavior in case JS is disabled. -->
+      <a id="menuEl" href="#drawerEl">☰</a>
 
       <h1>Lorem Ipsum</h1>
       <h4>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</h4>
@@ -26,107 +31,11 @@
       <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
     </main>
 
+    <!-- HTML import above will register the y-drawer custom element.
+    We can set Properties directly (using param-case). -->
     <y-drawer id="drawerEl" mouse-events>
       <aside>
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
-          <li><a href="../mixin/index.html">Mixin Example</a></li>
-          <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-          <li><a href="../jquery/index.html">jQuery Example</a></li>
-          <li><a href="../webcomponent/index.html">WebComponent HTML Import Example</a></li>
-        </ul>
-
-        <ul>
+        <ul style="min-height:1000px">
           <li><a href="../mixin/index.html">Mixin Example</a></li>
           <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
           <li><a href="../jquery/index.html">jQuery Example</a></li>
@@ -143,14 +52,25 @@
     </y-drawer>
 
     <script>
+      // No user agent sniffing code is part of y-drawer, but it offers options to customize its behavior.
+      // The snippet below will determine whether the current browser is Safari (both iOS and macOS)
+      // based on the user agent.
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
 
-      drawerEl.preventDefault = isSafari;
-      drawerEl.edgeMargin = isSafari ? 15 : 0;
+      // Use the DOM API to set Properties on the HTML element (use param-case!)
+      if (isSafari) drawerEl.setAttribute('prevent-default', '');
+      drawerEl.setAttribute('edge-margin', isSafari ? 15 : 0);
+
+      // Alternatively, change Properties by setting values directly on the element (use camelCase!)
+      // drawerEl.preventDefault = isSafari;
+      // drawerEl.edgeMargin = isSafari ? 15 : 0;
 
       menuEl.addEventListener('click', function (e) {
+        // Prevent default so the brwoser history doesn't get filled with # urls (see `a` tag above)
         e.preventDefault();
+
+        // Call Methods on the drawer element.
         drawerEl.toggle();
       });
     </script>
