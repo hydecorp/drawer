@@ -69,15 +69,12 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 import { createTween, linearTween } from '../common';
 
-// TODO: find better way of hiding?
 const Symbol = global.Symbol || (x => `_${x}`);
 const PERSISTENT = Symbol('persistent$');
-const OPENED = Symbol('persistent$');
-//
-// const IDLE = Symbol('idle');
-// const TOUCHING = Symbol('touching');
-// const START_ANIMATING = Symbol('startAnimating');
-// const ANIMATING = Symbol('animating');
+const OPENED = Symbol('opned$');
+const SCRIM = Symbol('scrim');
+const CONTENT = Symbol('content');
+const SCROLL = Symbol('scroll');
 
 const VELOCITY_THRESHOLD = 0.2; // px/ms
 // const VELOCITY_LINEAR_COMBINATION = 0.8;
@@ -105,10 +102,8 @@ function filterWith(p$) {
 // }
 
 function cacheDOMElements() {
-  // TODO: not enumerable?
-  // TODO: symbol?
-  this.scrim = this.root.querySelector('.y-drawer-scrim');
-  this.content = this.root.querySelector('.y-drawer-content');
+  this[SCRIM] = this.root.querySelector('.y-drawer-scrim');
+  this[CONTENT] = this.root.querySelector('.y-drawer-content');
 }
 
 // function velocityReducer(velocity, [prevSnowball, snowball]) {
@@ -152,28 +147,28 @@ function calcTranslateX(clientX, startX, startTranslateX, drawerWidth) {
 }
 
 function prepInteraction() {
-  this.content.style.willChange = 'transform';
-  this.scrim.style.willChange = 'opacity';
-  this.content.classList.remove('y-drawer-opened');
+  this[CONTENT].style.willChange = 'transform';
+  this[SCRIM].style.willChange = 'opacity';
+  this[CONTENT].classList.remove('y-drawer-opened');
   // this.drawerWidth = this.getMovableDrawerWidth();
 }
 
 function cleanupAnimation(opened) {
   if (opened) {
     // document.body.style.overflowY = 'hidden';
-    this.scrim.style.pointerEvents = 'all';
-    this.content.classList.add('y-drawer-opened');
+    this[SCRIM].style.pointerEvents = 'all';
+    this[CONTENT].classList.add('y-drawer-opened');
   } else {
-    this.scrim.style.pointerEvents = '';
+    this[SCRIM].style.pointerEvents = '';
 
     // TODO: set earlier
-    if (this.scrollContainer) {
-      this.scrollContainer.style.overflowY = '';
+    if (this[SCROLL]) {
+      this[SCROLL].style.overflowY = '';
     }
   }
 
-  this.content.style.willChange = '';
-  this.scrim.style.willChange = '';
+  this[CONTENT].style.willChange = '';
+  this[SCRIM].style.willChange = '';
 
   this.fireEvent('transitioned');
 }
@@ -182,12 +177,12 @@ function getMovableDrawerWidth() {
   // Since part of the drawer could be visible,
   // the width that is "movable" is less than the complete drawer width
   // and given by
-  return -this.content.offsetLeft;
+  return -this[CONTENT].offsetLeft;
 }
 
 function updateDOM(translateX, drawerWidth) {
-  this.content.style.transform = `translateX(${translateX}px)`;
-  this.scrim.style.opacity = translateX / drawerWidth;
+  this[CONTENT].style.transform = `translateX(${translateX}px)`;
+  this[SCRIM].style.opacity = translateX / drawerWidth;
 }
 
 function getStartObservable() {
@@ -267,7 +262,7 @@ function getIsSlidingObservable(move$, start$) {
         const isSliding = abs(startX - clientX) >= abs(startY - clientY);
         if (isSliding) {
           if (this.preventDefault) e.preventDefault();
-          if (this.scrollContainer) this.scrollContainer.style.overflowY = 'hidden';
+          if (this[SCROLL]) this[SCROLL].style.overflowY = 'hidden';
         }
         return isSliding;
       });
@@ -287,7 +282,7 @@ function setupObservables() {
 
   // TODO: recalculate on change. let user provide width?
   const drawerWidth = this::getMovableDrawerWidth();
-  this.scrollContainer = document.querySelector(this.scrollContainerSelector);
+  this[SCROLL] = document.querySelector(this.scrollSelector);
 
   const start$ = this::getStartObservable()
     ::share();
@@ -389,7 +384,7 @@ export function drawerMixin(C) {
         opened: false,
         transitionDuration: 250,
         persistent: false,
-        scrollContainerSelector: 'body',
+        scrollSelector: 'body',
         edgeMargin: 0,
         preventDefault: false,
         mouseEvents: false,
@@ -415,7 +410,7 @@ export function drawerMixin(C) {
 
       // this.jumpTo(this.opened);
       // if (!this.persistent) this.addEventListeners();
-      if (this.persistent) this.scrim.style.display = 'none';
+      if (this.persistent) this[SCRIM].style.display = 'none';
 
       return this;
     }
