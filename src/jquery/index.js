@@ -30,11 +30,11 @@ defineJQueryComponent('drawer', class extends drawerMixin() {
   setupDOM(el) {
     const $el = $(el);
 
-    // TODO: ....
-    $('<div />')
+    const children = $el.children().detach();
+
+    $el
       .append($('<div class="y-drawer-scrim" />'))
-      .append($('<div class="y-drawer-content" />').append($el.children().detach()))
-      .appendTo($el);
+      .append($('<div class="y-drawer-content" />').append(children));
 
     return el;
   }
