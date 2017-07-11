@@ -17,7 +17,9 @@ import { customElementMixin, CustomElement } from 'y-component/src/custom-elemen
 import { drawerMixin } from '../mixin';
 
 if ('customElements' in window) {
-  customElements.define('y-drawer', customElementMixin(drawerMixin(CustomElement)));
+  customElements.define('y-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
+    static get observedAttributes() { return this.getObservedAttributes(); }
+  });
 } else if (process.env.DEBUG) {
   console.warn('Couldn\'t define `y-drawer` component. Did you forget to include a custom elements polyfill?');
 }

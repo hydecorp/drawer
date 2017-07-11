@@ -23,6 +23,8 @@ function fragmentFromString(strHTML) {
 }
 
 export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElement)) {
+  static get observedAttributes() { return this.getObservedAttributes(); }
+
   // @override
   getTemplateInstance() { return fragmentFromString(template); }
 }
