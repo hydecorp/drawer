@@ -1,30 +1,16 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
 title: y-drawer
 tagline: Why push state?
 email: mail@qwtel.com
 
 description: >
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  A touch-enabled drawer component for the mobile web.
 baseurl: /y-drawer
 url: https://qwtel.com
-twitter_username: qwtel
-github_username:  qwtel
+
+author:
+  social:
+    github: https://github.com/qwtel/y-drawer
+    npm: https://www.npmjs.com/package/y-drawer
 
 permalink: pretty
 
@@ -52,10 +38,18 @@ strip_title: true
 
 defaults:
   - scope:
-      path: "LICENSE.md"
+      path: LICENSE.md
     values:
       menu: true
   - scope:
-      path: "NOTICE.md"
+      path: NOTICE.md
     values:
       menu: true
+
+data_social:
+  github:
+    name: GitHub
+    icon: icon-github
+  npm:
+    name: npm
+    icon: icon-npm
