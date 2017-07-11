@@ -371,13 +371,11 @@ function setupObservables() {
 
 export function drawerMixin(C) {
   return class extends componentMixin(C) {
-    // @override
-    getComponentName() {
+    static get componentName() {
       return 'y-drawer';
     }
 
-    // @override
-    defaults() {
+    static get defaults() {
       return {
         opened: false,
         transitionDuration: 250,
@@ -389,11 +387,10 @@ export function drawerMixin(C) {
       };
     }
 
-    // @override
-    sideEffects() {
+    static get sideEffects() {
       return {
-        opened: x => this[OPENED].next(x),
-        persistent: x => this[PERSISTENT].next(x),
+        opened(x) { this[OPENED].next(x); },
+        persistent(x) { this[PERSISTENT].next(x); },
       };
     }
 
