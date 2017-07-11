@@ -12,7 +12,7 @@
     transform: translate3d(0,0,0);
     -webkit-tap-highlight-color: transparent;
 
-    background: rgba(0, 0, 0, 0.67);
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .y-drawer-content {
@@ -27,6 +27,7 @@
     -webkit-overflow-scrolling: touch;
     contain: strict;
 
+    /* TODO: don't use rem */
     left: -18rem;
     width: 18rem;
     background: #e8e8e8;
