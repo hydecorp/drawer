@@ -13,8 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { drawerMixin } from '../mixin';
+import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
+
+export const MODERNIZR_TESTS = Object.assign({
+  classlist: true,
+}, DRAWER_MIXIN_MODERNIZER_TESTS);
 
 export class Drawer extends drawerMixin() {
   constructor(el, props) {

@@ -13,29 +13,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// const JS_FEATURES = [
-//   'fn/array/find',
-//   'fn/array/for-each',
-//   'fn/array/reduce',
-//   'fn/function/bind',
-//   'fn/number/constructor',
-//   'fn/object/assign',
-//   'fn/object/define-property',
-//   'fn/object/keys',
-// ];
-//
-// const MODERNIZR_TESTS = [
-//   'customevent',
-//   'eventlistener',
-//   'queryselector',
-//   'requestanimationframe',
-//   'classlist',
-//   'opacity',
-//   'csstransforms',
-//   'csspointerevents',
-// ];
+import 'core-js/fn/array/find';
+import 'core-js/fn/function/bind';
+import 'core-js/fn/object/assign';
 
-import { componentMixin } from 'y-component/src/component';
+import {
+  componentMixin,
+  MODERNIZR_TESTS as COMPONENT_MODERNIZER_TESTS,
+} from 'y-component/src/component';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -69,9 +54,22 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 import { createTween, linearTween } from '../common';
 
-const Symbol = global.Symbol || (x => `_${x}`);
-const PERSISTENT = Symbol('persistent$');
-const OPENED = Symbol('opned$');
+export const MODERNIZR_TESTS = Object.assign({
+  // touchevents: true, // optional
+  // pointerevents: true, // windows (phone) ???
+  // willchange: true, // optional
+  eventlistener: true,
+  queryselector: true,
+  requestanimationframe: true,
+  classlist: true,
+  opacity: true,
+  csstransforms: true,
+  csspointerevents: true,
+}, COMPONENT_MODERNIZER_TESTS);
+
+const Symbol = global.Symbol || (x => `_${x}`); // TODO: does rxjs use symbol anyway?
+const PERSISTENT = Symbol('persistentObservable');
+const OPENED = Symbol('opnedObservable');
 const SCRIM = Symbol('scrim');
 const CONTENT = Symbol('content');
 const SCROLL = Symbol('scroll');

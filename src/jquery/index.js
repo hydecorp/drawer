@@ -15,8 +15,10 @@
 
 import { defineJQueryComponent } from 'y-component/src/define-jquery-component';
 
-import { drawerMixin } from '../mixin';
+import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
+
+export const MODERNIZR_TESTS = Object.assign({}, DRAWER_MIXIN_MODERNIZER_TESTS);
 
 defineJQueryComponent('drawer', class extends drawerMixin() {
   constructor(el, props) {
