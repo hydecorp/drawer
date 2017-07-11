@@ -27,17 +27,18 @@ import { Subject } from 'rxjs/Subject';
 
 import { defer } from 'rxjs/observable/defer';
 import { fromEvent } from 'rxjs/observable/fromEvent';
-// import { merge } from 'rxjs/observable/merge';
+import { merge } from 'rxjs/observable/merge';
 // import { never } from 'rxjs/observable/never';
 // import { of } from 'rxjs/observable/of';
 // import { zip } from 'rxjs/observable/zip';
 
 // import { _catch as recover } from 'rxjs/operator/catch';
 import { _do as effect } from 'rxjs/operator/do';
+// import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
-import { mergeMap } from 'rxjs/operator/mergeMap';
+// import { mergeMap } from 'rxjs/operator/mergeMap';
 import { merge as mergeWith } from 'rxjs/operator/merge';
 import { pairwise } from 'rxjs/operator/pairwise';
 import { repeatWhen } from 'rxjs/operator/repeatWhen';
@@ -46,7 +47,7 @@ import { sample } from 'rxjs/operator/sample';
 import { share } from 'rxjs/operator/share';
 import { skipWhile } from 'rxjs/operator/skipWhile';
 import { startWith } from 'rxjs/operator/startWith';
-// import { switchMap } from 'rxjs/operator/switchMap';
+import { switchMap } from 'rxjs/operator/switchMap';
 import { take } from 'rxjs/operator/take';
 import { takeUntil } from 'rxjs/operator/takeUntil';
 import { timestamp } from 'rxjs/operator/timestamp';
@@ -75,11 +76,9 @@ const CONTENT = Symbol('content');
 const SCROLL = Symbol('scroll');
 
 const VELOCITY_THRESHOLD = 0.2; // px/ms
-// const VELOCITY_LINEAR_COMBINATION = 0.8;
-const SLIDE_THRESHOLD = 30;
+const SLIDE_THRESHOLD = 10; // px
 
 const abs = ::Math.abs;
-// const sqrt = ::Math.sqrt;
 const min = ::Math.min;
 const max = ::Math.max;
 const assign = ::Object.assign;
@@ -93,6 +92,12 @@ function filterWith(p$) {
       ::map(([x]) => x);
 }
 
+// function filterWithAll(...p$s) {
+//   return this::withLatestFrom(...p$s)
+//       ::filter(([, ...ps]) => ps.every(p => !!p))
+//       ::map(([x]) => x);
+// }
+
 // Similar to `filterWith`, but will unsubscribe for the source observable
 // when `pauser$` emits `true`, and re-subscribe when `pauser$` emits `false`.
 // function pauseable(pauser$) {
@@ -103,17 +108,6 @@ function cacheDOMElements() {
   this[SCRIM] = this.root.querySelector('.y-drawer-scrim');
   this[CONTENT] = this.root.querySelector('.y-drawer-content');
 }
-
-// function velocityReducer(velocity, [prevSnowball, snowball]) {
-//   const { value: { clientX: prevPageX }, timestamp: prevTime } = prevSnowball;
-//   const { value: { clientX }, timestamp: time } = snowball;
-//
-//   const pageXDiff = clientX - prevPageX;
-//   const timeDiff = time - prevTime;
-//
-//   return (VELOCITY_LINEAR_COMBINATION * (pageXDiff / timeDiff)) +
-//          ((1 - VELOCITY_LINEAR_COMBINATION) * velocity);
-// }
 
 function isInRange(clientX, drawerWidth, opened) {
   return opened || (clientX > this.edgeMargin && clientX < drawerWidth / 2);
@@ -169,6 +163,8 @@ function cleanupAnimation(opened) {
   this[SCRIM].style.willChange = '';
 
   this.fireEvent('transitioned');
+
+  // this.opened = opened;
 }
 
 function getMovableDrawerWidth() {
@@ -216,7 +212,7 @@ function getMoveObservable(start$, end$) {
     const mousemove$ = Observable::fromEvent(document, 'mousemove', {
       passive: !this.preventDefault,
     })
-      ::filterWith(start$::mapTo(true)::mergeWith(end$::mapTo(false)))
+      ::filterWith(Observable::merge(start$::mapTo(true), end$::mapTo(false)))
       ::map(e => assign(e, { e }));
 
     return touchmove$::mergeWith(mousemove$);
@@ -252,7 +248,7 @@ function getIsSlidingObservable(move$, start$) {
   } else {
     // Logic needs to be slightly different when using preventDefault:
     // iOS Safari will ignore any call to preventDefault except the one on the first move event,
-    // so we have to make a decision on the first move event.
+    // so we have to make a decision immediately.
     // Luckily, Safari will not fire a move event until the thumb has travelled a minium distance,
     // so that the decision is not (too) random.
     return move$::withLatestFrom(start$)
@@ -268,12 +264,14 @@ function getIsSlidingObservable(move$, start$) {
 }
 
 function setupObservables() {
-  // const scrimClick$ = Observable::fromEvent(this.scrim, 'click');
+  this[OPENED] = new Subject();
+  const opened$ = this[OPENED]::effect(this::prepInteraction);
 
-  const opened$ = this[OPENED] = new Subject();
   // const persistent$ = this[PERSISTENT] = new Subject();
 
-  opened$.subscribe(::console.log);
+  // const scrimClick$ = Observable::fromEvent(this[SCRIM], 'click')
+  //   ::filterWith(opened$)
+  //   ::effect(this::prepInteraction);
 
   // TODO: rename -- or -- find better solution for "circut breaker"
   const temp = {};
@@ -285,12 +283,11 @@ function setupObservables() {
   const start$ = this::getStartObservable()
     ::share();
 
-  // as long as the scrim is visible, the user can still "catch" the drawer mid-animation
+  // As long as the scrim is visible, the user can still "catch" the drawer
   const scrimVisible$ = Observable::defer(() =>
     temp.translateX$::map(translateX => translateX > 0)::startWith(false));
 
-  // indicates whether the touch positon is within the range (x-axis)
-  // from where to open the drawer.
+  // Indicates whether the touch positon is within the range (x-axis)
   const inRange$ = start$
     ::withLatestFrom(scrimVisible$)
     ::map(([{ clientX }, scrimVisible]) => this::isInRange(clientX, drawerWidth, scrimVisible))
@@ -310,24 +307,21 @@ function setupObservables() {
     ::startWith(undefined)
     ::repeatWhen(() => end$)
     ::share();
-
   // const isScrolling$ = isSliding$::map(x => (x === undefined ? undefined : !x));
 
-  // const startedMoving$ = move$
-  //   ::take(1)
-  //   ::mapTo(true)
-  //   ::startWith(false)
-  //   ::repeatWhen(() => start$)
+  // const startedMoving$ = isSliding$
+  //   ::map(isSliding => isSliding !== undefined)
   //   ::share();
 
   temp.translateX$ = Observable::defer(() =>
-    move$
-      ::filterWith(isSliding$)
-      ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
-      ::withLatestFrom(start$, temp.startTranslateX$)
-      ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
-        this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth))
-      ::mergeWith(temp.anim$))
+    Observable::merge(
+      move$
+        ::filterWith(isSliding$)
+        ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
+        ::withLatestFrom(start$, temp.startTranslateX$)
+        ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
+          this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth)),
+      temp.anim$))
     ::share();
 
   temp.startTranslateX$ = temp.translateX$
@@ -344,28 +338,26 @@ function setupObservables() {
 
   const willOpen$ = end$
     ::withLatestFrom(temp.translateX$, velocity$)
-    ::map(([, translateX, velocity]) =>
-      this::calcWillOpen(velocity, translateX, drawerWidth));
+    ::map(([{ target }, translateX, velocity]) => {
+      if (this.opened && target === this[SCRIM]) return false;
+      return this::calcWillOpen(velocity, translateX, drawerWidth);
+    })
+    // TODO: better way to break circut?
+    ::effect((willOpen) => { this.setInternalStateKV('opened', willOpen); })
+    ::share();
 
-  // TODO: make it clearer what is happenign here
-  // temp.anim$ = Observable::merge(
-  //     end$::filterWith(isSliding$),
-  //     isScrolling$::filter(isScrolling => isScrolling === true),
-  //   )
-  temp.anim$ = end$
-    ::withLatestFrom(temp.translateX$, willOpen$)
-    ::mergeMap(([, translateX, willOpen]) => {
-      const endTranslateX = (willOpen ? 1 : 0) * drawerWidth;
+  temp.anim$ = Observable::merge(willOpen$, opened$)
+    ::withLatestFrom(temp.translateX$::startWith(this.opened ? drawerWidth : 0))
+    ::switchMap(([opened, translateX]) => {
+      const endTranslateX = (opened ? 1 : 0) * drawerWidth;
       const diffTranslateX = endTranslateX - translateX;
       return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
-        ::effect(null, null, () => this::cleanupAnimation(willOpen))
-        // ::effect(null, null, () => { if (willOpen === false) this.opened$.next(false); })
+        ::effect(null, null, () => this::cleanupAnimation(opened))
         ::takeUntil(start$);
     });
 
   temp.translateX$
-    ::effect(translateX => this::updateDOM(translateX, drawerWidth) /* , ::console.error */)
-    // ::recover((e, c) => c)
+    ::effect(translateX => this::updateDOM(translateX, drawerWidth))
     .subscribe();
 }
 
