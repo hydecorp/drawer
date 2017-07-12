@@ -61,7 +61,7 @@
   "bugs": {
     "url": "https://github.com/qwtel/y-drawer/issues"
   },
-  "homepage": "http://qwtel.com/y-drawer",
+  "homepage": "https://qwtel.com/y-drawer",
   "browserify": {
     "transform": [
       [
@@ -79,6 +79,12 @@
             "y-component",
             "camelcase"
           ]
+        }
+      ],
+      [
+        "envify",
+        {
+          "DEBUG": false
         }
       ]
     ]
