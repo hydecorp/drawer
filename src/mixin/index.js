@@ -75,13 +75,17 @@ const SLIDE_THRESHOLD = 10;
 // TODO: rename
 const MAGIC_MIKE = 0.5;
 
+// If Symbol isn't supported, just use underscore naming convention for private properties.
+// We don't need advanced features of Symbol.
+// TODO: does rxjs use symbol anyway?
+const Symbol = global.Symbol || (x => `_${x}`);
+
 // We use symbols for all internal stuff, because this is a mixin which could
 // potentially be used in a lot of contexts, where names might conflict.
 // Also, we don't want users to accidentially modify internal state.
-const Symbol = global.Symbol || (x => `_${x}`); // TODO: does rxjs use symbol anyway?
-const persistent$ = Symbol('persistent$');
-const opened$ = Symbol('opened$');
-const animateTo$ = Symbol('animateTo$');
+const persistentObs = Symbol('persistentObs');
+const openedObs = Symbol('openedObs');
+const animateToObs = Symbol('animateToObs');
 const scrimEl = Symbol('scrimEl');
 const contentEl = Symbol('contentEl');
 const scrollEl = Symbol('scrollEl');
@@ -96,24 +100,40 @@ const max = ::Math.max;
 // Similar to `pauseable`, but will not unsubscribe from the source observable.
 // NOTE: Writing a custom observabele would probably be a more efficient way of doing this
 function filterWith(p$) {
-  return this::withLatestFrom(p$)
-      ::filter(([, p]) => p)
-      ::map(([x]) => x);
+  if (process.env.DEBUG && !p$) throw Error();
+  return this::withLatestFrom(p$)::filter(([, p]) => p)::map(([x]) => x);
 }
-
-// function filterWithAll(...p$s) {
-//   return this::withLatestFrom(...p$s)
-//       ::filter(([, ...ps]) => ps.every(p => !!p))
-//       ::map(([x]) => x);
-// }
 
 // Similar to `filterWith`, but will unsubscribe for the source observable
 // when `pauser$` emits `true`, and re-subscribe when `pauser$` emits `false`.
 // Note that the true/false are interpreted opposite to the way filterWith interprets them.
 // (filter true? = let pass. paused true? = don't let pass).
 function pauseable(pauser$) {
+  if (process.env.DEBUG && !pauser$) throw Error();
   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
 }
+
+
+// function filterWithAll(p$, ...others) {
+//   if (process.env.DEBUG && !p$) throw Error();
+//   else if (others.length === 0) {
+//     return this::withLatestFrom(p$)::filter(([, p]) => p)::map(([x]) => x);
+//   } else {
+//     return this::withLatestFrom(p$, ...others)
+//       ::filter(([, ...ps]) => ps.every(p => p))
+//       ::map(([x]) => x);
+//   }
+// }
+
+// function pauseableAll(pauser$, ...others) {
+//   if (process.env.DEBUG && !pauser$) throw Error();
+//   if (others.length === 0) {
+//     return pauser$::switchMap(paused => (paused ? Observable::never() : this));
+//   } else {
+//     return pauser$::combineLatest(...others)
+//       ::switchMap(states => (states.some(s => s) ? Observable.never() : this));
+//   }
+// }
 
 function cacheDOMElements() {
   this[scrimEl] = this.root.querySelector('.y-drawer-scrim');
@@ -174,6 +194,8 @@ function cleanupInteraction(opened) {
     this[scrimEl].style.pointerEvents = '';
     this[contentEl].classList.remove('y-drawer-opened');
   }
+
+  this[fire]('transitioned', opened);
 }
 
 // Since part of the drawer could be visible,
@@ -225,7 +247,7 @@ function getMoveObservable(start$, end$) {
     const mousemove$ = Observable::fromEvent(document, 'mousemove', {
       passive: !this.preventDefault,
     })
-      ::filterWith(Observable::merge(start$::mapTo(true), end$::mapTo(false)))
+      ::pauseable(Observable::merge(start$::mapTo(false), end$::mapTo(true)))
       ::map(e => assign(e, { e }));
 
     return touchmove$::mergeWith(mousemove$);
@@ -275,9 +297,11 @@ function getIsSlidingObservable(move$, start$) {
 }
 
 function setupObservables() {
-  this[opened$] = new Subject();
-  this[animateTo$] = new Subject();
-  this[persistent$] = new Subject();
+  this[openedObs] = new Subject();
+  this[animateToObs] = new Subject();
+  this[persistentObs] = new Subject();
+
+  const persistent$ = this[persistentObs]::share();
 
   // We use this inside `defer` to reference observables that haven't been defined yet.
   const ref = {};
@@ -287,6 +311,7 @@ function setupObservables() {
   this[scrollEl] = document.querySelector(this.scrollSelector);
 
   const start$ = this::getStartObservable()
+    ::pauseable(persistent$)
     ::share();
 
   // As long as the scrim is visible, the user can still "catch" the drawer
@@ -305,11 +330,13 @@ function setupObservables() {
     ::share();
 
   const end$ = this::getEndObservable()
+    ::pauseable(persistent$) // can unsubscribe when persistent
     ::filterWith(isInRange$)
     ::share();
 
   const move$ = this::getMoveObservable(start$, end$)
-    ::filterWith(isInRange$)
+    ::pauseable(persistent$) // can unsubscribe when persistent
+    ::filterWith(isInRange$) // MUST NOT unsubscribe (b/c of how `preventDefault` in Safari works)
     ::share();
 
   // *For every interaction*, determine whether it is a sliding (y-axis),
@@ -318,12 +345,6 @@ function setupObservables() {
     ::take(1)
     ::startWith(undefined)
     ::repeatWhen(() => end$);
-  //  ::share();
-  // const isScrolling$ = isSliding$::map(x => (x === undefined ? undefined : !x));
-
-  // const startedMoving$ = isSliding$
-  //   ::map(isSliding => isSliding !== undefined)
-  //   ::share();
 
   ref.translateX$ = Observable::defer(() => Observable::merge(
       ref.anim$,
@@ -333,17 +354,17 @@ function setupObservables() {
         ::withLatestFrom(start$, ref.startTranslateX$)
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
           this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth)),
-      this[opened$]
+      this[openedObs]
         ::map(opened => (opened ? drawerWidth : 0))
         ::effect(this::cleanupInteraction)))
     ::share();
 
-  // The current `translateX` value at the start of an interaction.
+  // The `translateX` value at the start of an interaction.
   // Typically, this would be either 0 or `drawerWidth`, but since the user can initiate
-  // an interaction *during the animation*, it can also be every value inbetween.
+  // an interaction *during an animation*, it can also be every value inbetween.
   ref.startTranslateX$ = ref.translateX$::sample(start$);
 
-  // The current velocity of the slider (not the thumb/mouse!)
+  // The current velocity of the slider (not of the thumb/mouse)
   const velocity$ = ref.translateX$
     ::timestamp()
     ::pairwise()
@@ -357,7 +378,7 @@ function setupObservables() {
         ::withLatestFrom(ref.translateX$, velocity$)
         ::map(([, translateX, velocity]) =>
           this::calcWillOpen(velocity, translateX, drawerWidth)),
-      this[animateTo$]
+      this[animateToObs]
         ::effect(this::prepInteraction))
     ::effect((willOpen) => { this[setState]('opened', willOpen); })
     ::withLatestFrom(ref.translateX$)
@@ -369,15 +390,28 @@ function setupObservables() {
         ::takeUntil(start$);
     });
 
+  // The end result is always to update the (shadow) DOM.
   ref.translateX$
-    ::effect(translateX => this::updateDOM(translateX, drawerWidth))
-    .subscribe();
+    .subscribe(translateX => this::updateDOM(translateX, drawerWidth));
 
   // A click on the scrim should close the drawer, but only when to drawer is fully extended.
   // Otherwise it's possible to accidentially close the drawer during sliding/animating.
+  // TODO: this still happens with mouseevents
   Observable::fromEvent(this[scrimEl], 'click')
     ::pauseable(isAnimating$)
     .subscribe(() => { this.close(); });
+
+  // Other than pausing sliding events, setting persistent to true will also hide the scrim.
+  persistent$
+    .subscribe((persistent) => { this[scrimEl].style.display = persistent ? 'none' : 'block'; });
+
+  // These could be useful at some point (don't forget to `share` dep obs)
+
+  // const isScrolling$ = isSliding$::map(x => (x === undefined ? undefined : !x));
+
+  // const hasStartedMoving$ = isSliding$
+  //   ::map(isSliding => isSliding !== undefined)
+  //   ::share();
 }
 
 export function drawerMixin(C) {
@@ -400,8 +434,8 @@ export function drawerMixin(C) {
 
     static get sideEffects() {
       return {
-        opened(x) { this[opened$].next(x); },
-        persistent(x) { this[persistent$].next(x); },
+        opened(x) { this[openedObs].next(x); },
+        persistent(x) { this[persistentObs].next(x); },
       };
     }
 
@@ -412,8 +446,8 @@ export function drawerMixin(C) {
       this::cacheDOMElements();
       this::setupObservables();
 
-      this[opened$].next(this.opened);
-      this[persistent$].next(this.persistent);
+      this[openedObs].next(this.opened);
+      this[persistentObs].next(this.persistent);
 
       // this.opened = this.opened; // trigger side effect
       // this.jumpTo(this.opened);
@@ -426,25 +460,25 @@ export function drawerMixin(C) {
     }
 
     open(animated = true) {
-      if (animated) this[animateTo$].next(true);
+      if (animated) this[animateToObs].next(true);
       else this.opened = true;
       return this;
     }
 
     close(animated = true) {
-      if (animated) this[animateTo$].next(false);
+      if (animated) this[animateToObs].next(false);
       else this.opened = false;
       return this;
     }
 
     toggle(animated = true) {
-      if (animated) this[animateTo$].next(!this.opened);
+      if (animated) this[animateToObs].next(!this.opened);
       else this.opened = !this.opened;
       return this;
     }
 
     animateTo(opened) {
-      this[animateTo$].next(opened);
+      this[animateToObs].next(opened);
       return this;
     }
 
@@ -452,15 +486,5 @@ export function drawerMixin(C) {
       this.opened = opened;
       return this;
     }
-
-    // persist() {
-    //   this.persistent = true;
-    //   return this;
-    // }
-    //
-    // unpersist() {
-    //   this.persistent = false;
-    //   return this;
-    // }
   };
 }
