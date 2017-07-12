@@ -70,10 +70,11 @@ export const MODERNIZR_TESTS = Object.assign({
 
 const Symbol = global.Symbol || (x => `_${x}`); // TODO: does rxjs use symbol anyway?
 const PERSISTENT = Symbol('persistentObservable');
-const OPENED = Symbol('opnedObservable');
-const SCRIM = Symbol('scrim');
-const CONTENT = Symbol('content');
-const SCROLL = Symbol('scroll');
+const OPENED = Symbol('openedObservable');
+const ANIMATE_TO = Symbol('animateToObservable');
+const SCRIM = Symbol('scrimEl');
+const CONTENT = Symbol('contentEl');
+const SCROLL = Symbol('scrollEl');
 
 const VELOCITY_THRESHOLD = 0.2; // px/ms
 const SLIDE_THRESHOLD = 10; // px
@@ -145,13 +146,14 @@ function prepInteraction() {
   // this.drawerWidth = this.getMovableDrawerWidth();
 }
 
-function cleanupAnimation(opened) {
+function cleanupInteraction(opened) {
   if (opened) {
     // document.body.style.overflowY = 'hidden';
     this[SCRIM].style.pointerEvents = 'all';
     this[CONTENT].classList.add('y-drawer-opened');
   } else {
     this[SCRIM].style.pointerEvents = '';
+    this[CONTENT].classList.remove('y-drawer-opened');
 
     // TODO: set earlier
     if (this[SCROLL]) {
@@ -162,7 +164,7 @@ function cleanupAnimation(opened) {
   this[CONTENT].style.willChange = '';
   this[SCRIM].style.willChange = '';
 
-  this.fireEvent('transitioned');
+  // this.fireEvent('transitioned');
 
   // this.opened = opened;
 }
@@ -265,16 +267,15 @@ function getIsSlidingObservable(move$, start$) {
 
 function setupObservables() {
   this[OPENED] = new Subject();
-  const opened$ = this[OPENED]::effect(this::prepInteraction);
-
-  // const persistent$ = this[PERSISTENT] = new Subject();
+  this[ANIMATE_TO] = new Subject();
+  // this[PERSISTENT] = new Subject();
 
   // const scrimClick$ = Observable::fromEvent(this[SCRIM], 'click')
   //   ::filterWith(opened$)
   //   ::effect(this::prepInteraction);
 
   // TODO: rename -- or -- find better solution for "circut breaker"
-  const temp = {};
+  const ref = {};
 
   // TODO: recalculate on change. let user provide width?
   const drawerWidth = this::getMovableDrawerWidth();
@@ -285,7 +286,7 @@ function setupObservables() {
 
   // As long as the scrim is visible, the user can still "catch" the drawer
   const scrimVisible$ = Observable::defer(() =>
-    temp.translateX$::map(translateX => translateX > 0)::startWith(false));
+    ref.translateX$::map(translateX => translateX > 0)::startWith(false));
 
   // Indicates whether the touch positon is within the range (x-axis)
   const inRange$ = start$
@@ -313,22 +314,26 @@ function setupObservables() {
   //   ::map(isSliding => isSliding !== undefined)
   //   ::share();
 
-  temp.translateX$ = Observable::defer(() =>
+  ref.translateX$ = Observable::defer(() =>
     Observable::merge(
       move$
         ::filterWith(isSliding$)
         ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
-        ::withLatestFrom(start$, temp.startTranslateX$)
+        ::withLatestFrom(start$, ref.startTranslateX$)
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
           this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth)),
-      temp.anim$))
+      this[OPENED]
+        ::startWith(this.opened)
+        ::effect(this::cleanupInteraction)
+        ::map(opened => (opened ? drawerWidth : 0)),
+      ref.anim$))
     ::share();
 
-  temp.startTranslateX$ = temp.translateX$
-    ::sample(start$)
-    ::startWith(0);
+  ref.startTranslateX$ = ref.translateX$
+    ::sample(start$);
+    // ::startWith(this.opened ? drawerWidth : 0);
 
-  const velocity$ = temp.translateX$
+  const velocity$ = ref.translateX$
     ::timestamp()
     ::pairwise()
     ::map(([{ value: x, timestamp: time },
@@ -336,27 +341,26 @@ function setupObservables() {
       (x - prevX) / (time - prevTime))
     ::startWith(0);
 
-  const willOpen$ = end$
-    ::withLatestFrom(temp.translateX$, velocity$)
-    ::map(([{ target }, translateX, velocity]) => {
-      if (this.opened && target === this[SCRIM]) return false;
-      return this::calcWillOpen(velocity, translateX, drawerWidth);
-    })
+  ref.anim$ = Observable::merge(
+      end$
+        ::withLatestFrom(ref.translateX$, velocity$)
+        ::map(([, translateX, velocity]) =>
+          this::calcWillOpen(velocity, translateX, drawerWidth)),
+      this[ANIMATE_TO]
+        ::effect(this::prepInteraction))
+
     // TODO: better way to break circut?
     ::effect((willOpen) => { this.setInternalStateKV('opened', willOpen); })
-    ::share();
-
-  temp.anim$ = Observable::merge(willOpen$, opened$)
-    ::withLatestFrom(temp.translateX$::startWith(this.opened ? drawerWidth : 0))
+    ::withLatestFrom(ref.translateX$::startWith(this.opened ? drawerWidth : 0))
     ::switchMap(([opened, translateX]) => {
       const endTranslateX = (opened ? 1 : 0) * drawerWidth;
       const diffTranslateX = endTranslateX - translateX;
       return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
-        ::effect(null, null, () => this::cleanupAnimation(opened))
-        ::takeUntil(start$);
+        ::effect(null, null, () => this::cleanupInteraction(opened))
+        ::takeUntil(start$::mergeWith(this[OPENED]));
     });
 
-  temp.translateX$
+  ref.translateX$
     ::effect(translateX => this::updateDOM(translateX, drawerWidth))
     .subscribe();
 }
@@ -392,23 +396,24 @@ export function drawerMixin(C) {
 
       this::cacheDOMElements();
       this::setupObservables();
-      // this.defProperties();
-      // this.bindCallbacks();
 
+      // this.opened = this.opened; // trigger side effect
       // this.jumpTo(this.opened);
       // if (!this.persistent) this.addEventListeners();
       if (this.persistent) this[SCRIM].style.display = 'none';
+
+      this.fireEvent('attached');
 
       return this;
     }
 
     open() {
-      this.opened = true;
+      this[ANIMATE_TO].next(true);
       return this;
     }
 
     close() {
-      this.opened = false;
+      this[ANIMATE_TO].next(false);
       return this;
     }
 
@@ -430,22 +435,5 @@ export function drawerMixin(C) {
       this.persistent = false;
       return this;
     }
-
-    // animateTo(opened) {
-    //   this.opened = !!opened;
-    //   // this.prepInteraction();
-    //   // this.setState('opened', opened);
-    //   // this.loopState = START_ANIMATING;
-    //   // this.requestAnimationLoop();
-    // }
-
-    // jumpTo() {
-      // this.prepInteraction();
-      // this.setState('opened', opened);
-      // this.loopState = IDLE;
-      // this.startTranslateX = opened * this.drawerWidth;
-      // this.endAnimating();
-      // this.updateDOM(this.startTranslateX, this.drawerWidth);
-    // }
   };
 }
