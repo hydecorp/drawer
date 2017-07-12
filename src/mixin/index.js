@@ -147,26 +147,20 @@ function prepInteraction() {
 }
 
 function cleanupInteraction(opened) {
+  this[CONTENT].style.willChange = '';
+  this[SCRIM].style.willChange = '';
+
   if (opened) {
     // document.body.style.overflowY = 'hidden';
     this[SCRIM].style.pointerEvents = 'all';
     this[CONTENT].classList.add('y-drawer-opened');
   } else {
+    // TODO: allow scrolling earlier
+    if (this[SCROLL]) this[SCROLL].style.overflowY = '';
+
     this[SCRIM].style.pointerEvents = '';
     this[CONTENT].classList.remove('y-drawer-opened');
-
-    // TODO: set earlier
-    if (this[SCROLL]) {
-      this[SCROLL].style.overflowY = '';
-    }
   }
-
-  this[CONTENT].style.willChange = '';
-  this[SCRIM].style.willChange = '';
-
-  // this.fireEvent('transitioned');
-
-  // this.opened = opened;
 }
 
 function getMovableDrawerWidth() {
@@ -188,14 +182,14 @@ function getStartObservable() {
     ::filter(({ touches }) => touches.length === 1)
     ::map(({ touches }) => touches[0]);
 
-  if (this.mouseEvents) {
+  if (!this.mouseEvents) {
+    return touchstart$;
+  } else {
     const mousedown$ = Observable::fromEvent(document, 'mousedown', {
       passive: !this.preventDefault,
     });
 
     return touchstart$::mergeWith(mousedown$);
-  } else {
-    return touchstart$;
   }
 }
 
@@ -210,7 +204,9 @@ function getMoveObservable(start$, end$) {
       // TODO: what if the finger is no longer available?
       assign(e.touches::find(t => t.identifier === startIdentifier), { e }));
 
-  if (this.mouseEvents) {
+  if (!this.mouseEvents) {
+    return touchmove$;
+  } else {
     const mousemove$ = Observable::fromEvent(document, 'mousemove', {
       passive: !this.preventDefault,
     })
@@ -218,8 +214,6 @@ function getMoveObservable(start$, end$) {
       ::map(e => assign(e, { e }));
 
     return touchmove$::mergeWith(mousemove$);
-  } else {
-    return touchmove$;
   }
 }
 
@@ -229,14 +223,14 @@ function getEndObservable() {
   })
     ::filter(({ touches }) => touches.length === 0);
 
-  if (this.mouseEvents) {
+  if (!this.mouseEvents) {
+    return touchend$;
+  } else {
     const mouseup$ = Observable::fromEvent(document, 'mouseup', {
       passive: !this.preventDefault,
     });
 
     return touchend$::mergeWith(mouseup$);
-  } else {
-    return touchend$;
   }
 }
 
