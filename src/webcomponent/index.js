@@ -16,14 +16,16 @@
 import {
   customElementMixin,
   CustomElement,
+  getTemplate,
   MODERNIZR_TESTS as CUSTOM_ELEMENT_MODERNIZER_TESTS,
 } from 'y-component/src/custom-element';
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
 
-import template from './template.ejs'; // eslint-disable-line
+import templateString from './template.ejs'; // eslint-disable-line
 
-export const MODERNIZR_TESTS = Object.assign({}, CUSTOM_ELEMENT_MODERNIZER_TESTS,
+export const MODERNIZR_TESTS = Object.assign({},
+  CUSTOM_ELEMENT_MODERNIZER_TESTS,
   DRAWER_MIXIN_MODERNIZR_TESTS);
 
 function fragmentFromString(strHTML) {
@@ -34,5 +36,5 @@ export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElem
   static get observedAttributes() { return this.getObservedAttributes(); }
 
   // @override
-  getTemplateInstance() { return fragmentFromString(template); }
+  [getTemplate]() { return fragmentFromString(templateString); }
 }

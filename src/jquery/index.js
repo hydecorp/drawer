@@ -13,30 +13,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { defineJQueryComponent } from 'y-component/src/define-jquery-component';
-
+import { JQueryComponent, defineJQueryComponent, setupDOM }
+from 'y-component/src/define-jquery-component';
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
 export const MODERNIZR_TESTS = Object.assign({}, DRAWER_MIXIN_MODERNIZER_TESTS);
 
 // TODO: rename? check how jQuery UI does it
-export const drawerJQueryPlugin = defineJQueryComponent('drawer', class extends drawerMixin() {
-  constructor(el, props) {
-    super();
-    this.setupComponent(el, props);
-  }
+export const drawerJQueryPlugin = defineJQueryComponent('drawer',
+  class extends drawerMixin(JQueryComponent) {
+    // @override
+    [setupDOM](el) {
+      const $el = $(el);
 
-  // @override
-  setupDOM(el) {
-    const $el = $(el);
+      const children = $el.children().detach();
 
-    const children = $el.children().detach();
+      $el
+        .append($('<div class="y-drawer-scrim" />'))
+        .append($('<div class="y-drawer-content" />').append(children));
 
-    $el
-      .append($('<div class="y-drawer-scrim" />'))
-      .append($('<div class="y-drawer-content" />').append(children));
-
-    return el;
-  }
-});
+      return el;
+    }
+  },
+);

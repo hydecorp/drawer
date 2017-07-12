@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { VanillaComponent, setupDOM } from 'y-component/src/vanilla';
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
@@ -20,20 +21,16 @@ export const MODERNIZR_TESTS = Object.assign({
   classlist: true,
 }, DRAWER_MIXIN_MODERNIZER_TESTS);
 
-export class Drawer extends drawerMixin() {
-  constructor(el, props) {
-    super();
-    this.setupComponent(el, props);
-  }
-
+export class Drawer extends drawerMixin(VanillaComponent) {
   // @override
-  setupDOM(el) {
+  [setupDOM](el) {
     if (!el) throw Error('No element provided');
 
     const scrim = document.createElement('div');
+    const content = document.createElement('div');
+
     scrim.classList.add('y-drawer-scrim');
 
-    const content = document.createElement('div');
     content.classList.add('y-drawer-content');
     while (el.children.length > 0) {
       content.appendChild(el.children[0]);
