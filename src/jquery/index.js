@@ -20,7 +20,8 @@ import '../style.css';
 
 export const MODERNIZR_TESTS = Object.assign({}, DRAWER_MIXIN_MODERNIZER_TESTS);
 
-defineJQueryComponent('drawer', class extends drawerMixin() {
+// TODO: rename? check how jQuery UI does it
+export const drawerJQueryPlugin = defineJQueryComponent('drawer', class extends drawerMixin() {
   constructor(el, props) {
     super();
     this.setupComponent(el, props);
@@ -39,5 +40,3 @@ defineJQueryComponent('drawer', class extends drawerMixin() {
     return el;
   }
 });
-
-// export ???
