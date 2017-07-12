@@ -264,6 +264,9 @@ function setupObservables() {
   this[ANIMATE_TO] = new Subject();
   // this[PERSISTENT] = new Subject();
 
+  const opened$ = this[OPENED]
+    ::startWith(this.opened);
+
   // const scrimClick$ = Observable::fromEvent(this[SCRIM], 'click')
   //   ::filterWith(opened$)
   //   ::effect(this::prepInteraction);
@@ -316,7 +319,7 @@ function setupObservables() {
         ::withLatestFrom(start$, ref.startTranslateX$)
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
           this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth)),
-      this[OPENED]
+      opened$
         ::startWith(this.opened)
         ::effect(this::cleanupInteraction)
         ::map(opened => (opened ? drawerWidth : 0)),
@@ -351,7 +354,7 @@ function setupObservables() {
       const diffTranslateX = endTranslateX - translateX;
       return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
         ::effect(null, null, () => this::cleanupInteraction(opened))
-        ::takeUntil(start$::mergeWith(this[OPENED]));
+        ::takeUntil(start$);
     });
 
   ref.translateX$
