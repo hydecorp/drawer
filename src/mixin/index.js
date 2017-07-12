@@ -110,8 +110,8 @@ function cacheDOMElements() {
   this[CONTENT] = this.root.querySelector('.y-drawer-content');
 }
 
-function isInRange(clientX, drawerWidth, opened) {
-  return opened || (clientX > this.edgeMargin && clientX < drawerWidth / 2);
+function isInRange(clientX, drawerWidth) {
+  return clientX > this.edgeMargin && clientX < drawerWidth / 2;
 }
 
 // Based on current velocity and position of drawer, will the drawer be open, or snap back?
@@ -291,7 +291,7 @@ function setupObservables() {
   // Indicates whether the touch positon is within the range (x-axis)
   const inRange$ = start$
     ::withLatestFrom(scrimVisible$)
-    ::map(([{ clientX }, scrimVisible]) => this::isInRange(clientX, drawerWidth, scrimVisible))
+    ::map(([{ clientX }, scrimVisible]) => scrimVisible || this::isInRange(clientX, drawerWidth))
     ::effect((inRange) => { if (inRange) { this::prepInteraction(); } })
     ::share();
 
