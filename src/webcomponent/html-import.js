@@ -21,9 +21,11 @@ import {
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
 
-export const MODERNIZR_TESTS = Object.assign({
-  htmlimports: true,
-}, CUSTOM_ELEMENT_MODERNIZER_TESTS, DRAWER_MIXIN_MODERNIZR_TESTS);
+export const MODERNIZR_TESTS = [
+  ...CUSTOM_ELEMENT_MODERNIZER_TESTS,
+  ...DRAWER_MIXIN_MODERNIZR_TESTS,
+  'htmlimports',
+];
 
 if ('customElements' in window) {
   customElements.define('y-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {

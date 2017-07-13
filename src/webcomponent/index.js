@@ -24,9 +24,10 @@ import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '..
 
 import templateString from './template.ejs'; // eslint-disable-line
 
-export const MODERNIZR_TESTS = Object.assign({},
-  CUSTOM_ELEMENT_MODERNIZER_TESTS,
-  DRAWER_MIXIN_MODERNIZR_TESTS);
+export const MODERNIZR_TESTS = [
+  ...CUSTOM_ELEMENT_MODERNIZER_TESTS,
+  ...DRAWER_MIXIN_MODERNIZR_TESTS,
+];
 
 function fragmentFromString(strHTML) {
   return document.createRange().createContextualFragment(strHTML);

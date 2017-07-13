@@ -17,9 +17,10 @@ import { VanillaComponent, setupDOM } from 'y-component/src/vanilla';
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
-export const MODERNIZR_TESTS = Object.assign({
-  classlist: true,
-}, DRAWER_MIXIN_MODERNIZER_TESTS);
+export const MODERNIZR_TESTS = [
+  ...DRAWER_MIXIN_MODERNIZER_TESTS,
+  'classlist',
+];
 
 export class Drawer extends drawerMixin(VanillaComponent) {
   // @override

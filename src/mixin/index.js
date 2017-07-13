@@ -47,18 +47,19 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 import { createTween, linearTween } from '../common';
 
-export const MODERNIZR_TESTS = Object.assign({
-  // touchevents: true, // optional
-  // pointerevents: true, // windows (phone) ???
-  // willchange: true, // optional
-  eventlistener: true,
-  queryselector: true,
-  requestanimationframe: true,
-  classlist: true,
-  opacity: true,
-  csstransforms: true,
-  csspointerevents: true,
-}, COMPONENT_MODERNIZER_TESTS);
+export const MODERNIZR_TESTS = [
+  ...COMPONENT_MODERNIZER_TESTS,
+  // 'touchevents', // optional
+  // 'pointerevents', // windows (phone) ???
+  // 'willchange', // optional
+  'eventlistener',
+  'queryselector',
+  'requestanimationframe',
+  'classlist',
+  'opacity',
+  'csstransforms',
+  'csspointerevents',
+];
 
 // TODO: export all symbols, always?
 export { setup };
@@ -117,7 +118,6 @@ function pauseable(pauser$) {
   if (process.env.DEBUG && !pauser$) throw Error();
   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
 }
-
 
 // function filterWithAll(p$, ...others) {
 //   if (process.env.DEBUG && !p$) throw Error();

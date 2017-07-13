@@ -18,7 +18,9 @@ from 'y-component/src/define-jquery-component';
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
-export const MODERNIZR_TESTS = Object.assign({}, DRAWER_MIXIN_MODERNIZER_TESTS);
+export const MODERNIZR_TESTS = [
+  ...DRAWER_MIXIN_MODERNIZER_TESTS,
+];
 
 // TODO: rename? check how jQuery UI does it
 export const drawerJQueryPlugin = defineJQueryComponent('drawer',
