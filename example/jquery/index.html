@@ -8,6 +8,8 @@
     <link href="../style.css" rel="stylesheet">
 
     <link href="../../dist/jquery/style.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/jquery@3"></script>
+    <script src="../../dist/jquery/y-drawer.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -57,13 +59,12 @@
       .y-drawer-content { color:#fff; background:#0769ad; }
     </style>
 
-    <script src="https://unpkg.com/jquery@3"></script>
-    <script src="../../dist/jquery/y-drawer.js"></script>
     <script>
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
 
       $('#drawerEl').drawer({
+        opened: true,
         preventDefault: isSafari,
         edgeMargin: isSafari ? 15 : 0,
         mouseEvents: true
@@ -71,7 +72,7 @@
 
       $('#menuEl').click(function (e) {
         e.preventDefault();
-        // drawer.toggle(); // TODO
+        $('#drawerEl').drawer('toggle');
       });
     </script>
   </body>

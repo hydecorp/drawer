@@ -66,6 +66,8 @@ export { setup };
 
 // TODO: make configurable?
 
+const TRANSITION_DURATION = 200; // ms
+
 // Min velocity of the drawer (in px/ms) to make it snap to open/close the drawer.
 const VELOCITY_THRESHOLD = 0.2;
 
@@ -341,12 +343,12 @@ function setupObservables() {
     ::share();
 
   const end$ = this::getEndObservable()
-    ::pauseable(persistent$) // can unsubscribe when persistent
+    ::pauseable(persistent$) // can unsubscribe when `persistent` is true
     ::filterWith(isInRange$)
     ::share();
 
   const move$ = this::getMoveObservable(start$, end$)
-    ::pauseable(persistent$) // can unsubscribe when persistent
+    ::pauseable(persistent$) // can unsubscribe when `persistent` is true
     ::filterWith(isInRange$) // MUST NOT unsubscribe (b/c of how `preventDefault` in Safari works)
     ::share();
 
@@ -358,7 +360,7 @@ function setupObservables() {
     ::repeatWhen(() => end$);
 
   ref.translateX$ = Observable::defer(() => Observable::merge(
-      ref.anim$,
+      ref.tween$,
       move$
         ::filterWith(isSliding$)
         ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
@@ -366,7 +368,7 @@ function setupObservables() {
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
           this::calcTranslateX(clientX, startX, startTranslateX)),
       this[openedObs]
-        ::map(opened => (opened ? this[drawerWidth] : 0))
+        ::map(opened => (opened ? this[drawerWidth] : 0)) // TODO: drawerWdith can be outdated...
         ::effect(this::cleanupInteraction)))
     ::share();
 
@@ -375,7 +377,7 @@ function setupObservables() {
   // an interaction *during an animation*, it can also be every value inbetween.
   ref.startTranslateX$ = ref.translateX$::sample(start$);
 
-  // The current velocity of the slider (not of the thumb/mouse)
+  // The current velocity of the slider
   const velocity$ = ref.translateX$
     ::timestamp()
     ::pairwise()
@@ -384,7 +386,7 @@ function setupObservables() {
       (x - prevX) / (time - prevTime))
     ::startWith(0);
 
-  ref.anim$ = Observable::merge(
+  ref.tween$ = Observable::merge(
       end$
         ::withLatestFrom(ref.translateX$, velocity$)
         ::map(([, translateX, velocity]) =>
@@ -396,7 +398,7 @@ function setupObservables() {
     ::switchMap(([opened, translateX]) => {
       const endTranslateX = (opened ? 1 : 0) * this[drawerWidth];
       const diffTranslateX = endTranslateX - translateX;
-      return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
+      return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
         ::effect(null, null, () => this::cleanupInteraction(opened))
         ::takeUntil(start$);
     });
@@ -404,22 +406,20 @@ function setupObservables() {
   // The end result is always to update the (shadow) DOM.
   ref.translateX$.subscribe(translateX => this::updateDOM(translateX));
 
-  // A click on the scrim should close the drawer, but only when to drawer is fully extended.
+  // A click on the scrim should close the drawer, but only when the drawer is fully extended.
   // Otherwise it's possible to accidentially close the drawer during sliding/animating.
   // TODO: this still happens with mouseevents
   Observable::fromEvent(this[scrimEl], 'click')
     ::pauseable(isAnimating$)
     .subscribe(() => { this.close(); });
 
-  // Other than pausing sliding events, setting persistent to true will also hide the scrim.
+  // Other than preventing sliding, setting `persistent` to `true` will also hide the scrim.
   persistent$.subscribe((persistent) => {
     this[scrimEl].style.display = persistent ? 'none' : 'block';
   });
 
   // These could be useful at some point (don't forget to `share` dep obs)
-
   // const isScrolling$ = isSliding$::map(x => (x === undefined ? undefined : !x));
-
   // const hasStartedMoving$ = isSliding$
   //   ::map(isSliding => isSliding !== undefined)
   //   ::share();
@@ -434,7 +434,6 @@ export function drawerMixin(C) {
     static get defaults() {
       return {
         opened: false,
-        transitionDuration: 250,
         persistent: false,
         scrollSelector: 'body',
         edgeMargin: 0,
@@ -444,7 +443,6 @@ export function drawerMixin(C) {
     }
 
     static get sideEffects() {
-      // TODO: automate?
       return {
         opened(x) { this[openedObs].next(x); },
         persistent(x) { this[persistentObs].next(x); },

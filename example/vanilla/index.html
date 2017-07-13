@@ -8,6 +8,7 @@
     <link href="../style.css" rel="stylesheet">
 
     <link href="../../dist/vanilla/style.css" rel="stylesheet" type="text/css">
+    <script src="../../dist/vanilla/y-drawer.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -56,7 +57,6 @@
       .y-drawer-content { color: #000; background: #f7df1e; }
     </style>
 
-    <script src="../../dist/vanilla/y-drawer.js"></script>
     <script>
       var Drawer = yDrawer.Drawer;
 
@@ -64,6 +64,7 @@
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
 
       var drawer = new Drawer(drawerEl, {
+        opened: true,
         preventDefault: isSafari,
         edgeMargin: isSafari ? 15 : 0,
         mouseEvents: true
