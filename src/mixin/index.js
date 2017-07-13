@@ -85,7 +85,12 @@ const Symbol = global.Symbol || (x => `_${x}`);
 // Also, we don't want users to accidentially modify internal state.
 const persistentObs = Symbol('persistentObs');
 const openedObs = Symbol('openedObs');
+const preventDefaultObs = Symbol('preventDefaultObs');
+const mouseEventsObs = Symbol('mouseEventsObs');
+
 const animateToObs = Symbol('animateToObs');
+const drawerWidth = Symbol('drawerWidth');
+
 const scrimEl = Symbol('scrimEl');
 const contentEl = Symbol('contentEl');
 const scrollEl = Symbol('scrollEl');
@@ -142,18 +147,18 @@ function cacheDOMElements() {
 
 // Given a x coordinate and the current drawer width,
 // determine whether it is within range to initiate an sliding interaction.
-function isInRange(clientX, drawerWidth) {
-  return clientX > this.edgeMargin && clientX < drawerWidth * MAGIC_MIKE;
+function isInRange(clientX) {
+  return clientX > this.edgeMargin && clientX < this[drawerWidth] * MAGIC_MIKE;
 }
 
 // Based on current velocity and position of drawer, will the drawer be open, or slide back?
 // TODO: could incorporate the current open state of the drawer
-function calcWillOpen(velocity, translateX, drawerWidth) {
+function calcWillOpen(velocity, translateX) {
   if (velocity > VELOCITY_THRESHOLD) {
     return true;
   } else if (velocity < -VELOCITY_THRESHOLD) {
     return false;
-  } else if (translateX >= drawerWidth / 2) {
+  } else if (translateX >= this[drawerWidth] / 2) {
     return true;
   } else {
     return false;
@@ -165,10 +170,17 @@ function calcWillOpen(velocity, translateX, drawerWidth) {
 // then applying the difference to the starting position of the drawer.
 // This way, we avoid snapping the drawer to the thumb, when catching it mid-animtion.
 // Will also clip the position at 0 and the width of the drawer.
-function calcTranslateX(clientX, startX, startTranslateX, drawerWidth) {
+function calcTranslateX(clientX, startX, startTranslateX) {
   const deltaX = clientX - startX;
   const translateX = startTranslateX + deltaX;
-  return max(0, min(drawerWidth, translateX));
+  return max(0, min(this[drawerWidth], translateX));
+}
+
+// Since part of the drawer could be visible,
+// the width that is "movable" is less than the complete drawer width
+// and given by
+function getMovableDrawerWidth() {
+  return -this[contentEl].offsetLeft;
 }
 
 // Side effects happening before a user interaction (sliding).
@@ -176,7 +188,7 @@ function prepInteraction() {
   this[contentEl].style.willChange = 'transform';
   this[scrimEl].style.willChange = 'opacity';
   this[contentEl].classList.remove('y-drawer-opened');
-  // this.drawerWidth = this.getMovableDrawerWidth();
+  this[drawerWidth] = this::getMovableDrawerWidth();
 }
 
 // Cleanup code after a completed interaction.
@@ -198,77 +210,76 @@ function cleanupInteraction(opened) {
   this[fire]('transitioned', opened);
 }
 
-// Since part of the drawer could be visible,
-// the width that is "movable" is less than the complete drawer width
-// and given by
-function getMovableDrawerWidth() {
-  return -this[contentEl].offsetLeft;
-}
-
 // The end result of pretty much everything in this component is
 // to modify the `transform` of the content, and the `opacity` of the scrim.
-function updateDOM(translateX, drawerWidth) {
+function updateDOM(translateX) {
   this[contentEl].style.transform = `translateX(${translateX}px)`;
-  this[scrimEl].style.opacity = translateX / drawerWidth;
+  this[scrimEl].style.opacity = translateX / this[drawerWidth];
 }
 
 function getStartObservable() {
-  const touchstart$ = Observable::fromEvent(document, 'touchstart', {
-    passive: !this.preventDefault,
-  })
-    ::filter(({ touches }) => touches.length === 1)
-    ::map(({ touches }) => touches[0]);
-
-  if (!this.mouseEvents) {
-    return touchstart$;
-  } else {
-    const mousedown$ = Observable::fromEvent(document, 'mousedown', {
+  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+    const touchstart$ = Observable::fromEvent(document, 'touchstart', {
       passive: !this.preventDefault,
-    });
+    })
+      ::filter(({ touches }) => touches.length === 1)
+      ::map(({ touches }) => touches[0]);
 
-    return touchstart$::mergeWith(mousedown$);
-  }
+    if (!this.mouseEvents) {
+      return touchstart$;
+    } else {
+      const mousedown$ = Observable::fromEvent(document, 'mousedown', {
+        passive: !this.preventDefault,
+      });
+
+      return touchstart$::mergeWith(mousedown$);
+    }
+  });
 }
 
 function getMoveObservable(start$, end$) {
   const { find } = Array.prototype;
 
-  const touchmove$ = Observable::fromEvent(document, 'touchmove', {
-    passive: !this.preventDefault,
-  })
-    ::withLatestFrom(start$)
-    ::map(([e, { identifier: startIdentifier }]) =>
-      // TODO: what if the finger is no longer available?
-      assign(e.touches::find(t => t.identifier === startIdentifier), { e }));
-
-  if (!this.mouseEvents) {
-    return touchmove$;
-  } else {
-    const mousemove$ = Observable::fromEvent(document, 'mousemove', {
+  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+    const touchmove$ = Observable::fromEvent(document, 'touchmove', {
       passive: !this.preventDefault,
     })
-      ::pauseable(Observable::merge(start$::mapTo(false), end$::mapTo(true)))
-      ::map(e => assign(e, { e }));
+      ::withLatestFrom(start$)
+      ::map(([e, { identifier: startIdentifier }]) =>
+        // TODO: what if the finger is no longer available?
+        assign(e.touches::find(t => t.identifier === startIdentifier), { e }));
 
-    return touchmove$::mergeWith(mousemove$);
-  }
+    if (!this.mouseEvents) {
+      return touchmove$;
+    } else {
+      const mousemove$ = Observable::fromEvent(document, 'mousemove', {
+        passive: !this.preventDefault,
+      })
+        ::pauseable(Observable::merge(start$::mapTo(false), end$::mapTo(true)))
+        ::map(e => assign(e, { e }));
+
+      return touchmove$::mergeWith(mousemove$);
+    }
+  });
 }
 
 function getEndObservable() {
-  const touchend$ = Observable::fromEvent(document, 'touchend', {
-    passive: !this.preventDefault,
-  })
-    ::filter(({ touches }) => touches.length === 0);
-
-  if (!this.mouseEvents) {
-    return touchend$;
-  } else {
-    const mouseup$ = Observable::fromEvent(document, 'mouseup', {
+  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+    const touchend$ = Observable::fromEvent(document, 'touchend', {
       passive: !this.preventDefault,
-    });
+    })
+      ::filter(({ touches }) => touches.length === 0);
 
-    return touchend$::mergeWith(mouseup$);
-  }
+    if (!this.mouseEvents) {
+      return touchend$;
+    } else {
+      const mouseup$ = Observable::fromEvent(document, 'mouseup', {
+        passive: !this.preventDefault,
+      });
+
+      return touchend$::mergeWith(mouseup$);
+    }
+  });
 }
 
 function getIsSlidingObservable(move$, start$) {
@@ -298,17 +309,17 @@ function getIsSlidingObservable(move$, start$) {
 
 function setupObservables() {
   this[openedObs] = new Subject();
-  this[animateToObs] = new Subject();
   this[persistentObs] = new Subject();
+  this[preventDefaultObs] = new Subject();
+  this[mouseEventsObs] = new Subject();
+  this[animateToObs] = new Subject();
 
   const persistent$ = this[persistentObs]::share();
 
   // We use this inside `defer` to reference observables that haven't been defined yet.
   const ref = {};
 
-  // TODO: recalculate on change. let user provide width?
-  const drawerWidth = this::getMovableDrawerWidth();
-  this[scrollEl] = document.querySelector(this.scrollSelector);
+  this[drawerWidth] = this::getMovableDrawerWidth();
 
   const start$ = this::getStartObservable()
     ::pauseable(persistent$)
@@ -319,13 +330,13 @@ function setupObservables() {
     ref.translateX$::map(translateX => translateX > 0));
 
   const isAnimating$ = Observable::defer(() =>
-    ref.translateX$::map(translateX => translateX < drawerWidth));
+    ref.translateX$::map(translateX => translateX < this[drawerWidth]));
 
   // Indicates whether the touch positon is within the range (x-axis)
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
     ::map(([{ clientX }, isScrimVisible]) =>
-      isScrimVisible || this::isInRange(clientX, drawerWidth))
+      isScrimVisible || this::isInRange(clientX))
     ::effect((inRange) => { if (inRange) this::prepInteraction(); })
     ::share();
 
@@ -353,9 +364,9 @@ function setupObservables() {
         ::effect(({ e }) => { if (this.preventDefault) e.preventDefault(); })
         ::withLatestFrom(start$, ref.startTranslateX$)
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
-          this::calcTranslateX(clientX, startX, startTranslateX, drawerWidth)),
+          this::calcTranslateX(clientX, startX, startTranslateX)),
       this[openedObs]
-        ::map(opened => (opened ? drawerWidth : 0))
+        ::map(opened => (opened ? this[drawerWidth] : 0))
         ::effect(this::cleanupInteraction)))
     ::share();
 
@@ -377,13 +388,13 @@ function setupObservables() {
       end$
         ::withLatestFrom(ref.translateX$, velocity$)
         ::map(([, translateX, velocity]) =>
-          this::calcWillOpen(velocity, translateX, drawerWidth)),
+          this::calcWillOpen(velocity, translateX)),
       this[animateToObs]
         ::effect(this::prepInteraction))
     ::effect((willOpen) => { this[setState]('opened', willOpen); })
     ::withLatestFrom(ref.translateX$)
     ::switchMap(([opened, translateX]) => {
-      const endTranslateX = (opened ? 1 : 0) * drawerWidth;
+      const endTranslateX = (opened ? 1 : 0) * this[drawerWidth];
       const diffTranslateX = endTranslateX - translateX;
       return createTween(linearTween, translateX, diffTranslateX, this.transitionDuration)
         ::effect(null, null, () => this::cleanupInteraction(opened))
@@ -391,8 +402,7 @@ function setupObservables() {
     });
 
   // The end result is always to update the (shadow) DOM.
-  ref.translateX$
-    .subscribe(translateX => this::updateDOM(translateX, drawerWidth));
+  ref.translateX$.subscribe(translateX => this::updateDOM(translateX));
 
   // A click on the scrim should close the drawer, but only when to drawer is fully extended.
   // Otherwise it's possible to accidentially close the drawer during sliding/animating.
@@ -402,8 +412,9 @@ function setupObservables() {
     .subscribe(() => { this.close(); });
 
   // Other than pausing sliding events, setting persistent to true will also hide the scrim.
-  persistent$
-    .subscribe((persistent) => { this[scrimEl].style.display = persistent ? 'none' : 'block'; });
+  persistent$.subscribe((persistent) => {
+    this[scrimEl].style.display = persistent ? 'none' : 'block';
+  });
 
   // These could be useful at some point (don't forget to `share` dep obs)
 
@@ -433,9 +444,15 @@ export function drawerMixin(C) {
     }
 
     static get sideEffects() {
+      // TODO: automate?
       return {
         opened(x) { this[openedObs].next(x); },
         persistent(x) { this[persistentObs].next(x); },
+        preventDefault(x) { this[preventDefaultObs].next(x); },
+        mouseEvents(x) { this[mouseEventsObs].next(x); },
+        scrollSelector(scrollSelector) {
+          this[scrollEl] = document.querySelector(scrollSelector);
+        },
       };
     }
 
@@ -448,11 +465,8 @@ export function drawerMixin(C) {
 
       this[openedObs].next(this.opened);
       this[persistentObs].next(this.persistent);
-
-      // this.opened = this.opened; // trigger side effect
-      // this.jumpTo(this.opened);
-      // if (!this.persistent) this.addEventListeners();
-      // if (this.persistent) this[scrimEl].style.display = 'none';
+      this[preventDefaultObs].next(this.preventDefault);
+      this[mouseEventsObs].next(this.mouseEvents);
 
       this[fire]('attached');
 
