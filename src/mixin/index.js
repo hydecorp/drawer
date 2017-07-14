@@ -76,9 +76,9 @@ import { createTween, linearTween } from '../common';
 // TODO: explain `MODERNIZR_TESTS`
 export const MODERNIZR_TESTS = [
   ...COMPONENT_MODERNIZER_TESTS,
-  // 'touchevents', // optional
-  // 'pointerevents', // windows (phone) ???
-  // 'willchange', // optional
+  /* 'touchevents', // optional */
+  /* 'pointerevents', // windows (phone) ??? */
+  /* 'willchange', // optional */
   'eventlistener',
   'queryselector',
   'requestanimationframe',
@@ -210,7 +210,7 @@ function cleanupInteraction(opened) {
   if (opened) {
     this[scrimEl].style.pointerEvents = 'all';
     this[contentEl].classList.add('y-drawer-opened');
-    // if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden';
+    /* if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden'; */
   } else {
     this[scrimEl].style.pointerEvents = '';
     this[contentEl].classList.remove('y-drawer-opened');
@@ -537,7 +537,7 @@ export function drawerMixin(C) {
       };
     }
 
-    // @override
+    /* @override */
     [setup](el, props) {
       super[setup](el, props);
 

@@ -30,12 +30,12 @@ node_modules
 .idea
 .vscode
 
-# jekyll
+# Jekyll
 _site
 .sass-cache
 
 react
 
-# eclude dist from git, not npm
+# exclude dist from git, not npm
 dist
 lib

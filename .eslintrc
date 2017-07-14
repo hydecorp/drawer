@@ -4,10 +4,6 @@
   "env": {
     "browser": true,
   },
-  "globals": {
-    "$": true,
-    "customElements": true,
-  },
   "rules": {
     "class-methods-use-this": "off",
     "no-else-return": "off",

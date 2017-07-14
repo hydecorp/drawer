@@ -17,21 +17,18 @@ import {
   customElementMixin,
   CustomElement,
   getTemplate,
+  fragmentFromString,
   MODERNIZR_TESTS as CUSTOM_ELEMENT_MODERNIZER_TESTS,
 } from 'y-component/src/custom-element';
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
 
-import templateString from './template.ejs'; // eslint-disable-line
+import templateString from './template.ejs';
 
 export const MODERNIZR_TESTS = [
   ...CUSTOM_ELEMENT_MODERNIZER_TESTS,
   ...DRAWER_MIXIN_MODERNIZR_TESTS,
 ];
-
-function fragmentFromString(strHTML) {
-  return document.createRange().createContextualFragment(strHTML);
-}
 
 export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElement)) {
   static get observedAttributes() { return this.getObservedAttributes(); }

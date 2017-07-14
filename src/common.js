@@ -58,8 +58,8 @@ export function linearTween(t, b, c, d) {
   return ((c * t) / d) + b;
 }
 
-export function pageDist(p1, p2) {
-  return Math.sqrt(((p1.pageX - p2.pageX) ** 2) + ((p1.pageY - p2.pageY) ** 2));
+export function clientDist(p1, p2) {
+  return Math.sqrt(((p2.clientX - p1.clientX) ** 2) + ((p2.clientY - p1.clientY) ** 2));
 }
 
 export function contains(target, className) {

@@ -15,6 +15,7 @@
 
 import { JQueryComponent, defineJQueryComponent, setupDOM }
 from 'y-component/src/define-jquery-component';
+
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
@@ -25,7 +26,7 @@ export const MODERNIZR_TESTS = [
 // TODO: rename? check how jQuery UI does it
 export const drawerJQueryPlugin = defineJQueryComponent('drawer',
   class extends drawerMixin(JQueryComponent) {
-    // @override
+    /* @override */
     [setupDOM](el) {
       const $el = $(el);
 
