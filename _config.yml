@@ -33,6 +33,8 @@ exclude:
   - package.json
   - package-lock.json
   - webpack.config.js
+  - src
+  - scripts
 
 strip_title: true
 
