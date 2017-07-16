@@ -1,3 +1,4 @@
+// # mixin/index.js
 // Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 //
 // This program is free software: you can redistribute it and/or modify
@@ -13,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// A word on the source code:
+// ## Introduction
 // This component is written with RxJS, which you can think of as a DSL for asynchronous events.
 // I chose it for a couple of reasons:
 // * UI components are essentially a set of rules on how to interpret a series of
@@ -36,6 +37,7 @@
 // which binds the `log` function to the `console` object (so it can be passed around).
 // As for reading the code, you can simply interpret `::` as `.` in most cases.
 
+// ## Imports
 // ES6+ functions that we use.
 // TODO: Explain `-lite` version.
 import 'core-js/fn/function/bind';
@@ -128,6 +130,7 @@ const abs = ::Math.abs;
 const min = ::Math.min;
 const max = ::Math.max;
 
+// ## Fuctions
 // Like `filter`, but takes an observable of booleans instead of a predicate function.
 // Similar to `pauseWith`, but will not unsubscribe from the source observable.
 function filterWith(p$) {
@@ -334,6 +337,7 @@ function getIsSlidingObservable(move$, start$) {
   }
 }
 
+// ## Putting it together
 // This is the main function, putting together all the parts.
 function setupObservables() {
   // Emitts a value every time you change the `persistent` property of the drawer.
@@ -510,6 +514,7 @@ function setupObservables() {
   });
 }
 
+// ## The final export
 export function drawerMixin(C) {
   return class extends componentMixin(C) {
     static get componentName() { return 'y-drawer'; }
