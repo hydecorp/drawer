@@ -46,8 +46,7 @@ export function createTween(easingFunction, b, c, d, s) {
         id = requestAnimationFrame(sample);
       } else {
         observer.next(easingFunction(d, b, c, d, s));
-        observer.complete();
-        id = null;
+        id = requestAnimationFrame(() => observer.complete());
       }
     });
     return () => { if (id) { cancelAnimationFrame(id); } };

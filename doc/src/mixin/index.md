@@ -68,6 +68,7 @@ import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as effect } from 'rxjs/operator/do';
+import { delay } from 'rxjs/operator/delay';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
@@ -124,7 +125,7 @@ Min velocity of the drawer (in px/ms) to make it snap to open/close the drawer.
 
 
 ```js
-const VELOCITY_THRESHOLD = 0.2;
+const VELOCITY_THRESHOLD = 0.15;
 ```
 
 By how much (in px) should the finger/mouse need to move,
@@ -139,7 +140,7 @@ TODO: rename
 
 
 ```js
-const MAGIC_MIKE = 0.5;
+const MAGIC_MIKE = 0.67;
 ```
 
 If Symbol isn't supported, just use underscore naming convention for private properties.
@@ -162,6 +163,7 @@ const openedObs = Symbol('openedObs');
 const preventDefaultObs = Symbol('preventDefaultObs');
 const mouseEventsObs = Symbol('mouseEventsObs');
 const animateToObs = Symbol('animateToObs');
+const backButtonObs = Symbol('backButtonObs');
 const drawerWidth = Symbol('drawerWidth');
 const scrimEl = Symbol('scrimEl');
 const contentEl = Symbol('contentEl');
@@ -204,23 +206,14 @@ function pauseWith(pauser$) {
 }
 ```
 
-TODO
-
-
-```js
-function cacheDOMElements() {
-  this[scrimEl] = this.root.querySelector('.y-drawer-scrim');
-  this[contentEl] = this.root.querySelector('.y-drawer-content');
-}
-```
-
 Given a x coordinate and the current drawer width,
 determine whether it is within range to initiate an sliding interaction.
 
 
 ```js
-function isInRange(clientX) {
-  return clientX > this.edgeMargin && clientX < this[drawerWidth] * MAGIC_MIKE;
+function isInRange(clientX, opened) {
+  return clientX > (this.edgeMargin * (window.devicePixelRatio || 1))
+    && (opened || clientX < this[drawerWidth] * MAGIC_MIKE);
 }
 ```
 
@@ -296,11 +289,23 @@ function cleanupInteraction(opened) {
   if (opened) {
     this[scrimEl].style.pointerEvents = 'all';
     this[contentEl].classList.add('y-drawer-opened');
-    /* if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden'; */
+    if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden';
   } else {
     this[scrimEl].style.pointerEvents = '';
     this[contentEl].classList.remove('y-drawer-opened');
     if (this[scrollEl]) this[scrollEl].style.overflowY = ''; // TODO: allow scrolling earlier
+  }
+
+  if (this.backButton) {
+    const hash = `#${this.el.id}--opened`;
+    if (opened && location.hash !== hash) {
+      history.pushState({ id: this.el.id }, document.title, hash);
+    }
+    if (!opened
+        && (history.state && history.state.id === this.el.id)
+        && location.hash !== '') {
+      history.back();
+    }
   }
 
   this[fire]('transitioned', opened);
@@ -566,8 +571,7 @@ This ensusred that the drawer can only be pulled form a narrow range close to th
 ```js
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
-    ::map(([{ clientX }, isScrimVisible]) =>
-      isScrimVisible || this::isInRange(clientX))
+    ::map(([{ clientX }, isScrimVisible]) => this::isInRange(clientX, isScrimVisible))
     ::effect((inRange) => { if (inRange) this::prepareInteraction(); })
     ::share();
 ```
@@ -740,7 +744,15 @@ which would have been called at the beginning of the interaction otherwise.
 
 ```js
       this[animateToObs]
-        ::effect(this::prepareInteraction))
+        ::effect(this::prepareInteraction)
+```
+
+Give the browser some time to prepare the animation (`will-change`).
+Note that less than 100ms response time are not noticiable.
+
+
+```js
+        ::delay(50))
 ```
 
 We silently set the new `opened` state here,
@@ -751,8 +763,7 @@ to the correct opposite state.
 
 
 ```js
-    ::effect((willOpen) => { this[setState]('opened', willOpen); })
-    ::withLatestFrom(ref.translateX$)
+    ::effect(willOpen => this[setState]('opened', willOpen))
 ```
 
 This ensures that subsequent events that trigger an animation
@@ -760,6 +771,7 @@ don't cause more than one animation to be played at a time.
 
 
 ```js
+    ::withLatestFrom(ref.translateX$)
     ::switchMap(([opened, translateX]) => {
       const endTranslateX = (opened ? 1 : 0) * this[drawerWidth];
       const diffTranslateX = endTranslateX - translateX;
@@ -794,16 +806,31 @@ TODO: this still happens with mouseevents
 ```js
   Observable::fromEvent(this[scrimEl], 'click')
     ::pauseWith(isAnimating$)
-    .subscribe(() => { this.close(); });
+    .subscribe(() => this.close());
 ```
 
-Other than preventing sliding, setting `persistent` to `true` will also hide the scrim.
+Other than preventing sliding, setting `persistent` will also hide the scrim.
 
 
 ```js
   persistent$.subscribe((persistent) => {
     this[scrimEl].style.display = persistent ? 'none' : 'block';
   });
+```
+
+TODO: ensure id
+
+
+```js
+  Observable::fromEvent(window, 'popstate')
+    ::pauseWith(this[backButtonObs]::map(x => !x))
+    .subscribe((e) => {
+      if (e.preventDefault) e.preventDefault();
+
+      const hash = `#${this.el.id}--opened`;
+      const willOpen = location.hash === hash;
+      if (willOpen !== this.opened) this[animateToObs].next(willOpen);
+    });
 }
 ```
 
@@ -813,8 +840,19 @@ Other than preventing sliding, setting `persistent` to `true` will also hide the
 ```js
 export function drawerMixin(C) {
   return class extends componentMixin(C) {
-    static get componentName() { return 'y-drawer'; }
+```
 
+TODO
+
+
+```js
+    static get componentName() { return 'y-drawer'; }
+```
+
+TODO
+
+
+```js
     static get defaults() {
       return {
         opened: false,
@@ -823,15 +861,22 @@ export function drawerMixin(C) {
         edgeMargin: 0,
         preventDefault: false,
         mouseEvents: false,
+        backButton: false,
       };
     }
+```
 
+TODO
+
+
+```js
     static get sideEffects() {
       return {
         opened(x) { this[openedObs].next(x); },
         persistent(x) { this[persistentObs].next(x); },
         preventDefault(x) { this[preventDefaultObs].next(x); },
         mouseEvents(x) { this[mouseEventsObs].next(x); },
+        backButton(x) { this[backButtonObs].next(x); },
         scrollSelector(scrollSelector) {
           this[scrollEl] = document.querySelector(scrollSelector);
         },
@@ -841,10 +886,14 @@ export function drawerMixin(C) {
     /* @override */
     [setup](el, props) {
       super[setup](el, props);
+
+      if (process.env.DEBUG && this.backButton && !this.el.id) {
+        console.warn('y-drawer needs to haven an id attribute in order for the backButton option to work.');
+      }
 ```
 
 Observables used for side effects caused by changing properties on the component.
-TODO: Move into separate function?
+The are used to emit the new vale whenever properties get changed on the component.
 
 
 ```js
@@ -852,32 +901,66 @@ TODO: Move into separate function?
       this[persistentObs] = new Subject();
       this[preventDefaultObs] = new Subject();
       this[mouseEventsObs] = new Subject();
+      this[backButtonObs] = new Subject();
       this[animateToObs] = new Subject();
-
-      this::cacheDOMElements();
-      this::setupObservables();
 ```
 
-Putting the initial values on the side-effect-observables.
-TODO: Move into separate function?
+Cache DOM elements.
 
 
 ```js
+      this[scrimEl] = this.root.querySelector('.y-drawer-scrim');
+      this[contentEl] = this.root.querySelector('.y-drawer-content');
+      if (this.scrollSelector) this[scrollEl] = document.querySelector(this.scrollSelector);
+```
+
+This is where most of the action happens.
+
+
+```js
+      this::setupObservables();
+```
+
+Now we set the initial opend state.
+Note that the opened state in the URL takes precedence over the initialization value.
+
+
+```js
+      const hash = `#${this.el.id}--opened`;
+      const willOpen = location.hash === '' ? undefined : location.hash === hash;
+      if (willOpen !== undefined) this[setState]('opened', willOpen);
       this[openedObs].next(this.opened);
+```
+
+Putting the initial values on the side-effect--observables:
+
+
+```js
       this[persistentObs].next(this.persistent);
       this[preventDefaultObs].next(this.preventDefault);
       this[mouseEventsObs].next(this.mouseEvents);
+      this[backButtonObs].next(this.backButton);
 ```
 
-Firing an event to let the outside world know that the drawer is ready.
+Firing an event to let the outside world know the drawer is ready.
 
 
 ```js
       this[fire]('attached');
+```
 
+Allow function chaining.
+
+
+```js
       return this;
     }
+```
 
+TODO
+
+
+```js
     open(animated = true) {
       if (animated) this[animateToObs].next(true);
       else this.opened = true;
