@@ -38,25 +38,25 @@
 
       <!-- HTML import above will register the y-drawer custom element.
       We can set Properties directly (using param-case). -->
-      <y-drawer id="drawerEl" mouse-events opened>
+      <y-drawer id="drawerEl" mouse-events>
         <aside>
           <ul>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
           </ul>
         </aside>
       </y-drawer>
@@ -73,10 +73,12 @@
 
       // Use the DOM API to set Properties on the HTML element (use param-case!)
       if (isSafari) drawerEl.setAttribute('prevent-default', '');
-      drawerEl.setAttribute('edge-margin', isSafari ? 15 : 0);
+      if (!isSafari) drawerEl.setAttribute('back-button', '');
+      drawerEl.setAttribute('edge-margin', isSafari ? 25 : 0);
 
       // Alternatively, change Properties by setting values directly on the element (use camelCase!)
       // drawerEl.preventDefault = isSafari;
+      // drawerEl.backButton = !isSafari;
       // drawerEl.edgeMargin = isSafari ? 15 : 0;
 
       menuEl.addEventListener('click', function (e) {

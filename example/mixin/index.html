@@ -35,22 +35,22 @@
         <div class="y-drawer-scrim"></div>
         <div class="y-drawer-content">
           <ul>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
-            <li><a href="../mixin/index.html">Mixin Example</a></li>
-            <li><a href="../vanilla/index.html">Vanilla JS Example</a></li>
-            <li><a href="../jquery/index.html">jQuery Example</a></li>
-            <li><a href="../webcomponent/index.html">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
+            <li><a href="../mixin/">Mixin Example</a></li>
+            <li><a href="../vanilla/">Vanilla JS Example</a></li>
+            <li><a href="../jquery/">jQuery Example</a></li>
+            <li><a href="../webcomponent/">WebComponent Example</a></li>
           </ul>
         </div>
       </aside>
@@ -68,10 +68,10 @@
       var drawer = new Drawer()
 
       drawer[setup](drawerEl, {
-        opened: true,
         preventDefault: isSafari,
-        edgeMargin: isSafari ? 15 : 0,
-        mouseEvents: true
+        edgeMargin: isSafari ? 25 : 0,
+        mouseEvents: true,
+        backButton: !isSafari
       });
 
       menuEl.addEventListener('click', function (e) {
