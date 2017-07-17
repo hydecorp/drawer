@@ -12,7 +12,7 @@ YDrawer can be used with a variety of tools and frameworks:
 * As WebComponent, either standalone or via HTML Import
 * Possibly as part of your own component hierarchy via "[ES6 Mixin][1]".
 
-The source code should be very approachable, as it is written in a "literal programming" style, and structured like a blog post. You can read it directly [here](doc/source.md).
+The source code should be very approachable, as it is written in a "literal programming" style, and structured like a blog post. You can read it [here](doc/src/mixin/index.md).
 
 The drawer is currently used in the wild by Hydejack.
 
@@ -45,7 +45,7 @@ If you chose `vanilla`, `jquery`, or `mixin`, you need to also include the style
 <link href="https://unpkg.com/y-drawer/dist/vanilla/style.css" rel="stylesheet" type="text/css">
 ~~~
 
-#### Vanilla JS
+<!-- #### Vanilla JS
 The vanilla JS class is defined within the global `yDrawer` namespace and is called `Drawer`:
 
 ~~~html
@@ -68,7 +68,7 @@ so you only need to call `drawer` on your target element.
 <script>
   $('#drawerEl').drawer();
 </script>
-~~~
+~~~ -->
 
 ### npm
 You can use `y-drawer` as part of your webpack or browserify build chain by fetching the source from npm:
@@ -99,13 +99,92 @@ class MyDrawerComponent extends drawerMixin(MyComponent) {
 ~~~
 
 Note that `lib` is precompiled to ES5 for convenience.
-Should you target a different set, you can
+Should you target a different set, you can TODO
 
+## Old Version
+y-drawer is a high-quality, (multi-)touch-enabled drawer menu for the mobile web.
+It offers options to optimize it's behavior for either iOS or Android
+(but no user-agent sniffing code is part of the core lib.
+
+It as initially developed for [Hydejack](https://qwtel.com/hydejack/)
+and is now available as a standalone component.
+
+It is written with RxJS, but only includes the parts it is using, resulting in a size of ~50kB minified,
+NOT gzipped.
+
+It can be used as a vanilla JS class, jQuery plugin, WebComponent (both via HTML import or UMD module),
+React component or as "ES6 mixin" for seamless integration in your own component library.
+For details, see examples below.
+
+CTO pitch:
+The implementation uses the CSS `transform`, `opacity`, and (dynamically set) `will-change` attributes,
+to ensure the minimum amount of repaints.
+The animations use `requestAnimationFrame` instead of CSS animations/WebAnimations
+in order to allow users to interrupt ("catch") the drawer duration the animation.
+If the drawer reaches a certain velocity when it is released, it will into that direction,
+i.e. it can be "flicked".
+Should the drawer not reach a certain threshold velocity when it is released,
+it will animate into whatever state it is closer in absolute terms.
+
+## Usage Example
+This is an example of how to use the component as a vanilla JS class.
+For other libraries, see TODO.
+
+~~~html
+<!-- need to load the stylesheet -->
+<link href="https://unpkg.com/y-drawer@7/dist/vanilla/style.css" rel="stylesheet" type="text/css">
+
+<!-- this element will be converted into the drawer -->
+<aside id="drawerEl">
+  <!-- can include arbitrary content -->
+</aside>
+
+<script src="https://unpkg.com/y-drawer@7/dist/vanilla/y-drawer.js"></script>
+<script>
+  // component exposes a global `yDrawer` namespace
+  var Drawer = yDrawer.Drawer;
+
+  // create drawer object via new
+  var drawer = new Drawer(drawerEl, {
+    preventDefault: true,
+    edgeMargin: 15
+  });
+
+  // call methods on the drawer object
+  drawer.open();
+</script>
+~~~
+
+
+Vanilla/jQuery
+~~~
+core-js/fn/object/assign
+core-js/fn/array/find
+core-js/fn/function/bind
+core-js/fn/array/for-each
+core-js/fn/object/define-property
+core-js/fn/object/keys
+~~~
+
+WebComponent:
+~~~
+core-js/fn/array/for-each
+core-js/fn/object/keys
+core-js/fn/object/assign
+core-js/fn/array/map
+core-js/fn/object/set-prototype-of
+core-js/fn/reflect/construct
+core-js/fn/string/trim
+core-js/fn/number/constructor
+core-js/fn/array/find
+core-js/fn/function/bind
+core-js/fn/object/define-property
+~~~
 
 ## Examples
-* [Mixin Example](example/mixin/index.html){:.no-push-state}
-* [Vanilla JS Example](example/vanilla/index.html){:.no-push-state}
-* [jQuery Example](example/jquery/index.html){:.no-push-state}
-* [WebComponent HTML Import Example](example/webcomponent/index.html){:.no-push-state}
+* [Mixin Example](example/mixin/){:.no-push-state}
+* [Vanilla JS Example](example/vanilla/){:.no-push-state}
+* [jQuery Example](example/jquery/){:.no-push-state}
+* [WebComponent HTML Import Example](example/webcomponent/){:.no-push-state}
 
 [1]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
