@@ -4,7 +4,7 @@ YDrawer is a touch-enabled drawer menu for the mobile web.
 It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
 while being performant and easy to use.
 It is the perfect companion for mobile-first web pages or (progressive-) web apps.
-[Give it a try!](example/mixin/index.html){:.no-push-state}.
+[Try it!](example/mixin/){:.no-push-state}.
 
 YDrawer can be used with a variety of tools and frameworks:
 * As Vanilla JavaScript class
@@ -12,7 +12,6 @@ YDrawer can be used with a variety of tools and frameworks:
 * As WebComponent, either standalone or via HTML Import
 * Possibly as part of your own component hierarchy via "[ES6 Mixin][1]".
 
-The source code should be very approachable, as it is written in a "literal programming" style, and structured like a blog post. You can read it [here](doc/src/mixin/index.md).
 
 The drawer is currently used in the wild by Hydejack.
 
@@ -21,13 +20,37 @@ It is part of the `y-components` family, that currently has `y-push-state` as an
 ## License
 The component is [GPL licensed](LICENSE.md), meaning you cannot use it in a project that isn't itself GPL licensed. For cases where this is not acceptable, there are commercial licenses available.
 
+TODO
+
+## Examples
+* [Mixin Example](example/mixin/){:.no-push-state}
+* [Vanilla JS Example](example/vanilla/){:.no-push-state}
+* [jQuery Example](example/jquery/){:.no-push-state}
+* [WebComponent Example](example/webcomponent/){:.no-push-state}
+
+## Documentation
+
+TODO
+
+## Source
+The source code is written in a "literal programming" style, and should be very approachable.
+Preferred reading order:
+
+* [mixin/index.js](doc/src/mixin/index.md)
+* [vanilla/index.js](doc/src/vanilla/index.md)
+* [jquery/index.js](doc/src/jquery/index.md)
+* [webcomponent/index.js](doc/src/webcomponent/index.md)
+* [webcomponent/html-import.js](doc/src/webcomponent/html-import.md)
+* [common.js](doc/src/common.md)
+
+
 ## Usage
 ### CDN
 For every bundle there are three versions that you can pick from
-* The minified version (`.min.js`) contains in the go-to, batteries-included version that you should use.
-* The lite version (`-lite.min.js`) does not bundle `core-js` polyfills for ES6 functions.
-  It is slightly smaller and can be used when you only target modern browsers, or when you've already patched the environment with `core-js` or similar yourself.
-* The unminified version (`.js`) should only be used for development
+* The `.min.js` version is the go-to, batteries-included version that you should use.
+* The `-lite.min.js` version does not bundle `core-js` polyfills.
+  It is slightly smaller and can be used when you only target modern browsers, or when you've already patched the environment with `core-js` or similar.
+* The unminified version (`.js`) should only be used for development.
 
 ~~~html
 <script src="https://unpkg.com/y-drawer/dist/vanilla/y-drawer.min.js"></script>
@@ -180,11 +203,5 @@ core-js/fn/array/find
 core-js/fn/function/bind
 core-js/fn/object/define-property
 ~~~
-
-## Examples
-* [Mixin Example](example/mixin/){:.no-push-state}
-* [Vanilla JS Example](example/vanilla/){:.no-push-state}
-* [jQuery Example](example/jquery/){:.no-push-state}
-* [WebComponent HTML Import Example](example/webcomponent/){:.no-push-state}
 
 [1]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/

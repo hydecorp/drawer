@@ -1,3 +1,4 @@
+# webcomponent/index.js
 Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 
 This program is free software: you can redistribute it and/or modify
@@ -35,12 +36,8 @@ export const MODERNIZR_TESTS = [
 
 export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElement)) {
   static get observedAttributes() { return this.getObservedAttributes(); }
-```
 
-@override
-
-
-```js
+  /* @override */
   [getTemplate]() { return fragmentFromString(templateString); }
 }
 ```

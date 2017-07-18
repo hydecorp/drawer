@@ -36,6 +36,9 @@
 // offers some quality of life improvements, like `::console.log`,
 // which binds the `log` function to the `console` object (so it can be passed around).
 // As for reading the code, you can simply interpret `::` as `.` in most cases.
+//
+// * Table of Contents
+// {:toc}
 
 // ## Imports
 // ES6+ functions that we use.
@@ -132,7 +135,7 @@ const abs = ::Math.abs;
 const min = ::Math.min;
 const max = ::Math.max;
 
-// ## Fuctions
+// ## Helper Fuctions
 // Like `filter`, but takes an observable of booleans instead of a predicate function.
 // Similar to `pauseWith`, but will not unsubscribe from the source observable.
 function filterWith(p$) {
@@ -239,7 +242,7 @@ function updateDOM(translateX) {
   this[scrimEl].style.opacity = translateX / this[drawerWidth];
 }
 
-// TODO
+// ### Start Observable
 function getStartObservable() {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
@@ -263,7 +266,7 @@ function getStartObservable() {
   });
 }
 
-// TODO
+// ### Move Observable
 function getMoveObservable(start$, end$) {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
@@ -295,7 +298,7 @@ function getMoveObservable(start$, end$) {
   });
 }
 
-// TODO
+// ### End Observable
 function getEndObservable() {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
@@ -320,7 +323,7 @@ function getEndObservable() {
   });
 }
 
-// TODO
+// ### Sliding or scrolling?
 function getIsSlidingObservable(move$, start$) {
   // Before we make a decision about whether the user is
   // sliding the drawer or scrolling the content, we wait for the finger/mouse to travel

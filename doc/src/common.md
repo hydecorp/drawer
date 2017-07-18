@@ -1,3 +1,4 @@
+# common.js
 Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 ```js
-
 import { Observable } from 'rxjs/Observable';
 
 /**
@@ -64,6 +64,7 @@ export function clientDist(p1, p2) {
   return Math.sqrt(((p2.clientX - p1.clientX) ** 2) + ((p2.clientY - p1.clientY) ** 2));
 }
 
+/*
 export function contains(target, className) {
   let t = target;
   while (t != null) {
@@ -74,6 +75,7 @@ export function contains(target, className) {
   }
   return false;
 }
+*/
 ```
 
 

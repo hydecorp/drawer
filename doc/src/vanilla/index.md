@@ -1,3 +1,4 @@
+# vanilla/index.js
 Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 
 This program is free software: you can redistribute it and/or modify
@@ -26,12 +27,7 @@ export const MODERNIZR_TESTS = [
 ];
 
 export class Drawer extends drawerMixin(VanillaComponent) {
-```
-
-@override
-
-
-```js
+  /* @override */
   [setupDOM](el) {
     if (!el) throw Error('No element provided');
 

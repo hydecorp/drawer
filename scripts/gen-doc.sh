@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-restricted-syntax, no-await-in-loop */
-
 // This script takes all `.js` and `.jsx` source files from `src`,
 // runs them through `docco` and puts the results in `doc/src`.
 

@@ -37,6 +37,9 @@ offers some quality of life improvements, like `::console.log`,
 which binds the `log` function to the `console` object (so it can be passed around).
 As for reading the code, you can simply interpret `::` as `.` in most cases.
 
+* Table of Contents
+{:toc}
+
 ## Imports
 ES6+ functions that we use.
 TODO: Explain `-lite` version.
@@ -180,7 +183,7 @@ const min = ::Math.min;
 const max = ::Math.max;
 ```
 
-## Fuctions
+## Helper Fuctions
 Like `filter`, but takes an observable of booleans instead of a predicate function.
 Similar to `pauseWith`, but will not unsubscribe from the source observable.
 
@@ -323,7 +326,7 @@ function updateDOM(translateX) {
 }
 ```
 
-TODO
+### Start Observable
 
 
 ```js
@@ -364,7 +367,7 @@ Otherwise we also include `mousedown` events in the output.
 }
 ```
 
-TODO
+### Move Observable
 
 
 ```js
@@ -419,7 +422,7 @@ we unsubscribe when the mouse goes up, and re-subscribe when it goes down.
 }
 ```
 
-TODO
+### End Observable
 
 
 ```js
@@ -462,7 +465,7 @@ If mouse events aren't enabled, we're done here.
 }
 ```
 
-TODO
+### Sliding or scrolling?
 
 
 ```js
