@@ -67,10 +67,10 @@
       var drawer = new Drawer()
 
       drawer[setup](drawerEl, {
-        preventDefault: isSafari,
-        edgeMargin: isSafari ? 25 : 0,
         mouseEvents: true,
-        backButton: !isSafari
+        preventDefault: isSafari,
+        backButton: !isSafari,
+        edgeMargin: isSafari ? 15 : 0,
       });
 
       menuEl.addEventListener('click', function (e) {

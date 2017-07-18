@@ -60,10 +60,10 @@
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
 
       $('#drawerEl').drawer({
-        preventDefault: isSafari,
-        edgeMargin: isSafari ? 25 : 0,
         mouseEvents: true,
-        backButton: !isSafari
+        preventDefault: isSafari,
+        backButton: !isSafari,
+        edgeMargin: isSafari ? 15 : 0,
       });
 
       $('#menuEl').click(function (e) {
