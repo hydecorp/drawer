@@ -72,6 +72,7 @@ import { never } from 'rxjs/observable/never';
 
 import { _do as effect } from 'rxjs/operator/do';
 import { delay } from 'rxjs/operator/delay';
+import { combineLatest } from 'rxjs/operator/combineLatest';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
@@ -143,7 +144,7 @@ TODO: rename
 
 
 ```js
-const MAGIC_MIKE = 0.67;
+const MAGIC_MIKE = 0.5;
 ```
 
 If Symbol isn't supported, just use underscore naming convention for private properties.
@@ -161,8 +162,9 @@ Also, we don't want you to accidentially modify internal state.
 
 
 ```js
-const persistentObs = Symbol('persistentObs');
 const openedObs = Symbol('openedObs');
+const alignObs = Symbol('alignObs');
+const persistentObs = Symbol('persistentObs');
 const preventDefaultObs = Symbol('preventDefaultObs');
 const mouseEventsObs = Symbol('mouseEventsObs');
 const animateToObs = Symbol('animateToObs');
@@ -215,8 +217,16 @@ determine whether it is within range to initiate an sliding interaction.
 
 ```js
 function isInRange(clientX, opened) {
-  return clientX > (this.edgeMargin * (window.devicePixelRatio || 1))
-    && (opened || clientX < this[drawerWidth] * MAGIC_MIKE);
+  switch (this.align) {
+    case 'left':
+      return clientX > (this.edgeMargin * (devicePixelRatio || 1))
+        && (opened || clientX < this[drawerWidth] * MAGIC_MIKE);
+    case 'right':
+      return clientX < innerWidth - (this.edgeMargin * (devicePixelRatio || 1))
+        && (opened || clientX > innerWidth - (this[drawerWidth] * MAGIC_MIKE));
+    default:
+      throw Error();
+  }
 }
 ```
 
@@ -226,14 +236,21 @@ TODO: could incorporate the current open state of the drawer
 
 ```js
 function calcWillOpen(velocity, translateX) {
-  if (velocity > VELOCITY_THRESHOLD) {
-    return true;
-  } else if (velocity < -VELOCITY_THRESHOLD) {
-    return false;
-  } else if (translateX >= this[drawerWidth] / 2) {
-    return true;
-  } else {
-    return false;
+  switch (this.align) {
+    case 'left': {
+      if (velocity > VELOCITY_THRESHOLD) return true;
+      else if (velocity < -VELOCITY_THRESHOLD) return false;
+      else if (translateX >= this[drawerWidth] / 2) return true;
+      else return false;
+    }
+    case 'right': {
+      if (-velocity > VELOCITY_THRESHOLD) return true;
+      else if (-velocity < -VELOCITY_THRESHOLD) return false;
+      else if (translateX <= -this[drawerWidth] / 2) return true;
+      else return false;
+    }
+    default:
+      throw Error();
   }
 }
 ```
@@ -247,9 +264,20 @@ It will also clip the position at 0 and the width of the drawer.
 
 ```js
 function calcTranslateX(clientX, startX, startTranslateX) {
-  const deltaX = clientX - startX;
-  const translateX = startTranslateX + deltaX;
-  return max(0, min(this[drawerWidth], translateX));
+  switch (this.align) {
+    case 'left': {
+      const deltaX = clientX - startX;
+      const translateX = startTranslateX + deltaX;
+      return max(0, min(this[drawerWidth], translateX));
+    }
+    case 'right': {
+      const deltaX = clientX - startX;
+      const translateX = startTranslateX + deltaX;
+      return min(0, max(-this[drawerWidth], translateX));
+    }
+    default:
+      throw Error();
+  }
 }
 ```
 
@@ -259,14 +287,15 @@ the width that is "movable" is less than the complete drawer width and given by
 
 ```js
 function getMovableDrawerWidth() {
-  return -this[contentEl].offsetLeft;
+  /* TODO: subtract "peek over edge" */
+  return this[contentEl].clientWidth;
 }
 ```
 
 Side effects happening before a user interaction.
 Note that the drawer receives the `y-drawer-opened` CSS class when it is opend.
 The opened class makes the drawer appear open, not by setting `translateX` (which depends
-on the drawer's size), but by setting the CSS `left` property.
+on the drawer's size), but by setting the CSS `left`/`right` property.
 That way, the drawer's width can change while it is open without breaking the layout (and without
 having the recalculate `translateX` on every `resize` event).
 However, it has to be removed before we move the drawer via `translateX` again.
@@ -301,7 +330,8 @@ function cleanupInteraction(opened) {
 
   if (this.backButton) {
     const hash = `#${this.el.id}--opened`;
-    if (opened && location.hash !== hash) {
+    if (opened
+        && location.hash !== hash) {
       history.pushState({ id: this.el.id }, document.title, hash);
     }
     if (!opened
@@ -321,8 +351,9 @@ to modify the `transform` of the content, and the `opacity` of the scrim.
 
 ```js
 function updateDOM(translateX) {
+  const inv = this.align === 'left' ? 1 : -1;
   this[contentEl].style.transform = `translateX(${translateX}px)`;
-  this[scrimEl].style.opacity = translateX / this[drawerWidth];
+  this[scrimEl].style.opacity = (translateX / this[drawerWidth]) * inv;
 }
 ```
 
@@ -335,10 +366,10 @@ function getStartObservable() {
 
 When you change the `mouseEvents` or `preventDefault` option,
 we re-subscribe to reflect the changes.
-TODO: this causes the code to run twice on startup
 
 
 ```js
+  /* TODO: this causes the code to run twice on startup */
   return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchstart$ = Observable::fromEvent(document, 'touchstart', {
       passive: !this.preventDefault,
@@ -376,10 +407,10 @@ function getMoveObservable(start$, end$) {
 
 When you change the `mouseEvents` or `preventDefault` option,
 we re-subscribe to reflect the changes.
-TODO: this causes the code to run twice on startup
 
 
 ```js
+  /* TODO: this causes the code to run twice on startup */
   return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchmove$ = Observable::fromEvent(document, 'touchmove', {
       passive: !this.preventDefault,
@@ -431,10 +462,10 @@ function getEndObservable() {
 
 When you change the `mouseEvents` or `preventDefault` option,
 we re-subscribe to reflect the changes.
-TODO: this causes the code to run twice on startup
 
 
 ```js
+  /* TODO: this causes the code to run twice on startup */
   return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchend$ = Observable::fromEvent(document, 'touchend', {
       passive: !this.preventDefault,
@@ -475,10 +506,10 @@ function getIsSlidingObservable(move$, start$) {
 Before we make a decision about whether the user is
 sliding the drawer or scrolling the content, we wait for the finger/mouse to travel
 at least `SLIDE_THRESHOLD` pixels.
-TODO: Should the way we detect sliding depend on `preventDefault`?
 
 
 ```js
+  /* TODO: Should the way we detect sliding depend on `preventDefault`? */
   if (!this.preventDefault) {
     return move$::withLatestFrom(start$)
       ::skipWhile(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
@@ -552,7 +583,10 @@ As long as the scrim is visible, the user can still "catch" the drawer.
 
 ```js
   const isScrimVisible$ = Observable::defer(() =>
-      ref.translateX$::map(translateX => translateX > 0)); // no share because used only once
+      ref.translateX$::map(translateX => (this.align === 'left' ?
+        translateX > 0 :
+        translateX < this[drawerWidth])));
+  /* no share because used only once */
 ```
 
 An observable that emits `true`, as long as the drawer isn't fully extended.
@@ -563,7 +597,10 @@ Since we use this to to close the drawer (see below), we don't care about the cl
 
 ```js
   const isAnimating$ = Observable::defer(() =>
-      ref.translateX$::map(translateX => translateX < this[drawerWidth])); // no share
+      ref.translateX$::map(translateX => (this.align === 'left' ?
+        translateX < this[drawerWidth] :
+        translateX > 0)));
+  /* no share because used only once */
 ```
 
 If the first touch occured outside the range from which to pull the drawer,
@@ -686,8 +723,9 @@ which is either 0 (when closed) or the width of the drawer (when open).
 
 
 ```js
-      this[openedObs]
-        ::map(opened => (opened ? this[drawerWidth] : 0)) // TODO: drawerWdith could be outdated
+      this[openedObs]::combineLatest(this[alignObs])
+        /* TODO: drawerWdith could be outdated */
+        ::map(([opened, align]) => (!opened ? 0 : this[drawerWidth] * (align === 'left' ? 1 : -1)))
 ```
 
 Only in this case we need to call the cleanup code directly,
@@ -776,7 +814,7 @@ don't cause more than one animation to be played at a time.
 ```js
     ::withLatestFrom(ref.translateX$)
     ::switchMap(([opened, translateX]) => {
-      const endTranslateX = (opened ? 1 : 0) * this[drawerWidth];
+      const endTranslateX = (opened ? 1 : 0) * this[drawerWidth] * (this.align === 'left' ? 1 : -1);
       const diffTranslateX = endTranslateX - translateX;
 ```
 
@@ -787,8 +825,9 @@ in which case it is canceled.
 
 ```js
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
-        ::effect(null, null, () => this::cleanupInteraction(opened))
-        ::takeUntil(start$);
+        ::effect(null, null, () => this[openedObs].next(opened))
+        ::takeUntil(start$)
+        ::takeUntil(this[alignObs]);
     });
 ```
 
@@ -798,15 +837,16 @@ and causes the code inside the above `defer` observables to run.
 
 
 ```js
-  ref.translateX$.subscribe(translateX => this::updateDOM(translateX));
+  ref.translateX$
+    .subscribe(translateX => this::updateDOM(translateX));
 ```
 
 A click on the scrim should close the drawer, but only when the drawer is fully extended.
 Otherwise it's possible to accidentially close the drawer during sliding/animating.
-TODO: this still happens with mouseevents
 
 
 ```js
+  /* TODO: this still happens with mouseevents */
   Observable::fromEvent(this[scrimEl], 'click')
     ::pauseWith(isAnimating$)
     .subscribe(() => this.close());
@@ -821,7 +861,7 @@ Other than preventing sliding, setting `persistent` will also hide the scrim.
   });
 ```
 
-TODO: ensure id
+TODO
 
 
 ```js
@@ -833,6 +873,18 @@ TODO: ensure id
       const hash = `#${this.el.id}--opened`;
       const willOpen = location.hash === hash;
       if (willOpen !== this.opened) this[animateToObs].next(willOpen);
+    });
+```
+
+TODO
+
+
+```js
+  this[alignObs]
+    .subscribe((align) => {
+      const oldAlign = align === 'left' ? 'right' : 'left';
+      this[contentEl].classList.remove(`y-drawer-${oldAlign}`);
+      this[contentEl].classList.add(`y-drawer-${align}`);
     });
 }
 ```
@@ -859,6 +911,7 @@ TODO
     static get defaults() {
       return {
         opened: false,
+        align: 'left',
         persistent: false,
         scrollSelector: 'body',
         edgeMargin: 0,
@@ -876,6 +929,7 @@ TODO
     static get sideEffects() {
       return {
         opened(x) { this[openedObs].next(x); },
+        align(x) { this[alignObs].next(x); },
         persistent(x) { this[persistentObs].next(x); },
         preventDefault(x) { this[preventDefaultObs].next(x); },
         mouseEvents(x) { this[mouseEventsObs].next(x); },
@@ -901,6 +955,7 @@ The are used to emit the new vale whenever properties get changed on the compone
 
 ```js
       this[openedObs] = new Subject();
+      this[alignObs] = new Subject();
       this[persistentObs] = new Subject();
       this[preventDefaultObs] = new Subject();
       this[mouseEventsObs] = new Subject();
@@ -915,6 +970,14 @@ Cache DOM elements.
       this[scrimEl] = this.root.querySelector('.y-drawer-scrim');
       this[contentEl] = this.root.querySelector('.y-drawer-content');
       if (this.scrollSelector) this[scrollEl] = document.querySelector(this.scrollSelector);
+```
+
+Set the alignment class.
+
+
+```js
+      /* TODO: respond to changes */
+      this[contentEl].classList.add(`y-drawer-${this.align}`);
 ```
 
 This is where most of the action happens.
@@ -939,6 +1002,7 @@ Putting the initial values on the side-effect--observables:
 
 
 ```js
+      this[alignObs].next(this.align);
       this[persistentObs].next(this.persistent);
       this[preventDefaultObs].next(this.preventDefault);
       this[mouseEventsObs].next(this.mouseEvents);

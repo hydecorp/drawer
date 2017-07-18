@@ -5,12 +5,20 @@
 
   .y-drawer-content {
     @apply --y-drawer-content-container;
-    width: var(--y-drawer-width, 288px);
-    left: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 288px)));
+    width: var(--y-drawer-width, 300px);
     background: var(--y-drawer-background, #e8e8e8);
   }
 
+  .y-drawer-content.y-drawer-left {
+    left: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 300px)));
+  }
+
+  .y-drawer-content.y-drawer-right {
+    right: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 300px)));
+  }
+
   .y-drawer-scrim {
+    @apply --y-drawer-scrim-container;
     background: var(--y-drawer-scrim-background, rgba(0, 0, 0, 0.5));
   }
 }

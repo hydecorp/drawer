@@ -16,22 +16,33 @@
 
   .y-drawer-content {
     position: fixed;
-    left: 0;
     bottom: 0;
     top: 0;
     z-index: 1;
     overflow-x: hidden;
     overflow-y: auto;
     transform: translate3d(0,0,0);
-    -webkit-overflow-scrolling: touch;
     contain: strict;
-    left: -288px;
-    width: 288px;
+    width: 300px;
     background: #e8e8e8;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .y-drawer-content.y-drawer-opened {
+  .y-drawer-content.y-drawer-left {
+    left: -300px;
+  }
+
+  .y-drawer-content.y-drawer-right {
+    right: -300px;
+  }
+
+  .y-drawer-content.y-drawer-left.y-drawer-opened {
     left: 0!important;
+    transform: translate3d(0,0,0)!important;
+  }
+
+  .y-drawer-content.y-drawer-right.y-drawer-opened {
+    right: 0!important;
     transform: translate3d(0,0,0)!important;
   }
 }
