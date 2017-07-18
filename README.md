@@ -1,21 +1,21 @@
-# YDrawer
+# y-drawer
 
-YDrawer is a touch-enabled drawer menu for the mobile web.
+**y-drawer** is a touch-enabled drawer menu for the modern web.
 It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
 while being performant and easy to use.
 It is the perfect companion for mobile-first web pages or (progressive-) web apps.
 [Try it!](example/mixin/){:.no-push-state}.
 
-YDrawer can be used with a variety of tools and frameworks:
-* As Vanilla JavaScript class
-* As jQuery plugin
-* As WebComponent, either standalone or via HTML Import
+**y-drawer** can be used with a variety of tools and frameworks:
+* As **Vanilla** JavaScript class
+* As **jQuery** plugin
+* As **WebComponent**, either standalone or via HTML Import
 * Possibly as part of your own component hierarchy via "[ES6 Mixin][1]".
 
 
 The drawer is currently used in the wild by Hydejack.
 
-It is part of the `y-components` family, that currently has `y-push-state` as another member.
+It is part of the y-component family.
 
 ## License
 The component is [GPL licensed](LICENSE.md), meaning you cannot use it in a project that isn't itself GPL licensed. For cases where this is not acceptable, there are commercial licenses available.
@@ -36,12 +36,16 @@ TODO
 The source code is written in a "literal programming" style, and should be very approachable.
 Preferred reading order:
 
-* [mixin/index.js](doc/src/mixin/index.md)
-* [vanilla/index.js](doc/src/vanilla/index.md)
-* [jquery/index.js](doc/src/jquery/index.md)
-* [webcomponent/index.js](doc/src/webcomponent/index.md)
-* [webcomponent/html-import.js](doc/src/webcomponent/html-import.md)
-* [common.js](doc/src/common.md)
+* `mixin`
+  * [`index.js`](doc/src/mixin/index.md)
+* `vanilla`
+  * [`index.js`](doc/src/vanilla/index.md)
+* `jquery`
+  * [`index.js`](doc/src/jquery/index.md)
+* `webcomponent`
+  * [`index.js`](doc/src/webcomponent/index.md)
+  * [`html-import.js`](doc/src/webcomponent/html-import.md)
+* [`common.js`](doc/src/common.md)
 
 
 ## Usage
@@ -96,7 +100,9 @@ so you only need to call `drawer` on your target element.
 ### npm
 You can use `y-drawer` as part of your webpack or browserify build chain by fetching the source from npm:
 
-    npm  install --save-dev y-drawer
+~~~sh
+$ npm  install --save-dev y-drawer
+~~~
 
 Usage depends on the
 
