@@ -33,11 +33,11 @@ async function genDoc(dir) {
   const files = await getFiles(dir);
   return Promise.all(files
     .filter(file => EXTENSIONS.has(extname(file)))
-    .map(async (file) => { // e.g. `~/GitHub/y-comp/src/mixin/index.js`
+    .map(async (file) => { // e.g. `~/GitHub/hy-comp/src/mixin/index.js`
       const ext = extname(file); // e.g. `.js`
       const name = basename(file, ext); // e.g. `index`
       const path = relative(resolve(), dirname(file)); // e.g. `src/mixin`
-      const output = resolve(TARGET_DIR, path); // e.g. `~/GitHub/y-comp/doc/src/mixin`
+      const output = resolve(TARGET_DIR, path); // e.g. `~/GitHub/hy-comp/doc/src/mixin`
 
       await docco({
         output,
@@ -48,8 +48,8 @@ async function genDoc(dir) {
 
       // docco generates .html files, but we want .md
       await rename(
-        resolve(output, name + DOCCO_EXT), // e.g. `~/GitHub/y-comp/doc/src/mixin/index.html`
-        resolve(output, name + TARGET_EXT), // e.g. `~/GitHub/y-comp/doc/src/mixin/index.md`
+        resolve(output, name + DOCCO_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.html`
+        resolve(output, name + TARGET_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.md`
       );
     }));
 }

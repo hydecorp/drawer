@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { VanillaComponent, setupDOM } from 'y-component/src/vanilla';
+import { VanillaComponent, setupDOM } from 'hy-component/src/vanilla';
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
 
@@ -34,9 +34,9 @@ export class Drawer extends drawerMixin(VanillaComponent) {
     const scrim = document.createElement('div');
     const content = document.createElement('div');
 
-    scrim.classList.add('y-drawer-scrim');
+    scrim.classList.add('hy-drawer-scrim');
 
-    content.classList.add('y-drawer-content');
+    content.classList.add('hy-drawer-content');
     while (el.children.length > 0) {
       content.appendChild(el.children[0]);
     }

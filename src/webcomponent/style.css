@@ -3,22 +3,23 @@
 
   }
 
-  .y-drawer-content {
-    @apply --y-drawer-content-container;
-    width: var(--y-drawer-width, 300px);
-    background: var(--y-drawer-background, #e8e8e8);
+  .hy-drawer-content {
+    @apply --hy-drawer-content-container;
+    width: var(--hy-drawer-width, 300px);
+    background: var(--hy-drawer-background, #e8e8e8);
+    box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
   }
 
-  .y-drawer-content.y-drawer-left {
-    left: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 300px)));
+  .hy-drawer-content.hy-drawer-left {
+    left: calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
   }
 
-  .y-drawer-content.y-drawer-right {
-    right: calc(-1 * var(--y-drawer-slide-width, var(--y-drawer-width, 300px)));
+  .hy-drawer-content.hy-drawer-right {
+    right: calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
   }
 
-  .y-drawer-scrim {
-    @apply --y-drawer-scrim-container;
-    background: var(--y-drawer-scrim-background, rgba(0, 0, 0, 0.5));
+  .hy-drawer-scrim {
+    @apply --hy-drawer-scrim-container;
+    background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.25));
   }
 }

@@ -46,9 +46,9 @@
 import 'core-js/fn/function/bind';
 import 'core-js/fn/object/assign';
 
-// TODO: explain `y-component`
+// TODO: explain `hy-component`
 import { componentMixin, setup, fire, setState,
-  MODERNIZR_TESTS as COMPONENT_MODERNIZER_TESTS } from 'y-component/src/component';
+  MODERNIZR_TESTS as COMPONENT_MODERNIZER_TESTS } from 'hy-component/src/component';
 
 // As mentioned before, we only import the RxJS function that we actually need.
 import { Observable } from 'rxjs/Observable';
@@ -230,7 +230,7 @@ function getMovableDrawerWidth() {
 function prepareInteraction() {
   this[contentEl].style.willChange = 'transform';
   this[scrimEl].style.willChange = 'opacity';
-  this[contentEl].classList.remove('y-drawer-opened');
+  this[contentEl].classList.remove('hy-drawer-opened');
   this[drawerWidth] = this::getMovableDrawerWidth();
 }
 
@@ -241,12 +241,12 @@ function cleanupInteraction(opened) {
 
   if (opened) {
     this[scrimEl].style.pointerEvents = 'all';
-    this[contentEl].classList.add('y-drawer-opened');
     if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden';
+    this[contentEl].classList.add('hy-drawer-opened');
   } else {
     this[scrimEl].style.pointerEvents = '';
-    this[contentEl].classList.remove('y-drawer-opened');
     if (this[scrollEl]) this[scrollEl].style.overflowY = ''; // TODO: allow scrolling earlier
+    this[contentEl].classList.remove('hy-drawer-opened');
   }
 
   if (this.backButton) {
@@ -581,8 +581,8 @@ function setupObservables() {
   this[alignObs]
     .subscribe((align) => {
       const oldAlign = align === 'left' ? 'right' : 'left';
-      this[contentEl].classList.remove(`y-drawer-${oldAlign}`);
-      this[contentEl].classList.add(`y-drawer-${align}`);
+      this[contentEl].classList.remove(`hy-drawer-${oldAlign}`);
+      this[contentEl].classList.add(`hy-drawer-${align}`);
     });
 }
 
@@ -591,7 +591,7 @@ export function drawerMixin(C) {
   return class extends componentMixin(C) {
 
     // TODO
-    static get componentName() { return 'y-drawer'; }
+    static get componentName() { return 'hy-drawer'; }
 
     // TODO
     static get defaults() {
@@ -627,7 +627,7 @@ export function drawerMixin(C) {
       super[setup](el, props);
 
       if (process.env.DEBUG && this.backButton && !this.el.id) {
-        console.warn('y-drawer needs to haven an id attribute in order for the backButton option to work.');
+        console.warn('hy-drawer needs to haven an id attribute in order for the backButton option to work.');
       }
 
       // Observables used for side effects caused by changing properties on the component.
@@ -641,13 +641,13 @@ export function drawerMixin(C) {
       this[animateToObs] = new Subject();
 
       // Cache DOM elements.
-      this[scrimEl] = this.root.querySelector('.y-drawer-scrim');
-      this[contentEl] = this.root.querySelector('.y-drawer-content');
-      if (this.scrollSelector) this[scrollEl] = document.querySelector(this.scrollSelector);
+      this[scrimEl] = this.root.querySelector('.hy-drawer-scrim');
+      this[contentEl] = this.root.querySelector('.hy-drawer-content');
+      // if (this.scrollSelector) this[scrollEl] = document.querySelector(this.scrollSelector);
 
       // Set the alignment class.
       /* TODO: respond to changes */
-      this[contentEl].classList.add(`y-drawer-${this.align}`);
+      this[contentEl].classList.add(`hy-drawer-${this.align}`);
 
       // This is where most of the action happens.
       this::setupObservables();

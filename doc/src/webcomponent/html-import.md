@@ -14,6 +14,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+## Overview
+This in the HTML Import version of the WebComponent version of **hy-drawer**.
+See [here](index.md) for the standalone version.
+This file included via `script` tag in `hy-drawer.html` and shouldn't be used via import.
+
 
 ```js
 
@@ -21,7 +26,7 @@ import {
   customElementMixin,
   CustomElement,
   MODERNIZR_TESTS as CUSTOM_ELEMENT_MODERNIZER_TESTS,
-} from 'y-component/src/custom-element';
+} from 'hy-component/src/custom-element';
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
 
@@ -32,11 +37,11 @@ export const MODERNIZR_TESTS = [
 ];
 
 if ('customElements' in window) {
-  customElements.define('y-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
+  customElements.define('hy-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
     static get observedAttributes() { return this.getObservedAttributes(); }
   });
 } else if (process.env.DEBUG) {
-  console.warn('Couldn\'t define `y-drawer` component. Did you forget to include a custom elements polyfill?');
+  console.warn('Couldn\'t define `hy-drawer` component. Did you forget to include a custom elements polyfill?');
 }
 ```
 

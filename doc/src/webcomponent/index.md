@@ -14,6 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+## Overview
+This is the standalone version of the WebComponent version of **hy-drawer**.
+It exports the HTML element that you can define as a custom element, e.g.
+`customElements.define('hy-drawer', DrawerHTMLElement)`.
+Unlike the [HTML Import version](html-import.md), it bundles the template as a string.
+**NOTE**: For this to work, your bundler needs to be able to parse underscore `.ejs` templates!
+
 
 ```js
 
@@ -23,7 +30,7 @@ import {
   getTemplate,
   fragmentFromString,
   MODERNIZR_TESTS as CUSTOM_ELEMENT_MODERNIZER_TESTS,
-} from 'y-component/src/custom-element';
+} from 'hy-component/src/custom-element';
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
 

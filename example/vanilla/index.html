@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-    <title>Vanilla Example | y-drawer</title>
+    <title>Vanilla Example | hy-drawer</title>
     <link href="../style.css" rel="stylesheet">
 
     <link href="../../dist/vanilla/style.css" rel="stylesheet" type="text/css">
-    <script src="../../dist/vanilla/y-drawer.js"></script>
+    <script src="../../dist/vanilla/hy-drawer.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -52,17 +52,17 @@
       </aside>
     </div>
 
-    <style>.y-drawer-content { color: #000; background: #f7df1e; }</style>
+    <style>.hy-drawer-content { color: #000; background: #f7df1e; }</style>
 
     <script>
-      var Drawer = yDrawer.Drawer;
+      var Drawer = hyDrawer.Drawer;
 
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
 
       var drawer = new Drawer(drawerEl, {
         mouseEvents: true,
-        preventDefault: isSafari,
+        preventDefault: true,
         backButton: !isSafari,
         edgeMargin: isSafari ? 15 : 0,
       });

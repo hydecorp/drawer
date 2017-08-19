@@ -1,9 +1,9 @@
 {
-  "name": "y-drawer",
-  "version": "7.0.0",
-  "description": "Y another drawer?",
-  "main": "./lib/mixin/index.js",
-  "browser": "./dist/vanilla/y-drawer.min.js",
+  "name": "hy-drawer",
+  "version": "1.0.0",
+  "description": "A drawer component for the modern web.",
+  "main": "./lib/vanilla/index.js",
+  "browser": "./dist/vanilla/hy-drawer.min.js",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
     "clean": "rm -rf dist lib doc/src",
@@ -48,8 +48,7 @@
   },
   "dependencies": {
     "core-js": "^2.4.1",
-    "rxjs": "^5.4.1",
-    "y-component": "^7.0.0"
+    "rxjs": "^5.4.1"
   },
   "directories": {
     "lib": "./lib",
@@ -58,12 +57,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qwtel/y-drawer.git"
+    "url": "git+https://github.com/qwtel/hy-drawer.git"
   },
   "bugs": {
-    "url": "https://github.com/qwtel/y-drawer/issues"
+    "url": "https://github.com/qwtel/hy-drawer/issues"
   },
-  "homepage": "https://qwtel.com/y-drawer",
+  "homepage": "https://qwtel.com/hy-drawer",
   "browserify": {
     "transform": [
       [
@@ -78,7 +77,7 @@
           ],
           "only": [
             "./src",
-            "y-component",
+            "hy-component",
             "camelcase"
           ]
         }

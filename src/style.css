@@ -1,5 +1,5 @@
 @media screen {
-  .y-drawer-scrim {
+  .hy-drawer-scrim {
     display: block;
     position: fixed;
     top: 0;
@@ -10,11 +10,11 @@
     z-index: 0;
     pointer-events: none;
     transform: translate3d(0,0,0);
-    -webkit-tap-highlight-color: transparent;
     background: rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .y-drawer-content {
+  .hy-drawer-content {
     position: fixed;
     bottom: 0;
     top: 0;
@@ -25,34 +25,35 @@
     contain: strict;
     width: 300px;
     background: #e8e8e8;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
     -webkit-overflow-scrolling: touch;
   }
 
-  .y-drawer-content.y-drawer-left {
+  .hy-drawer-content.hy-drawer-left {
     left: -300px;
   }
 
-  .y-drawer-content.y-drawer-right {
+  .hy-drawer-content.hy-drawer-right {
     right: -300px;
   }
 
-  .y-drawer-content.y-drawer-left.y-drawer-opened {
+  .hy-drawer-content.hy-drawer-left.hy-drawer-opened {
     left: 0!important;
     transform: translate3d(0,0,0)!important;
   }
 
-  .y-drawer-content.y-drawer-right.y-drawer-opened {
+  .hy-drawer-content.hy-drawer-right.hy-drawer-opened {
     right: 0!important;
     transform: translate3d(0,0,0)!important;
   }
 }
 
 @media print {
-  .y-drawer-scrim {
+  .hy-drawer-scrim {
     display: none!important;
   }
 
-  .y-drawer-content {
+  .hy-drawer-content {
     transform: none!important;
   }
 }

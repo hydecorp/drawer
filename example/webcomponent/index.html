@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-    <title>WebComponent Example | y-drawer</title>
+    <title>WebComponent Example | hy-drawer</title>
     <link href="../style.css" rel="stylesheet">
 
     <!-- A webcomponents polyfill to ensure Templates, HTML Imports, Custom Elements and Shadow (Shady) DOM works -->
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@1"></script>
 
-    <!-- Import y-drawer from dist/webcomonent -->
-    <link rel="import" href="../../dist/webcomponent/y-drawer.html">
+    <!-- Import hy-drawer from dist/webcomonent -->
+    <link rel="import" href="../../dist/webcomponent/hy-drawer.html">
   </head>
   <body>
     <div class="wrapper">
@@ -35,9 +35,9 @@
         <p>Facilisis leo vel fringilla est ullamcorper. Velit laoreet id donec ultrices tincidunt arcu non sodales. Adipiscing elit duis tristique sollicitudin. Interdum varius sit amet mattis vulputate. Vitae auctor eu augue ut lectus arcu bibendum at. Arcu risus quis varius quam quisque id diam. Non blandit massa enim nec dui nunc mattis. Ornare arcu odio ut sem nulla pharetra diam. Nunc sed velit dignissim sodales ut eu. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Auctor elit sed vulputate mi sit amet mauris commodo quis. Etiam tempor orci eu lobortis. Dui ut ornare lectus sit amet est placerat. Sed risus ultricies tristique nulla aliquet enim tortor at. Eget duis at tellus at urna condimentum mattis.
       </main>
 
-      <!-- HTML import above will register the y-drawer custom element.
+      <!-- HTML import above will register the hy-drawer custom element.
       We can set Properties directly (using param-case). -->
-      <y-drawer id="drawerEl" mouse-events>
+      <hy-drawer id="drawerEl" mouse-events>
         <aside>
           <ul>
             <li><a href="../mixin/">Mixin Example</a></li>
@@ -58,13 +58,13 @@
             <li><a href="../webcomponent/">WebComponent Example</a></li>
           </ul>
         </aside>
-      </y-drawer>
+      </hy-drawer>
     </div>
 
-    <style>y-drawer { --y-drawer-background: #f17641; } aside a { color: #fff; }</style>
+    <style>hy-drawer { --hy-drawer-background: #f17641; } aside a { color: #fff; }</style>
 
     <script>
-      // No user agent sniffing code is part of y-drawer, but it offers options to customize its behavior.
+      // No user agent sniffing code is part of hy-drawer, but it offers options to customize its behavior.
       // The snippet below will determine whether the current browser is Safari (both iOS and macOS)
       // based on the user agent.
       var ua = navigator.userAgent.toLowerCase();

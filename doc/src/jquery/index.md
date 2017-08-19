@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import $ from 'jquery';
 
 import { JQueryComponent, defineJQueryComponent, setupDOM }
-from 'y-component/src/define-jquery-component';
+from 'hy-component/src/define-jquery-component';
 
 import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZER_TESTS } from '../mixin';
 import '../style.css';
@@ -43,8 +43,8 @@ export const drawerJQueryPlugin = defineJQueryComponent('drawer',
       const children = $el.children().detach();
 
       $el
-        .append($('<div class="y-drawer-scrim" />'))
-        .append($('<div class="y-drawer-content" />').append(children));
+        .append($('<div class="hy-drawer-scrim" />'))
+        .append($('<div class="hy-drawer-content" />').append(children));
 
       return el;
     }

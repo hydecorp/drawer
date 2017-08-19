@@ -83,7 +83,7 @@ const baseConfig = merge({
         // NOTE: exclude defined in .babelrc
         // exclude: {
         //   test: /node_modules/,
-        //   exclude: /(y-component|camelcase)/,
+        //   exclude: /(hy-component|camelcase)/,
         // },
       },
       {
