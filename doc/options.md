@@ -1,41 +1,77 @@
-# Properties
+# Options
 
-* Table of Contents
+* toc
 {:toc}
 
-## `opened`
+## opened
+
 Default
 : `false`
 
-HTML tag
-: `opened`
+Type
+: Boolean
 
+HTML Attribute
+: `opened`
 
 TODO
 
-## `transitionDuration`
-Default
-: `250` (ms)
+***
 
-HTML tag
+## align
+
+Default
+: `left`
+
+Type
+: String (One of: `left`, `right`)
+
+HTML Attribute
+: `align`
+
+TODO
+
+***
+
+## transitionDuration
+
+Default
+: `250`
+
+Type
+: Number (Milliseconds)
+
+HTML Attribute
 : `transition-duration`
 
 TODO
 
-## `persistent`
+***
+
+## persistent
+
 Default
 : `false`
 
-HTML tag
+Type
+: Boolean
+
+HTML Attribute
 : `persistent`
 
 TODO
 
-## `scrollSelector`
-Default
-: `body` (CSS selector)  
+***
 
-HTML tag
+## scrollSelector
+
+Default
+: `body`
+
+Type
+: String (CSS selector)
+
+HTML Attribute
 : `scroll-selector`
 
 y-drawer may prevent scrolling while sliding the drawer,
@@ -48,15 +84,32 @@ See `preventDefault` for more.
 
 TODO
 
-## `edgeMargin`
-Default: `0` (px)  
-HTML tag: `edge-margin`
+***
+
+## edgeMargin
+
+Default
+: `0`
+
+Type
+: Number (device independent pixel)
+
+HTML Attribute
+: `edge-margin`
 
 TODO
 
-## `preventDefault`
-Default: `false`  
-HTML tag: `prevent-default`
+***
+
+## preventDefault
+Default
+: `false`  
+
+Type
+: Boolean
+
+HTML Attribute
+: `prevent-default`
 
 When true, y-drawer will call `preventDefault` on every (touch-)move event,
 effectively preventing document scrolling while sliding the drawer.
@@ -72,9 +125,18 @@ delaying any native behavior by the time it takes for the event listener to comp
 
 TODO
 
-## `mouseEvents`
-Default: `false`  
-HTML tag: `mouse-events`
+***
+
+## mouseEvents
+
+Default
+: `false`  
+
+Type
+: Boolean
+
+HTML Attribute
+: `mouse-events`
 
 Allows the drawer to be pulled with the mouse. This is more geared towards presentation purposes,
 as it interferes with other mouse gestures like text selection. However, this could be solved by calling
