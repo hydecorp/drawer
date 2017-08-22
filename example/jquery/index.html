@@ -58,12 +58,15 @@
     <script>
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
+      var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       $('#drawerEl').drawer({
-        mouseEvents: true,
-        preventDefault: isSafari,
+        range: isMobileSafari ? [35, 150] : [0, 50],
         backButton: !isSafari,
-        edgeMargin: isSafari ? 15 : 0,
+        slideThreshold: isSafari ? 0 : 10,
+        preventDefault: true,
+        // hideOverflow: 'body'
+        mouseEvents: true,
       });
 
       $('#menuEl').click(function (e) {

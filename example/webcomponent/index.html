@@ -37,7 +37,7 @@
 
       <!-- HTML import above will register the hy-drawer custom element.
       We can set Properties directly (using param-case). -->
-      <hy-drawer id="drawerEl" mouse-events>
+      <hy-drawer id="drawerEl" prevent-default mouse-events >
         <aside>
           <ul>
             <li><a href="../mixin/">Mixin Example</a></li>
@@ -69,16 +69,17 @@
       // based on the user agent.
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
+      var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       // Use the DOM API to set Properties on the HTML element (use param-case!)
-      if (isSafari) drawerEl.setAttribute('prevent-default', '');
+      drawerEl.setAttribute('range', isMobileSafari ? '35,150' : '0,50');
       if (!isSafari) drawerEl.setAttribute('back-button', '');
-      drawerEl.setAttribute('edge-margin', isSafari ? 15 : 0);
+      drawerEl.setAttribute('slide-threshold', isSafari ? 0 : 10);
 
       // Alternatively, change Properties by setting values directly on the element (use camelCase!)
-      // drawerEl.preventDefault = isSafari;
+      // drawerEl.range = isMobileSafari ? [35, 150] : [0, 50];
       // drawerEl.backButton = !isSafari;
-      // drawerEl.edgeMargin = isSafari ? 15 : 0;
+      // drawerEl.slideThreshold = isSafari ? 0 : 10;
 
       menuEl.addEventListener('click', function (e) {
         // Prevent default so the brwoser history doesn't get filled with # urls (see `a` tag above)

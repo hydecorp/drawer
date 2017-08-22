@@ -1,3 +1,4 @@
+* { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 html { font-family:'Noto Sans', Helvetica, Arial, serif; font-size:16px; line-height:1.75; }
 body { margin:0; padding:0; color:#000; background:#fff; }
 a { color:#000; text-decoration:none; }
@@ -6,7 +7,7 @@ h1, h2, h3, h4, h5, h6 { margin:3rem 0 1rem; line-height:1.6; }
 h1 { font-size:2rem; line-height:1.25; margin-top:1rem; }
 h2 { font-size:1.5rem; }
 h3 { font-size:1.17em; }
-.wrapper { background:rgba(0,0,0,0.05); max-width:38rem; padding:1rem; margin:auto; }
+.wrapper { background:rgba(0,0,0,0.025); max-width:38rem; margin:1rem; padding:1rem; margin:auto; }
 aside ul { list-style:none; margin:0; padding:0; }
 aside ul li a { display:block; padding:1.5rem; border-bottom:1px solid rgba(0, 0, 0, 0.05);}
 #menuEl { display:inline-block; padding:1.5rem 1rem; margin-left:-1rem; margin-top:-1rem; text-decoration:none; }

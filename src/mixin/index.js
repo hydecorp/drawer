@@ -14,18 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// ## Introduction
-// This component is written with RxJS, which you can think of as a DSL for asynchronous events.
-// I chose it for a couple of reasons:
-// * UI components are essentially a set of rules on how to interpret a series of
-//   asynchronous events from different sources.
-// * Observables follow naturally from inverting an iterator, which are a staple in
-//   modern programming languages, making them somewhat more "basic" than other (UI-) libraries.
-//   Ideally, a low-level component shouldn't depend on anything,
-//   but since hand-writing async-heavy code is *very* error-prone,
-//   observables are is the next best choice.
-// * The specific library, RxJS 5, allows to only import the parts that are relevant to you
-//   (see below) which helps to keep the size of the componentn down.
+// ## Overview
+// TODO: overview...
 //
 // The other thing you will notice is the usage of the `::` operator.
 // It is a non-stanard ES feature (babel knows how to transpile it), but it helpes dramatically with
@@ -60,7 +50,6 @@ import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as effect } from 'rxjs/operator/do';
-import { delay } from 'rxjs/operator/delay';
 import { combineLatest } from 'rxjs/operator/combineLatest';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
@@ -84,7 +73,6 @@ import { createTween, linearTween } from '../common';
 export const MODERNIZR_TESTS = [
   ...COMPONENT_MODERNIZER_TESTS,
   /* 'touchevents', // optional */
-  /* 'pointerevents', // windows (phone) ??? */
   /* 'willchange', // optional */
   'eventlistener',
   'queryselector',
@@ -103,13 +91,6 @@ const TRANSITION_DURATION = 200; // ms
 
 // Min velocity of the drawer (in px/ms) to make it snap to open/close the drawer.
 const VELOCITY_THRESHOLD = 0.15;
-
-// By how much (in px) should the finger/mouse need to move,
-// before we are confident about making a decision about it's direction?
-const SLIDE_THRESHOLD = 10;
-
-// TODO: rename
-const MAGIC_MIKE = 0.5;
 
 // If Symbol isn't supported, just use underscore naming convention for private properties.
 // We don't need advanced features of Symbol.
@@ -138,40 +119,45 @@ const min = ::Math.min;
 const max = ::Math.max;
 
 // ## Helper Fuctions
-// Like `filter`, but takes an observable of booleans instead of a predicate function.
-// Similar to `pauseWith`, but will not unsubscribe from the source observable.
-function filterWith(p$) {
+// `filterWith` is like `filter`,
+// but takes an observable of booleans instead of a predicate function.
+function filterWith(p$, ...others) {
   if (process.env.DEBUG && !p$) throw Error();
-  return this::withLatestFrom(p$)::filter(([, p]) => p)::map(([x]) => x);
+  else if (others.length === 0) {
+    return this::withLatestFrom(p$)::filter(([, p]) => p)::map(([x]) => x);
+  } else {
+    return this::withLatestFrom(p$, ...others)
+      ::filter(([, ...ps]) => ps.every(p => p))
+      ::map(([x]) => x);
+  }
 }
 
-// Similar to `filterWith`, but will unsubscribe from the source observable,
+// `pauserWith` is similar to `filterWith`, but will unsubscribe from the source observable
 // when `pauser$` emits `true`, and re-subscribe when `pauser$` emits `false`.
 // Note that `true` and `false` have to exact opposite effect here, i.e.
-// when paused is true no values will pass through,
-// while `filterWith` will let values pass when it's argument is `true`.
+// when paused is `true` no values will pass through,
+// while `filterWith` will let values pass when its argument is `true`.
 function pauseWith(pauser$) {
   if (process.env.DEBUG && !pauser$) throw Error();
   return pauser$::switchMap(paused => (paused ? Observable::never() : this));
 }
 
-// Given a x coordinate and the current drawer width,
-// determine whether it is within range to initiate an sliding interaction.
+// Given a x coordinate and the current drawer width, `isInRange` will
+// determine whether x is within range to initiate an sliding interaction:
 function isInRange(clientX, opened) {
   switch (this.align) {
     case 'left':
-      return clientX > (this.edgeMargin * (devicePixelRatio || 1))
-        && (opened || clientX < this[drawerWidth] * MAGIC_MIKE);
+      return clientX > this.range[0] && (opened || clientX < this.range[1]);
     case 'right':
-      return clientX < innerWidth - (this.edgeMargin * (devicePixelRatio || 1))
-        && (opened || clientX > innerWidth - (this[drawerWidth] * MAGIC_MIKE));
+      return clientX < innerWidth - this.range[0]
+        && (opened || clientX > innerWidth - this.range[1]);
     default:
       throw Error();
   }
 }
 
-// Based on current velocity and position of the drawer, will the drawer slide open, or snap back?
-// TODO: could incorporate the current open state of the drawer
+// Based on current velocity and position of the drawer, should the drawer slide open, or snap back?
+/* TODO: could incorporate the current open state of the drawer */
 function calcWillOpen(velocity, translateX) {
   switch (this.align) {
     case 'left': {
@@ -216,8 +202,7 @@ function calcTranslateX(clientX, startX, startTranslateX) {
 // Since part of the drawer could be visible,
 // the width that is "movable" is less than the complete drawer width and given by
 function getMovableDrawerWidth() {
-  /* TODO: subtract "peek over edge" */
-  return this[contentEl].clientWidth;
+  return this[contentEl].getBoundingClientRect().width - this.peekOverEdge;
 }
 
 // Side effects happening before a user interaction.
@@ -236,16 +221,15 @@ function prepareInteraction() {
 
 // Cleanup code after a completed interaction.
 function cleanupInteraction(opened) {
+  this[contentEl].style.pointerEvents = '';
   this[contentEl].style.willChange = '';
   this[scrimEl].style.willChange = '';
 
   if (opened) {
     this[scrimEl].style.pointerEvents = 'all';
-    if (this[scrollEl]) this[scrollEl].style.overflowY = 'hidden';
     this[contentEl].classList.add('hy-drawer-opened');
   } else {
     this[scrimEl].style.pointerEvents = '';
-    if (this[scrollEl]) this[scrollEl].style.overflowY = ''; // TODO: allow scrolling earlier
     this[contentEl].classList.remove('hy-drawer-opened');
   }
 
@@ -360,10 +344,10 @@ function getIsSlidingObservable(move$, start$) {
   // sliding the drawer or scrolling the content, we wait for the finger/mouse to travel
   // at least `SLIDE_THRESHOLD` pixels.
   /* TODO: Should the way we detect sliding depend on `preventDefault`? */
-  if (!this.preventDefault) {
+  if (this.slideThreshold) {
     return move$::withLatestFrom(start$)
       ::skipWhile(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-        abs(startY - clientY) < SLIDE_THRESHOLD && abs(startX - clientX) < SLIDE_THRESHOLD)
+        abs(startY - clientY) < this.slideThreshold && abs(startX - clientX) < this.slideThreshold)
       ::map(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
         abs(startX - clientX) >= abs(startY - clientY));
   // The Logic needs to be slightly different when using `preventDefault`.
@@ -384,7 +368,7 @@ function getIsSlidingObservable(move$, start$) {
 // This is the main function, putting together all the parts.
 function setupObservables() {
   // Emitts a value every time you change the `persistent` property of the drawer.
-  const persistent$ = this[persistentObs]::share();
+  const persistent$ = this[persistentObs]::map(x => !x)::share();
 
   // We use this to get references to observables that get defined alter.
   const ref = {};
@@ -397,7 +381,7 @@ function setupObservables() {
   // Emits a value every time a `touchstart` (or `mousedown`) *could* intiate an interaction.
   // Each emitted value is a hash containing a `clientX` and `clientY` key.
   const start$ = this::getStartObservable()
-    ::pauseWith(persistent$)
+    ::filterWith(persistent$)
     ::share();
 
   // An observable that emits `true`, as long as the drawer isn't fully closed.
@@ -430,23 +414,19 @@ function setupObservables() {
   // The observable of all relevant "end" events, i.e. the last `touchend`
   // as well as `mouseup` when mosue events are enabled.
   const end$ = this::getEndObservable()
-    // Unsubscribe when `persistent` is true:
-    ::pauseWith(persistent$)
     // We are only interested in the event if the event that started this interaction,
     // occured within the range from where the drawer can be pulled.
     // Must not unsubscribe (b/c of how `preventDefault` in Safari works):
-    ::filterWith(isInRange$)
+    ::filterWith(persistent$, isInRange$)
     ::share();
 
   // The observable of all relevant "move" events.
   // Each emitted value has a `clientX`, `clientY` and `preventDefault` (function) key.
   const move$ = this::getMoveObservable(start$, end$)
-    // Unsubscribe when `persistent` is true:
-    ::pauseWith(persistent$)
     // We are only interested in the event if the event that started this interaction,
     // occured within the range from where the drawer can be pulled.
     // Must not unsubscribe (b/c of how `preventDefault` in Safari works):
-    ::filterWith(isInRange$)
+    ::filterWith(persistent$, isInRange$)
     ::share();
 
   // For every interaction, determine whether it is a sliding (y-axis),
@@ -455,12 +435,15 @@ function setupObservables() {
   // then it remains `true` or `false` for the remainder of the interaction,
   // and is `undefined` again once `end$` emits a value (the end of the interaction).
   const isSliding$ = this::getIsSlidingObservable(move$, start$)
-    ::effect((isSliding) => {
-      if (this[scrollEl] && isSliding) this[scrollEl].style.overflowY = 'hidden';
-    })
     ::take(1)
     ::startWith(undefined)
-    ::repeatWhen(() => end$);
+    ::repeatWhen(() => end$)
+    ::effect((isSliding) => {
+      if (isSliding) {
+        if (this[scrollEl]) this[scrollEl].style.overflow = 'hidden';
+        this[fire]('slidestart');
+      }
+    });
 
   // This is the central observable of this component.
   // It is the current x coordinate of the drawer, which
@@ -487,11 +470,12 @@ function setupObservables() {
       // 3) When the `opened` state changes, we "jump" to the new position,
       // which is either 0 (when closed) or the width of the drawer (when open).
       this[openedObs]::combineLatest(this[alignObs])
-        /* TODO: drawerWdith could be outdated */
-        ::map(([opened, align]) => (!opened ? 0 : this[drawerWidth] * (align === 'left' ? 1 : -1)))
         // Only in this case we need to call the cleanup code directly,
         // which would otherwise run at the end of an animation:
-        ::effect(this::cleanupInteraction)))
+        ::effect(([opened]) => this::cleanupInteraction(opened))
+        /* TODO: drawerWdith could be outdated */
+        ::map(([opened, align]) =>
+          (!opened ? 0 : this[drawerWidth] * (align === 'left' ? 1 : -1)))))
     ::share();
 
   // The `translateX` value at the start of an interaction.
@@ -503,8 +487,12 @@ function setupObservables() {
   const velocity$ = ref.translateX$
     ::timestamp()
     ::pairwise()
-    ::map(([{ value: x, timestamp: time },
-            { value: prevX, timestamp: prevTime }]) =>
+    // Since we are at the mercy of the browser firing move events,
+    // we make sure that some time has passed since the last move event.
+    ::filter(([{ timestamp: prevTime }, { timestamp: time }]) => time - prevTime > 0)
+    // Now we are save to calculate the current velocity without divide by zero errors.
+    ::map(([{ value: prevX, timestamp: prevTime },
+            { value: x, timestamp: time }]) =>
       (x - prevX) / (time - prevTime))
     ::startWith(0);
 
@@ -517,22 +505,23 @@ function setupObservables() {
       // calculate whether it should open or close.
       end$
         ::withLatestFrom(ref.translateX$, velocity$)
-        ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX)),
+        ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
+        ::effect(() => this[fire]('slideend')),
 
       // 2) In this case we need to call the prepare code directly,
       // which would have been called at the beginning of the interaction otherwise.
       this[animateToObs]
-        ::effect(this::prepareInteraction)
-        // Give the browser some time to prepare the animation (`will-change`).
-        // Note that less than 100ms response time are not noticiable.
-        ::delay(50))
+        ::effect(this::prepareInteraction))
 
     // We silently set the new `opened` state here,
     // so that the next interaction will do the right thing,
     // even while the animation is still playing.
     // E.g. a call to `toggle` will cancel the current animation and initiate an animation
     // to the correct opposite state.
-    ::effect(willOpen => this[setState]('opened', willOpen))
+    ::effect((willOpen) => {
+      this[setState]('opened', willOpen);
+      if (this[scrollEl] && !willOpen) this[scrollEl].style.overflow = '';
+    })
     // This ensures that subsequent events that trigger an animation
     // don't cause more than one animation to be played at a time.
     ::withLatestFrom(ref.translateX$)
@@ -543,7 +532,10 @@ function setupObservables() {
       // that runs cleanup code when it completes --- unless a new interactions in initiated,
       // in which case it is canceled.
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
-        ::effect(null, null, () => this[openedObs].next(opened))
+        ::effect({
+          error: () => this::cleanupInteraction(opened),
+          complete: () => this[openedObs].next(opened),
+        })
         ::takeUntil(start$)
         ::takeUntil(this[alignObs]);
     });
@@ -563,7 +555,7 @@ function setupObservables() {
 
   // Other than preventing sliding, setting `persistent` will also hide the scrim.
   persistent$.subscribe((persistent) => {
-    this[scrimEl].style.display = persistent ? 'none' : 'block';
+    this[scrimEl].style.display = !persistent ? 'none' : 'block';
   });
 
   // TODO
@@ -599,11 +591,13 @@ export function drawerMixin(C) {
         opened: false,
         align: 'left',
         persistent: false,
-        scrollSelector: 'body',
-        edgeMargin: 0,
-        preventDefault: false,
+        range: [0, 150],
+        peekOverEdge: 0,
+        slideThreshold: 10,
+        preventDefault: true,
         mouseEvents: false,
         backButton: false,
+        hideOverflow: null,
       };
     }
 
@@ -616,8 +610,9 @@ export function drawerMixin(C) {
         preventDefault(x) { this[preventDefaultObs].next(x); },
         mouseEvents(x) { this[mouseEventsObs].next(x); },
         backButton(x) { this[backButtonObs].next(x); },
-        scrollSelector(scrollSelector) {
-          this[scrollEl] = document.querySelector(scrollSelector);
+        hideOverflow(selector) {
+          if (this[scrollEl]) this[scrollEl].style.overflow = '';
+          this[scrollEl] = document.querySelector(selector);
         },
       };
     }
@@ -643,10 +638,9 @@ export function drawerMixin(C) {
       // Cache DOM elements.
       this[scrimEl] = this.root.querySelector('.hy-drawer-scrim');
       this[contentEl] = this.root.querySelector('.hy-drawer-content');
-      // if (this.scrollSelector) this[scrollEl] = document.querySelector(this.scrollSelector);
+      if (this.hideOverflow) this[scrollEl] = document.querySelector(this.hideOverflow);
 
       // Set the alignment class.
-      /* TODO: respond to changes */
       this[contentEl].classList.add(`hy-drawer-${this.align}`);
 
       // This is where most of the action happens.

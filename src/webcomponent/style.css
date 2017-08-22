@@ -20,6 +20,6 @@
 
   .hy-drawer-scrim {
     @apply --hy-drawer-scrim-container;
-    background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.25));
+    background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
   }
 }
