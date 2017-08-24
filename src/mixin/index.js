@@ -649,8 +649,7 @@ export function drawerMixin(C) {
       // Now we set the initial opend state.
       // Note that the opened state in the URL takes precedence over the initialization value.
       const hash = `#${this.el.id}--opened`;
-      const willOpen = location.hash === '' ? undefined : location.hash === hash;
-      if (willOpen !== undefined) this[setState]('opened', willOpen);
+      if (window.location.hash === hash) this[setState]('opened', true);
       this[openedObs].next(this.opened);
 
       // Putting the initial values on the side-effect--observables:
