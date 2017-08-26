@@ -9,7 +9,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 > A touch-enabled drawer component for the modern web.
 {:.lead}
 
-**hy-drawer** has *idiomatic* integrations for a variety of tools and frameworks:
+**hy-drawer** has idiomatic integrations for a variety of tools and frameworks:
 * As **Vanilla** JavaScript class
 * As **jQuery** plugin
 * As **WebComponent**, either standalone or via HTML Import

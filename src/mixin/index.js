@@ -52,6 +52,7 @@ import { never } from 'rxjs/observable/never';
 import { _do as effect } from 'rxjs/operator/do';
 import { combineLatest } from 'rxjs/operator/combineLatest';
 import { filter } from 'rxjs/operator/filter';
+// import { _finally as cleanup } from 'rxjs/operator/finally';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
 import { merge as mergeWith } from 'rxjs/operator/merge';
@@ -235,8 +236,7 @@ function cleanupInteraction(opened) {
 
   if (this.backButton) {
     const hash = `#${this.el.id}--opened`;
-    if (opened
-        && location.hash !== hash) {
+    if (opened && location.hash !== hash) {
       history.pushState({ id: this.el.id }, document.title, hash);
     }
     if (!opened
@@ -533,7 +533,7 @@ function setupObservables() {
       // in which case it is canceled.
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
         ::effect({
-          error: () => this::cleanupInteraction(opened),
+          // error: () => this::cleanupInteraction(opened),
           complete: () => this[openedObs].next(opened),
         })
         ::takeUntil(start$)
@@ -561,8 +561,8 @@ function setupObservables() {
   // TODO
   Observable::fromEvent(window, 'popstate')
     ::pauseWith(this[backButtonObs]::map(x => !x))
-    .subscribe((e) => {
-      if (e.preventDefault) e.preventDefault();
+    .subscribe(() => {
+      // if (e.preventDefault) e.preventDefault();
 
       const hash = `#${this.el.id}--opened`;
       const willOpen = location.hash === hash;

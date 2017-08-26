@@ -63,6 +63,12 @@ import { never } from 'rxjs/observable/never';
 import { _do as effect } from 'rxjs/operator/do';
 import { combineLatest } from 'rxjs/operator/combineLatest';
 import { filter } from 'rxjs/operator/filter';
+```
+
+import { _finally as cleanup } from 'rxjs/operator/finally';
+
+
+```js
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
 import { merge as mergeWith } from 'rxjs/operator/merge';
@@ -306,8 +312,7 @@ function cleanupInteraction(opened) {
 
   if (this.backButton) {
     const hash = `#${this.el.id}--opened`;
-    if (opened
-        && location.hash !== hash) {
+    if (opened && location.hash !== hash) {
       history.pushState({ id: this.el.id }, document.title, hash);
     }
     if (!opened
@@ -802,7 +807,12 @@ in which case it is canceled.
 ```js
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
         ::effect({
-          error: () => this::cleanupInteraction(opened),
+```
+
+error: () => this::cleanupInteraction(opened),
+
+
+```js
           complete: () => this[openedObs].next(opened),
         })
         ::takeUntil(start$)
@@ -846,8 +856,13 @@ TODO
 ```js
   Observable::fromEvent(window, 'popstate')
     ::pauseWith(this[backButtonObs]::map(x => !x))
-    .subscribe((e) => {
-      if (e.preventDefault) e.preventDefault();
+    .subscribe(() => {
+```
+
+if (e.preventDefault) e.preventDefault();
+
+
+```js
 
       const hash = `#${this.el.id}--opened`;
       const willOpen = location.hash === hash;
@@ -974,8 +989,7 @@ Note that the opened state in the URL takes precedence over the initialization v
 
 ```js
       const hash = `#${this.el.id}--opened`;
-      const willOpen = location.hash === '' ? undefined : location.hash === hash;
-      if (willOpen !== undefined) this[setState]('opened', willOpen);
+      if (window.location.hash === hash) this[setState]('opened', true);
       this[openedObs].next(this.opened);
 ```
 
