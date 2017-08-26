@@ -1,4 +1,4 @@
-const { resolve: r } = require('path');
+const { resolve } = require('path');
 
 const {
   BannerPlugin,
@@ -50,7 +50,7 @@ function envConfig() {
     // same as prod, but does not bundle core-js polyfills
     case 'lite':
       return {
-        externals: [/core-js/],
+        externals: [/^core-js/],
         plugins: [
           new BannerPlugin({ banner }),
           new EnvironmentPlugin({ DEBUG: false }),
@@ -87,13 +87,13 @@ const baseConfig = merge({
         // },
       },
       {
-        test: /\.ejs/,
+        test: /\.ejs$/,
         loader: 'underscore-template-loader',
       },
     ],
   },
   resolve: {
-    modules: [r('./src'), r('./node_modules'), r(process.env.NODE_PATH)], // TODO: save?
+    modules: [resolve('./src'), resolve('./node_modules'), resolve(process.env.NODE_PATH)], // TODO: save?
     extensions: ['.json', '.js'],
     symlinks: true,
   },
@@ -106,7 +106,7 @@ const cssFileLoaderConfig = {
   module: {
     rules: [
       {
-        test: /\.css/,
+        test: /\.css$/,
         loader: 'file-loader?name=[name].[ext]',
       },
     ],
@@ -117,7 +117,7 @@ const cssRawLoaderConfig = {
   module: {
     rules: [
       {
-        test: /\.css/,
+        test: /\.css$/,
         loader: 'raw-loader',
       },
     ],
@@ -127,25 +127,25 @@ const cssRawLoaderConfig = {
 const config = [
   // Mixin
   merge(baseConfig, {
-    entry: r('./src/mixin/index.js'),
+    entry: resolve('./src/mixin/index.js'),
     output: {
-      path: r('./dist/mixin'),
+      path: resolve('./dist/mixin'),
     },
   }),
 
   // Vanilla JS
   merge(baseConfig, cssFileLoaderConfig, {
-    entry: r('./src/vanilla/index.js'),
+    entry: resolve('./src/vanilla/index.js'),
     output: {
-      path: r('./dist/vanilla'),
+      path: resolve('./dist/vanilla'),
     },
   }),
 
   // jQuery
   merge(baseConfig, cssFileLoaderConfig, {
-    entry: r('./src/jquery/index.js'),
+    entry: resolve('./src/jquery/index.js'),
     output: {
-      path: r('./dist/jquery'),
+      path: resolve('./dist/jquery'),
     },
     externals: [{
       jquery: 'jQuery',
@@ -154,9 +154,9 @@ const config = [
 
   // // React
   // merge(baseConfig, cssFileLoaderConfig, {
-  //   entry: r('./src/react/index.jsx'),
+  //   entry: resolve('./src/react/index.jsx'),
   //   output: {
-  //     path: r('./dist/react'),
+  //     path: resolve('./dist/react'),
   //   },
   //   externals: {
   //     react: 'React',
@@ -165,22 +165,22 @@ const config = [
 
   // WebComponent Standalone
   merge(baseConfig, cssRawLoaderConfig, {
-    entry: r('./src/webcomponent/index.js'),
+    entry: resolve('./src/webcomponent/index.js'),
     output: {
-      path: r('./dist/webcomponent'),
+      path: resolve('./dist/webcomponent'),
     },
   }),
 
   // WebComponent HTML Import
   merge(baseConfig, cssRawLoaderConfig, {
-    entry: r('./src/webcomponent/html-import.js'),
+    entry: resolve('./src/webcomponent/html-import.js'),
     output: {
-      path: r('./dist/webcomponent'),
+      path: resolve('./dist/webcomponent'),
       filename: `${filename}-html-import${min}.js`,
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: r('./src/webcomponent/index.ejs'),
+        template: resolve('./src/webcomponent/index.ejs'),
         filename: `${filename}${min}.html`,
       }),
     ],
