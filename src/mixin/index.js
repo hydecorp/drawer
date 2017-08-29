@@ -262,10 +262,9 @@ function getStartObservable() {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
   /* TODO: this causes the code to run twice on startup */
+  // major insight: start events can always be passive
   return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
-    const touchstart$ = Observable::fromEvent(document, 'touchstart', {
-      passive: !this.preventDefault,
-    })
+    const touchstart$ = Observable::fromEvent(document, 'touchstart', { passive: true })
       ::filter(({ touches }) => touches.length === 1)
       ::map(({ touches }) => touches[0]);
 
@@ -273,9 +272,7 @@ function getStartObservable() {
     if (!this.mouseEvents) return touchstart$;
 
     // Otherwise we also include `mousedown` events in the output.
-    const mousedown$ = Observable::fromEvent(document, 'mousedown', {
-      passive: !this.preventDefault,
-    });
+    const mousedown$ = Observable::fromEvent(document, 'mousedown', { passive: true });
 
     return touchstart$::mergeWith(mousedown$);
   });
@@ -319,9 +316,7 @@ function getEndObservable() {
   // we re-subscribe to reflect the changes.
   /* TODO: this causes the code to run twice on startup */
   return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
-    const touchend$ = Observable::fromEvent(document, 'touchend', {
-      passive: !this.preventDefault,
-    })
+    const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
       // We're only interested in the last `touchend`.
       // Otherwise there's at least one finger left on the screen,
       // that can be used to slide the drawer.
@@ -330,9 +325,7 @@ function getEndObservable() {
     // If mouse events aren't enabled, we're done here.
     if (!this.mouseEvents) return touchend$;
 
-    const mouseup$ = Observable::fromEvent(document, 'mouseup', {
-      passive: !this.preventDefault,
-    });
+    const mouseup$ = Observable::fromEvent(document, 'mouseup', { passive: true });
 
     return touchend$::mergeWith(mouseup$);
   });
