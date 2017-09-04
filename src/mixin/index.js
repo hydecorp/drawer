@@ -44,13 +44,13 @@ import { componentMixin, setup, fire, setState,
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { defer } from 'rxjs/observable/defer';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as effect } from 'rxjs/operator/do';
-import { combineLatest } from 'rxjs/operator/combineLatest';
 import { filter } from 'rxjs/operator/filter';
 // import { _finally as cleanup } from 'rxjs/operator/finally';
 import { map } from 'rxjs/operator/map';
@@ -261,9 +261,7 @@ function updateDOM(translateX) {
 function getStartObservable() {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
-  /* TODO: this causes the code to run twice on startup */
-  // major insight: start events can always be passive
-  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+  return Observable::combineLatest(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchstart$ = Observable::fromEvent(document, 'touchstart', { passive: true })
       ::filter(({ touches }) => touches.length === 1)
       ::map(({ touches }) => touches[0]);
@@ -282,8 +280,7 @@ function getStartObservable() {
 function getMoveObservable(start$, end$) {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
-  /* TODO: this causes the code to run twice on startup */
-  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+  return Observable::combineLatest(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchmove$ = Observable::fromEvent(document, 'touchmove', {
       passive: !this.preventDefault,
     })
@@ -292,7 +289,7 @@ function getMoveObservable(start$, end$) {
       // Note that this doesn't occur under normal cirumstances,
       // and exists primarliy to ensure that the interaction continues without hiccups.
       // We also store `preventDefault` (bound to the event), in case we need it to call it later.
-      ::map(e => assign(e.touches[0], { preventDefault: ::e.preventDefault }));
+      ::map(event => assign(event.touches[0], { event }));
 
     // If mouse events aren't enabled, we're done here.
     if (!this.mouseEvents) return touchmove$;
@@ -304,7 +301,7 @@ function getMoveObservable(start$, end$) {
       // Since're only interested in move events when the mouse is down,
       // we unsubscribe when the mouse goes up, and re-subscribe when it goes down.
       ::pauseWith(Observable::merge(start$::mapTo(false), end$::mapTo(true)))
-      ::map(e => assign(e, { preventDefault: ::e.preventDefault }));
+      ::map(event => assign(event, { event }));
 
     return touchmove$::mergeWith(mousemove$);
   });
@@ -314,8 +311,7 @@ function getMoveObservable(start$, end$) {
 function getEndObservable() {
   // When you change the `mouseEvents` or `preventDefault` option,
   // we re-subscribe to reflect the changes.
-  /* TODO: this causes the code to run twice on startup */
-  return Observable::merge(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
+  return Observable::combineLatest(this[mouseEventsObs], this[preventDefaultObs])::switchMap(() => {
     const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
       // We're only interested in the last `touchend`.
       // Otherwise there's at least one finger left on the screen,
@@ -451,7 +447,7 @@ function setupObservables() {
       // that the user is sliding:
       move$
         ::filterWith(isSliding$)
-        ::effect(({ preventDefault }) => { if (this.preventDefault) preventDefault(); })
+        ::effect(({ event }) => { if (this.preventDefault) event.preventDefault(); })
         ::withLatestFrom(start$, ref.startTranslateX$)
         ::map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
           this::calcTranslateX(clientX, startX, startTranslateX)),
@@ -462,7 +458,7 @@ function setupObservables() {
 
       // 3) When the `opened` state changes, we "jump" to the new position,
       // which is either 0 (when closed) or the width of the drawer (when open).
-      this[openedObs]::combineLatest(this[alignObs])
+      Observable::combineLatest(this[openedObs], this[alignObs])
         // Only in this case we need to call the cleanup code directly,
         // which would otherwise run at the end of an animation:
         ::effect(([opened]) => this::cleanupInteraction(opened))
@@ -536,8 +532,7 @@ function setupObservables() {
   // The end result is always to update the (shadow) DOM, which happens here.
   // Note that the call to subscribe sets the whole process in motion,
   // and causes the code inside the above `defer` observables to run.
-  ref.translateX$
-    .subscribe(translateX => this::updateDOM(translateX));
+  ref.translateX$.subscribe(this::updateDOM);
 
   // A click on the scrim should close the drawer, but only when the drawer is fully extended.
   // Otherwise it's possible to accidentially close the drawer during sliding/animating.
