@@ -110,15 +110,15 @@ The source code is written in a "literal programming" style, and should be very 
 Preferred reading order:
 
 * `mixin`
-  * [`index.js`](src/mixin/index.md)
+  * [`index.js`](../src/mixin/index.md)
 * `vanilla`
-  * [`index.js`](src/vanilla/index.md)
+  * [`index.js`](../src/vanilla/index.md)
 * `jquery`
-  * [`index.js`](src/jquery/index.md)
+  * [`index.js`](../src/jquery/index.md)
 * `webcomponent`
-  * [`index.js`](src/webcomponent/index.md)
-  * [`html-import.js`](src/webcomponent/html-import.md)
-* [`common.js`](src/common.md)
+  * [`index.js`](../src/webcomponent/index.md)
+  * [`html-import.js`](../src/webcomponent/html-import.md)
+* [`common.js`](../src/common.md)
 
 
 {% comment %}
