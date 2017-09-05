@@ -22,8 +22,8 @@ image: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJ
 markdown: kramdown
 theme: jekyll-theme-hydejack
 gems:
-  - jekyll-default-layout
-  - jekyll-optional-front-matter
+  # - jekyll-default-layout
+  # - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
   - jekyll-titles-from-headings
@@ -36,8 +36,8 @@ exclude:
   - webpack.config.js
   - src
   - scripts
-
-strip_title: true
+include:
+  - LICENSE.md
 
 defaults:
   - scope:
@@ -45,6 +45,19 @@ defaults:
     values:
       menu: true
       order: 1
+
+titles_from_headings:
+  strip_title: true
+  collections: true
+
+relative_links:
+  collections: true
+
+optional_front_matter:
+  remove_originals: true
+
+readme_index:
+  remove_originals: true
 
 data_social:
   github:
