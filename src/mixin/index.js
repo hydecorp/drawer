@@ -237,10 +237,10 @@ function cleanupInteraction(opened) {
   if (this.backButton) {
     const hash = `#${this.el.id}--opened`;
     if (opened && location.hash !== hash) {
-      history.pushState({ id: this.el.id }, document.title, hash);
+      history.pushState({ [this.el.id]: true }, document.title, hash);
     }
     if (!opened
-        && (history.state && history.state.id === this.el.id)
+        && (history.state && history.state[this.el.id])
         && location.hash !== '') {
       history.back();
     }
@@ -345,9 +345,9 @@ function getIsSlidingObservable(move$, start$) {
   // Luckily, Safari will not fire a move event until the finger has travelled a minium distance.
   } else {
     return move$::withLatestFrom(start$)
-      ::map(([{ clientX, clientY, preventDefault }, { clientX: startX, clientY: startY }]) => {
+      ::map(([{ clientX, clientY, event }, { clientX: startX, clientY: startY }]) => {
         const isSliding = abs(startX - clientX) >= abs(startY - clientY);
-        if (this.preventDefault && isSliding) preventDefault();
+        if (this.preventDefault && isSliding) event.preventDefault();
         return isSliding;
       });
   }
@@ -550,8 +550,6 @@ function setupObservables() {
   Observable::fromEvent(window, 'popstate')
     ::pauseWith(this[backButtonObs]::map(x => !x))
     .subscribe(() => {
-      // if (e.preventDefault) e.preventDefault();
-
       const hash = `#${this.el.id}--opened`;
       const willOpen = location.hash === hash;
       if (willOpen !== this.opened) this[animateToObs].next(willOpen);
