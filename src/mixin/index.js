@@ -37,8 +37,7 @@ import 'core-js/fn/function/bind';
 import 'core-js/fn/object/assign';
 
 // TODO: explain `hy-component`
-import { componentMixin, setup, fire, setState,
-  MODERNIZR_TESTS as COMPONENT_MODERNIZER_TESTS } from 'hy-component/src/component';
+import { componentMixin, setup, fire, setState, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
 
 // As mentioned before, we only import the RxJS function that we actually need.
 import { Observable } from 'rxjs/Observable';
@@ -71,10 +70,8 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 import { createTween, linearTween } from '../common';
 
 // TODO: explain `MODERNIZR_TESTS`
-export const MODERNIZR_TESTS = [
-  ...COMPONENT_MODERNIZER_TESTS,
-  /* 'touchevents', // optional */
-  /* 'willchange', // optional */
+export const MIXIN_FEATURE_TESTS = [
+  ...COMPONENT_FEATURE_TESTS,
   'eventlistener',
   'queryselector',
   'requestanimationframe',

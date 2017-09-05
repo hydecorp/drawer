@@ -26,16 +26,16 @@ import {
   CustomElement,
   getTemplate,
   fragmentFromString,
-  MODERNIZR_TESTS as CUSTOM_ELEMENT_MODERNIZER_TESTS,
+  CUSTOM_ELEMENT_FEATURE_TESTS,
 } from 'hy-component/src/custom-element';
 
-import { drawerMixin, MODERNIZR_TESTS as DRAWER_MIXIN_MODERNIZR_TESTS } from '../mixin';
+import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
 import templateString from './template.ejs';
 
-export const MODERNIZR_TESTS = [
-  ...CUSTOM_ELEMENT_MODERNIZER_TESTS,
-  ...DRAWER_MIXIN_MODERNIZR_TESTS,
+export const DRAWER_WEBCOMPONENT_FEATURE_TESTS = [
+  ...CUSTOM_ELEMENT_FEATURE_TESTS,
+  ...MIXIN_FEATURE_TESTS,
 ];
 
 export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElement)) {
