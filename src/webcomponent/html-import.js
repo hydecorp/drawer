@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // ## Overview
-// This in the HTML Import version of the WebComponent version of **hy-drawer**.
+// This in the HTML import version of the WebComponent version of this component.
 // See [here](index.md) for the standalone version.
-// This file included via `script` tag in `hy-drawer.html` and shouldn't be used via import.
+// This file is included via `script` tag in `hy-drawer.html` and shouldn't be used via ES import.
 
 import {
   customElementMixin,
@@ -26,10 +26,21 @@ import {
 
 import { drawerMixin } from '../mixin';
 
+// First we check if CustomElements are supported.
 if ('customElements' in window) {
+  // When they are, we define an ad-hoc component class.
+  // It is a combination of the `CustomElement` class (a wrapper around `HTMLElement` that
+  // doesn't break when piped through the babel transformer),
+  // our [`drawerMixin`](../mixin/index.md),
+  // and the `customElementMixin`, which is part of hy-component and handles things like
+  // reflecting options as HTML attributes, and looking up the `template`, etc..
   customElements.define('hy-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
+    // The CustomElements spec demands that we provide a list of attributes (i.e. our options).
+    // hy-component provides these for us.
     static get observedAttributes() { return this.getObservedAttributes(); }
   });
+
+// Otherwise we log to the console (during development).
 } else if (process.env.DEBUG) {
   console.warn('Couldn\'t define `hy-drawer` component. Did you forget to include a custom elements polyfill?');
 }

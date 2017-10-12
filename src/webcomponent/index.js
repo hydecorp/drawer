@@ -15,32 +15,46 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // ## Overview
-// This is the standalone version of the WebComponent version of **hy-drawer**.
-// It exports the HTML element that you can define as a custom element, e.g.
-// `customElements.define('hy-drawer', DrawerHTMLElement)`.
-// Unlike the [HTML Import version](html-import.md), it bundles the template as a string.
-// **NOTE**: For this to work, your bundler needs to be able to parse underscore `.ejs` templates!
+// This is the standalone version of the WebComponent version of hy-drawer.
+// It is inteded to be used with custom bundler toolchains.
+// It exports a HTML element that you can `define` as a custom element, e.g.
+// `customElements.define('hy-drawer', HTMLDrawerElement)`.
 
+// We start by importing form the hy-component library...
 import {
   customElementMixin,
   CustomElement,
-  getTemplate,
   fragmentFromString,
+  sGetTemplate,
   CUSTOM_ELEMENT_FEATURE_TESTS,
 } from 'hy-component/src/custom-element';
 
+// ...and our own component.
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
-import templateString from './template.ejs';
+// Unlike the [HTML Import version](./html-import.md), this version bundles the template
+// as a string.
+// Note that for this to work, your bundler needs to be able to bundle raw strings!
+import templateString from './template.html';
 
-export const DRAWER_WEBCOMPONENT_FEATURE_TESTS = [
+// The set of Modernizr feature tests required for *this* version of the component.
+export const WEBCOMPONENT_FEATURE_TESTS = [
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
   ...MIXIN_FEATURE_TESTS,
 ];
 
-export class DrawerHTMLElement extends customElementMixin(drawerMixin(CustomElement)) {
+// The exported class follows the HTML naming convetion.
+// It is a combination of the `CustomElement` class (a wrapper around `HTMLElement` that
+// doesn't break when piped through the babel transformer),
+// our [`drawerMixin`](../mixin/index.md),
+// and the `customElementMixin`, which is part of hy-component and handles things like
+// reflecting options as HTML attributes, etc...
+export class HTMLDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
+  // The CustomElements spec demands that we provide a list of attributes (i.e. our options).
+  // hy-component provides these for us.
   static get observedAttributes() { return this.getObservedAttributes(); }
 
-  /* @override */
-  [getTemplate]() { return fragmentFromString(templateString); }
+  // We override the `getTemplate` method and return a document fragment
+  // obtained from parsing the template string.
+  [sGetTemplate]() { return fragmentFromString(templateString); }
 }

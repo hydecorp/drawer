@@ -4,10 +4,13 @@
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
     <title>Mixin Example | hy-drawer</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Noto+Sans:400,400i,700,700i" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
 
     <link href="../../dist/vanilla/style.css" rel="stylesheet" type="text/css">
     <script src="../../dist/mixin/hy-drawer.js"></script>
+
+    <style>.hy-drawer-content { color:#fff; background:#4fb1ba; } aside a { color: #fff; }</style>
   </head>
   <body>
     <div class="wrapper">
@@ -57,7 +60,7 @@
 
     <script>
       var drawerMixin = hyDrawer.drawerMixin;
-      var setup = hyDrawer.setup;
+      var sSetup = hyDrawer.sSetup;
 
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
@@ -65,23 +68,21 @@
 
       function MyComponent() {}
       var Drawer = drawerMixin(MyComponent);
-      var drawer = new Drawer()
+      window.drawer = new Drawer()
 
-      drawer[setup](drawerEl, {
+      window.drawer[sSetup](window.drawerEl, {
         range: isMobileSafari ? [35, 150] : [0, 50],
-        backButton: !isSafari,
-        slideThreshold: isSafari ? 0 : 10,
+        threshold: isSafari ? 0 : 10,
         preventDefault: true,
-        // hideOverflow: 'body'
         mouseEvents: true,
+        _backButton: !isSafari,
+        // _hideOverflow: 'body'
       });
 
       menuEl.addEventListener('click', function (e) {
         e.preventDefault();
-        drawer.toggle();
+        window.drawer.toggle();
       });
     </script>
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Noto+Sans:400,400i,700,700i" rel="stylesheet">
   </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0",
+  "version": "1.0.0-hydejack",
   "description": "A drawer component for the modern web.",
   "main": "./lib/vanilla/index.js",
   "browser": "./dist/vanilla/hy-drawer.min.js",
@@ -13,7 +13,9 @@
     "build:lite": "webpack --env lite",
     "build:dev": "webpack --env dev",
     "build:doc": "scripts/gen-doc.sh",
-    "watch": "webpack --progress --colors --watch --env dev",
+    "watch": "npm run watch:src & npm run watch:doc",
+    "watch:src": "webpack --progress --colors --watch --env dev",
+    "watch:doc": "npm run build:doc && onchange 'src/**/*.js' -- npm run build:doc '{{changed}}'",
     "serve": "http-server -s -p $npm_package_config_port",
     "dev": "npm run watch & npm run serve",
     "lint": "eslint src webpack.config.js",
@@ -43,6 +45,7 @@
     "eslint-plugin-react": "^7.1.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.29.0",
+    "onchange": "^3.2.1",
     "raw-loader": "^0.5.1",
     "underscore-template-loader": "^0.7.3",
     "webpack": "^3.1.0",
@@ -51,6 +54,7 @@
   },
   "dependencies": {
     "core-js": "^2.4.1",
+    "hy-component": "^1.0.0-hydejack",
     "rxjs": "^5.4.1"
   },
   "directories": {
@@ -94,7 +98,6 @@
     ]
   },
   "optionalDependencies": {
-    "jquery": "^3.2.1",
-    "react": "^15.6.1"
+    "jquery": "^3.2.1"
   }
 }

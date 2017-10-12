@@ -4,16 +4,17 @@
 // runs them through `docco` and puts the results in `doc/src`.
 
 const { promisify } = require('util');
-const { basename, dirname, extname, relative, resolve } = require('path');
-const fs = require('fs');
+
 const docco = promisify(require('docco').document);
+const fs = require('fs');
+const { basename, dirname, extname, relative, resolve } = require('path');
 
 const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
 const stat = promisify(fs.stat);
 
 const SOURCE_DIR = 'src';
-const TARGET_DIR = 'doc';
+const TARGET_DIR = 'doc/source';
 const TEMPLATE = resolve('scripts/md.jst');
 const EXTENSIONS = new Set(['.js', '.jsx']);
 const DOCCO_EXT = '.html';
@@ -30,20 +31,20 @@ async function getFiles(dir) {
 }
 
 async function genDoc(dir) {
-  const files = await getFiles(dir);
+  const files = process.argv.length > 2 ? [process.argv[2]] : await getFiles(dir);
   return Promise.all(files
     .filter(file => EXTENSIONS.has(extname(file)))
     .map(async (file) => { // e.g. `~/GitHub/hy-comp/src/mixin/index.js`
       const ext = extname(file); // e.g. `.js`
       const name = basename(file, ext); // e.g. `index`
-      const path = relative(resolve(), dirname(file)); // e.g. `src/mixin`
-      const output = resolve(TARGET_DIR, path); // e.g. `~/GitHub/hy-comp/doc/src/mixin`
+      const path = relative(resolve(SOURCE_DIR), dirname(file)); // e.g. `mixin`
+      const output = resolve(TARGET_DIR, path); // e.g. `~/GitHub/hy-comp/doc/source/mixin`
 
       await docco({
-        output,
         args: [file],
-        template: TEMPLATE,
+        output,
         css: 'none',
+        template: TEMPLATE,
       });
 
       // docco generates .html files, but we want .md

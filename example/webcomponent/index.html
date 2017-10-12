@@ -4,6 +4,7 @@
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
     <title>WebComponent Example | hy-drawer</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Noto+Sans:400,400i,700,700i" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
 
     <!-- A webcomponents polyfill to ensure Templates, HTML Imports, Custom Elements and Shadow (Shady) DOM works -->
@@ -11,6 +12,8 @@
 
     <!-- Import hy-drawer from dist/webcomonent -->
     <link rel="import" href="../../dist/webcomponent/hy-drawer.html">
+
+    <style>hy-drawer { --hy-drawer-background: #f17641; } aside a { color: #fff; }</style>
   </head>
   <body>
     <div class="wrapper">
@@ -61,8 +64,6 @@
       </hy-drawer>
     </div>
 
-    <style>hy-drawer { --hy-drawer-background: #f17641; } aside a { color: #fff; }</style>
-
     <script>
       // No user agent sniffing code is part of hy-drawer, but it offers options to customize its behavior.
       // The snippet below will determine whether the current browser is Safari (both iOS and macOS)
@@ -72,24 +73,17 @@
       var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       // Use the DOM API to set Properties on the HTML element (use param-case!)
-      drawerEl.setAttribute('range', isMobileSafari ? '35,150' : '0,50');
-      if (!isSafari) drawerEl.setAttribute('back-button', '');
-      drawerEl.setAttribute('slide-threshold', isSafari ? 0 : 10);
-
-      // Alternatively, change Properties by setting values directly on the element (use camelCase!)
-      // drawerEl.range = isMobileSafari ? [35, 150] : [0, 50];
-      // drawerEl.backButton = !isSafari;
-      // drawerEl.slideThreshold = isSafari ? 0 : 10;
+      window.drawerEl.setAttribute('range', isMobileSafari ? '35,150' : '0,50');
+      window.drawerEl.setAttribute('threshold', isSafari ? 0 : 10);
+      if (!isSafari) window.drawerEl.setAttribute('_back-button', '');
 
       menuEl.addEventListener('click', function (e) {
         // Prevent default so the brwoser history doesn't get filled with # urls (see `a` tag above)
         e.preventDefault();
 
         // Call Methods on the drawer element.
-        drawerEl.toggle();
+        window.drawerEl.toggle();
       });
     </script>
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Noto+Sans:400,400i,700,700i" rel="stylesheet">
   </body>
 </html>

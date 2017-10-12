@@ -1,0 +1,96 @@
+<div class="hy-drawer-scrim"></div>
+<div class="hy-drawer-content">
+  <slot></slot>
+</div>
+
+<style>
+  /* HACK: Hard-coded: ../style.css */
+  @media screen {
+    .hy-drawer-scrim {
+      display: block;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0.5);
+      transform: translateX(0);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hy-drawer-content {
+      position: fixed;
+      bottom: 0;
+      top: 0;
+      z-index: 3;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform: translateX(0);
+      contain: strict;
+      width: 300px;
+      background: #e8e8e8;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hy-drawer-content.hy-drawer-left {
+      left: -300px;
+    }
+
+    .hy-drawer-content.hy-drawer-right {
+      right: -300px;
+    }
+
+    .hy-drawer-content.hy-drawer-left.hy-drawer-opened {
+      left: 0!important;
+      transform: translateX(0)!important;
+    }
+
+    .hy-drawer-content.hy-drawer-right.hy-drawer-opened {
+      right: 0!important;
+      transform: translateX(0)!important;
+    }
+  }
+
+  @media print {
+    .hy-drawer-scrim {
+      display: none!important;
+    }
+
+    .hy-drawer-content {
+      transform: none!important;
+    }
+  }
+
+  /* HACK: Hard-coded ./style.css */
+  @media screen {
+    :host {
+
+    }
+
+    .hy-drawer-content {
+      @apply --hy-drawer-content-container;
+      width: var(--hy-drawer-width, 300px);
+      background: var(--hy-drawer-background, #e8e8e8);
+      box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
+      z-index: var(--hy-drawer-z-index, 3);
+    }
+
+    .hy-drawer-content.hy-drawer-left {
+      left: calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+    }
+
+    .hy-drawer-content.hy-drawer-right {
+      right: calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+    }
+
+    .hy-drawer-scrim {
+      @apply --hy-drawer-scrim-container;
+      background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
+      z-index: var(--hy-drawer-scrim-z-index, 2);
+    }
+  }
+</style>

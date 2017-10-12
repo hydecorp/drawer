@@ -87,6 +87,10 @@ const baseConfig = merge({
         // },
       },
       {
+        test: /\.html$/,
+        use: 'raw-loader',
+      },
+      {
         test: /\.ejs$/,
         loader: 'underscore-template-loader',
       },

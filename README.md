@@ -4,24 +4,24 @@
 It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
 while being performant and easy to use.
 It is the perfect companion for mobile-first web pages and progressive web apps.
-[Try it!](example/mixin/){:.no-push-state}.
 
 > A touch-enabled drawer component for the modern web.
 {:.lead}
 
-**hy-drawer** has idiomatic integrations for a variety of tools and frameworks:
+**hy-drawer** can be used in a variety of ways:
 * As **Vanilla** JavaScript class
 * As **jQuery** plugin
-* As **WebComponent**, either standalone or via HTML Import
-* Possibly as part of your own component hierarchy via "[ES6 Mixin][1]" (they are just classes!).
+* As **WebComponent**, either *Standalone* or as *HTML Import*.
+* Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
 
-The component was initially developed and is still used by [Hydejack](https://qwtel.com/hydejack/).
-It is part of the hy-component family.
+The component was initially developed --- and can be encountered in the wild ---
+as part of the [Hydejack](https://qwtel.com/hydejack/) Jekyll theme.
+
+**NOTE**: The current version of **hy-drawer** is a custom build for Hydejack,
+which assumes that you don't do certain "evil" things with the component, like detaching and re-attaching it to the DOM, etc.
 
 ## License
-The component is [GPL licensed](LICENSE.md), meaning you cannot use it in a project that isn't itself GPL licensed. For cases where this is not acceptable, there are commercial licenses available.
-
-TODO
+**hy-drawer** is [GPL-3.0](LICENSE.md)-licensed. Commercial licenses will be available for cases where this is not acceptable.
 
 ## Examples
 * [Mixin Example](example/mixin/){:.no-push-state}
@@ -29,31 +29,47 @@ TODO
 * [jQuery Example](example/jquery/){:.no-push-state}
 * [WebComponent Example](example/webcomponent/){:.no-push-state}
 
+## Usage
+The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
+
+~~~html
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.css">
+<script type="application/javascript" src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
+~~~
+
+~~~html
+<aside id="drawerEl"><!--content--></aside>
+<script>
+  var Drawer = window.hyDrawer.Drawer;
+  var drawer = new Drawer(window.drawerEl, { /* options */ });
+</script>
+~~~
+
 ## Documentation
 
 * [Options](doc/options.md)
 * [Methods](doc/methods.md)
 * [Events](doc/events.md)
-* [Source](doc/source.md)
+* [Styling](doc/styling.md)
 
-## Usage
-The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
+## Source
+The source code is written in a *literal programming* style, and should be reasonably approachable.
+However, some knowledge of [RxJS] is required.
 
-~~~html
-<link type="text/css" rel="stylesheet"
-  href="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.css">
-<script type="application/javascript"
-   src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
-~~~
+The core functionality is implemented in [`mixin / index.js`](doc/source/mixin/index.md),
+which is used to create the framework-specific versions of the component.
 
-~~~html
-<aside id="drawerEl"><!-- content --></aside>
-<script>
-  var Drawer = yDrawer.Drawer;
-  var drawer = new Drawer(drawerEl, { /* options */ });
-</script>
-~~~
+* `jquery`
+  * [`index.js`](doc/source/jquery/index.md)
+* `mixin`
+  * [`index.js`](doc/source/mixin/index.md)
+* `vanilla`
+  * [`index.js`](doc/source/vanilla/index.md)
+* `webcomponent`
+  * [`index.js`](doc/source/webcomponent/index.md)
+  * [`html-import.js`](doc/source/webcomponent/html-import.md)
+* [`common.js`](doc/source/common.md)
 
-Usage is different for other platforms. For more see [Usage](doc/usage/README.md){:.flip-title}.
 
-[1]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+[rxjs]: https://github.com/ReactiveX/rxjs

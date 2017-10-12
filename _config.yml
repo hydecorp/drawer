@@ -1,5 +1,4 @@
 title: hy-drawer
-tagline: Why another drawer?
 email: mail@qwtel.com
 
 description: >
@@ -8,6 +7,7 @@ baseurl: /hy-drawer
 url: https://qwtel.com
 
 author:
+  email: mail@qwtel.com
   social:
     github: https://github.com/qwtel/hy-drawer
     npm: https://www.npmjs.com/package/hy-drawer
@@ -16,14 +16,16 @@ author:
 permalink: pretty
 
 color: '#4fb1ba'
-image: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIzM2U0YyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzNjOTI5ZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkNWQ1ZDQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+
+image:
+  background: 'linear-gradient(to bottom,#193747 0%,#233e4c 30%,#3c929e 50%,#d5d5d4 70%,#cdccc8 100%)'
+  overlay:    true
 
 # Build settings
 markdown: kramdown
 theme: jekyll-theme-hydejack
-gems:
-  # - jekyll-default-layout
-  # - jekyll-optional-front-matter
+plugins:
+  - jekyll-default-layout
+  - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
   - jekyll-titles-from-headings
@@ -31,6 +33,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - node_modules
+  - vendor
   - package.json
   - package-lock.json
   - webpack.config.js
@@ -41,10 +44,20 @@ include:
 
 defaults:
   - scope:
-      path: doc/README.md
+      path: doc/options.md
     values:
       menu: true
       order: 1
+  - scope:
+      path: doc/methods.md
+    values:
+      menu: true
+      order: 2
+  - scope:
+      path: doc/events.md
+    values:
+      menu: true
+      order: 3
 
 titles_from_headings:
   strip_title: true

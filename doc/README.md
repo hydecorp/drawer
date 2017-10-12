@@ -3,4 +3,4 @@
 * [Options](options.md)
 * [Methods](methods.md)
 * [Events](events.md)
-* [Source](source.md)
+* [Styling](styling.md)
