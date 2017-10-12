@@ -35,9 +35,11 @@ _site
 _drafts
 .sass-cache
 
+# macOS
+.DS_Store
+
 # Bundler
-vendor
-.bundle
+vendor/bundle
 
 # hy-component
 dist
