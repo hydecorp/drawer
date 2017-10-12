@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import $ from 'jquery';
+import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
 import { JQueryComponent, defineJQueryComponent, sSetupDOM }
-from 'hy-component/src/define-jquery-component';
+  from 'hy-component/src/define-jquery-component';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
@@ -26,18 +26,17 @@ export const JQUERY_FEATURE_TESTS = [
   ...MIXIN_FEATURE_TESTS,
 ];
 
-export const drawerJQueryPlugin = defineJQueryComponent('hy.drawer',
+export const drawerJQueryPlugin = defineJQueryComponent(
+  'hy.drawer',
   class extends drawerMixin(JQueryComponent) {
-    [sSetupDOM](el) {
-      const $el = $(el);
-
+    [sSetupDOM]($el) {
       const children = $el.children().detach();
 
       $el
         .append($('<div class="hy-drawer-scrim" />'))
         .append($('<div class="hy-drawer-content" />').append(children));
 
-      return el;
+      return $el;
     }
   },
 );

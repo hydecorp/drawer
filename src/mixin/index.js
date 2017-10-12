@@ -38,7 +38,7 @@ import 'core-js/fn/object/assign';
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
 import { componentMixin, sFire, sSetState, sSetup, sSetupDOM, COMPONENT_FEATURE_TESTS }
-from 'hy-component/src/component';
+  from 'hy-component/src/component';
 
 // As mentioned before, we only import the RxJS function that we need.
 import { Observable } from 'rxjs/Observable';
@@ -158,8 +158,8 @@ function isInRange(clientX, opened) {
       return clientX > this.range[0]
         && (opened || clientX < this.range[1]);
     case 'right':
-      return clientX < innerWidth - this.range[0]
-        && (opened || clientX > innerWidth - this.range[1]);
+      return clientX < window.innerWidth - this.range[0]
+        && (opened || clientX > window.innerWidth - this.range[1]);
     default:
       throw Error();
   }
@@ -237,6 +237,10 @@ function prepareInteraction() {
   this[sDrawerWidth] = this::getMovableDrawerWidth();
 }
 
+function histId() {
+  return this.el.id || this.constructor.componentName;
+}
+
 // Cleanup code after a completed interaction.
 // Will add/remove the beforementioned `hy-drawer-opened` class.
 function cleanupInteraction(opened) {
@@ -254,16 +258,17 @@ function cleanupInteraction(opened) {
   // If the experimental back button feature is enabled we hack the history API,
   // so that it matches the state of the drawer...
   if (this._backButton) {
-    const hash = `#${this.el.id || this.constructor.componentName}--opened`;
-    if (opened && location.hash !== hash) {
-      history.pushState({
-        [this.el.id || this.constructor.componentName]: true,
-      }, document.title, hash);
+    const id = this::histId();
+    const hash = `#${id}--opened`;
+
+    if (opened && window.location.hash !== hash) {
+      window.history.pushState({ [id]: true }, document.title, hash);
     }
+
     if (!opened
-        && (history.state && history.state[this.el.id || this.constructor.componentName])
-        && location.hash !== '') {
-      history.back();
+        && (window.history.state && window.history.state[this::histId()])
+        && window.location.hash !== '') {
+      window.history.back();
     }
   }
 
@@ -496,7 +501,8 @@ function setupObservables() {
         ::effect(([opened]) => this::cleanupInteraction(opened))
         /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
-          (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1)))))
+          (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
+  ))
 
     // `share`ing the observable between many subscribers:
     ::share();
@@ -519,9 +525,10 @@ function setupObservables() {
     // we make sure that some time has passed since the last move event.
     ::filter(([{ timestamp: prevTime }, { timestamp: time }]) => time - prevTime > 0)
     // Now we are save to calculate the current velocity without divide by zero errors.
-    ::map(([{ value: prevX, timestamp: prevTime },
-            { value: x, timestamp: time }]) =>
-      (x - prevX) / (time - prevTime))
+    ::map(([
+      { value: prevX, timestamp: prevTime },
+      { value: x, timestamp: time },
+    ]) => (x - prevX) / (time - prevTime))
     // The initial velocity is zero.
     ::startWith(0);
 
@@ -538,8 +545,8 @@ function setupObservables() {
 
       // 2) In this case we need to call the prepare code directly,
       // which would have been called at the beginning of the interaction otherwise.
-      this[sAnimateTo$]
-        ::effect(this::prepareInteraction));
+      this[sAnimateTo$]::effect(this::prepareInteraction),
+  );
 
   // We silently set the new `opened` state here,
   // so that the next interaction will do the right thing even while the animation is
@@ -595,8 +602,8 @@ function setupObservables() {
   Observable::fromEvent(window, 'popstate')
     ::subscribeWhen(this[sBackButton$])
     .subscribe(() => {
-      const hash = `#${this.el.id || this.constructor.componentName}--opened`;
-      const willOpen = location.hash === hash;
+      const hash = `#${this::histId()}--opened`;
+      const willOpen = window.location.hash === hash;
       if (willOpen !== this.opened) this[sAnimateTo$].next(willOpen);
     });
 }
@@ -612,10 +619,6 @@ export function drawerMixin(C) {
     // Overriding the setup function.
     [sSetup](el, props) {
       super[sSetup](el, props);
-
-      if (process.env.DEBUG && this._backButton && !this.el.id) {
-        console.warn('hy-drawer needs to haven an id attribute in order for the backButton option to work.');
-      }
 
       // Observables used for side effects caused by changing settings on the component.
       // The are used to emit the new vale whenever properties get changed on the component.
@@ -640,7 +643,7 @@ export function drawerMixin(C) {
 
       // Now we set the initial opend state.
       // If the experimental back button feature is enabled, we check the location hash...
-      const hash = `#${this.el.id || this.constructor.componentName}--opened`;
+      const hash = `#${this::histId()}--opened`;
       if (window.location.hash === hash) this[sSetState]('opened', true);
       this[sOpened$].next(this.opened);
 

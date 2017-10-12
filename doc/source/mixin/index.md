@@ -45,7 +45,7 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 
 ```js
 import { componentMixin, sFire, sSetState, sSetup, sSetupDOM, COMPONENT_FEATURE_TESTS }
-from 'hy-component/src/component';
+  from 'hy-component/src/component';
 ```
 
 As mentioned before, we only import the RxJS function that we need.
@@ -217,8 +217,8 @@ function isInRange(clientX, opened) {
       return clientX > this.range[0]
         && (opened || clientX < this.range[1]);
     case 'right':
-      return clientX < innerWidth - this.range[0]
-        && (opened || clientX > innerWidth - this.range[1]);
+      return clientX < window.innerWidth - this.range[0]
+        && (opened || clientX > window.innerWidth - this.range[1]);
     default:
       throw Error();
   }
@@ -311,6 +311,10 @@ function prepareInteraction() {
   this[sContentEl].classList.remove('hy-drawer-opened');
   this[sDrawerWidth] = this::getMovableDrawerWidth();
 }
+
+function histId() {
+  return this.el.id || this.constructor.componentName;
+}
 ```
 
 Cleanup code after a completed interaction.
@@ -337,16 +341,17 @@ so that it matches the state of the drawer...
 
 ```js
   if (this._backButton) {
-    const hash = `#${this.el.id || this.constructor.componentName}--opened`;
-    if (opened && location.hash !== hash) {
-      history.pushState({
-        [this.el.id || this.constructor.componentName]: true,
-      }, document.title, hash);
+    const id = this::histId();
+    const hash = `#${id}--opened`;
+
+    if (opened && window.location.hash !== hash) {
+      window.history.pushState({ [id]: true }, document.title, hash);
     }
+
     if (!opened
-        && (history.state && history.state[this.el.id || this.constructor.componentName])
-        && location.hash !== '') {
-      history.back();
+        && (window.history.state && window.history.state[this::histId()])
+        && window.location.hash !== '') {
+      window.history.back();
     }
   }
 ```
@@ -733,7 +738,8 @@ but since there is no animation in this case, we call it directly.
         ::effect(([opened]) => this::cleanupInteraction(opened))
         /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
-          (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1)))))
+          (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
+  ))
 ```
 
 `share`ing the observable between many subscribers:
@@ -778,9 +784,10 @@ Now we are save to calculate the current velocity without divide by zero errors.
 
 
 ```js
-    ::map(([{ value: prevX, timestamp: prevTime },
-            { value: x, timestamp: time }]) =>
-      (x - prevX) / (time - prevTime))
+    ::map(([
+      { value: prevX, timestamp: prevTime },
+      { value: x, timestamp: time },
+    ]) => (x - prevX) / (time - prevTime))
 ```
 
 The initial velocity is zero.
@@ -815,8 +822,8 @@ which would have been called at the beginning of the interaction otherwise.
 
 
 ```js
-      this[sAnimateTo$]
-        ::effect(this::prepareInteraction));
+      this[sAnimateTo$]::effect(this::prepareInteraction),
+  );
 ```
 
 We silently set the new `opened` state here,
@@ -906,8 +913,8 @@ If the experimental back button feature is enabled, handle popstate events...
   Observable::fromEvent(window, 'popstate')
     ::subscribeWhen(this[sBackButton$])
     .subscribe(() => {
-      const hash = `#${this.el.id || this.constructor.componentName}--opened`;
-      const willOpen = location.hash === hash;
+      const hash = `#${this::histId()}--opened`;
+      const willOpen = window.location.hash === hash;
       if (willOpen !== this.opened) this[sAnimateTo$].next(willOpen);
     });
 }
@@ -941,10 +948,6 @@ Overriding the setup function.
 ```js
     [sSetup](el, props) {
       super[sSetup](el, props);
-
-      if (process.env.DEBUG && this._backButton && !this.el.id) {
-        console.warn('hy-drawer needs to haven an id attribute in order for the backButton option to work.');
-      }
 ```
 
 Observables used for side effects caused by changing settings on the component.
@@ -989,7 +992,7 @@ If the experimental back button feature is enabled, we check the location hash..
 
 
 ```js
-      const hash = `#${this.el.id || this.constructor.componentName}--opened`;
+      const hash = `#${this::histId()}--opened`;
       if (window.location.hash === hash) this[sSetState]('opened', true);
       this[sOpened$].next(this.opened);
 ```

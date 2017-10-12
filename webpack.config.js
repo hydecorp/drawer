@@ -97,7 +97,11 @@ const baseConfig = merge({
     ],
   },
   resolve: {
-    modules: [resolve('./src'), resolve('./node_modules'), resolve(process.env.NODE_PATH)], // TODO: save?
+    modules: [
+      resolve('./src'),
+      resolve('./node_modules'),
+      resolve(process.env.NODE_PATH), // TODO: save?
+    ],
     extensions: ['.json', '.js'],
     symlinks: true,
   },
