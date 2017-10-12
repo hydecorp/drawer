@@ -73,9 +73,12 @@
       var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       // Use the DOM API to set Properties on the HTML element (use param-case!)
-      window.drawerEl.setAttribute('range', isMobileSafari ? '35,150' : '0,50');
+      window.drawerEl.setAttribute('range', isMobileSafari ? '35,150' : '0,150');
       window.drawerEl.setAttribute('threshold', isSafari ? 0 : 10);
-      if (!isSafari) window.drawerEl.setAttribute('_back-button', '');
+
+      window.drawerEl.addEventListener('hy-drawer-transitioned', function (e) {
+        console.log('hy-drawer transitioned to', e.detail);
+      });
 
       menuEl.addEventListener('click', function (e) {
         // Prevent default so the brwoser history doesn't get filled with # urls (see `a` tag above)

@@ -4,10 +4,37 @@
 {:toc}
 
 ## `open`
-Opens the drawer. TODO
+Opens the drawer.
+
+Arguments:
+1.  `animated` (optional)
+
+    Type
+    : `Boolean`
+
+    Default
+    : `true`
 
 ## `close`
-Closes the drawer. TODO
+Closes the drawer.
+
+Arguments:
+1.  `animated` (optional)
+
+    Type
+    : `Boolean`
+
+    Default
+    : `true`
 
 ## `toggle`
-Toggles the drawer. TODO
+Toggles the drawer.
+
+Arguments:
+1.  `animated` (optional)
+
+    Type
+    : `Boolean`
+
+    Default
+    : `true`

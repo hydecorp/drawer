@@ -71,12 +71,14 @@
       window.drawer = new Drawer()
 
       window.drawer[sSetup](window.drawerEl, {
-        range: isMobileSafari ? [35, 150] : [0, 50],
+        range: isMobileSafari ? [35, 150] : [0, 150],
         threshold: isSafari ? 0 : 10,
         preventDefault: true,
         mouseEvents: true,
-        _backButton: !isSafari,
-        // _hideOverflow: 'body'
+      });
+
+      window.drawerEl.addEventListener('hy-drawer-transitioned', function (e) {
+        console.log('hy-drawer transitioned to', e.detail);
       });
 
       menuEl.addEventListener('click', function (e) {

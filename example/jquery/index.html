@@ -34,7 +34,7 @@
         <p>Facilisis leo vel fringilla est ullamcorper. Velit laoreet id donec ultrices tincidunt arcu non sodales. Adipiscing elit duis tristique sollicitudin. Interdum varius sit amet mattis vulputate. Vitae auctor eu augue ut lectus arcu bibendum at. Arcu risus quis varius quam quisque id diam. Non blandit massa enim nec dui nunc mattis. Ornare arcu odio ut sem nulla pharetra diam. Nunc sed velit dignissim sodales ut eu. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Auctor elit sed vulputate mi sit amet mauris commodo quis. Etiam tempor orci eu lobortis. Dui ut ornare lectus sit amet est placerat. Sed risus ultricies tristique nulla aliquet enim tortor at. Eget duis at tellus at urna condimentum mattis.
       </main>
 
-      <aside id="drawerEl">
+      <aside id="drawerEl" data-prevent-default="true" data-mouse-events="true">
         <ul>
           <li><a href="../mixin/">Mixin Example</a></li>
           <li><a href="../vanilla/">Vanilla JS Example</a></li>
@@ -62,12 +62,11 @@
       var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       $('#drawerEl').drawer({
-        range: isMobileSafari ? [35, 150] : [0, 50],
+        range: isMobileSafari ? [35, 150] : [0, 150],
         threshold: isSafari ? 0 : 10,
-        preventDefault: true,
-        mouseEvents: true,
-        _backButton: !isSafari,
-        // _hideOverflow: 'body'
+      })
+      .on('transitioned.hy.drawer', function(e) {
+        console.log('hy-drawer transitioned to', e.detail);
       });
 
       $('#menuEl').click(function (e) {

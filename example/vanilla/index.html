@@ -63,15 +63,17 @@
       var isMobileSafari = isSafari && ua.indexOf('mobile') > 0;
 
       window.drawer = new Drawer(window.drawerEl, {
-        range: isMobileSafari ? [35, 150] : [0, 50],
+        range: isMobileSafari ? [35, 150] : [0, 150],
         threshold: isSafari ? 0 : 10,
         preventDefault: true,
         mouseEvents: true,
-        _backButton: !isSafari,
-        // hideOverflow: 'body'
       });
 
-      menuEl.addEventListener('click', function (e) {
+      window.drawerEl.addEventListener('hy-drawer-transitioned', function (e) {
+        console.log('hy-drawer transitioned to', e.detail);
+      });
+
+      window.menuEl.addEventListener('click', function (e) {
         e.preventDefault();
         window.drawer.toggle();
       });
