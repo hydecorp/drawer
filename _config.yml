@@ -58,6 +58,11 @@ defaults:
     values:
       menu: true
       order: 3
+  - scope:
+      path: doc/styling.md
+    values:
+      menu: true
+      order: 4
 
 titles_from_headings:
   strip_title: true
