@@ -19,10 +19,7 @@
 // See [here](index.md) for the standalone version.
 // This file is included via `script` tag in `hy-drawer.html` and shouldn't be used via ES import.
 
-import {
-  customElementMixin,
-  CustomElement,
-} from 'hy-component/src/custom-element';
+import { customElementMixin, CustomElement } from 'hy-component/src/custom-element';
 
 import { drawerMixin } from '../mixin';
 

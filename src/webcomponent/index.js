@@ -21,13 +21,9 @@
 // `customElements.define('hy-drawer', HTMLDrawerElement)`.
 
 // We start by importing form the hy-component library...
-import {
-  customElementMixin,
-  CustomElement,
-  fragmentFromString,
-  sGetTemplate,
-  CUSTOM_ELEMENT_FEATURE_TESTS,
-} from 'hy-component/src/custom-element';
+import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
+  from 'hy-component/src/custom-element';
+import { sGetTemplate } from 'hy-component/src/symbols';
 
 // ...and our own component.
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';

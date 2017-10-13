@@ -22,10 +22,7 @@ This file is included via `script` tag in `hy-drawer.html` and shouldn't be used
 
 ```js
 
-import {
-  customElementMixin,
-  CustomElement,
-} from 'hy-component/src/custom-element';
+import { customElementMixin, CustomElement } from 'hy-component/src/custom-element';
 
 import { drawerMixin } from '../mixin';
 ```

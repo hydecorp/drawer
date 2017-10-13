@@ -44,8 +44,9 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 
 
 ```js
-import { componentMixin, sFire, sSetState, sSetup, sSetupDOM, COMPONENT_FEATURE_TESTS }
-  from 'hy-component/src/component';
+import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
+import { sSetup, sSetupDOM, sFire, sSetState } from 'hy-component/src/symbols';
+import { array, arrayOf, boolean, number, string } from 'hy-component/src/types';
 ```
 
 As mentioned before, we only import the RxJS function that we need.
@@ -1042,6 +1043,20 @@ See [Options](../../options.md) for usage information.
         _hideOverflow: null,
       };
     }
+
+    static get types() {
+      return {
+        opened: boolean,
+        align: string,
+        persistent: boolean,
+        range: arrayOf(number),
+        threshold: number,
+        preventDefault: boolean,
+        mouseEvents: boolean,
+        _backButton: boolean,
+        _hideOverflow: string,
+      };
+    }
 ```
 
 Side effects of changing configuration options (if any).
@@ -1089,7 +1104,7 @@ Public methods of this component. See [Methods](../../methods.md) for more.
     }
 ```
 
-These aren't finalized yet...
+TODO: These aren't finalized yet...
 
 
 ```js
@@ -1106,11 +1121,13 @@ These aren't finalized yet...
 }
 ```
 
-This completes the implmentation of the drawer mixin.
+This concludes the implementation of push-state mixin.
 You can now check out
-[vanilla / index.js](../vanilla/index.md),
-[jquery / index.js](../jquery/index.md), or
-[webcomponent / index.js](../webcomponent/index.md)
+
+* [vanilla / index.js](../vanilla/index.md)
+* [jquery / index.js](../jquery/index.md)
+* [webcomponent / index.js](../webcomponent/index.md)
+
 to see how it is used.
 
 [rxjs]: https://github.com/ReactiveX/rxjs

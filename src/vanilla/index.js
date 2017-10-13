@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { VanillaComponent, sSetupDOM } from 'hy-component/src/vanilla';
+import { VanillaComponent } from 'hy-component/src/vanilla';
+import { sSetupDOM } from 'hy-component/src/symbols';
+
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
 
@@ -24,7 +26,6 @@ export const VANILLA_FEATURE_TESTS = [
 ];
 
 export class Drawer extends drawerMixin(VanillaComponent) {
-  /* @override */
   [sSetupDOM](el) {
     if (!el) throw Error('No element provided');
 

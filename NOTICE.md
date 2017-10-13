@@ -77,5 +77,21 @@ which is MIT licensed with the following copyright
 
 A copy of the [MIT] license is provided as part of this distribution.
 
+### jQuery
+This software also uses portions of the jQuery project,
+which is MIT licensed with the following copyright
+
+> Copyright JS Foundation and other contributors, https://js.foundation/
+
+A copy of the [MIT] license is provided as part of this distribution.
+
+### Bootstrap
+This software also uses portions of the Bootstrap project,
+which is MIT licensed with the following copyright
+
+> Copyright 2011-2015 Twitter, Inc.
+
+A copy of the [MIT] license is provided as part of this distribution.
+
 [MIT]: licenses/MIT.md
 [Apache-2.0]: licenses/Apache-2.0.md

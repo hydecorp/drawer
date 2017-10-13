@@ -37,8 +37,9 @@ import 'core-js/fn/object/assign';
 
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
-import { componentMixin, sFire, sSetState, sSetup, sSetupDOM, COMPONENT_FEATURE_TESTS }
-  from 'hy-component/src/component';
+import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
+import { sSetup, sSetupDOM, sFire, sSetState } from 'hy-component/src/symbols';
+import { arrayOf, boolean, number, string } from 'hy-component/src/types';
 
 // As mentioned before, we only import the RxJS function that we need.
 import { Observable } from 'rxjs/Observable';
@@ -678,6 +679,20 @@ export function drawerMixin(C) {
       };
     }
 
+    static get types() {
+      return {
+        opened: boolean,
+        align: string,
+        persistent: boolean,
+        range: arrayOf(number),
+        threshold: number,
+        preventDefault: boolean,
+        mouseEvents: boolean,
+        _backButton: boolean,
+        _hideOverflow: string,
+      };
+    }
+
     // Side effects of changing configuration options (if any).
     // Mostly we just put the value on an observable and deal with it from there.
     static get sideEffects() {
@@ -715,7 +730,7 @@ export function drawerMixin(C) {
       return this;
     }
 
-    // These aren't finalized yet...
+    // TODO: These aren't finalized yet...
     _animateTo(opened) {
       this[sAnimateTo$].next(opened);
       return this;
@@ -728,11 +743,13 @@ export function drawerMixin(C) {
   };
 }
 
-// This completes the implmentation of the drawer mixin.
+// This concludes the implementation of push-state mixin.
 // You can now check out
-// [vanilla / index.js](../vanilla/index.md),
-// [jquery / index.js](../jquery/index.md), or
-// [webcomponent / index.js](../webcomponent/index.md)
+//
+// * [vanilla / index.js](../vanilla/index.md)
+// * [jquery / index.js](../jquery/index.md)
+// * [webcomponent / index.js](../webcomponent/index.md)
+//
 // to see how it is used.
 //
 // [rxjs]: https://github.com/ReactiveX/rxjs

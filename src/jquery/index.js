@@ -16,8 +16,8 @@
 
 import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
-import { JQueryComponent, defineJQueryComponent, sSetupDOM }
-  from 'hy-component/src/define-jquery-component';
+import { JQueryComponent, defineJQueryComponent } from 'hy-component/src/define-jquery-component';
+import { sSetupDOM } from 'hy-component/src/symbols';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';

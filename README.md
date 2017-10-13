@@ -11,7 +11,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 **hy-drawer** can be used in a variety of ways:
 * As **Vanilla** JavaScript class
 * As **jQuery** plugin
-* As **WebComponent**, either *Standalone* or as *HTML Import*.
+* As **WebComponent**, both as *ES6 Module* and *HTML Import*
 * Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
 
 The component was initially developed --- and can be encountered in the wild ---
