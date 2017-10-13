@@ -32,6 +32,7 @@
 
 // ## Imports
 // ES6+ functions that we use.
+import 'core-js/fn/array/from';
 import 'core-js/fn/function/bind';
 import 'core-js/fn/object/assign';
 
@@ -68,12 +69,11 @@ import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 // Some helper functions to create observable tweens. See [src / common.js](../common.md).
-import { createTween, linearTween } from '../common';
+import { createTween, linearTween, Set } from '../common';
 
 // ## Constants
 // A set of [Modernizr] tests that are required for this component to work.
-// Not using `Set` here for backwards-compatiblity reasons.
-export const MIXIN_FEATURE_TESTS = [
+export const MIXIN_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
   'eventlistener',
   'queryselector',
@@ -82,7 +82,7 @@ export const MIXIN_FEATURE_TESTS = [
   'opacity',
   'csstransforms',
   'csspointerevents',
-];
+]);
 
 // We export the setup symbols,
 // so that mixin users don't have to import them from hy-compnent separately.

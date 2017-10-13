@@ -20,12 +20,15 @@
 // It exports a HTML element that you can `define` as a custom element, e.g.
 // `customElements.define('hy-drawer', HTMLDrawerElement)`.
 
+import 'core-js/fn/array/from';
+
 // We start by importing form the hy-component library...
 import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
   from 'hy-component/src/custom-element';
 import { sGetTemplate } from 'hy-component/src/symbols';
 
 // ...and our own component.
+import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
 // Unlike the [HTML Import version](./html-import.md), this version bundles the template
@@ -34,10 +37,10 @@ import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import templateString from './template.html';
 
 // The set of Modernizr feature tests required for *this* version of the component.
-export const WEBCOMPONENT_FEATURE_TESTS = [
+export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
   ...MIXIN_FEATURE_TESTS,
-];
+]);
 
 // The exported class follows the HTML naming convetion.
 // It is a combination of the `CustomElement` class (a wrapper around `HTMLElement` that

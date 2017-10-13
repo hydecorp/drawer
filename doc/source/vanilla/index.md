@@ -17,16 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
+import 'core-js/fn/array/from';
+
 import { VanillaComponent } from 'hy-component/src/vanilla';
 import { sSetupDOM } from 'hy-component/src/symbols';
 
+import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
 
-export const VANILLA_FEATURE_TESTS = [
+export const VANILLA_FEATURE_TESTS = new Set([
   ...MIXIN_FEATURE_TESTS,
   'classlist',
-];
+]);
 
 export class Drawer extends drawerMixin(VanillaComponent) {
   [sSetupDOM](el) {

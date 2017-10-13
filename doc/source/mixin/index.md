@@ -35,6 +35,7 @@ ES6+ functions that we use.
 
 
 ```js
+import 'core-js/fn/array/from';
 import 'core-js/fn/function/bind';
 import 'core-js/fn/object/assign';
 ```
@@ -46,7 +47,7 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 ```js
 import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
 import { sSetup, sSetupDOM, sFire, sSetState } from 'hy-component/src/symbols';
-import { array, arrayOf, boolean, number, string } from 'hy-component/src/types';
+import { arrayOf, boolean, number, string } from 'hy-component/src/types';
 ```
 
 As mentioned before, we only import the RxJS function that we need.
@@ -83,16 +84,15 @@ Some helper functions to create observable tweens. See [src / common.js](../comm
 
 
 ```js
-import { createTween, linearTween } from '../common';
+import { createTween, linearTween, Set } from '../common';
 ```
 
 ## Constants
 A set of [Modernizr] tests that are required for this component to work.
-Not using `Set` here for backwards-compatiblity reasons.
 
 
 ```js
-export const MIXIN_FEATURE_TESTS = [
+export const MIXIN_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
   'eventlistener',
   'queryselector',
@@ -101,7 +101,7 @@ export const MIXIN_FEATURE_TESTS = [
   'opacity',
   'csstransforms',
   'csspointerevents',
-];
+]);
 ```
 
 We export the setup symbols,

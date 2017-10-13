@@ -60,7 +60,7 @@ Otherwise we log to the console (during development).
 
 ```js
 } else if (process.env.DEBUG) {
-  console.warn('Couldn\'t define `hy-drawer` component. Did you forget to include a custom elements polyfill?');
+  console.warn('Couldn\'t register hy-drawer component. Did you forget to include a WebComponents polyfill?');
 }
 ```
 

@@ -17,6 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 import { Observable } from 'rxjs/Observable';
+
+import { Set } from 'hy-component/src/common';
+
+export { Set };
 ```
 
 Creates an observable that emits samples from an easing function on every animation frame

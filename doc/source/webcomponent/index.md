@@ -20,6 +20,12 @@ It is inteded to be used with custom bundler toolchains.
 It exports a HTML element that you can `define` as a custom element, e.g.
 `customElements.define('hy-drawer', HTMLDrawerElement)`.
 
+
+```js
+
+import 'core-js/fn/array/from';
+```
+
 We start by importing form the hy-component library...
 
 
@@ -33,6 +39,7 @@ import { sGetTemplate } from 'hy-component/src/symbols';
 
 
 ```js
+import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 ```
 
@@ -49,10 +56,10 @@ The set of Modernizr feature tests required for *this* version of the component.
 
 
 ```js
-export const WEBCOMPONENT_FEATURE_TESTS = [
+export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
   ...MIXIN_FEATURE_TESTS,
-];
+]);
 ```
 
 The exported class follows the HTML naming convetion.
