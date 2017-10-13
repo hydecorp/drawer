@@ -17,24 +17,26 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 The component was initially developed --- and can be encountered in the wild ---
 as part of the [Hydejack](https://qwtel.com/hydejack/) Jekyll theme.
 
-**NOTE**: The current version of **hy-drawer** is a custom build for Hydejack,
-which assumes that you don't do certain "evil" things with the component, like detaching and re-attaching it to the DOM, etc.
+**NOTE**: The current version is a custom build for Hydejack, which works fine but assumes that you don't do certain "evil" things,
+like detaching and re-attaching it to the DOM, etc. This will be fixed in the 1.0.0 release.
+{:.message}
 
 ## License
-**hy-drawer** is [GPL-3.0](LICENSE.md)-licensed. Commercial licenses will be available for cases where this is not acceptable.
+**hy-drawer** is [GPL-3.0](LICENSE.md)--licensed.
+Commercial licenses will be available for cases where this is not suitable.
 
 ## Examples
-* [Mixin Example](example/mixin/){:.no-push-state}
-* [Vanilla JS Example](example/vanilla/){:.no-push-state}
-* [jQuery Example](example/jquery/){:.no-push-state}
-* [WebComponent Example](example/webcomponent/){:.no-push-state}
+* [Mixin Example](example/mixin/index.html){:.no-push-state}
+* [Vanilla JS Example](example/vanilla/index.html){:.no-push-state}
+* [jQuery Example](example/jquery/index.html){:.no-push-state}
+* [WebComponent Example](example/webcomponent/index.html){:.no-push-state}
 
 ## Usage
 The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
 
 ~~~html
-<link type="text/css" rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.css">
-<script type="application/javascript" src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.css">
+<script src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
 ~~~
 
 ~~~html
