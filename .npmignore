@@ -41,10 +41,6 @@ _drafts
 # Bundler
 vendor/bundle
 
-# hy-component
-dist
-lib
-
 # Temp
 react
 
