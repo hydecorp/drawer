@@ -80,11 +80,6 @@ const baseConfig = merge({
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel-loader',
-        // NOTE: exclude defined in .babelrc
-        // exclude: {
-        //   test: /node_modules/,
-        //   exclude: /(hy-component|camelcase)/,
-        // },
       },
       {
         test: /\.html$/,
