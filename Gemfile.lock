@@ -1,20 +1,15 @@
-PATH
-  remote: ../hydejack
+GIT
+  remote: git@github.com:qwtel/hydejack.git
+  revision: a76888ae5599110ac046abedb96c5630357b58bd
+  branch: gem
   specs:
     jekyll-theme-hydejack (7.0.0)
-      classifier-reborn (~> 2.1)
-      jekyll (~> 3.6)
-      jekyll-default-layout (~> 0.1)
-      jekyll-feed (~> 0.9)
-      jekyll-optional-front-matter (~> 0.3)
-      jekyll-paginate (~> 1.1)
-      jekyll-redirect-from (~> 0.12)
-      jekyll-relative-links (~> 0.5)
-      jekyll-seo-tag (~> 2.3)
-      jekyll-sitemap (~> 1.1)
+      jekyll (~> 3.5)
 
-PATH
-  remote: ../jekyll-relative-links
+GIT
+  remote: git@github.com:qwtel/jekyll-relative-links.git
+  revision: 38acc327092f0a77885550aca9b539da014cfbf0
+  branch: fix
   specs:
     jekyll-relative-links (0.5.0)
       jekyll (~> 3.3)
@@ -24,10 +19,7 @@ GEM
   specs:
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    classifier-reborn (2.1.0)
-      fast-stemmer (~> 1.0)
     colorator (1.1.0)
-    fast-stemmer (1.0.2)
     ffi (1.9.18)
     forwardable-extended (2.6.0)
     jekyll (3.6.0)
@@ -47,17 +39,10 @@ GEM
       jekyll (~> 3.3)
     jekyll-optional-front-matter (0.3.0)
       jekyll (~> 3.0)
-    jekyll-paginate (1.1.0)
     jekyll-readme-index (0.2.0)
       jekyll (~> 3.0)
-    jekyll-redirect-from (0.12.1)
-      jekyll (~> 3.3)
     jekyll-sass-converter (1.5.0)
       sass (~> 3.4)
-    jekyll-seo-tag (2.3.0)
-      jekyll (~> 3.3)
-    jekyll-sitemap (1.1.1)
-      jekyll (~> 3.3)
     jekyll-titles-from-headings (0.5.0)
       jekyll (~> 3.3)
     jekyll-watch (1.5.0)
