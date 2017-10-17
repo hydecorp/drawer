@@ -47,7 +47,7 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 ```js
 import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
 import { sSetup, sSetupDOM, sFire, sSetState } from 'hy-component/src/symbols';
-import { arrayOf, boolean, number, string } from 'hy-component/src/types';
+import { arrayOf, bool, number, string, oneOf } from 'hy-component/src/types';
 ```
 
 As mentioned before, we only import the RxJS function that we need.
@@ -1046,14 +1046,14 @@ See [Options](../../options.md) for usage information.
 
     static get types() {
       return {
-        opened: boolean,
-        align: string,
-        persistent: boolean,
+        opened: bool,
+        align: oneOf(['left', 'right']),
+        persistent: bool,
         range: arrayOf(number),
         threshold: number,
-        preventDefault: boolean,
-        mouseEvents: boolean,
-        _backButton: boolean,
+        preventDefault: bool,
+        mouseEvents: bool,
+        _backButton: bool,
         _hideOverflow: string,
       };
     }
