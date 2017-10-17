@@ -26,10 +26,10 @@ like detaching and re-attaching it to the DOM, etc. This will be fixed in the 1.
 Commercial licenses will be available for cases where this is not suitable.
 
 ## Examples
-* [Mixin Example](example/mixin/index.html){:.no-push-state}
-* [Vanilla JS Example](example/vanilla/index.html){:.no-push-state}
-* [jQuery Example](example/jquery/index.html){:.no-push-state}
-* [WebComponent Example](example/webcomponent/index.html){:.no-push-state}
+* [Mixin Example](example/mixin/index.html){:.external}
+* [Vanilla JS Example](example/vanilla/index.html){:.external}
+* [jQuery Example](example/jquery/index.html){:.external}
+* [WebComponent Example](example/webcomponent/index.html){:.external}
 
 ## Usage
 The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
