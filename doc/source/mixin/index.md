@@ -64,6 +64,7 @@ import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as effect } from 'rxjs/operator/do';
+import { debounceTime } from 'rxjs/operator/debounceTime';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
@@ -310,7 +311,6 @@ function prepareInteraction() {
   this[sContentEl].style.willChange = 'transform';
   this[sScrimEl].style.willChange = 'opacity';
   this[sContentEl].classList.remove('hy-drawer-opened');
-  this[sDrawerWidth] = this::getMovableDrawerWidth();
 }
 
 function histId() {
@@ -1002,6 +1002,27 @@ Set the initial alignment class.
 
 ```js
       this[sContentEl].classList.add(`hy-drawer-${this.align}`);
+```
+
+Measure the current drawer width...
+
+
+```js
+      this[sDrawerWidth] = this::getMovableDrawerWidth();
+```
+
+...and keep it up-to-date.
+Note that we need to temporarily remove the opened class to get the correct measures.
+
+
+```js
+      Observable::fromEvent(window, 'resize', { passive: true })
+        ::debounceTime(100)
+        .subscribe(() => {
+          if (this.opened) this[sContentEl].classList.remove('hy-drawer-opened');
+          this[sDrawerWidth] = this::getMovableDrawerWidth();
+          if (this.opened) this[sContentEl].classList.add('hy-drawer-opened');
+        });
 ```
 
 Finally, calling the [setup observables function](#setup-observables) function.
