@@ -13,6 +13,8 @@ author:
     npm: https://www.npmjs.com/package/hy-drawer
     download: https://github.com/qwtel/hy-drawer/archive/v1.0.0-hydejack.4.zip
 
+copyright: © 2017 Florian Klampfer
+
 permalink: pretty
 
 color: '#4fb1ba'
@@ -28,6 +30,7 @@ plugins:
   - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
+  - jekyll-seo-tag
   - jekyll-titles-from-headings
 exclude:
   - Gemfile

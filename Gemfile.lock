@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:qwtel/hydejack.git
-  revision: a76888ae5599110ac046abedb96c5630357b58bd
+  revision: 10ad0954958312bf980b39c60069e4a4f5c66e6b
   branch: gem
   specs:
     jekyll-theme-hydejack (7.0.0)
@@ -43,6 +43,8 @@ GEM
       jekyll (~> 3.0)
     jekyll-sass-converter (1.5.0)
       sass (~> 3.4)
+    jekyll-seo-tag (2.3.0)
+      jekyll (~> 3.3)
     jekyll-titles-from-headings (0.5.0)
       jekyll (~> 3.3)
     jekyll-watch (1.5.0)
@@ -76,6 +78,7 @@ DEPENDENCIES
   jekyll-optional-front-matter
   jekyll-readme-index
   jekyll-relative-links!
+  jekyll-seo-tag
   jekyll-theme-hydejack!
   jekyll-titles-from-headings
   tzinfo-data

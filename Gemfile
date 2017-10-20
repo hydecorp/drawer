@@ -7,6 +7,7 @@ group :jekyll_plugins do
   gem "jekyll-optional-front-matter"
   gem "jekyll-readme-index"
   gem "jekyll-relative-links", git: "git@github.com:qwtel/jekyll-relative-links.git", branch: "fix"
+  gem "jekyll-seo-tag"
   gem "jekyll-titles-from-headings"
 end
 
