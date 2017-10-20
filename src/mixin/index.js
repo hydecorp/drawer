@@ -644,11 +644,13 @@ export function drawerMixin(C) {
 
       // Now we set the initial opend state.
       // If the experimental back button feature is enabled, we check the location hash...
-      const hash = `#${this::histId()}--opened`;
-      if (window.location.hash === hash) this[sSetState]('opened', true);
-      this[sOpened$].next(this.opened);
+      if (this._backButton) {
+        const hash = `#${this::histId()}--opened`;
+        if (window.location.hash === hash) this[sSetState]('opened', true);
+      }
 
       // Putting initial values on the side-effect--observables:
+      this[sOpened$].next(this.opened);
       this[sAlign$].next(this.align);
       this[sPersitent$].next(this.persistent);
       this[sPreventDefault$].next(this.preventDefault);
