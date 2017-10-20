@@ -399,6 +399,16 @@ function getIsSlidingObservable(move$, start$) {
 // ### Setup observables
 // This function sets up the observable "pipeline".
 function setupObservables() {
+  // Observables used for side effects caused by changing settings on the component.
+  // The are used to emit the new vale whenever properties get changed on the component.
+  this[sOpened$] = new Subject();
+  this[sAlign$] = new Subject();
+  this[sPersitent$] = new Subject();
+  this[sPreventDefault$] = new Subject();
+  this[sMouseEvents$] = new Subject();
+  this[sBackButton$] = new Subject();
+  this[sAnimateTo$] = new Subject();
+
   // Emitts a value every time you change the `persistent` property of the drawer.
   // Interally, we invert it and call it `active`.
   const active$ = this[sPersitent$]::map(x => !x)::share();
@@ -607,6 +617,21 @@ function setupObservables() {
       const willOpen = window.location.hash === hash;
       if (willOpen !== this.opened) this[sAnimateTo$].next(willOpen);
     });
+
+  // Now we set the initial opend state.
+  // If the experimental back button feature is enabled, we check the location hash...
+  if (this._backButton) {
+    const hash = `#${this::histId()}--opened`;
+    if (window.location.hash === hash) this[sSetState]('opened', true);
+  }
+
+  // Putting initial values on the side-effect--observables:
+  this[sOpened$].next(this.opened);
+  this[sAlign$].next(this.align);
+  this[sPersitent$].next(this.persistent);
+  this[sPreventDefault$].next(this.preventDefault);
+  this[sMouseEvents$].next(this.mouseEvents);
+  this[sBackButton$].next(this._backButton);
 }
 
 // ## Drawer Mixin
@@ -621,16 +646,6 @@ export function drawerMixin(C) {
     [sSetup](el, props) {
       super[sSetup](el, props);
 
-      // Observables used for side effects caused by changing settings on the component.
-      // The are used to emit the new vale whenever properties get changed on the component.
-      this[sOpened$] = new Subject();
-      this[sAlign$] = new Subject();
-      this[sPersitent$] = new Subject();
-      this[sPreventDefault$] = new Subject();
-      this[sMouseEvents$] = new Subject();
-      this[sBackButton$] = new Subject();
-      this[sAnimateTo$] = new Subject();
-
       // Cache DOM elements.
       this[sScrimEl] = this.root.querySelector('.hy-drawer-scrim');
       this[sContentEl] = this.root.querySelector('.hy-drawer-content');
@@ -641,21 +656,6 @@ export function drawerMixin(C) {
 
       // Finally, calling the [setup observables function](#setup-observables) function.
       this::setupObservables();
-
-      // Now we set the initial opend state.
-      // If the experimental back button feature is enabled, we check the location hash...
-      if (this._backButton) {
-        const hash = `#${this::histId()}--opened`;
-        if (window.location.hash === hash) this[sSetState]('opened', true);
-      }
-
-      // Putting initial values on the side-effect--observables:
-      this[sOpened$].next(this.opened);
-      this[sAlign$].next(this.align);
-      this[sPersitent$].next(this.persistent);
-      this[sPreventDefault$].next(this.preventDefault);
-      this[sMouseEvents$].next(this.mouseEvents);
-      this[sBackButton$].next(this._backButton);
 
       // Firing an event to let the outside world know the drawer is ready.
       this[sFire]('init', { detail: this.opened });
