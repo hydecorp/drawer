@@ -1104,21 +1104,6 @@ Public methods of this component. See [Methods](../../methods.md) for more.
       else this.opened = !this.opened;
       return this;
     }
-```
-
-TODO: These aren't finalized yet...
-
-
-```js
-    _animateTo(opened) {
-      this[sAnimateTo$].next(opened);
-      return this;
-    }
-
-    _jumpTo(opened) {
-      this.opened = opened;
-      return this;
-    }
   };
 }
 ```

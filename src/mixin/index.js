@@ -731,17 +731,6 @@ export function drawerMixin(C) {
       else this.opened = !this.opened;
       return this;
     }
-
-    // TODO: These aren't finalized yet...
-    _animateTo(opened) {
-      this[sAnimateTo$].next(opened);
-      return this;
-    }
-
-    _jumpTo(opened) {
-      this.opened = opened;
-      return this;
-    }
   };
 }
 
