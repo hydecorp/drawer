@@ -1,10 +1,10 @@
 GIT
   remote: git@github.com:qwtel/hydejack.git
-  revision: 10ad0954958312bf980b39c60069e4a4f5c66e6b
+  revision: 39529d6554b40923a9356e520443120e192bfa0c
   branch: gem
   specs:
     jekyll-theme-hydejack (7.0.0)
-      jekyll (~> 3.5)
+      jekyll (~> 3.6)
 
 GIT
   remote: git@github.com:qwtel/jekyll-relative-links.git
