@@ -11,7 +11,7 @@ group :jekyll_plugins do
   gem "jekyll-titles-from-headings"
 end
 
-gem "jekyll-theme-hydejack", git: "git@github.com:qwtel/hydejack.git", branch: "gem"
+gem "jekyll-theme-hydejack", "~> 7.0.0"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
