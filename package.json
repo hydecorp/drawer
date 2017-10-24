@@ -9,7 +9,7 @@
     "clean": "rm -rf dist lib doc/source",
     "build": "npm run build:dev & npm run build:prod & npm run build:lite & npm run build:lib & npm run build:doc & wait",
     "build:lib": "babel src --out-dir lib",
-    "build:prod": "webpack --env prod --display-optimization-bailout",
+    "build:prod": "webpack --env prod",
     "build:lite": "webpack --env lite",
     "build:dev": "webpack --env dev",
     "build:doc": "scripts/gen-doc.sh",
@@ -39,9 +39,9 @@
     "camelcase": "^4.1.0",
     "docco": "^0.7.0",
     "envify": "^4.1.0",
-    "eslint": "^4.8.0",
-    "eslint-config-airbnb": "^16.0.0",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "file-loader": "^1.1.5",
@@ -49,14 +49,14 @@
     "onchange": "^3.2.1",
     "raw-loader": "^0.5.1",
     "underscore-template-loader": "^0.8.0",
-    "webpack": "^3.7.1",
+    "webpack": "^3.8.1",
     "webpack-merge": "^4.1.0",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "dependencies": {
     "core-js": "^2.5.1",
-    "hy-component": "^1.0.0-hydejack.5",
-    "rxjs": "^5.4.3"
+    "hy-component": "^1.0.0-hydejack.6",
+    "rxjs": "^5.5.0"
   },
   "optionalDependencies": {
     "jquery": "^3.2.1"

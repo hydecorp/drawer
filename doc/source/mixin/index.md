@@ -63,7 +63,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
-import { _do as effect } from 'rxjs/operator/do';
+import { _do as tap } from 'rxjs/operator/do';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
@@ -634,7 +634,7 @@ TODO: ...
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
     ::map(([{ clientX }, isScrimVisible]) => this::isInRange(clientX, isScrimVisible))
-    ::effect((inRange) => { if (inRange) this::prepareInteraction(); })
+    ::tap((inRange) => { if (inRange) this::prepareInteraction(); })
     ::share();
 ```
 
@@ -681,7 +681,7 @@ Experimental: Set `overflow: hidden` on some container element.
 
 
 ```js
-    ::effect((isSliding) => {
+    ::tap((isSliding) => {
       if (isSliding) {
         if (this[sScrollEl]) this[sScrollEl].style.overflow = 'hidden';
         this[sFire]('slidestart', { detail: this.opened });
@@ -713,7 +713,7 @@ this is also when we're sure to call `preventDefault`.
 
 ```js
       move$::filterWhen(isSliding$)
-        ::effect(({ event }) => { if (this.preventDefault) event.preventDefault(); })
+        ::tap(({ event }) => { if (this.preventDefault) event.preventDefault(); })
 ```
 
 Finally, we take the start position of the finger, the start position of the drawer,
@@ -750,7 +750,7 @@ but since there is no animation in this case, we call it directly.
 
 
 ```js
-        ::effect(([opened]) => this::cleanupInteraction(opened))
+        ::tap(([opened]) => this::cleanupInteraction(opened))
         /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
           (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
@@ -829,7 +829,7 @@ calculate whether it should open or close.
       end$
         ::withLatestFrom(ref.translateX$, velocity$)
         ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
-        ::effect(willOpen => this[sFire]('slideend', { detail: willOpen })),
+        ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
 ```
 
 2) In this case we need to call the prepare code directly,
@@ -837,7 +837,7 @@ which would have been called at the beginning of the interaction otherwise.
 
 
 ```js
-      this[sAnimateTo$]::effect(this::prepareInteraction),
+      this[sAnimateTo$]::tap(this::prepareInteraction),
   );
 ```
 
@@ -849,7 +849,7 @@ and initiate an animation to the opposite state.
 
 ```js
   ref.tween$ = tweenTrigger$
-    ::effect((willOpen) => {
+    ::tap((willOpen) => {
       this[sSetState]('opened', willOpen);
       if (this[sScrollEl] && !willOpen) this[sScrollEl].style.overflow = '';
     })
@@ -874,7 +874,7 @@ We return a tween observable that runs cleanup code when it completes
       const diffTranslateX = endTranslateX - translateX;
 
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
-        ::effect({ complete: () => this[sOpened$].next(opened) })
+        ::tap({ complete: () => this[sOpened$].next(opened) })
         ::takeUntil(start$)
         ::takeUntil(this[sAlign$]);
     });

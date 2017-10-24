@@ -52,7 +52,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
-import { _do as effect } from 'rxjs/operator/do';
+import { _do as tap } from 'rxjs/operator/do';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
@@ -435,7 +435,7 @@ function setupObservables() {
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
     ::map(([{ clientX }, isScrimVisible]) => this::isInRange(clientX, isScrimVisible))
-    ::effect((inRange) => { if (inRange) this::prepareInteraction(); })
+    ::tap((inRange) => { if (inRange) this::prepareInteraction(); })
     ::share();
 
   // #### End observable
@@ -466,7 +466,7 @@ function setupObservables() {
 
     // When the user is sliding, fire the `slidestart` event.
     // Experimental: Set `overflow: hidden` on some container element.
-    ::effect((isSliding) => {
+    ::tap((isSliding) => {
       if (isSliding) {
         if (this[sScrollEl]) this[sScrollEl].style.overflow = 'hidden';
         this[sFire]('slidestart', { detail: this.opened });
@@ -489,7 +489,7 @@ function setupObservables() {
       // that the user is sliding. In case the `preventDefault` option is enabled,
       // this is also when we're sure to call `preventDefault`.
       move$::filterWhen(isSliding$)
-        ::effect(({ event }) => { if (this.preventDefault) event.preventDefault(); })
+        ::tap(({ event }) => { if (this.preventDefault) event.preventDefault(); })
 
         // Finally, we take the start position of the finger, the start position of the drawer,
         // and the current position of the finger to calculate the next `translateX` value.
@@ -509,7 +509,7 @@ function setupObservables() {
       Observable::combineLatest(this[sOpened$], this[sAlign$])
         // Usually the cleanup code would run at the end of the fling animation,
         // but since there is no animation in this case, we call it directly.
-        ::effect(([opened]) => this::cleanupInteraction(opened))
+        ::tap(([opened]) => this::cleanupInteraction(opened))
         /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
           (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
@@ -552,11 +552,11 @@ function setupObservables() {
       end$
         ::withLatestFrom(ref.translateX$, velocity$)
         ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
-        ::effect(willOpen => this[sFire]('slideend', { detail: willOpen })),
+        ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
 
       // 2) In this case we need to call the prepare code directly,
       // which would have been called at the beginning of the interaction otherwise.
-      this[sAnimateTo$]::effect(this::prepareInteraction),
+      this[sAnimateTo$]::tap(this::prepareInteraction),
   );
 
   // We silently set the new `opened` state here,
@@ -564,7 +564,7 @@ function setupObservables() {
   // still playing, e.g. a call to `toggle` will cancel the current animation
   // and initiate an animation to the opposite state.
   ref.tween$ = tweenTrigger$
-    ::effect((willOpen) => {
+    ::tap((willOpen) => {
       this[sSetState]('opened', willOpen);
       if (this[sScrollEl] && !willOpen) this[sScrollEl].style.overflow = '';
     })
@@ -579,7 +579,7 @@ function setupObservables() {
       const diffTranslateX = endTranslateX - translateX;
 
       return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
-        ::effect({ complete: () => this[sOpened$].next(opened) })
+        ::tap({ complete: () => this[sOpened$].next(opened) })
         ::takeUntil(start$)
         ::takeUntil(this[sAlign$]);
     });
