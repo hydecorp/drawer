@@ -39,7 +39,8 @@ _drafts
 .DS_Store
 
 # Bundler
-vendor/bundle
+/.bundle
+/vendor/bundle
 
 # hy-component
 dist
