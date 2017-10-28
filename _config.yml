@@ -17,6 +17,8 @@ copyright: © 2017 Florian Klampfer
 
 permalink: pretty
 
+google_analytics: UA-84025722-3
+
 color: '#4fb1ba'
 image:
   background: 'linear-gradient(to bottom,#193747 0%,#233e4c 30%,#3c929e 50%,#d5d5d4 70%,#cdccc8 100%)'
