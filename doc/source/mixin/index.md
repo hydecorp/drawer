@@ -751,7 +751,6 @@ but since there is no animation in this case, we call it directly.
 
 ```js
         ::tap(([opened]) => this::cleanupInteraction(opened))
-        /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
           (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
   ))

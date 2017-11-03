@@ -510,7 +510,6 @@ function setupObservables() {
         // Usually the cleanup code would run at the end of the fling animation,
         // but since there is no animation in this case, we call it directly.
         ::tap(([opened]) => this::cleanupInteraction(opened))
-        /* TODO: drawerWdith could be outdated */
         ::map(([opened, align]) =>
           (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
   ))
