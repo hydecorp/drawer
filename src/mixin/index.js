@@ -729,19 +729,16 @@ export function drawerMixin(C) {
     open(animated = true) {
       if (animated) this[sAnimateTo$].next(true);
       else this.opened = true;
-      return this;
     }
 
     close(animated = true) {
       if (animated) this[sAnimateTo$].next(false);
       else this.opened = false;
-      return this;
     }
 
     toggle(animated = true) {
       if (animated) this[sAnimateTo$].next(!this.opened);
       else this.opened = !this.opened;
-      return this;
     }
   };
 }
