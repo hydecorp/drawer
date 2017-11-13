@@ -942,7 +942,6 @@ We return a tween observable that runs cleanup code when it completes
       const diffTranslateX = endTranslateX - translateX;
       const duration = BASE_DURATION + (this[sDrawerWidth] * WIDTH_CONTRIBUTION);
 
-      console.log(duration);
       return createTween(easeOutSine, translateX, diffTranslateX, duration)
         ::tap({ complete: () => this[sOpened$].next(opened) })
         ::takeUntil(start$)
