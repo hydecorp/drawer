@@ -236,6 +236,7 @@ function prepareInteraction() {
   this[sContentEl].style.willChange = 'transform';
   this[sScrimEl].style.willChange = 'opacity';
   this[sContentEl].classList.remove('hy-drawer-opened');
+  this[sFire]('prepare');
 }
 
 function histId() {
