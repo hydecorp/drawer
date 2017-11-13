@@ -70,7 +70,7 @@ import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 // Some helper functions to create observable tweens. See [src / common.js](../common.md).
-import { createTween, linearTween, Set } from '../common';
+import { createTween, easeOutSine, Set } from '../common';
 
 // ## Constants
 // A set of [Modernizr] tests that are required for this component to work.
@@ -89,8 +89,15 @@ export const MIXIN_FEATURE_TESTS = new Set([
 // so that mixin users don't have to import them from hy-compnent separately.
 export { sSetup, sSetupDOM };
 
-// The duration (in ms) of the animation when releasing the drawer.
-const TRANSITION_DURATION = 200;
+// The base duration of the fling animation.
+const BASE_DURATION = 200;
+
+// We adjust the duration of the animation using the width of the drawer.
+// There is no physics to this, but we know from testing that the animation starts to feel bad
+// when the drawer increases in size.
+// From testing we know that, if we increase the duration as a fraction of the drawer width,
+// the animation stays smooth across common display sizes.
+const WIDTH_CONTRIBUTION = 0.15;
 
 // Minimum velocity of the drawer (in px/ms) when releasing to make it fling to opened/closed state.
 const VELOCITY_THRESHOLD = 0.15;
@@ -581,8 +588,9 @@ function setupObservables() {
       const inv = this.align === 'left' ? 1 : -1;
       const endTranslateX = opened ? this[sDrawerWidth] * inv : 0;
       const diffTranslateX = endTranslateX - translateX;
+      const duration = BASE_DURATION + (this[sDrawerWidth] * WIDTH_CONTRIBUTION);
 
-      return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
+      return createTween(easeOutSine, translateX, diffTranslateX, duration)
         ::tap({ complete: () => this[sOpened$].next(opened) })
         ::takeUntil(start$)
         ::takeUntil(this[sAlign$]);
