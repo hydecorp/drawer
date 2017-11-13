@@ -53,7 +53,6 @@ import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as tap } from 'rxjs/operator/do';
-import { debounceTime } from 'rxjs/operator/debounceTime';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
@@ -161,7 +160,7 @@ function subscribeWhen(p$) {
 // to pull the drawer. The x-coordinate *must* be larger than the lower bound,
 // but when the drawer is opened it may be anywhere on the screen.
 // Otherwise it must be below the upper bound.
-function isInRange(clientX, opened) {
+function calcIsInRange(clientX, opened) {
   switch (this.align) {
     case 'left':
       return clientX > this.range[0]
@@ -316,7 +315,9 @@ function getStartObservable() {
     if (!mouseEvents) return touchstart$;
 
     // Otherwise we also include `mousedown` events in the output.
-    const mousedown$ = Observable::fromEvent(document, 'mousedown', { passive: true });
+    const mousedown$ = Observable::fromEvent(document, 'mousedown')
+      ::tap(event => assign(event, { event }));
+
     return Observable::merge(touchstart$, mousedown$);
   });
 }
@@ -369,7 +370,8 @@ function getEndObservable() {
     // Otherwise there's at least one finger left on the screen,
     // that can be used to slide the drawer.
     const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
-      ::filter(({ touches }) => touches.length === 0);
+      ::filter(({ touches }) => touches.length === 0)
+      ::map(event => event.changedTouches[0]);
 
     // If mouse events aren't enabled, we're done here.
     if (!mouseEvents) return touchend$;
@@ -421,6 +423,20 @@ function setupObservables() {
   this[sBackButton$] = new Subject();
   this[sAnimateTo$] = new Subject();
 
+  // An observable of resize events.
+  const resize$ = Observable::fromEvent(window, 'resize', { passive: true })
+    // ::debounceTime(100)
+    ::share()
+    ::startWith({});
+
+  // Keep measurements up-to-date.
+  // Note that we need to temporarily remove the opened class to get the correct measures.
+  resize$.subscribe(() => {
+    if (this.opened) this[sContentEl].classList.remove('hy-drawer-opened');
+    this[sDrawerWidth] = this::getMovableDrawerWidth();
+    if (this.opened) this[sContentEl].classList.add('hy-drawer-opened');
+  });
+
   // Emitts a value every time you change the `persistent` property of the drawer.
   // Interally, we invert it and call it `active`.
   const active$ = this[sPersitent$]::map(x => !x)::share();
@@ -446,14 +462,20 @@ function setupObservables() {
   // TODO: ...
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
-    ::map(([{ clientX }, isScrimVisible]) => this::isInRange(clientX, isScrimVisible))
-    ::tap((inRange) => { if (inRange) this::prepareInteraction(); })
+    ::map(([{ clientX }, isScrimVisible]) => this::calcIsInRange(clientX, isScrimVisible))
+    ::tap((inRange) => {
+      if (inRange) {
+        if (this.mouseEvents) this[sContentEl].classList.add('hy-drawer-grabbing');
+        this::prepareInteraction();
+      }
+    })
     ::share();
 
   // #### End observable
   // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
   const end$ = this::getEndObservable()
     ::filterWhen(active$, isInRange$)
+    ::tap(() => { this[sContentEl].classList.remove('hy-drawer-grabbing'); })
     ::share();
 
   // #### Move observable
@@ -518,7 +540,7 @@ function setupObservables() {
       // When the `opened` state changes, we "jump" to the new position,
       // which is either 0 (when closed) or the width of the drawer (when open).
       // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
-      Observable::combineLatest(this[sOpened$], this[sAlign$])
+      Observable::combineLatest(this[sOpened$], this[sAlign$], resize$)
         // Usually the cleanup code would run at the end of the fling animation,
         // but since there is no animation in this case, we call it directly.
         ::tap(([opened]) => this::cleanupInteraction(opened))
@@ -561,8 +583,9 @@ function setupObservables() {
       // 1) When the user releases the finger/mouse, we take the current velocity of the drawer and
       // calculate whether it should open or close.
       end$
-        ::withLatestFrom(ref.translateX$, velocity$)
-        ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
+        ::withLatestFrom(start$, ref.translateX$, velocity$)
+        ::filter(([{ clientX: endX }, { clientX: startX }]) => endX !== startX)
+        ::map(([,, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
         ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
 
       // 2) In this case we need to call the prepare code directly,
@@ -630,6 +653,21 @@ function setupObservables() {
       if (willOpen !== this.opened) this[sAnimateTo$].next(willOpen);
     });
 
+  // When drawing with mouse is enabled, we add the grab cursor to the drawer.
+  // We also want to call `preventDefault` when `mousedown` is within the drawer range
+  // to prevent text selection while sliding.
+  this[sMouseEvents$]::switchMap((mouseEvents) => {
+    if (mouseEvents) this[sContentEl].classList.add('hy-drawer-grab');
+    else this[sContentEl].classList.remove('hy-drawer-grab');
+
+    return mouseEvents ?
+      start$::withLatestFrom(isInRange$) :
+      Observable::never();
+  })
+    .subscribe(([{ event }, isInRange]) => {
+      if (isInRange && event) event.preventDefault();
+    });
+
   // Now we set the initial opend state.
   // If the experimental back button feature is enabled, we check the location hash...
   if (this._backButton) {
@@ -665,19 +703,6 @@ export function drawerMixin(C) {
 
       // Set the initial alignment class.
       this[sContentEl].classList.add(`hy-drawer-${this.align}`);
-
-      // Measure the current drawer width...
-      this[sDrawerWidth] = this::getMovableDrawerWidth();
-
-      // ...and keep it up-to-date.
-      // Note that we need to temporarily remove the opened class to get the correct measures.
-      Observable::fromEvent(window, 'resize', { passive: true })
-        ::debounceTime(100)
-        .subscribe(() => {
-          if (this.opened) this[sContentEl].classList.remove('hy-drawer-opened');
-          this[sDrawerWidth] = this::getMovableDrawerWidth();
-          if (this.opened) this[sContentEl].classList.add('hy-drawer-opened');
-        });
 
       // Finally, calling the [setup observables function](#setup-observables) function.
       this::setupObservables();

@@ -46,6 +46,19 @@
     right: 0!important;
     transform: translateX(0)!important;
   }
+
+  .hy-drawer-grab {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+  }
+
+  .hy-drawer-grabbing {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+  }
 }
 
 @media print {
