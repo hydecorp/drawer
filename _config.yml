@@ -26,14 +26,13 @@ image:
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-hydejack
-# remote_theme: qwtel/hydejack@gem
+
 plugins:
   - jekyll-default-layout
   - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
-  # - jekyll-remote-theme
+  - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-titles-from-headings
 exclude:
@@ -48,6 +47,8 @@ exclude:
   - scripts
 include:
   - LICENSE.md
+
+remote_theme: qwtel/hydejack@gem
 
 defaults:
   - scope:
