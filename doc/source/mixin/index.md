@@ -64,7 +64,6 @@ import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
 import { _do as tap } from 'rxjs/operator/do';
-import { debounceTime } from 'rxjs/operator/debounceTime';
 import { filter } from 'rxjs/operator/filter';
 import { map } from 'rxjs/operator/map';
 import { mapTo } from 'rxjs/operator/mapTo';
@@ -85,7 +84,7 @@ Some helper functions to create observable tweens. See [src / common.js](../comm
 
 
 ```js
-import { createTween, linearTween, Set } from '../common';
+import { createTween, easeOutSine, Set } from '../common';
 ```
 
 ## Constants
@@ -113,11 +112,22 @@ so that mixin users don't have to import them from hy-compnent separately.
 export { sSetup, sSetupDOM };
 ```
 
-The duration (in ms) of the animation when releasing the drawer.
+The base duration of the fling animation.
 
 
 ```js
-const TRANSITION_DURATION = 200;
+const BASE_DURATION = 200;
+```
+
+We adjust the duration of the animation using the width of the drawer.
+There is no physics to this, but we know from testing that the animation starts to feel bad
+when the drawer increases in size.
+From testing we know that, if we increase the duration as a fraction of the drawer width,
+the animation stays smooth across common display sizes.
+
+
+```js
+const WIDTH_CONTRIBUTION = 0.15;
 ```
 
 Minimum velocity of the drawer (in px/ms) when releasing to make it fling to opened/closed state.
@@ -213,7 +223,7 @@ Otherwise it must be below the upper bound.
 
 
 ```js
-function isInRange(clientX, opened) {
+function calcIsInRange(clientX, opened) {
   switch (this.align) {
     case 'left':
       return clientX > this.range[0]
@@ -227,6 +237,22 @@ function isInRange(clientX, opened) {
 }
 ```
 
+#### Calculate 'Is swipe?'
+If the start and end position are not the same x-coordinate, we call it a 'swipe'.
+However, if a tap occures during an animation (i.e. `translateX` not in a resting position)
+we treat it as a swipe as well. The reasons for this are pretty complex:
+Basically, we want users the be able to stop the animation by putting a finger on the screen.
+However, if they lift the finger again without swiping, the animation would not continue,
+because it would not pass the condition below, unless we introduce the second term.
+TODO: reuse isSlidign observable?
+
+
+```js
+function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
+  return endX !== startX || (translateX > 0 && translateX < this[sDrawerWidth]);
+}
+```
+
 #### Calculate 'Will open?'
 Based on current velocity and position of the drawer,
 should the drawer slide open, or snap back?
@@ -234,7 +260,7 @@ TODO: could incorporate the current open state of the drawer.
 
 
 ```js
-function calcWillOpen(velocity, translateX) {
+function calcWillOpen([,, translateX, velocity]) {
   switch (this.align) {
     case 'left': {
       if (velocity > VELOCITY_THRESHOLD) return true;
@@ -311,6 +337,7 @@ function prepareInteraction() {
   this[sContentEl].style.willChange = 'transform';
   this[sScrimEl].style.willChange = 'opacity';
   this[sContentEl].classList.remove('hy-drawer-opened');
+  this[sFire]('prepare');
 }
 
 function histId() {
@@ -373,8 +400,12 @@ and the opacity of the scrim, which is handled by `updateDOM`.
 ```js
 function updateDOM(translateX) {
   const inv = this.align === 'left' ? 1 : -1;
+  const opacity = (translateX / this[sDrawerWidth]) * inv;
+
   this[sContentEl].style.transform = `translateX(${translateX}px)`;
-  this[sScrimEl].style.opacity = (translateX / this[sDrawerWidth]) * inv;
+  this[sScrimEl].style.opacity = opacity;
+
+  this[sFire]('move', { detail: { translateX, opacity } });
 }
 ```
 
@@ -417,7 +448,9 @@ Otherwise we also include `mousedown` events in the output.
 
 
 ```js
-    const mousedown$ = Observable::fromEvent(document, 'mousedown', { passive: true });
+    const mousedown$ = Observable::fromEvent(document, 'mousedown')
+      ::tap(event => assign(event, { event }));
+
     return Observable::merge(touchstart$, mousedown$);
   });
 }
@@ -506,7 +539,8 @@ that can be used to slide the drawer.
 
 ```js
     const touchend$ = Observable::fromEvent(document, 'touchend', { passive: true })
-      ::filter(({ touches }) => touches.length === 0);
+      ::filter(({ touches }) => touches.length === 0)
+      ::map(event => event.changedTouches[0]);
 ```
 
 If mouse events aren't enabled, we're done here.
@@ -589,6 +623,33 @@ The are used to emit the new vale whenever properties get changed on the compone
   this[sAnimateTo$] = new Subject();
 ```
 
+An observable of resize events.
+
+
+```js
+  const resize$ = Observable::fromEvent(window, 'resize', { passive: true })
+```
+
+::debounceTime(100)
+
+
+```js
+    ::share()
+    ::startWith({});
+```
+
+Keep measurements up-to-date.
+Note that we need to temporarily remove the opened class to get the correct measures.
+
+
+```js
+  resize$.subscribe(() => {
+    if (this.opened) this[sContentEl].classList.remove('hy-drawer-opened');
+    this[sDrawerWidth] = this::getMovableDrawerWidth();
+    if (this.opened) this[sContentEl].classList.add('hy-drawer-opened');
+  });
+```
+
 Emitts a value every time you change the `persistent` property of the drawer.
 Interally, we invert it and call it `active`.
 
@@ -633,8 +694,13 @@ TODO: ...
 ```js
   const isInRange$ = start$
     ::withLatestFrom(isScrimVisible$)
-    ::map(([{ clientX }, isScrimVisible]) => this::isInRange(clientX, isScrimVisible))
-    ::tap((inRange) => { if (inRange) this::prepareInteraction(); })
+    ::map(([{ clientX }, isScrimVisible]) => this::calcIsInRange(clientX, isScrimVisible))
+    ::tap((inRange) => {
+      if (inRange) {
+        if (this.mouseEvents) this[sContentEl].classList.add('hy-drawer-grabbing');
+        this::prepareInteraction();
+      }
+    })
     ::share();
 ```
 
@@ -742,7 +808,7 @@ We also want to jump when `align` chagnes, in this case to the other side of the
 
 
 ```js
-      Observable::combineLatest(this[sOpened$], this[sAlign$])
+      Observable::combineLatest(this[sOpened$], this[sAlign$], resize$)
 ```
 
 Usually the cleanup code would run at the end of the fling animation,
@@ -811,32 +877,35 @@ The initial velocity is zero.
     ::startWith(0);
 ```
 
+TODO
+
+
+```js
+  const willOpen$ = end$
+    ::tap(() => { this[sContentEl].classList.remove('hy-drawer-grabbing'); })
+    ::withLatestFrom(start$, ref.translateX$, velocity$)
+    ::filter(this::calcIsSwipe)
+    ::map(this::calcWillOpen)
+```
+
+TODO: only fire `slideend` event when slidestart fired as well!?
+
+
+```js
+    ::tap(willOpen => this[sFire]('slideend', { detail: willOpen }));
+```
+
 There are 2 things that can trigger an animation:
 1. The end of an interaction, i.e. the user releases the finger/mouse while moving the slider.
 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
+   Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
+   prior `touchdown`/`mousedown` event in this case.
 
 
 ```js
   const tweenTrigger$ = Observable::merge(
-```
-
-1) When the user releases the finger/mouse, we take the current velocity of the drawer and
-calculate whether it should open or close.
-
-
-```js
-      end$
-        ::withLatestFrom(ref.translateX$, velocity$)
-        ::map(([, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
-        ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
-```
-
-2) In this case we need to call the prepare code directly,
-which would have been called at the beginning of the interaction otherwise.
-
-
-```js
-      this[sAnimateTo$]::tap(this::prepareInteraction),
+    willOpen$,
+    this[sAnimateTo$]::tap(this::prepareInteraction),
   );
 ```
 
@@ -871,8 +940,10 @@ We return a tween observable that runs cleanup code when it completes
       const inv = this.align === 'left' ? 1 : -1;
       const endTranslateX = opened ? this[sDrawerWidth] * inv : 0;
       const diffTranslateX = endTranslateX - translateX;
+      const duration = BASE_DURATION + (this[sDrawerWidth] * WIDTH_CONTRIBUTION);
 
-      return createTween(linearTween, translateX, diffTranslateX, TRANSITION_DURATION)
+      console.log(duration);
+      return createTween(easeOutSine, translateX, diffTranslateX, duration)
         ::tap({ complete: () => this[sOpened$].next(opened) })
         ::takeUntil(start$)
         ::takeUntil(this[sAlign$]);
@@ -888,7 +959,7 @@ and causes the code inside the above `defer` observables to run.
 
 
 ```js
-  ref.translateX$.subscribe(updateDOM.bind(this));
+  ref.translateX$.subscribe(this::updateDOM);
 ```
 
 A click on the scrim should close the drawer.
@@ -930,6 +1001,25 @@ If the experimental back button feature is enabled, handle popstate events...
       const hash = `#${this::histId()}--opened`;
       const willOpen = window.location.hash === hash;
       if (willOpen !== this.opened) this[sAnimateTo$].next(willOpen);
+    });
+```
+
+When drawing with mouse is enabled, we add the grab cursor to the drawer.
+We also want to call `preventDefault` when `mousedown` is within the drawer range
+to prevent text selection while sliding.
+
+
+```js
+  this[sMouseEvents$]::switchMap((mouseEvents) => {
+    if (mouseEvents) this[sContentEl].classList.add('hy-drawer-grab');
+    else this[sContentEl].classList.remove('hy-drawer-grab');
+
+    return mouseEvents ?
+      start$::withLatestFrom(isInRange$) :
+      Observable::never();
+  })
+    .subscribe(([{ event }, isInRange]) => {
+      if (isInRange && event) event.preventDefault();
     });
 ```
 
@@ -1001,27 +1091,6 @@ Set the initial alignment class.
 
 ```js
       this[sContentEl].classList.add(`hy-drawer-${this.align}`);
-```
-
-Measure the current drawer width...
-
-
-```js
-      this[sDrawerWidth] = this::getMovableDrawerWidth();
-```
-
-...and keep it up-to-date.
-Note that we need to temporarily remove the opened class to get the correct measures.
-
-
-```js
-      Observable::fromEvent(window, 'resize', { passive: true })
-        ::debounceTime(100)
-        .subscribe(() => {
-          if (this.opened) this[sContentEl].classList.remove('hy-drawer-opened');
-          this[sDrawerWidth] = this::getMovableDrawerWidth();
-          if (this.opened) this[sContentEl].classList.add('hy-drawer-opened');
-        });
 ```
 
 Finally, calling the [setup observables function](#setup-observables) function.
@@ -1110,19 +1179,16 @@ Public methods of this component. See [Methods](../../methods.md) for more.
     open(animated = true) {
       if (animated) this[sAnimateTo$].next(true);
       else this.opened = true;
-      return this;
     }
 
     close(animated = true) {
       if (animated) this[sAnimateTo$].next(false);
       else this.opened = false;
-      return this;
     }
 
     toggle(animated = true) {
       if (animated) this[sAnimateTo$].next(!this.opened);
       else this.opened = !this.opened;
-      return this;
     }
   };
 }

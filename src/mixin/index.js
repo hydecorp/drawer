@@ -180,6 +180,7 @@ function calcIsInRange(clientX, opened) {
 // Basically, we want users the be able to stop the animation by putting a finger on the screen.
 // However, if they lift the finger again without swiping, the animation would not continue,
 // because it would not pass the condition below, unless we introduce the second term.
+// TODO: reuse isSlidign observable?
 function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
   return endX !== startX || (translateX > 0 && translateX < this[sDrawerWidth]);
 }
@@ -486,7 +487,6 @@ function setupObservables() {
   // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
   const end$ = this::getEndObservable()
     ::filterWhen(active$, isInRange$)
-    ::tap(() => { this[sContentEl].classList.remove('hy-drawer-grabbing'); })
     ::share();
 
   // #### Move observable
@@ -587,21 +587,23 @@ function setupObservables() {
     // The initial velocity is zero.
     ::startWith(0);
 
+  // TODO
+  const willOpen$ = end$
+    ::tap(() => { this[sContentEl].classList.remove('hy-drawer-grabbing'); })
+    ::withLatestFrom(start$, ref.translateX$, velocity$)
+    ::filter(this::calcIsSwipe)
+    ::map(this::calcWillOpen)
+    // TODO: only fire `slideend` event when slidestart fired as well!?
+    ::tap(willOpen => this[sFire]('slideend', { detail: willOpen }));
+
   // There are 2 things that can trigger an animation:
   // 1. The end of an interaction, i.e. the user releases the finger/mouse while moving the slider.
   // 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
+  //    Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
+  //    prior `touchdown`/`mousedown` event in this case.
   const tweenTrigger$ = Observable::merge(
-      // 1) When the user releases the finger/mouse, we take the current velocity of the drawer and
-      // calculate whether it should open or close.
-      end$
-        ::withLatestFrom(start$, ref.translateX$, velocity$)
-        ::filter(this::calcIsSwipe)
-        ::map(this::calcWillOpen)
-        ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
-
-      // 2) In this case we need to call the prepare code directly,
-      // which would have been called at the beginning of the interaction otherwise.
-      this[sAnimateTo$]::tap(this::prepareInteraction),
+    willOpen$,
+    this[sAnimateTo$]::tap(this::prepareInteraction),
   );
 
   // We silently set the new `opened` state here,

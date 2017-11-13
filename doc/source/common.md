@@ -56,14 +56,9 @@ export function createTween(easingFunction, b, c, d, s) {
     return () => { if (id) { cancelAnimationFrame(id); } };
   });
 }
-```
 
-The linear easing function...
-
-
-```js
-export function linearTween(t, b, c, d) {
-  return ((c * t) / d) + b;
+export function easeOutSine(t, b, c, d) {
+  return c * Math.sin(t/d * (Math.PI/2)) + b; // eslint-disable-line
 }
 ```
 
