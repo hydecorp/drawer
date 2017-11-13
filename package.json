@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-hydejack.9",
+  "version": "1.0.0-hydejack.10",
   "description": "A drawer component for the modern web.",
   "main": "./lib/vanilla/index.js",
   "browser": "./dist/vanilla/hy-drawer.min.js",
