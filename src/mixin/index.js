@@ -173,11 +173,22 @@ function calcIsInRange(clientX, opened) {
   }
 }
 
+// #### Calculate 'Is swipe?'
+// If the start and end position are not the same x-coordinate, we call it a 'swipe'.
+// However, if a tap occures during an animation (i.e. `translateX` not in a resting position)
+// we treat it as a swipe as well. The reasons for this are pretty complex:
+// Basically, we want users the be able to stop the animation by putting a finger on the screen.
+// However, if they lift the finger again without swiping, the animation would not continue,
+// because it would not pass the condition below, unless we introduce the second term.
+function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
+  return endX !== startX || (translateX > 0 && translateX < this[sDrawerWidth]);
+}
+
 // #### Calculate 'Will open?'
 // Based on current velocity and position of the drawer,
 // should the drawer slide open, or snap back?
 // TODO: could incorporate the current open state of the drawer.
-function calcWillOpen(velocity, translateX) {
+function calcWillOpen([,, translateX, velocity]) {
   switch (this.align) {
     case 'left': {
       if (velocity > VELOCITY_THRESHOLD) return true;
@@ -584,8 +595,8 @@ function setupObservables() {
       // calculate whether it should open or close.
       end$
         ::withLatestFrom(start$, ref.translateX$, velocity$)
-        ::filter(([{ clientX: endX }, { clientX: startX }]) => endX !== startX)
-        ::map(([,, translateX, velocity]) => this::calcWillOpen(velocity, translateX))
+        ::filter(this::calcIsSwipe)
+        ::map(this::calcWillOpen)
         ::tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
 
       // 2) In this case we need to call the prepare code directly,
