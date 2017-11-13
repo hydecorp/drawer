@@ -282,8 +282,12 @@ function cleanupInteraction(opened) {
 // and the opacity of the scrim, which is handled by `updateDOM`.
 function updateDOM(translateX) {
   const inv = this.align === 'left' ? 1 : -1;
+  const opacity = (translateX / this[sDrawerWidth]) * inv;
+
   this[sContentEl].style.transform = `translateX(${translateX}px)`;
-  this[sScrimEl].style.opacity = (translateX / this[sDrawerWidth]) * inv;
+  this[sScrimEl].style.opacity = opacity;
+
+  this[sFire]('move', { detail: { translateX, opacity } });
 }
 
 // #### Get start observable
@@ -589,7 +593,7 @@ function setupObservables() {
   // The end result is always to update the (shadow) DOM, which happens here.
   // Note that the call to subscribe sets the whole process in motion,
   // and causes the code inside the above `defer` observables to run.
-  ref.translateX$.subscribe(updateDOM.bind(this));
+  ref.translateX$.subscribe(this::updateDOM);
 
   // A click on the scrim should close the drawer.
   Observable::fromEvent(this[sScrimEl], 'click')
