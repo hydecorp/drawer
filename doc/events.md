@@ -48,8 +48,8 @@ jQuery event name
 
 ## `hy-drawer-move`
 This event is fired on every frame while the drawer is moving  (both sliding and animations).
-The `detail` of the event will contain `translateX` (the current x-coordinate of the drawer, in px),
-as well as `opacity` (the opacity of the scrim).
+The `detail` field of the event is a value between 0 and 1, where
+0 means the drawer is fully closed, and 1 means the drawer is fully opened.
 You can use this to animate other elements in sync with the drawer.
 
 jQuery event name

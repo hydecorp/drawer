@@ -306,7 +306,7 @@ function updateDOM(translateX) {
   this[sContentEl].style.transform = `translateX(${translateX}px)`;
   this[sScrimEl].style.opacity = opacity;
 
-  this[sFire]('move', { detail: { translateX, opacity } });
+  this[sFire]('move', { detail: opacity });
 }
 
 // #### Get start observable
