@@ -11,7 +11,7 @@ author:
   social:
     github: https://github.com/qwtel/hy-drawer
     npm: https://www.npmjs.com/package/hy-drawer
-    download: https://github.com/qwtel/hy-drawer/archive/v1.0.0-hydejack.10.zip
+    download: https://github.com/qwtel/hy-drawer/archive/v1.0.0-hydejack.11.zip
 
 copyright: © 2017 Florian Klampfer
 
@@ -32,7 +32,7 @@ plugins:
   - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
-  - jekyll-remote-theme
+  # - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-titles-from-headings
 exclude:
@@ -48,7 +48,8 @@ exclude:
 include:
   - LICENSE.md
 
-remote_theme: qwtel/hydejack@gem
+theme: jekyll-theme-hydejack
+# remote_theme: qwtel/hydejack@gem
 
 defaults:
   - scope:

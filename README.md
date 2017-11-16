@@ -1,6 +1,6 @@
 # hy-drawer
 
-[![npm version](https://badge.fury.io/js/hy-drawer.svg)](https://badge.fury.io/js/hy-drawer)
+[![npm version](https://badge.fury.io/js/hy-drawer.svg)](https://badge.fury.io/js/hy-drawer){:.no-mark-external}
 
 **hy-drawer** is a touch-enabled drawer component for the modern web.
 It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
