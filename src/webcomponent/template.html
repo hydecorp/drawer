@@ -7,14 +7,12 @@
   /* HACK: Hard-coded: ../style.css */
   @media screen {
     .hy-drawer-scrim {
-      display: block;
       position: fixed;
       top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      opacity: 0;
+      height: 100vh;
+      widht: 100vw;
       z-index: 2;
+      opacity: 0;
       pointer-events: none;
       background: rgba(0, 0, 0, 0.5);
       transform: translateX(0);
@@ -23,8 +21,8 @@
 
     .hy-drawer-content {
       position: fixed;
-      bottom: 0;
       top: 0;
+      height: 100vh;
       z-index: 3;
       overflow-x: hidden;
       overflow-y: auto;
