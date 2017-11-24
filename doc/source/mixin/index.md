@@ -808,7 +808,7 @@ We also want to jump when `align` chagnes, in this case to the other side of the
 
 
 ```js
-      Observable::combineLatest(this[sOpened$], this[sAlign$], resize$)
+      Observable::combineLatest(this[sOpened$], this[sAlign$])
 ```
 
 Usually the cleanup code would run at the end of the fling animation,

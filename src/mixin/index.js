@@ -551,7 +551,7 @@ function setupObservables() {
       // When the `opened` state changes, we "jump" to the new position,
       // which is either 0 (when closed) or the width of the drawer (when open).
       // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
-      Observable::combineLatest(this[sOpened$], this[sAlign$], resize$)
+      Observable::combineLatest(this[sOpened$], this[sAlign$])
         // Usually the cleanup code would run at the end of the fling animation,
         // but since there is no animation in this case, we call it directly.
         ::tap(([opened]) => this::cleanupInteraction(opened))
