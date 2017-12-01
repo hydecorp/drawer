@@ -68,7 +68,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qwtel/hy-drawer.git"
+    "url": "https://github.com/qwtel/hy-drawer.git"
   },
   "bugs": {
     "url": "https://github.com/qwtel/hy-drawer/issues"
