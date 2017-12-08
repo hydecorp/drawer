@@ -19,7 +19,8 @@
     "serve": "http-server -s -p $npm_package_config_port",
     "dev": "npm run watch & npm run serve",
     "lint": "eslint src webpack.config.js",
-    "prepare": "npm run lint && npm run test && npm run clean && npm run build"
+    "prepare": "npm run lint && npm run test && npm run clean && npm run build",
+    "version": "npm run prepare && git add ."
   },
   "config": {
     "port": "8080"
