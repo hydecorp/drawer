@@ -18,8 +18,8 @@ import 'core-js/fn/array/from';
 
 import { VanillaComponent } from 'hy-component/src/vanilla';
 import { sSetupDOM } from 'hy-component/src/symbols';
+import { Set } from 'qd-set';
 
-import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
 

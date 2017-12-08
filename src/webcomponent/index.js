@@ -27,8 +27,9 @@ import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_F
   from 'hy-component/src/custom-element';
 import { sGetTemplate } from 'hy-component/src/symbols';
 
+import { Set } from 'qd-set';
+
 // ...and our own component.
-import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
 // Unlike the [HTML Import version](./html-import.md), this version bundles the template

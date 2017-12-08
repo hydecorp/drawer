@@ -68,8 +68,10 @@ import { takeUntil } from 'rxjs/operator/takeUntil';
 import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
+import { Set } from 'qd-set';
+
 // Some helper functions to create observable tweens. See [src / common.js](../common.md).
-import { createTween, easeOutSine, Set } from '../common';
+import { createTween, easeOutSine } from '../common';
 
 // ## Constants
 // A set of [Modernizr] tests that are required for this component to work.
