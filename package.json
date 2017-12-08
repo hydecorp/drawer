@@ -82,8 +82,7 @@
         "babelify",
         {
           "presets": [
-            "es2015",
-            "es2016"
+            "env"
           ],
           "plugins": [
             "transform-function-bind"
