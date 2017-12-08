@@ -5,9 +5,11 @@
 
 const { promisify } = require('util');
 
-const docco = promisify(require('docco').document);
+const docco = promisify(require('docco').document); // eslint-disable-line
 const fs = require('fs');
-const { basename, dirname, extname, relative, resolve } = require('path');
+const {
+  basename, dirname, extname, relative, resolve,
+} = require('path');
 
 const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
