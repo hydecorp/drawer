@@ -33,13 +33,14 @@ We start by importing form the hy-component library...
 import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
   from 'hy-component/src/custom-element';
 import { sGetTemplate } from 'hy-component/src/symbols';
+
+import { Set } from 'qd-set';
 ```
 
 ...and our own component.
 
 
 ```js
-import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 ```
 

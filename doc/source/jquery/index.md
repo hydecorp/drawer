@@ -23,8 +23,8 @@ import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
 import { JQueryComponent, defineJQueryComponent } from 'hy-component/src/define-jquery-component';
 import { sSetupDOM } from 'hy-component/src/symbols';
+import { Set } from 'qd-set';
 
-import { Set } from '../common';
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
 

@@ -22,31 +22,22 @@ import 'core-js/fn/array/from';
 import { VanillaComponent } from 'hy-component/src/vanilla';
 import { sSetupDOM } from 'hy-component/src/symbols';
 
-import { Set } from '../common';
+import { createElement } from 'create-element-extended/library';
+
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
 
-export const VANILLA_FEATURE_TESTS = new Set([
-  ...MIXIN_FEATURE_TESTS,
-  'classlist',
-]);
+export const VANILLA_FEATURE_TESTS = MIXIN_FEATURE_TESTS;
 
 export class Drawer extends drawerMixin(VanillaComponent) {
   [sSetupDOM](el) {
     if (!el) throw Error('No element provided');
 
-    const scrim = document.createElement('div');
-    const content = document.createElement('div');
+    const df = new DocumentFragment();
+    df.appendChild(createElement('div', { class: 'hy-drawer-scrim' }));
+    df.appendChild(createElement('div', { class: 'hy-drawer-content' }, el.children));
 
-    scrim.classList.add('hy-drawer-scrim');
-
-    content.classList.add('hy-drawer-content');
-    while (el.children.length > 0) {
-      content.appendChild(el.children[0]);
-    }
-
-    el.appendChild(scrim);
-    el.appendChild(content);
+    el.appendChild(df);
 
     return el;
   }
