@@ -69,10 +69,10 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
 // Small little helpers:
 import { arrayOf, bool, number, string, oneOf } from 'attr-types';
+import { createTween } from 'rxjs-create-tween';
 import { Set } from 'qd-set';
 
-// Some helper functions to create observable tweens. See [src / common.js](../common.md).
-import { createTween, easeOutSine } from '../common';
+import { easeOutSine } from '../common';
 
 // ## Constants
 // A set of [Modernizr] tests that are required for this component to work.

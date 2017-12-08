@@ -59,7 +59,8 @@
     "create-element-extended": "^1.0.0-pre.1",
     "hy-component": "^1.0.0-hydejack.8",
     "qd-set": "^1.0.0-pre.2",
-    "rxjs": "^5.5.5"
+    "rxjs": "^5.5.5",
+    "rxjs-create-tween": "^1.0.0-pre.0"
   },
   "optionalDependencies": {
     "jquery": "^3.2.1"
