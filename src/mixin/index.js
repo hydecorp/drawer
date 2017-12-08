@@ -40,7 +40,6 @@ import 'core-js/fn/object/assign';
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
 import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
 import { sSetup, sSetupDOM, sFire, sSetState } from 'hy-component/src/symbols';
-import { arrayOf, bool, number, string, oneOf } from 'hy-component/src/types';
 
 // As mentioned before, we only import the RxJS function that we need.
 import { Observable } from 'rxjs/Observable';
@@ -68,6 +67,8 @@ import { takeUntil } from 'rxjs/operator/takeUntil';
 import { timestamp } from 'rxjs/operator/timestamp';
 import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 
+// Small little helpers:
+import { arrayOf, bool, number, string, oneOf } from 'attr-types';
 import { Set } from 'qd-set';
 
 // Some helper functions to create observable tweens. See [src / common.js](../common.md).

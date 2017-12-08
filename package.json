@@ -54,6 +54,7 @@
     "yargs": "^10.0.3"
   },
   "dependencies": {
+    "attr-types": "^1.0.0-pre.0",
     "core-js": "^2.5.1",
     "hy-component": "^1.0.0-hydejack.8",
     "qd-set": "^1.0.0-pre.2",
