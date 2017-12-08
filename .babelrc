@@ -1,7 +1,5 @@
 {
   "presets": ["env"],
-  "plugins": [
-    ["transform-function-bind"],
-  ],
+  "plugins": ["transform-function-bind"],
   "only": ["./src", "hy-component", "camelcase"],
 }
