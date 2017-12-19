@@ -52,6 +52,7 @@ remote_theme: qwtel/hydejack@gem-7.5.0
 
 hydejack:
   cookies_banner: true
+  no_mark_external: true
 
 defaults:
   - scope:
