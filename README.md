@@ -17,7 +17,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 * Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
 
 The component was initially developed --- and can be encountered in the wild ---
-as part of the [Hydejack](https://qwtel.com/hydejack/) Jekyll theme.
+as part of the [Hydejack](https://qwtel.com/hydejack/){:.external} Jekyll theme.
 
 **NOTE**: The current version is a custom build for Hydejack, which works fine but assumes that you don't do certain "evil" things,
 like detaching and re-attaching it to the DOM, etc. This will be fixed in the 1.0.0 release.
