@@ -237,7 +237,7 @@ var Observable = (function () {
             operator.call(sink, this.source);
         }
         else {
-            sink.add(this.source ? this._subscribe(sink) : this._trySubscribe(sink));
+            sink.add(this.source || !sink.syncErrorThrowable ? this._subscribe(sink) : this._trySubscribe(sink));
         }
         if (sink.syncErrorThrowable) {
             sink.syncErrorThrowable = false;
@@ -436,6 +436,7 @@ var Subscriber = (function (_super) {
                 }
                 if (typeof destinationOrNext === 'object') {
                     if (destinationOrNext instanceof Subscriber) {
+                        this.syncErrorThrowable = destinationOrNext.syncErrorThrowable;
                         this.destination = destinationOrNext;
                         this.destination.add(this);
                     }
@@ -1260,7 +1261,7 @@ exports.root = _root;
     }
 })();
 //# sourceMappingURL=root.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 10 */
@@ -1628,6 +1629,33 @@ module.exports = function (it, key) {
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1692,10 +1720,10 @@ exports.MulticastOperator = MulticastOperator;
 //# sourceMappingURL=multicast.js.map
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 var IE8_DOM_DEFINE = __webpack_require__(89);
 var toPrimitive = __webpack_require__(59);
 var dP = Object.defineProperty;
@@ -1714,7 +1742,7 @@ exports.f = __webpack_require__(20) ? Object.defineProperty : function definePro
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(15);
@@ -1722,33 +1750,6 @@ module.exports = function (it) {
   if (!isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
 };
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
 
 
 /***/ }),
@@ -1775,7 +1776,7 @@ Object.defineProperty(exports, "__esModule", {
 var Set = exports.Set = global.Set && new global.Set([1]).size === 1 ? global.Set : __webpack_require__(268);
 
 exports.default = Set;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 28 */
@@ -2788,7 +2789,7 @@ module.exports = function (it) {
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(23);
+var dP = __webpack_require__(24);
 var createDesc = __webpack_require__(41);
 module.exports = __webpack_require__(20) ? function (object, key, value) {
   return dP.f(object, key, createDesc(1, value));
@@ -2874,7 +2875,7 @@ var sGetEl = exports.sGetEl = _Symbol('getElement');
 var sFire = exports.sFire = _Symbol('fire');
 var sSetState = exports.sSetState = _Symbol('setState');
 var sGetTemplate = exports.sGetTemplate = _Symbol('getTemplate');
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 45 */
@@ -4054,7 +4055,7 @@ module.exports = {};
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 var dPs = __webpack_require__(233);
 var enumBugKeys = __webpack_require__(70);
 var IE_PROTO = __webpack_require__(69)('IE_PROTO');
@@ -5753,7 +5754,7 @@ module.exports = function (key) {
 /* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(23).f;
+var def = __webpack_require__(24).f;
 var has = __webpack_require__(21);
 var TAG = __webpack_require__(17)('toStringTag');
 
@@ -5843,7 +5844,7 @@ module.exports = function (method, arg) {
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
 var isObject = __webpack_require__(15);
-var anObject = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 var check = function (O, proto) {
   anObject(O);
   if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
@@ -6126,7 +6127,7 @@ function componentMixin() {
     return _class;
   }(C);
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 104 */
@@ -7276,7 +7277,7 @@ exports.share = share;
 
 "use strict";
 
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 var refCount_1 = __webpack_require__(75);
 var Subject_1 = __webpack_require__(6);
 function shareSubjectFactory() {
@@ -13099,7 +13100,7 @@ function plucker(props, length) {
 "use strict";
 
 var Subject_1 = __webpack_require__(6);
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 /* tslint:enable:max-line-length */
 /**
  * Returns a ConnectableObservable, which is a variety of Observable that waits until its connect method is called
@@ -13129,7 +13130,7 @@ exports.publish = publish;
 "use strict";
 
 var BehaviorSubject_1 = __webpack_require__(191);
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 /**
  * @param value
  * @return {ConnectableObservable<T>}
@@ -13204,7 +13205,7 @@ exports.BehaviorSubject = BehaviorSubject;
 "use strict";
 
 var ReplaySubject_1 = __webpack_require__(55);
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 /* tslint:enable:max-line-length */
 function publishReplay(bufferSize, windowTime, selectorOrScheduler, scheduler) {
     if (selectorOrScheduler && typeof selectorOrScheduler !== 'function') {
@@ -13224,7 +13225,7 @@ exports.publishReplay = publishReplay;
 "use strict";
 
 var AsyncSubject_1 = __webpack_require__(52);
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 function publishLast() {
     return function (source) { return multicast_1.multicast(new AsyncSubject_1.AsyncSubject())(source); };
 }
@@ -14220,7 +14221,7 @@ exports.asap = new AsapScheduler_1.AsapScheduler(AsapAction_1.AsapAction);
 /* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = Function.prototype.apply;
+/* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
 
 // DOM APIs, for completeness
 
@@ -14271,9 +14272,17 @@ exports._unrefActive = exports.active = function(item) {
 
 // setimmediate attaches itself to the global object
 __webpack_require__(513);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
+// On some exotic environments, it's not clear which object `setimmeidate` was
+// able to install onto.  Search each possibility in the same order as the
+// `setimmediate` library.
+exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
+                       (typeof global !== "undefined" && global.setImmediate) ||
+                       (this && this.setImmediate);
+exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
+                         (typeof global !== "undefined" && global.clearImmediate) ||
+                         (this && this.clearImmediate);
 
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 207 */
@@ -16255,8 +16264,8 @@ module.exports = function (Constructor, NAME, next) {
 /* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(23);
-var anObject = __webpack_require__(24);
+var dP = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 var getKeys = __webpack_require__(65);
 
 module.exports = __webpack_require__(20) ? Object.defineProperties : function defineProperties(O, Properties) {
@@ -16388,7 +16397,7 @@ $export($export.S + $export.F * !__webpack_require__(244)(function (iter) { Arra
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
-var anObject = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 module.exports = function (iterator, fn, value, entries) {
   try {
     return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -16421,7 +16430,7 @@ module.exports = function (it) {
 
 "use strict";
 
-var $defineProperty = __webpack_require__(23);
+var $defineProperty = __webpack_require__(24);
 var createDesc = __webpack_require__(41);
 
 module.exports = function (object, index, value) {
@@ -16863,7 +16872,7 @@ var toPrimitive = __webpack_require__(59);
 var fails = __webpack_require__(16);
 var gOPN = __webpack_require__(255).f;
 var gOPD = __webpack_require__(98).f;
-var dP = __webpack_require__(23).f;
+var dP = __webpack_require__(24).f;
 var $trim = __webpack_require__(100).trim;
 var NUMBER = 'Number';
 var $Number = global[NUMBER];
@@ -17025,7 +17034,7 @@ module.exports = __webpack_require__(10).Reflect.construct;
 var $export = __webpack_require__(11);
 var create = __webpack_require__(64);
 var aFunction = __webpack_require__(62);
-var anObject = __webpack_require__(24);
+var anObject = __webpack_require__(25);
 var isObject = __webpack_require__(15);
 var fails = __webpack_require__(16);
 var bind = __webpack_require__(102);
@@ -17338,7 +17347,7 @@ module.exports = function defineProperty(it, key, desc) {
 
 var $export = __webpack_require__(11);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(20), 'Object', { defineProperty: __webpack_require__(23).f });
+$export($export.S + $export.F * !__webpack_require__(20), 'Object', { defineProperty: __webpack_require__(24).f });
 
 
 /***/ }),
@@ -18373,7 +18382,7 @@ function drawerMixin(C) {
 // [rxjs]: https://github.com/ReactiveX/rxjs
 // [esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
 // [modernizr]: https://modernizr.com/
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
 
 /***/ }),
 /* 276 */
@@ -25333,7 +25342,7 @@ Observable_1.Observable.prototype.multicast = multicast_1.multicast;
 
 "use strict";
 
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 /* tslint:enable:max-line-length */
 /**
  * Allows source Observable to be subscribed only once with a Subject of choice,
@@ -27160,7 +27169,7 @@ exports.Immediate = new ImmediateDefinition(root_1.root);
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25), __webpack_require__(514)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22), __webpack_require__(514)))
 
 /***/ }),
 /* 514 */
@@ -29061,7 +29070,7 @@ var mergeScan_1 = __webpack_require__(185);
 exports.mergeScan = mergeScan_1.mergeScan;
 var min_1 = __webpack_require__(186);
 exports.min = min_1.min;
-var multicast_1 = __webpack_require__(22);
+var multicast_1 = __webpack_require__(23);
 exports.multicast = multicast_1.multicast;
 var observeOn_1 = __webpack_require__(51);
 exports.observeOn = observeOn_1.observeOn;
