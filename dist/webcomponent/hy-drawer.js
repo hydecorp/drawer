@@ -16615,12 +16615,9 @@ function getStateFromAttributes() {
   Object.keys(types).forEach(function (key) {
     var attrName = (0, _decamelize2.default)(key, '-');
     var attr = _this.hasAttribute(attrName) ? _this.getAttribute(attrName) : null;
-    console.log(attrName, attr);
     var value = (0, _common.parseType)(types[key], attr);
     if (value != null) state[key] = value;
   });
-
-  console.log(state);
 
   return state;
 }
@@ -16673,7 +16670,6 @@ function customElementMixin(C) {
           var types = this.constructor.types;
 
           var key = (0, _camelcase2.default)(attrName);
-          console.log(attrName, key, attr);
           var value = (0, _common.parseType)(types[key], attr);
           this[key] = value != null ? value : this.constructor.defaults[key];
         }
