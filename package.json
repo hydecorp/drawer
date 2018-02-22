@@ -30,9 +30,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.2",
-    "babel-plugin-transform-function-bind": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "browserify-css": "^0.14.0",
@@ -85,9 +83,6 @@
         {
           "presets": [
             "env"
-          ],
-          "plugins": [
-            "transform-function-bind"
           ],
           "only": [
             "./src",
