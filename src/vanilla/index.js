@@ -19,7 +19,7 @@ import 'core-js/fn/array/from';
 import { VanillaComponent } from 'hy-component/src/vanilla';
 import { sSetupDOM } from 'hy-component/src/symbols';
 
-import { createElement } from 'create-element-extended/library';
+import { createElement } from 'create-element-x/library';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 import '../style.css';
