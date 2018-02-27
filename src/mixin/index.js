@@ -119,6 +119,8 @@ const sDrawerWidth = Symbol('drawerWidth');
 const sScrimEl = Symbol('scrimElement');
 const sContentEl = Symbol('contentElement');
 const sScrollEl = Symbol('scrollElement');
+const sTranslateX = Symbol('translateX');
+const sOpacity = Symbol('opacity');
 
 // Using shorthands for common functions
 const assign = Object.assign.bind(this);
@@ -189,7 +191,7 @@ function calcIsInRange(clientX, opened) {
 // because it would not pass the condition below, unless we introduce the second term.
 // TODO: reuse isSlidign observable?
 function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-  return endX !== startX || (translateX > 0 && translateX < this[sDrawerWidth]);
+  return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
 }
 
 // #### Calculate 'Will open?'
@@ -201,13 +203,13 @@ function calcWillOpen([,, translateX, velocity]) {
     case 'left': {
       if (velocity > VELOCITY_THRESHOLD) return true;
       else if (velocity < -VELOCITY_THRESHOLD) return false;
-      else if (translateX >= this[sDrawerWidth] / 2) return true;
+      else if (translateX >= this.drawerWidth / 2) return true;
       else return false;
     }
     case 'right': {
       if (-velocity > VELOCITY_THRESHOLD) return true;
       else if (-velocity < -VELOCITY_THRESHOLD) return false;
-      else if (translateX <= -this[sDrawerWidth] / 2) return true;
+      else if (translateX <= -this.drawerWidth / 2) return true;
       else return false;
     }
     default:
@@ -226,12 +228,12 @@ function calcTranslateX(clientX, startX, startTranslateX) {
     case 'left': {
       const deltaX = clientX - startX;
       const translateX = startTranslateX + deltaX;
-      return max(0, min(this[sDrawerWidth], translateX));
+      return max(0, min(this.drawerWidth, translateX));
     }
     case 'right': {
       const deltaX = clientX - startX;
       const translateX = startTranslateX + deltaX;
-      return min(0, max(-this[sDrawerWidth], translateX));
+      return min(0, max(-this.drawerWidth, translateX));
     }
     default:
       throw Error();
@@ -307,13 +309,15 @@ function cleanupInteraction(opened) {
 // In the end, we only modify two properties: The x-coordinate of the drawer,
 // and the opacity of the scrim, which is handled by `updateDOM`.
 function updateDOM(translateX) {
+  this[sTranslateX] = translateX;
+
   const inv = this.align === 'left' ? 1 : -1;
-  const opacity = (translateX / this[sDrawerWidth]) * inv;
+  const opacity = this[sOpacity] = (translateX / this.drawerWidth) * inv;
 
   this[sContentEl].style.transform = `translateX(${translateX}px)`;
-  this[sScrimEl].style.opacity = opacity;
+  this[sScrimEl].style.opacity = this.opacity;
 
-  this[sFire]('move', { detail: opacity });
+  this[sFire]('move', { detail: { translateX, opacity } });
 }
 
 // #### Get start observable
@@ -489,7 +493,7 @@ function setupObservables() {
   const isScrimVisible$ = defer(() =>
     ref.translateX$.pipe(map(translateX => (this.align === 'left' ?
       translateX > 0 :
-      translateX < this[sDrawerWidth]))));
+      translateX < this.drawerWidth))));
 
   // TODO: ...
   const isInRange$ = start$.pipe(
@@ -582,7 +586,7 @@ function setupObservables() {
       // but since there is no animation in this case, we call it directly.
       tap(([opened]) => cleanupInteraction.call(this, opened)),
       map(([opened, align]) =>
-        (!opened ? 0 : this[sDrawerWidth] * (align === 'left' ? 1 : -1))),
+        (!opened ? 0 : this.drawerWidth * (align === 'left' ? 1 : -1))),
     ),
   ))
 
@@ -651,9 +655,9 @@ function setupObservables() {
       // We return a tween observable that runs cleanup code when it completes
       // --- unless a new interaction is initiated, in which case it is canceled.
       const inv = this.align === 'left' ? 1 : -1;
-      const endTranslateX = opened ? this[sDrawerWidth] * inv : 0;
+      const endTranslateX = opened ? this.drawerWidth * inv : 0;
       const diffTranslateX = endTranslateX - translateX;
-      const duration = BASE_DURATION + (this[sDrawerWidth] * WIDTH_CONTRIBUTION);
+      const duration = BASE_DURATION + (this.drawerWidth * WIDTH_CONTRIBUTION);
 
       return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
         tap({ complete: () => this[sOpened$].next(opened) }),
@@ -804,6 +808,20 @@ export function drawerMixin(C) {
           this[sScrollEl] = document.querySelector(selector);
         },
       };
+    }
+
+    // ### Getters
+    // Access to internal vairables
+    get translateX() {
+      return this[sTranslateX];
+    }
+
+    get drawerWidth() {
+      return this[sDrawerWidth];
+    }
+
+    get opacity() {
+      return this[sOpacity];
     }
 
     // ### Methods
