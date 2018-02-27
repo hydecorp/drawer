@@ -46,7 +46,9 @@ _drafts
 react
 
 # npm specific
-.git
-_config.yml
-404.md
-Gemfile*
+/_config.yml
+/404.md
+/Gemfile*
+/scripts
+/webpack.config.js
+/.travis.yml
