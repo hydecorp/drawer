@@ -20,7 +20,7 @@ const { name: filename } = require('./package.json');
 const min = env === 'lite' ? '-lite.min' : env === 'prod' ? '.min' : ''; // eslint-disable-line
 const library = camelcase(filename);
 const banner = String.prototype.trim.call(`
-Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
+Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 `);
+
+const flatten = [(a, x) => a.concat(x), []];
 
 function envConfig() {
   switch (env) {
@@ -95,8 +97,8 @@ const baseConfig = merge({
     modules: [
       resolve('./src'),
       resolve('./node_modules'),
-      resolve(process.env.NODE_PATH), // TODO: save?
-    ],
+      process.env.NODE_PATH ? resolve(process.env.NODE_PATH) : [],
+    ].reduce(...flatten),
     extensions: ['.json', '.js'],
     symlinks: true,
   },

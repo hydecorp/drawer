@@ -16,14 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Overview
 This component is written in [RxJS] and reading its code requires some basic understanding
-of how RxJS works. It may also serve as an example of how to use RxJS (or how not to use it...).
+of how RxJS works. It may also serve as an example of how to use RxJS.
 
-Other than RxJS, you should be familiar with the (non-standard) function-bind syntax `::`,
-which is extremely helpful with using RxJS operators *as if* they were class methods,
-as well as writing private functions for our mixin.
-
-Finally, the export is a [ES6 Mixin][esmixins],
+Other than RxJS, you should be familiar with [ES6 Mixin][esmixins],
 which is a clever way of using the ES6 class syntax to achieve inheritance-based mixins.
+The mixin in the main export of this file.
 
 ## Table of Contents
 {:.no_toc}

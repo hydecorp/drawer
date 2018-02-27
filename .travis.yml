@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- node
+deploy:
+  provider: npm
+  email: mail@qwtel.com
+  api_key:
+    secure: eLLk+FYltZBi7zRwDf46SbBWYC0OvhqTJJ/9DvS/+nPlR0w+TdE4bz8+9zI+4EpweeuZizTBvan+EuRQS983olVaPvlzHvh2FlftmngWG1KXYhs2bbu5yiEzBznvSTkDMJcI0ZXBQySswt/SxdKgCm0bwqm9qBgAKwp7K+4zC7BtYErD2Bn0uTgXwX1rGyhuecTx300Hqkrw3ewB9bY4Z2fbC2Dk9es468ISaGlyw6EnA1BKpuLio4W12SXtMFLADtJfpqzf7GwOlu9GMTL8jM9S3BKYNLeRFSgA7qH1QU8NXIO9PgevnGSjsaZMmQ7DErQ/snYE2Bm+zwMTOGUm2dFwuiNe9OVN5h82wnH4RzGjYr+VpLLWZlMGDGY1GHxENEZkUWbnN/UTByRfNedfNrmnwTg8hXXr3ms4p/fNfgC63aAtf3nW78/08kcDmOJjmDdvctXUflS6+/JO8LAbSM4hCeBYL+zO7QOPWAP/7MX5JLOxXz3otdZX7vs7rgWJ6DObE94iPWq0gDAyXvdYwtJTFAJf0krztJEogC6UhXjyM41GDLq9SaHsxa0eZj+tw81023cGtxvczPNg9CWrgbaSBEJLZuMzv9RAdW1wSj8Fw79q67zkCTl/NOwUvestqEYYCQGyb0jmm0z9Ur31pZcdgZDF87mCKkUkjQJVKRM=
+  on:
+    tags: true
+    repo: qwtel/hy-drawer
+  skip_cleanup: true

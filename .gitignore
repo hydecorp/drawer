@@ -44,3 +44,7 @@ _drafts
 
 # Temp
 react
+
+# Build artifacts
+/dist
+/lib
