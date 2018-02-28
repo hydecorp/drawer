@@ -1,7 +1,7 @@
 @media screen {
   .hy-drawer-scrim {
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
     height: 100vh;
     width: 100vw;
@@ -15,7 +15,7 @@
 
   .hy-drawer-content {
     position: fixed;
-    bottom: 0;
+    top: 0;
     height: 100vh;
     z-index: 3;
     overflow-x: hidden;
