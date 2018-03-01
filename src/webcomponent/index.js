@@ -25,7 +25,6 @@ import 'core-js/fn/array/from';
 // We start by importing form the hy-component library...
 import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
   from 'hy-component/src/custom-element';
-import { sGetTemplate } from 'hy-component/src/symbols';
 
 import { Set } from 'qd-set';
 
@@ -56,5 +55,5 @@ export class HTMLDrawerElement extends customElementMixin(drawerMixin(CustomElem
 
   // We override the `getTemplate` method and return a document fragment
   // obtained from parsing the template string.
-  [sGetTemplate]() { return fragmentFromString(templateString); }
+  getTemplate() { return fragmentFromString(templateString); }
 }

@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { sFire, sSetState } from 'hy-component/src/symbols';
-
 // As mentioned before, we only import the RxJS function that we need.
 import { Subject } from 'rxjs';
 
@@ -185,7 +183,7 @@ export function setupObservables() {
     tap((isSliding) => {
       if (isSliding) {
         if (this[sScrollEl]) this[sScrollEl].style.overflow = 'hidden';
-        this[sFire]('slidestart', { detail: this.opened });
+        this.fireEvent('slidestart', { detail: this.opened });
       }
     }),
   );
@@ -271,7 +269,7 @@ export function setupObservables() {
     filter(calcIsSwipe.bind(this)),
     map(calcWillOpen.bind(this)),
     // TODO: only fire `slideend` event when slidestart fired as well!?
-    tap(willOpen => this[sFire]('slideend', { detail: willOpen })),
+    tap(willOpen => this.fireEvent('slideend', { detail: willOpen })),
   );
 
   // There are 2 things that can trigger an animation:
@@ -290,7 +288,7 @@ export function setupObservables() {
   // and initiate an animation to the opposite state.
   ref.tween$ = tweenTrigger$.pipe(
     tap((willOpen) => {
-      this[sSetState]('opened', willOpen);
+      this.setInternalState('opened', willOpen);
       if (this[sScrollEl] && !willOpen) this[sScrollEl].style.overflow = '';
     }),
     // By using `switchMap` we ensure that subsequent events that trigger an animation
@@ -365,7 +363,7 @@ export function setupObservables() {
   // If the experimental back button feature is enabled, we check the location hash...
   if (this._backButton) {
     const hash = `#${histId.call(this)}--opened`;
-    if (window.location.hash === hash) this[sSetState]('opened', true);
+    if (window.location.hash === hash) this.setInternalState('opened', true);
   }
 
   // Putting initial values on the side-effect--observables:

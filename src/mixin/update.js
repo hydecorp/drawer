@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { sFire } from 'hy-component/src/symbols';
-
 import {
   sScrimEl,
   sContentEl,
@@ -43,7 +41,7 @@ export function prepareInteraction() {
   this[sContentEl].style.willChange = 'transform';
   this[sScrimEl].style.willChange = 'opacity';
   this[sContentEl].classList.remove('hy-drawer-opened');
-  this[sFire]('prepare');
+  this.fireEvent('prepare');
 }
 
 // Cleanup code after a completed interaction.
@@ -78,7 +76,7 @@ export function cleanupInteraction(opened) {
   }
 
   // Once we're finished cleaning up, we fire the `transitioned` event.
-  this[sFire]('transitioned', { detail: opened });
+  this.fireEvent('transitioned', { detail: opened });
 }
 
 // #### Update DOM
@@ -93,5 +91,5 @@ export function updateDOM(translateX) {
   this[sContentEl].style.transform = `translateX(${translateX}px)`;
   this[sScrimEl].style.opacity = this.opacity;
 
-  this[sFire]('move', { detail: { translateX, opacity } });
+  this.fireEvent('move', { detail: { translateX, opacity } });
 }

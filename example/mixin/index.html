@@ -61,7 +61,6 @@
 
     <script>
       var drawerMixin = hyDrawer.drawerMixin;
-      var sSetup = hyDrawer.sSetup;
 
       var ua = navigator.userAgent.toLowerCase();
       var isSafari = ua.indexOf('safari') > 0 && ua.indexOf('chrome') < 0;
@@ -70,8 +69,7 @@
       function MyComponent() {}
       var Drawer = drawerMixin(MyComponent);
       window.drawer = new Drawer()
-
-      window.drawer[sSetup](window.drawerEl, {
+      window.drawer.setupComponent(window.drawerEl, {
         range: isMobileSafari ? [35, 150] : [0, 150],
         threshold: isSafari ? 0 : 10,
         preventDefault: true,

@@ -19,7 +19,6 @@ import 'core-js/fn/array/from';
 import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
 import { JQueryComponent, defineJQueryComponent } from 'hy-component/src/define-jquery-component';
-import { sSetupDOM } from 'hy-component/src/symbols';
 import { Set } from 'qd-set';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
@@ -29,7 +28,7 @@ export const JQUERY_FEATURE_TESTS = new Set([...MIXIN_FEATURE_TESTS]);
 JQUERY_FEATURE_TESTS.delete('customevent');
 
 defineJQueryComponent('hy.drawer', class extends drawerMixin(JQueryComponent) {
-  [sSetupDOM]($el) {
+  setupShadowDOM($el) {
     const children = $el.children().detach();
 
     $el

@@ -31,7 +31,6 @@ import 'core-js/fn/object/assign';
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
 import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
-import { sSetup, sSetupDOM, sFire } from 'hy-component/src/symbols';
 
 // Small little helpers:
 import { arrayOf, bool, number, string, oneOf } from 'attr-types';
@@ -69,10 +68,6 @@ export const MIXIN_FEATURE_TESTS = new Set([
   'csspointerevents',
 ]);
 
-// We export the setup symbols,
-// so that mixin users don't have to import them from hy-compnent separately.
-export { sSetup, sSetupDOM };
-
 // ## Drawer Mixin
 export function drawerMixin(C) {
   // TODO: see ES6 mixins...
@@ -82,8 +77,8 @@ export function drawerMixin(C) {
 
     // ### Setup
     // Overriding the setup function.
-    [sSetup](el, props) {
-      super[sSetup](el, props);
+    setupComponent(el, props) {
+      super.setupComponent(el, props);
 
       // Cache DOM elements.
       this[sScrimEl] = this.root.querySelector('.hy-drawer-scrim');
@@ -97,7 +92,7 @@ export function drawerMixin(C) {
       setupObservables.call(this);
 
       // Firing an event to let the outside world know the drawer is ready.
-      this[sFire]('init', { detail: this.opened });
+      this.fireEvent('init', { detail: this.opened });
 
       // Allow function chaining.
       return this;
@@ -152,7 +147,7 @@ export function drawerMixin(C) {
     }
 
     // ### Getters
-    // Access to internal vairables
+    // Access to internal vairables.
     get translateX() {
       return this[sTranslateX];
     }
