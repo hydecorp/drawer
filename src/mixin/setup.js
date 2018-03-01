@@ -257,7 +257,7 @@ export function setupObservables() {
     withLatestFrom(start$, ref.translateX$, velocity$),
     filter(calcIsSwipe.bind(this)),
     map(calcWillOpen.bind(this)),
-    // TODO: only fire `slideend` event when slidestart fired as well!?
+    // TODO: only fire `slideend` event when slidestart fired as well?
     tap(willOpen => this.fireEvent('slideend', { detail: willOpen })),
   );
 
