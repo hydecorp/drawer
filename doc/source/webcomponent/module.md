@@ -1,5 +1,5 @@
-# src / webcomponent / html-import.js
-Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
+# src / webcomponent / module.js
+Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,27 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Overview
-This in the HTML import version of the WebComponent version of this component.
-See [here](index.md) for the standalone version.
-This file is included via `script` tag in `hy-drawer.html` and shouldn't be used via ES import.
+TODO
 
 
 ```js
 
-import { customElementMixin, CustomElement } from 'hy-component/src/custom-element';
-
-import { drawerMixin } from '../mixin';
+import { HTMLDrawerElement } from './index';
 
 const define = () => {
-  customElements.define('hy-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
-```
-
-The CustomElements spec demands that we provide a list of attributes (i.e. our options).
-
-
-```js
-    static get observedAttributes() { return this.getObservedAttributes(); }
-  });
+  window.customElements.define('hy-drawer', HTMLDrawerElement);
 };
 ```
 

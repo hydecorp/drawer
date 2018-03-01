@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'core-js/fn/array/from';
 
 import { VanillaComponent } from 'hy-component/src/vanilla';
-import { sSetupDOM } from 'hy-component/src/symbols';
 
 import { createElement } from 'create-element-x/library';
 
@@ -30,7 +29,7 @@ import '../style.css';
 export const VANILLA_FEATURE_TESTS = MIXIN_FEATURE_TESTS;
 
 export class Drawer extends drawerMixin(VanillaComponent) {
-  [sSetupDOM](el) {
+  setupShadowDOM(el) {
     if (!el) throw Error('No element provided');
 
     const df = new DocumentFragment();

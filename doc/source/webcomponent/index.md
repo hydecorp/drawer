@@ -14,12 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## Overview
-This is the standalone version of the WebComponent version of hy-drawer.
-It is inteded to be used with custom bundler toolchains.
-It exports a HTML element that you can `define` as a custom element, e.g.
-`customElements.define('hy-drawer', HTMLDrawerElement)`.
-
 
 ```js
 
@@ -32,7 +26,6 @@ We start by importing form the hy-component library...
 ```js
 import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
   from 'hy-component/src/custom-element';
-import { sGetTemplate } from 'hy-component/src/symbols';
 
 import { Set } from 'qd-set';
 ```
@@ -76,7 +69,6 @@ export class HTMLDrawerElement extends customElementMixin(drawerMixin(CustomElem
 ```
 
 The CustomElements spec demands that we provide a list of attributes (i.e. our options).
-hy-component provides these for us.
 
 
 ```js
@@ -88,7 +80,7 @@ obtained from parsing the template string.
 
 
 ```js
-  [sGetTemplate]() { return fragmentFromString(templateString); }
+  getTemplate() { return fragmentFromString(templateString); }
 }
 ```
 
