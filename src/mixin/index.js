@@ -39,23 +39,6 @@ import { Set } from 'qd-set';
 // TODO
 import { setupObservables } from './setup';
 
-// ## Constants
-import {
-  sOpened$,
-  sAlign$,
-  sPersitent$,
-  sPreventDefault$,
-  sMouseEvents$,
-  sBackButton$,
-  sAnimateTo$,
-  sDrawerWidth,
-  sScrimEl,
-  sContentEl,
-  sScrollEl,
-  sTranslateX,
-  sOpacity,
-} from './constants';
-
 // A set of [Modernizr] tests that are required for this component to work.
 export const MIXIN_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
@@ -81,12 +64,12 @@ export function drawerMixin(C) {
       super.setupComponent(el, props);
 
       // Cache DOM elements.
-      this[sScrimEl] = this.root.querySelector('.hy-drawer-scrim');
-      this[sContentEl] = this.root.querySelector('.hy-drawer-content');
-      if (this._hideOverflow) this[sScrollEl] = document.querySelector(this._hideOverflow);
+      this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
+      this.contentEl = this.root.querySelector('.hy-drawer-content');
+      if (this._hideOverflow) this.scrollEl = document.querySelector(this._hideOverflow);
 
       // Set the initial alignment class.
-      this[sContentEl].classList.add(`hy-drawer-${this.align}`);
+      this.contentEl.classList.add(`hy-drawer-${this.align}`);
 
       // Finally, calling the [setup observables function](#setup-observables) function.
       setupObservables.call(this);
@@ -133,47 +116,33 @@ export function drawerMixin(C) {
     // Mostly we just put the value on an observable and deal with it from there.
     static get sideEffects() {
       return {
-        opened(x) { this[sOpened$].next(x); },
-        align(x) { this[sAlign$].next(x); },
-        persistent(x) { this[sPersitent$].next(x); },
-        preventDefault(x) { this[sPreventDefault$].next(x); },
-        mouseEvents(x) { this[sMouseEvents$].next(x); },
-        _backButton(x) { this[sBackButton$].next(x); },
+        opened(x) { this.opened$.next(x); },
+        align(x) { this.align$.next(x); },
+        persistent(x) { this.persitent$.next(x); },
+        preventDefault(x) { this.preventDefault$.next(x); },
+        mouseEvents(x) { this.mouseEvents$.next(x); },
+        _backButton(x) { this.backButton$.next(x); },
         _hideOverflow(selector) {
-          if (this[sScrollEl]) this[sScrollEl].style.overflow = '';
-          this[sScrollEl] = document.querySelector(selector);
+          if (this.scrollEl) this.scrollEl.style.overflow = '';
+          this.scrollEl = document.querySelector(selector);
         },
       };
-    }
-
-    // ### Getters
-    // Access to internal vairables.
-    get translateX() {
-      return this[sTranslateX];
-    }
-
-    get drawerWidth() {
-      return this[sDrawerWidth];
-    }
-
-    get opacity() {
-      return this[sOpacity];
     }
 
     // ### Methods
     // Public methods of this component. See [Methods](../../methods.md) for more.
     open(animated = true) {
-      if (animated) this[sAnimateTo$].next(true);
+      if (animated) this.animateTo$.next(true);
       else this.opened = true;
     }
 
     close(animated = true) {
-      if (animated) this[sAnimateTo$].next(false);
+      if (animated) this.animateTo$.next(false);
       else this.opened = false;
     }
 
     toggle(animated = true) {
-      if (animated) this[sAnimateTo$].next(!this.opened);
+      if (animated) this.animateTo$.next(!this.opened);
       else this.opened = !this.opened;
     }
   };

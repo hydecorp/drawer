@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { VELOCITY_THRESHOLD, sContentEl } from './constants';
+import { VELOCITY_THRESHOLD } from './constants';
 
 // Using shorthands for common functions
 const min = Math.min.bind(this);
@@ -103,5 +103,5 @@ export function calcTranslateX(clientX, startX, startTranslateX) {
 // The 'moveable' part of the drawer, then, is equal to that the inverse of that property.
 // See [Styling](../../styling.md) for more.
 export function calcMovableDrawerWidth() {
-  return -parseFloat(getComputedStyle(this[sContentEl])[this.align]);
+  return -parseFloat(getComputedStyle(this.contentEl)[this.align]);
 }

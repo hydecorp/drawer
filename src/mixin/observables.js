@@ -30,8 +30,6 @@ import {
 
 import { subscribeWhen } from './operators';
 
-import { sPreventDefault$, sMouseEvents$ } from './constants';
-
 // Using shorthands for common functions
 const assign = Object.assign.bind(this);
 const abs = Math.abs.bind(this);
@@ -43,7 +41,7 @@ const abs = Math.abs.bind(this);
 // we may listen for `mousedown` events.
 export function getStartObservable() {
   // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-  return this[sMouseEvents$].pipe(switchMap((mouseEvents) => {
+  return this.mouseEvents$.pipe(switchMap((mouseEvents) => {
     // The touchstart observable is passive since we won't be calling `preventDefault`.
     // Also, we're only interested in the first `touchstart`.
     const touchstart$ = fromEvent(document, 'touchstart', { passive: true }).pipe(
@@ -70,7 +68,7 @@ export function getMoveObservable(start$, end$) {
   // we `switchMap` to reflect the changes.
   // Nice: `combineLatest` provides us with the functionality of emitting
   // when either of the inputs change, but not before all inputs have their first value set.
-  return combineLatest(this[sMouseEvents$], this[sPreventDefault$])
+  return combineLatest(this.mouseEvents$, this.preventDefault$)
     .pipe(switchMap(([mouseEvents, preventDefault]) => {
       // We're only keeping track of the first finger.
       // Should the user remove the finger that started the interaction, we use the next instead.
@@ -105,7 +103,7 @@ export function getMoveObservable(start$, end$) {
 // when the `mouseEvents` option is enabled.
 export function getEndObservable() {
   // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-  return this[sMouseEvents$].pipe(switchMap((mouseEvents) => {
+  return this.mouseEvents$.pipe(switchMap((mouseEvents) => {
     // We're only interested in the last `touchend`.
     // Otherwise there's at least one finger left on the screen,
     // that can be used to slide the drawer.
