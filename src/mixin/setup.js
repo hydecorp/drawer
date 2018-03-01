@@ -84,9 +84,12 @@ export function setupObservables() {
   this.mouseEvents$ = new Subject();
   this.backButton$ = new Subject();
   this.animateTo$ = new Subject();
+  this.teardown$ = new Subject();
+  this.document$ = new Subject();
 
   // An observable of resize events.
   const resize$ = fromEvent(window, 'resize', { passive: true }).pipe(
+    takeUntil(this.teardown$),
     /* debounceTime(100), */
     share(),
     startWith({}),
@@ -94,15 +97,18 @@ export function setupObservables() {
 
   // Keep measurements up-to-date.
   // Note that we need to temporarily remove the opened class to get the correct measures.
-  resize$.subscribe(() => {
-    if (this.opened) this.contentEl.classList.remove('hy-drawer-opened');
-    this.drawerWidth = calcMovableDrawerWidth.call(this);
-    if (this.opened) this.contentEl.classList.add('hy-drawer-opened');
-  });
+  resize$
+    .pipe(takeUntil(this.teardown$))
+    .subscribe(() => {
+      if (this.opened) this.contentEl.classList.remove('hy-drawer-opened');
+      this.drawerWidth = calcMovableDrawerWidth.call(this);
+      if (this.opened) this.contentEl.classList.add('hy-drawer-opened');
+    });
 
   // Emitts a value every time you change the `persistent` property of the drawer.
   // Interally, we invert it and call it `active`.
   const active$ = this.persitent$.pipe(
+    takeUntil(this.teardown$),
     map(x => !x),
     share(),
   );
@@ -114,6 +120,7 @@ export function setupObservables() {
   // Emits a value every time a start event *could* intiate an interaction.
   // Each emitted value is a hash containing a `clientX` and `clientY` key.
   const start$ = getStartObservable.call(this).pipe(
+    takeUntil(this.teardown$),
     filterWhen(active$),
     share(),
   );
@@ -142,6 +149,7 @@ export function setupObservables() {
   // #### End observable
   // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
   const end$ = getEndObservable.call(this).pipe(
+    takeUntil(this.teardown$),
     filterWhen(active$, isInRange$),
     share(),
   );
@@ -149,6 +157,7 @@ export function setupObservables() {
   // #### Move observable
   // The observable of all relevant "move" events.
   const move$ = getMoveObservable.call(this, start$, end$).pipe(
+    takeUntil(this.teardown$),
     filterWhen(active$, isInRange$),
     share(),
   );
@@ -221,9 +230,11 @@ export function setupObservables() {
         : this.drawerWidth * (align === 'left' ? 1 : -1))),
     ),
   ))
-
     // `share`ing the observable between many subscribers:
-    .pipe(share());
+    .pipe(
+      takeUntil(this.teardown$),
+      share(),
+    );
 
   // The `translateX` value at the start of an interaction.
   // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
@@ -312,12 +323,14 @@ export function setupObservables() {
     .subscribe(() => this.close());
 
   // Other than preventing sliding, setting `persistent` will also hide the scrim.
-  active$.subscribe((active) => {
-    this.scrimEl.style.display = active ? 'block' : 'none';
-  });
+  active$
+    .subscribe((active) => {
+      this.scrimEl.style.display = active ? 'block' : 'none';
+    });
 
   // Whenever the alignment of the drawer changes, update the CSS classes.
   this.align$
+    .pipe(takeUntil(this.teardown$))
     .subscribe((align) => {
       const oldAlign = align === 'left' ? 'right' : 'left';
       this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
@@ -326,7 +339,10 @@ export function setupObservables() {
 
   // If the experimental back button feature is enabled, handle popstate events...
   fromEvent(window, 'popstate')
-    .pipe(subscribeWhen(this.backButton$))
+    .pipe(
+      takeUntil(this.teardown$),
+      subscribeWhen(this.backButton$)
+    )
     .subscribe(() => {
       const hash = `#${histId.call(this)}--opened`;
       const willOpen = window.location.hash === hash;
@@ -336,14 +352,17 @@ export function setupObservables() {
   // When drawing with mouse is enabled, we add the grab cursor to the drawer.
   // We also want to call `preventDefault` when `mousedown` is within the drawer range
   // to prevent text selection while sliding.
-  this.mouseEvents$.pipe(switchMap((mouseEvents) => {
-    if (mouseEvents) this.contentEl.classList.add('hy-drawer-grab');
-    else this.contentEl.classList.remove('hy-drawer-grab');
+  this.mouseEvents$.pipe(
+    takeUntil(this.teardown$),
+    switchMap((mouseEvents) => {
+      if (mouseEvents) this.contentEl.classList.add('hy-drawer-grab');
+      else this.contentEl.classList.remove('hy-drawer-grab');
 
-    return mouseEvents ?
-      start$.pipe(withLatestFrom(isInRange$)) :
-      never();
-  }))
+      return mouseEvents ?
+        start$.pipe(withLatestFrom(isInRange$)) :
+        never();
+    }),
+  )
     .subscribe(([{ event }, isInRange]) => {
       if (isInRange && event) event.preventDefault();
     });
@@ -356,6 +375,7 @@ export function setupObservables() {
   }
 
   // Putting initial values on the side-effect--observables:
+  this.document$.next(document);
   this.opened$.next(this.opened);
   this.align$.next(this.align);
   this.persitent$.next(this.persistent);

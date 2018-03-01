@@ -76,9 +76,14 @@ export function drawerMixin(C) {
 
       // Firing an event to let the outside world know the drawer is ready.
       this.fireEvent('init', { detail: this.opened });
+    }
 
-      // Allow function chaining.
-      return this;
+    teardownComponent() {
+      this.teardown$.next({});
+    }
+
+    adoptComponent() {
+      this.document$.next(document);
     }
 
     // ### Options
