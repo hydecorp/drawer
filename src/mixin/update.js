@@ -52,6 +52,7 @@ export function cleanupInteraction(opened) {
 
   // If the experimental back button feature is enabled we hack the history API,
   // so that it matches the state of the drawer...
+  /*
   if (this._backButton) {
     const id = histId.call(this);
     const hash = `#${id}--opened`;
@@ -66,6 +67,7 @@ export function cleanupInteraction(opened) {
       window.history.back();
     }
   }
+  */
 
   // Once we're finished cleaning up, we fire the `transitioned` event.
   this.fireEvent('transitioned', { detail: opened });

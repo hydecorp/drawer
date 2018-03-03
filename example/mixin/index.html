@@ -75,6 +75,7 @@
         preventDefault: true,
         mouseEvents: true,
       });
+      window.drawer.connectComponent();
 
       window.drawerEl.addEventListener('hy-drawer-transitioned', function (e) {
         console.log('hy-drawer transitioned to', e.detail);

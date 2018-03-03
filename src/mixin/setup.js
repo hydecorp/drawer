@@ -15,8 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // As mentioned before, we only import the RxJS function that we need.
-import { Subject } from 'rxjs';
-
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { defer } from 'rxjs/observable/defer';
 import { fromEvent } from 'rxjs/observable/fromEvent';
@@ -75,18 +73,6 @@ import {
 // ### Setup observables
 // This function sets up the observable "pipeline".
 export function setupObservables() {
-  // Observables used for side effects caused by changing settings on the component.
-  // The are used to emit the new vale whenever properties get changed on the component.
-  this.opened$ = new Subject();
-  this.align$ = new Subject();
-  this.persitent$ = new Subject();
-  this.preventDefault$ = new Subject();
-  this.mouseEvents$ = new Subject();
-  this.backButton$ = new Subject();
-  this.animateTo$ = new Subject();
-  this.teardown$ = new Subject();
-  this.document$ = new Subject();
-
   // An observable of resize events.
   const resize$ = fromEvent(window, 'resize', { passive: true }).pipe(
     takeUntil(this.teardown$),
@@ -179,10 +165,7 @@ export function setupObservables() {
     // When the user is sliding, fire the `slidestart` event.
     // Experimental: Set `overflow: hidden` on some container element.
     tap((isSliding) => {
-      if (isSliding) {
-        if (this.scrollEl) this.scrollEl.style.overflow = 'hidden';
-        this.fireEvent('slidestart', { detail: this.opened });
-      }
+      if (isSliding) this.fireEvent('slidestart', { detail: this.opened });
     }),
   );
 
@@ -289,7 +272,6 @@ export function setupObservables() {
   ref.tween$ = tweenTrigger$.pipe(
     tap((willOpen) => {
       this.setInternalState('opened', willOpen);
-      if (this.scrollEl && !willOpen) this.scrollEl.style.overflow = '';
     }),
     // By using `switchMap` we ensure that subsequent events that trigger an animation
     // don't cause more than one animation to be played at a time.
@@ -341,7 +323,7 @@ export function setupObservables() {
   fromEvent(window, 'popstate')
     .pipe(
       takeUntil(this.teardown$),
-      subscribeWhen(this.backButton$)
+      subscribeWhen(this.backButton$),
     )
     .subscribe(() => {
       const hash = `#${histId.call(this)}--opened`;
@@ -369,17 +351,20 @@ export function setupObservables() {
 
   // Now we set the initial opend state.
   // If the experimental back button feature is enabled, we check the location hash...
+  /*
   if (this._backButton) {
     const hash = `#${histId.call(this)}--opened`;
     if (window.location.hash === hash) this.setInternalState('opened', true);
   }
+  */
 
   // Putting initial values on the side-effect--observables:
   this.document$.next(document);
+
   this.opened$.next(this.opened);
   this.align$.next(this.align);
   this.persitent$.next(this.persistent);
   this.preventDefault$.next(this.preventDefault);
   this.mouseEvents$.next(this.mouseEvents);
-  this.backButton$.next(this._backButton);
+  /* this.backButton$.next(this._backButton); */
 }

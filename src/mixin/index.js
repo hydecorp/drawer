@@ -33,8 +33,10 @@ import 'core-js/fn/object/assign';
 import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
 
 // Small little helpers:
-import { arrayOf, bool, number, string, oneOf } from 'attr-types';
+import { arrayOf, bool, number, oneOf } from 'attr-types';
 import { Set } from 'qd-set';
+
+import { Subject } from 'rxjs';
 
 // TODO
 import { setupObservables } from './setup';
@@ -58,34 +60,6 @@ export function drawerMixin(C) {
     // The name of the component (required by hy-component)
     static get componentName() { return 'hy-drawer'; }
 
-    // ### Setup
-    // Overriding the setup function.
-    setupComponent(el, props) {
-      super.setupComponent(el, props);
-
-      // Cache DOM elements.
-      this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
-      this.contentEl = this.root.querySelector('.hy-drawer-content');
-      if (this._hideOverflow) this.scrollEl = document.querySelector(this._hideOverflow);
-
-      // Set the initial alignment class.
-      this.contentEl.classList.add(`hy-drawer-${this.align}`);
-
-      // Finally, calling the [setup observables function](#setup-observables) function.
-      setupObservables.call(this);
-
-      // Firing an event to let the outside world know the drawer is ready.
-      this.fireEvent('init', { detail: this.opened });
-    }
-
-    teardownComponent() {
-      this.teardown$.next({});
-    }
-
-    adoptComponent() {
-      this.document$.next(document);
-    }
-
     // ### Options
     // The default values (and types) of the configuration options (required by hy-component)
     // See [Options](../../options.md) for usage information.
@@ -98,8 +72,7 @@ export function drawerMixin(C) {
         threshold: 10,
         preventDefault: false,
         mouseEvents: false,
-        _backButton: false,
-        _hideOverflow: null,
+        /* _backButton: false, */
       };
     }
 
@@ -112,8 +85,7 @@ export function drawerMixin(C) {
         threshold: number,
         preventDefault: bool,
         mouseEvents: bool,
-        _backButton: bool,
-        _hideOverflow: string,
+        /* _backButton: bool, */
       };
     }
 
@@ -126,12 +98,49 @@ export function drawerMixin(C) {
         persistent(x) { this.persitent$.next(x); },
         preventDefault(x) { this.preventDefault$.next(x); },
         mouseEvents(x) { this.mouseEvents$.next(x); },
-        _backButton(x) { this.backButton$.next(x); },
-        _hideOverflow(selector) {
-          if (this.scrollEl) this.scrollEl.style.overflow = '';
-          this.scrollEl = document.querySelector(selector);
-        },
+        /* _backButton(x) { this.backButton$.next(x); }, */
       };
+    }
+
+    // ### Setup
+    // Overriding the setup function.
+    setupComponent(el, props) {
+      super.setupComponent(el, props);
+
+      // Observables used for side effects caused by changing settings on the component.
+      // The are used to emit the new vale whenever properties get changed on the component.
+      this.opened$ = new Subject();
+      this.align$ = new Subject();
+      this.persitent$ = new Subject();
+      this.preventDefault$ = new Subject();
+      this.mouseEvents$ = new Subject();
+      this.backButton$ = new Subject();
+      this.animateTo$ = new Subject();
+      this.teardown$ = new Subject();
+      this.document$ = new Subject();
+
+      // Cache DOM elements.
+      this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
+      this.contentEl = this.root.querySelector('.hy-drawer-content');
+
+      // Set the initial alignment class.
+      this.contentEl.classList.add(`hy-drawer-${this.align}`);
+    }
+
+    connectComponent() {
+      // Finally, calling the [setup observables function](#setup-observables) function.
+      setupObservables.call(this);
+
+      // Firing an event to let the outside world know the drawer is ready.
+      this.fireEvent('init', { detail: this.opened });
+    }
+
+    disconnectComponent() {
+      this.teardown$.next({});
+    }
+
+    adoptComponent() {
+      this.document$.next(document);
     }
 
     // ### Methods
@@ -153,15 +162,6 @@ export function drawerMixin(C) {
   };
 }
 
-// This concludes the implementation of push-state mixin.
-// You can now check out
-//
-// * [vanilla / index.js](../vanilla/index.md)
-// * [jquery / index.js](../jquery/index.md)
-// * [webcomponent / index.js](../webcomponent/index.md)
-//
-// to see how it is used.
-//
 // [rxjs]: https://github.com/ReactiveX/rxjs
 // [esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
 // [modernizr]: https://modernizr.com/
