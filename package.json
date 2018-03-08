@@ -74,6 +74,16 @@
     "url": "https://github.com/qwtel/hy-drawer/issues"
   },
   "homepage": "https://qwtel.com/hy-drawer/",
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "only": [
+      "./src",
+      "hy-component",
+      "camelcase"
+    ]
+  },
   "browserify": {
     "transform": [
       [
