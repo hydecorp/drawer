@@ -162,6 +162,15 @@ const config = [
     },
   }),
 
+  // WebComponent Module
+  merge(baseConfig, cssRawLoaderConfig, {
+    entry: resolve('./src/webcomponent/module.js'),
+    output: {
+      path: resolve('./dist/webcomponent'),
+      filename: `${filename}-module${min}.js`,
+    },
+  }),
+
   // WebComponent HTML Import
   merge(baseConfig, cssRawLoaderConfig, {
     entry: resolve('./src/webcomponent/html-import.js'),
