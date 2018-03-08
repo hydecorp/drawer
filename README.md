@@ -66,12 +66,18 @@ which is used to create the framework-specific versions of the component.
 * `jquery`
   * [`index.js`](doc/source/jquery/index.md)
 * `mixin`
+  * [`calc.js`](doc/source/mixin/calc.md)
+  * [`constants.js`](doc/source/mixin/constants.md)
   * [`index.js`](doc/source/mixin/index.md)
+  * [`observables.js`](doc/source/mixin/observables.md)
+  * [`operators.js`](doc/source/mixin/operators.md)
+  * [`setup.js`](doc/source/mixin/setup.md)
+  * [`update.js`](doc/source/mixin/update.md)
 * `vanilla`
   * [`index.js`](doc/source/vanilla/index.md)
 * `webcomponent`
-  * [`index.js`](doc/source/webcomponent/index.md)
   * [`html-import.js`](doc/source/webcomponent/html-import.md)
+  * [`index.js`](doc/source/webcomponent/index.md)
 * [`common.js`](doc/source/common.md)
 
 
