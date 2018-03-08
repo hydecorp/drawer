@@ -1,13 +1,11 @@
+/* eslint-disable no-nested-ternary */
 const { readFileSync } = require('fs');
 const { resolve } = require('path');
 
 const {
   BannerPlugin,
   EnvironmentPlugin,
-  optimize: {
-    UglifyJsPlugin,
-    ModuleConcatenationPlugin,
-  },
+  optimize: { UglifyJsPlugin },
 } = require('webpack');
 
 const merge = require('webpack-merge');
@@ -18,7 +16,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const { name: filename } = require('./package.json');
 
-const min = env === 'lite' ? '-lite.min' : env === 'prod' ? '.min' : ''; // eslint-disable-line
+const min = env === 'lite'
+  ? '-lite.min'
+  : env === 'prod' ? '.min' : '';
 const library = camelcase(filename);
 const banner = readFileSync(resolve('./header.md'), 'utf-8');
 
@@ -88,9 +88,6 @@ const baseConfig = merge({
     extensions: ['.json', '.js'],
     symlinks: true,
   },
-  plugins: [
-    new ModuleConcatenationPlugin(),
-  ],
 }, envConfig());
 
 const cssFileLoaderConfig = {
