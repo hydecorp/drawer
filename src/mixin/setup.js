@@ -21,21 +21,19 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { never } from 'rxjs/observable/never';
 
-import {
-  tap,
-  filter,
-  map,
-  pairwise,
-  repeatWhen,
-  sample,
-  share,
-  startWith,
-  switchMap,
-  take,
-  takeUntil,
-  timestamp,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { tap } from 'rxjs/operators/tap';
+import { filter } from 'rxjs/operators/filter';
+import { map } from 'rxjs/operators/map';
+import { pairwise } from 'rxjs/operators/pairwise';
+import { repeatWhen } from 'rxjs/operators/repeatWhen';
+import { sample } from 'rxjs/operators/sample';
+import { share } from 'rxjs/operators/share';
+import { startWith } from 'rxjs/operators/startWith';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { take } from 'rxjs/operators/take';
+import { takeUntil } from 'rxjs/operators/takeUntil';
+import { timestamp } from 'rxjs/operators/timestamp';
+import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
 
 import { createTween } from 'rxjs-create-tween';
 
@@ -46,7 +44,7 @@ import {
   WIDTH_CONTRIBUTION,
 } from './constants';
 
-import { filterWhen, subscribeWhen } from './operators';
+import { filterWhen /* , subscribeWhen */ } from './operators';
 
 import {
   calcIsInRange,
@@ -57,7 +55,7 @@ import {
 } from './calc';
 
 import {
-  histId,
+  /* histId, */
   prepareInteraction,
   cleanupInteraction,
   updateDOM,
@@ -149,21 +147,17 @@ export function setupObservables() {
   );
 
   // #### 'Is sliding?' observable
-  // The value is `undefind` until we are ready to make a decision
   // An observable that emits `true` when the user is *sliding* the drawer,
   // (i.e. moving the finger along the x-axis), or `false` when *scrolling* the page
   // (i.e. moving the finger along the y-axis), and `undefined` while we aren't sure yet.
   //
-  // (see [`getIsSlidingObservable`](#get-is-sliding-observable)),
-  // then it remains `true`/`false` for the remainder of the interaction,
-  // and is `undefined` again once the interaction `end`s.
+  // See [`getIsSlidingObservable`](./observables.md#get-is-sliding-observable).
   const isSliding$ = getIsSlidingObservable.call(this, move$, start$).pipe(
     take(1),
     startWith(undefined),
     repeatWhen(() => end$),
 
     // When the user is sliding, fire the `slidestart` event.
-    // Experimental: Set `overflow: hidden` on some container element.
     tap((isSliding) => {
       if (isSliding) this.fireEvent('slidestart', { detail: this.opened });
     }),
@@ -221,8 +215,8 @@ export function setupObservables() {
 
   // The `translateX` value at the start of an interaction.
   // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
-  // an interaction *during the animation*, it may be every value inbetween.
-  // We obtain it by sampling the translate X observable at the beginning of each interaction.
+  // an interaction *during the animation*, it could also be any value inbetween.
+  // We obtain it by sampling the translate-x observable at the beginning of each interaction.
   ref.startTranslateX$ = ref.translateX$.pipe(sample(start$));
 
   // #### Tween observable
@@ -302,10 +296,12 @@ export function setupObservables() {
 
   // A click on the scrim should close the drawer.
   fromEvent(this.scrimEl, 'click')
+    .pipe(takeUntil(this.teardown$))
     .subscribe(() => this.close());
 
   // Other than preventing sliding, setting `persistent` will also hide the scrim.
   active$
+    .pipe(takeUntil(this.teardown$))
     .subscribe((active) => {
       this.scrimEl.style.display = active ? 'block' : 'none';
     });
@@ -320,6 +316,7 @@ export function setupObservables() {
     });
 
   // If the experimental back button feature is enabled, handle popstate events...
+  /*
   fromEvent(window, 'popstate')
     .pipe(
       takeUntil(this.teardown$),
@@ -330,6 +327,7 @@ export function setupObservables() {
       const willOpen = window.location.hash === hash;
       if (willOpen !== this.opened) this.animateTo$.next(willOpen);
     });
+  */
 
   // When drawing with mouse is enabled, we add the grab cursor to the drawer.
   // We also want to call `preventDefault` when `mousedown` is within the drawer range

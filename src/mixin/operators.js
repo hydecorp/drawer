@@ -16,12 +16,10 @@
 
 import { never } from 'rxjs/observable/never';
 
-import {
-  filter,
-  map,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { filter } from 'rxjs/operators/filter';
+import { map } from 'rxjs/operators/map';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
 
 // ### Observable extensions
 // #### Subscribe when

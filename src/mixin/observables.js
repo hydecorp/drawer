@@ -18,15 +18,13 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 
-import {
-  tap,
-  filter,
-  map,
-  mapTo,
-  skipWhile,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { tap } from 'rxjs/operators/tap';
+import { filter } from 'rxjs/operators/filter';
+import { map } from 'rxjs/operators/map';
+import { mapTo } from 'rxjs/operators/mapTo';
+import { skipWhile } from 'rxjs/operators/skipWhile';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
 
 import { subscribeWhen } from './operators';
 

@@ -36,7 +36,7 @@ import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/compon
 import { arrayOf, bool, number, oneOf } from 'attr-types';
 import { Set } from 'qd-set';
 
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 // TODO
 import { setupObservables } from './setup';
@@ -114,10 +114,10 @@ export function drawerMixin(C) {
       this.persitent$ = new Subject();
       this.preventDefault$ = new Subject();
       this.mouseEvents$ = new Subject();
-      this.backButton$ = new Subject();
       this.animateTo$ = new Subject();
       this.teardown$ = new Subject();
       this.document$ = new Subject();
+      /* this.backButton$ = new Subject(); */
 
       // Cache DOM elements.
       this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
@@ -127,8 +127,8 @@ export function drawerMixin(C) {
       this.contentEl.classList.add(`hy-drawer-${this.align}`);
     }
 
+    // Calling the [setup observables function](./setup.md) function.
     connectComponent() {
-      // Finally, calling the [setup observables function](#setup-observables) function.
       setupObservables.call(this);
 
       // Firing an event to let the outside world know the drawer is ready.
