@@ -39,7 +39,7 @@ _drafts
 .DS_Store
 
 # Bundler
-/.bundle
+.bundle
 /vendor/bundle
 
 # Temp
