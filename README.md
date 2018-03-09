@@ -16,8 +16,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 * As **WebComponent**, both as *ES6 Module* and *HTML Import*
 * Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
 
-The component was initially developed --- and can be encountered in the wild ---
-as part of the [Hydejack](https://qwtel.com/hydejack/){:.external} Jekyll theme.
+**hy-drawer** is used by thousands of sites as part of the [Hydejack]{:.external} Jekyll theme.
 
 **NOTE**: The current version is a pre-release. The public API may still change in important ways.
 {:.message}
@@ -32,17 +31,20 @@ as part of the [Hydejack](https://qwtel.com/hydejack/){:.external} Jekyll theme.
 
 ## License
 
-|            | Personal       | Startup       | Enterprise       |
-|:-----------|:--------------:|:-------------:|:----------------:|
-| Developers | 2              | 15            | ∞                |
-| License    | [Personal][pl] | [Startup][sl] | [Enterprise][el] |
-| Price      | $29            | $249          | $499             |
-| Buy        | TBA  | TBA | TBA    |
+|            | Personal           | Startup            | Enterprise         |
+|:-----------|:------------------:|:------------------:|:------------------:|
+| Developers | 2                  | 15                 | ∞                  |
+| License    | [Personal][pl]     | [Startup][sl]      | [Enterprise][el]   |
+| Price      | $29                | $249               | $499               |
+| Buy        | [**Buy this**][bp] | [**Buy this**][bs] | [**Buy this**][be] |
 {:.stretch-table}
 
 [pl]: licenses/personal.md
 [sl]: licenses/startup.md
 [el]: licenses/enterprise.md
+[bp]: https://gumroad.com/l/hy-drawer-personal
+[bs]: https://gumroad.com/l/hy-drawer-startup
+[be]: https://gumroad.com/l/hy-drawer-enterprise
 
 Unless you've obtained one of the licenses above, **hy-drawer** must be used in accordance with the [GPL-3.0](LICENSE.md) license.
 
@@ -72,6 +74,10 @@ The most straight-forward way to use **hy-drawer** is by using the vanilla JS ve
 * [Styling](doc/styling.md)
 
 
+## Gold Standard
+This components follows the [Web Components Gold Standard](doc/gold-standard).
+
+
 ## Source
 The source code is written in a *literal programming* style, and should be reasonably approachable.
 However, some knowledge of [RxJS] is required.
@@ -94,8 +100,10 @@ which is used to create the framework-specific versions of the component.
 * `webcomponent`
   * [`html-import.js`](doc/source/webcomponent/html-import.md)
   * [`index.js`](doc/source/webcomponent/index.md)
+  * [`module.js`](doc/source/webcomponent/module.md)
 * [`common.js`](doc/source/common.md)
 
 
 [esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
 [rxjs]: https://github.com/ReactiveX/rxjs
+[hydejack]: https://qwtel.com/hydejack/
