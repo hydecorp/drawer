@@ -75,7 +75,7 @@ The most straight-forward way to use **hy-drawer** is by using the vanilla JS ve
 
 
 ## Gold Standard
-This components follows the [Web Components Gold Standard](doc/gold-standard).
+This component follows the [Web Components Gold Standard](doc/gold-standard.md).
 
 
 ## Source
