@@ -1,7 +1,6 @@
 ---
 layout: page
-title: PRO–hy-drawer License
-sitemap: false
+title: hy-drawer Startup License
 ---
 
 ## License Summary
@@ -9,7 +8,7 @@ sitemap: false
 * License does not expire
 * Commercial use allowed
 * Can modify source code
-* Can only use as integral part of [Hydejack PRO][2]
+* 15 licensed developers
 * Parts of software are provided under [separate licenses](../NOTICE.md#licenses)
 
 ## Terms and Conditions
@@ -19,17 +18,18 @@ Florian Klampfer qwtel.com (hereinafter: Licensor).
 This Agreement sets the terms, rights, restrictions and obligations on using
 hy-drawer (hereinafter: The Software)
 created and owned by Licensor, as detailed herein.
+"Licensed Developer" shall mean an individual person permitted to use the Software and make Modifications for your Applications.
 
 ### 2. License Grant
-Licensor hereby grants Licensee a Personal, Perpetual, Commercial, Royalty free,
+Licensor hereby grants Licensee a Perpetual, Commercial, Royalty free,
 Including the rights to create derivative works, Non-exclusive, Non-transferable license, all with accordance with
 the terms set forth and other legal restrictions set forth in 3rd party software used while running Software.
 
 1.  **Limited:** Licensee may use Software for the purpose of:
 
-    1. Running Software on Licensee’s Website[s] and Server[s] *solely as integrated into Hydejack PRO*;
+    1. Running Software on Licensee’s Website[s] and Server[s];
     2. Allowing 3rd Parties to run Software on Licensee’s Website[s] and Server[s];
-    3. Modify Software to suit Licensee’s needs and specifications.
+    3. Allowing 15 Licensed Developers to Modify Software to suit Licensee’s needs and specifications.
 
 2.  This license is granted perpetually, as long as you do not materially breach it.
 
@@ -137,4 +137,3 @@ relation to this license and to compensate Licensor for any legal fees, cost or 
 brought by Licensee against Licensor be denied, in part or in full.
 
 [1]: https://qwtel.com/hy-drawer/
-[2]: https://qwtel.com/hydejack/
