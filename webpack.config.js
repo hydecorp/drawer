@@ -20,7 +20,7 @@ const min = env === 'lite'
   ? '-lite.min'
   : env === 'prod' ? '.min' : '';
 const library = camelcase(filename);
-const banner = readFileSync(resolve('./header.md'), 'utf-8');
+const banner = readFileSync(resolve('./header.txt'), 'utf-8');
 
 const flatten = [(a, x) => a.concat(x), []];
 
