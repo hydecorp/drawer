@@ -1,7 +1,4 @@
----
-layout: page
-title: hy-drawer Enterprise License
----
+# hy-drawer Enterprise License
 
 ## License Summary
 * License concerns use of [hy-drawer][1]

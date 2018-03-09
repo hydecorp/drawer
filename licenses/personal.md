@@ -1,7 +1,4 @@
----
-layout: page
-title: hy-drawer Personal License
----
+# hy-drawer Personal License
 
 ## License Summary
 * License concerns use of [hy-drawer][1]

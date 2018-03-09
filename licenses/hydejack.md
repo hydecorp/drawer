@@ -1,8 +1,8 @@
 ---
-layout: page
-title: PRO–hy-drawer License
 sitemap: false
 ---
+
+# PRO–hy-drawer License
 
 ## License Summary
 * License concerns use of [hy-drawer][1]

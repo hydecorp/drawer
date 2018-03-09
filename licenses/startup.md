@@ -1,7 +1,4 @@
----
-layout: page
-title: hy-drawer Startup License
----
+# hy-drawer Startup License
 
 ## License Summary
 * License concerns use of [hy-drawer][1]
