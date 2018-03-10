@@ -22,6 +22,7 @@ jQuery attribute
 HTML attribute
 : `opened`
 
+***
 
 ## `align`
 The alignment of the drawer. Can be either to the `left` or to the `right`.
@@ -38,6 +39,8 @@ jQuery attribute
 
 HTML attribute
 : `align`
+
+***
 
 ## `range`
 Sets the range in pixels from either left or right side of the screen (depending on [alignment](#align))
@@ -58,6 +61,7 @@ jQuery attribute
 HTML attribute
 : `range` (e.g. `range="0,100"`)
 
+***
 
 ## `persistent`
 Indicates whether the drawer is in 'persistent' state.
@@ -75,6 +79,8 @@ jQuery attribute
 
 HTML attribute
 : `persistent`
+
+***
 
 ## `preventDefault`
 When true, hy-drawer will call `preventDefault` on every (touch-)move event,
@@ -96,6 +102,8 @@ jQuery attribute
 HTML attribute
 : `prevent-default`
 
+***
+
 ## `threshold`
 Related to [preventDefault](#preventdefault) is the threshold option.
 TODO
@@ -112,6 +120,7 @@ jQuery attribute
 HTML attribute
 : `threshold`
 
+***
 
 ## `mouseEvents`
 Allows the drawer to be pulled with the mouse. This is mostly for presentation purposes,

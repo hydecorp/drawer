@@ -20,6 +20,8 @@ Arguments:
     Default
     : `true`
 
+***
+
 ## `close`
 Closes the drawer.
 
@@ -31,6 +33,8 @@ Arguments:
 
     Default
     : `true`
+
+***
 
 ## `toggle`
 Toggles the drawer.

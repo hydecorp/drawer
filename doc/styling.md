@@ -15,6 +15,7 @@ Default
 CSS equivalent
 : `.hy-drawer-content { width: $value }`
 
+***
 
 ## `--hy-drawer-slide-width`
 Specifies the width of the sliding area. Must be less than or equal to the drawer width.
@@ -27,6 +28,7 @@ CSS equivalent
 : `.hy-drawer-content.hy-drawer-left { left: -$value }` and  
   `.hy-drawer-content.hy-drawer-right { right: -$value }`
 
+***
 
 ## `--hy-drawer-background`
 The background CSS property of the drawer.
@@ -37,6 +39,7 @@ Default
 CSS equivalent
 : `.hy-drawer-content { background: $value }`
 
+***
 
 ## `--hy-drawer-box-shadow`
 The box shadow CSS property of the drawer.
@@ -47,6 +50,7 @@ Default
 CSS equivalent
 : `.hy-drawer-content { box-shadow: $value }`
 
+***
 
 ## `--hy-drawer-scrim-background`
 The CSS background property of the scrim (the overlay behind the drawer).
@@ -57,6 +61,7 @@ Default
 CSS equivalent
 : `.hy-drawer-scrim { background: $value }`
 
+***
 
 ## `--hy-drawer-z-index`
 The Z index of the drawer.
@@ -67,6 +72,7 @@ Default
 CSS equivalent
 : `.hy-drawer-content { z-index: $value }`
 
+***
 
 ## `--hy-drawer-scrim-z-index`
 The Z index of the scrim. Must be lower than `--hy-drawer-z-index`.
