@@ -17,7 +17,7 @@ const stat = promisify(fs.stat);
 
 const SOURCE_DIR = 'src';
 const TARGET_DIR = 'doc/source';
-const TEMPLATE = resolve('scripts/md.jst');
+const TEMPLATE = resolve('.scripts/md.jst');
 const EXTENSIONS = new Set(['.js', '.jsx']);
 const DOCCO_EXT = '.html';
 const TARGET_EXT = '.md';
@@ -38,7 +38,8 @@ async function genDoc(dir) {
     .filter(file => EXTENSIONS.has(extname(file)))
     .map(async (file) => { // e.g. `~/GitHub/hy-comp/src/mixin/index.js`
       const ext = extname(file); // e.g. `.js`
-      const name = basename(file, ext); // e.g. `index`
+      const bname = basename(file, ext); // e.g. `index`
+      const name = bname === 'index' ? 'README' : bname; // e.g. `index` => `README`
       const path = relative(resolve(SOURCE_DIR), dirname(file)); // e.g. `mixin`
       const output = resolve(TARGET_DIR, path); // e.g. `~/GitHub/hy-comp/doc/source/mixin`
 
@@ -51,8 +52,8 @@ async function genDoc(dir) {
 
       // docco generates .html files, but we want .md
       await rename(
-        resolve(output, name + DOCCO_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.html`
-        resolve(output, name + TARGET_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.md`
+        resolve(output, bname + DOCCO_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.html`
+        resolve(output, name + TARGET_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/README.md`
       );
     }));
 }

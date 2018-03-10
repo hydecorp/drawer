@@ -2,7 +2,7 @@
   "name": "hy-drawer",
   "version": "1.0.0-pre.0",
   "description": "A drawer component for the modern web.",
-  "main": "lib/vanilla/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "eslint src webpack.config.js",
     "clean": "rm -rf dist lib doc/source",
@@ -11,7 +11,7 @@
     "build:prod": "webpack --env prod",
     "build:lite": "webpack --env lite",
     "build:dev": "webpack --env dev",
-    "build:doc": "scripts/gen-doc.js",
+    "build:doc": ".scripts/gen-doc.js",
     "watch": "npm run watch:src & npm run watch:doc",
     "watch:src": "webpack --progress --colors --watch --env dev",
     "watch:doc": "npm run build:doc && onchange 'src/**/*.js' -- npm run build:doc '{{changed}}'",
