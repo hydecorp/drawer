@@ -1,5 +1,6 @@
 # Examples
-* [Mixin Example](mixin/index.html){:.external}
-* [Vanilla JS Example](vanilla/index.html){:.external}
-* [jQuery Example](jquery/index.html){:.external}
-* [WebComponent Example](webcomponent/index.html){:.external}
+
+* [Mixin Example](https://qwtel.com/hy-drawer/example/mixin/){:.external}
+* [Vanilla JS Example](https://qwtel.com/hy-drawer/example/vanilla/){:.external}
+* [jQuery Example](https://qwtel.com/hy-drawer/example/jquery/){:.external}
+* [WebComponent Example](https://qwtel.com/hy-drawer/example/webcomponent/){:.external}

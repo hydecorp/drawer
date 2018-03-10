@@ -23,10 +23,10 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 
 
 ## Examples
-* [Mixin Example](example/mixin/index.html){:.external}
-* [Vanilla JS Example](example/vanilla/index.html){:.external}
-* [jQuery Example](example/jquery/index.html){:.external}
-* [WebComponent Example](example/webcomponent/index.html){:.external}
+* [Mixin Example](https://qwtel.com/hy-drawer/example/mixin/){:.external}
+* [Vanilla JS Example](https://qwtel.com/hy-drawer/example/vanilla/){:.external}
+* [jQuery Example](https://qwtel.com/hy-drawer/example/jquery/){:.external}
+* [WebComponent Example](https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
 
 
 ## License
