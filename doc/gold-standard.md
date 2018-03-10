@@ -1,4 +1,4 @@
-# Web Components Gold Standard
+# Gold Standard
 This component follows the [Web Components Gold Standard][wcgs] to the extent possible.
 
 [wcgs]: https://github.com/webcomponents/gold-standard/wiki

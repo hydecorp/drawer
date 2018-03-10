@@ -68,14 +68,14 @@ The most straight-forward way to use **hy-drawer** is by using the vanilla JS ve
 
 ## Documentation
 
-* [Options](doc/options.md)
-* [Methods](doc/methods.md)
-* [Events](doc/events.md)
-* [Styling](doc/styling.md)
+* [Options](doc/options.md){:.flip-title}
+* [Methods](doc/methods.md){:.flip-title}
+* [Events](doc/events.md){:.flip-title}
+* [Styling](doc/styling.md){:.flip-title}
 
 
 ## Gold Standard
-This component follows the [Web Components Gold Standard](doc/gold-standard.md).
+This component follows the Web Components [Gold Standard](doc/gold-standard.md){:.flip-title}.
 
 
 ## Source
