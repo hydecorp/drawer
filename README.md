@@ -107,3 +107,4 @@ which is used to create the framework-specific versions of the component.
   * [`index.js`](doc/source/webcomponent/README.md)
   * [`module.js`](doc/source/webcomponent/module.md)
 * [`common.js`](doc/source/common.md)
+* [`index.js`](doc/source/README.md)

@@ -48,3 +48,4 @@ which is used to create the framework-specific versions of the component.
   * [`index.js`](source/webcomponent/README.md)
   * [`module.js`](source/webcomponent/module.md)
 * [`common.js`](source/common.md)
+* [`index.js`](source/README.md)
