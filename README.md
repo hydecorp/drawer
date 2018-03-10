@@ -16,7 +16,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 * As **WebComponent**, both as *ES6 Module* and *HTML Import*
 * Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
 
-**hy-drawer** is used by thousands of sites as part of the [Hydejack]{:.external} Jekyll theme.
+**hy-drawer** is used by hundreds of sites as part of the [Hydejack]{:.external} Jekyll theme.
 
 **NOTE**: The current version is a pre-release. The public API may still change in important ways.
 {:.message}
