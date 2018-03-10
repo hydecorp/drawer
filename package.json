@@ -11,7 +11,7 @@
     "build:prod": "webpack --env prod",
     "build:lite": "webpack --env lite",
     "build:dev": "webpack --env dev",
-    "build:doc": ".scripts/gen-doc.js",
+    "build:doc": ".scripts/gen-doc.js & .scripts/gen-readme.js & wait",
     "watch": "npm run watch:src & npm run watch:doc",
     "watch:src": "webpack --progress --colors --watch --env dev",
     "watch:doc": "npm run build:doc && onchange 'src/**/*.js' -- npm run build:doc '{{changed}}'",
