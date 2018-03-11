@@ -43,7 +43,10 @@ Make sure the polyfills are ready (if they are being used).
 
 
 ```js
-if ('customElements' in window || window.WebComponents.ready) {
+if (
+  ('customElements' in window && 'attachShadow' in Element.prototype) ||
+  (window.WebComponents && window.WebComponents.ready)
+) {
   define();
 } else if (window.WebComponents) {
   window.addEventListener('WebComponentsReady', define);
