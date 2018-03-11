@@ -54,8 +54,6 @@ Unless you've obtained one of the licenses above, **hy-drawer** must be used in 
 [bs]: https://gumroad.com/l/hy-drawer-startup
 [be]: https://gumroad.com/l/hy-drawer-enterprise
 
-<script src="https://gumroad.com/js/gumroad.js" defer></script>
-
 
 ## Documentation
 
