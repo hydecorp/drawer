@@ -6,7 +6,8 @@ Note that --- to be an idiomatic WebComponent --- all communication form the com
 {:toc}
 
 ## `hy-drawer-init`
-This event is fired after the component has been initialized.
+This event is fired after the component gets attached to the DOM.
+Note that this event occurs more than once when the component gets removed and attached to the DOM again.
 The current `opened` state is provided in the `detail` field of the event.
 
 jQuery event name
