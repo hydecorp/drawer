@@ -22,7 +22,7 @@ import { JQueryComponent, defineJQueryComponent } from 'hy-component/src/define-
 import { Set } from 'qd-set';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
-import '../style.css';
+// import '../style.css';
 
 export const JQUERY_FEATURE_TESTS = new Set([...MIXIN_FEATURE_TESTS]);
 JQUERY_FEATURE_TESTS.delete('customevent');

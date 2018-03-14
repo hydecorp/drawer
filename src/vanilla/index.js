@@ -21,7 +21,7 @@ import { VanillaComponent } from 'hy-component/src/vanilla';
 import { createElement } from 'create-element-x/library';
 
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
-import '../style.css';
+// import '../style.css';
 
 export const VANILLA_FEATURE_TESTS = MIXIN_FEATURE_TESTS;
 

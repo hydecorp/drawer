@@ -27,8 +27,7 @@ import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
 // Unlike the [HTML Import version](./html-import.md), this version bundles the template
 // as a string.
-// Note that for this to work, your bundler needs to be able to bundle raw strings!
-import templateString from './template.html';
+import { template } from './template';
 
 // The set of Modernizr feature tests required for *this* version of the component.
 export const WEBCOMPONENT_FEATURE_TESTS = new Set([
@@ -48,5 +47,5 @@ export class HTMLDrawerElement extends customElementMixin(drawerMixin(CustomElem
 
   // We override the `getTemplate` method and return a document fragment
   // obtained from parsing the template string.
-  getTemplate() { return fragmentFromString(templateString); }
+  getTemplate() { return fragmentFromString(template); }
 }

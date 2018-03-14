@@ -1,4 +1,4 @@
-<div class="hy-drawer-scrim"></div>
+export const template = `<div class="hy-drawer-scrim"></div>
 <div class="hy-drawer-content">
   <slot></slot>
 </div>
@@ -105,4 +105,4 @@
       z-index: var(--hy-drawer-scrim-z-index, 2);
     }
   }
-</style>
+</style>`;
