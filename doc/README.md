@@ -9,7 +9,7 @@
 The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
 
 ~~~html
-<link rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/vanilla/style.css">
+<link rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/style.css">
 <script src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
 ~~~
 

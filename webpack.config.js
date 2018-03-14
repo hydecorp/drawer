@@ -90,17 +90,6 @@ const baseConfig = merge({
   },
 }, envConfig());
 
-const cssFileLoaderConfig = {
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        loader: 'file-loader?name=[name].[ext]',
-      },
-    ],
-  },
-};
-
 const cssRawLoaderConfig = {
   module: {
     rules: [
@@ -122,7 +111,7 @@ const config = [
   }),
 
   // Vanilla JS
-  merge(baseConfig, cssFileLoaderConfig, {
+  merge(baseConfig, {
     entry: resolve('./src/vanilla/index.js'),
     output: {
       path: resolve('./dist/vanilla'),
@@ -130,7 +119,7 @@ const config = [
   }),
 
   // jQuery
-  merge(baseConfig, cssFileLoaderConfig, {
+  merge(baseConfig, {
     entry: resolve('./src/jquery/index.js'),
     output: {
       path: resolve('./dist/jquery'),
@@ -141,7 +130,7 @@ const config = [
   }),
 
   // // React
-  // merge(baseConfig, cssFileLoaderConfig, {
+  // merge(baseConfig, {
   //   entry: resolve('./src/react/index.jsx'),
   //   output: {
   //     path: resolve('./dist/react'),
@@ -152,7 +141,7 @@ const config = [
   // }),
 
   // WebComponent Standalone
-  merge(baseConfig, cssRawLoaderConfig, {
+  merge(baseConfig, {
     entry: resolve('./src/webcomponent/index.js'),
     output: {
       path: resolve('./dist/webcomponent'),
@@ -160,7 +149,7 @@ const config = [
   }),
 
   // WebComponent Module
-  merge(baseConfig, cssRawLoaderConfig, {
+  merge(baseConfig, {
     entry: resolve('./src/webcomponent/module.js'),
     output: {
       path: resolve('./dist/webcomponent'),
