@@ -17,10 +17,10 @@
 // ## Overview
 // TODO
 
-import { HTMLDrawerElement } from './index';
+import { HyDrawerElement } from './index';
 
 const define = () => {
-  window.customElements.define('hy-drawer', HTMLDrawerElement);
+  window.customElements.define('hy-drawer', HyDrawerElement);
 };
 
 // Make sure the polyfills are ready (if they are being used).

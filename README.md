@@ -73,8 +73,8 @@ The most straight-forward way to use **hy-drawer** is by using the vanilla JS ve
 ~~~html
 <aside id="drawerEl"><!--content--></aside>
 <script>
-  var Drawer = window.hyDrawer.Drawer;
-  var drawer = new Drawer(window.drawerEl, { /* options */ });
+  var HyDrawer = window.hyDrawer.HyDrawer;
+  var drawer = new HyDrawer(window.drawerEl, { /* options */ });
 </script>
 ~~~
 
