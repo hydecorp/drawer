@@ -20,10 +20,10 @@ TODO
 
 ```js
 
-import { HTMLDrawerElement } from './index';
+import { HyDrawerElement } from './index';
 
 const define = () => {
-  window.customElements.define('hy-drawer', HTMLDrawerElement);
+  window.customElements.define('hy-drawer', HyDrawerElement);
 };
 ```
 

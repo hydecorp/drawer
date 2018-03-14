@@ -39,11 +39,10 @@ import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 
 Unlike the [HTML Import version](./html-import.md), this version bundles the template
 as a string.
-Note that for this to work, your bundler needs to be able to bundle raw strings!
 
 
 ```js
-import templateString from './template.html';
+import { template } from './template';
 ```
 
 The set of Modernizr feature tests required for *this* version of the component.
@@ -65,7 +64,7 @@ reflecting options as HTML attributes, etc...
 
 
 ```js
-export class HTMLDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
+export class HyDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
 ```
 
 The CustomElements spec demands that we provide a list of attributes (i.e. our options).
@@ -80,7 +79,7 @@ obtained from parsing the template string.
 
 
 ```js
-  getTemplate() { return fragmentFromString(templateString); }
+  getTemplate() { return fragmentFromString(template); }
 }
 ```
 
