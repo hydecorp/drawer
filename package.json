@@ -78,8 +78,7 @@
     "only": [
       "./src",
       "rxjs",
-      "hy-component",
-      "camelcase"
+      "hy-component"
     ]
   },
   "browserify": {
@@ -93,8 +92,7 @@
           "only": [
             "./src",
             "rxjs",
-            "hy-component",
-            "camelcase"
+            "hy-component"
           ]
         }
       ],
