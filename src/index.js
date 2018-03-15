@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { drawerMixin } from './mixin';
-import { Drawer } from './vanilla';
-import { HTMLDrawerElement } from './webcomponent';
+import { drawerMixin, MIXIN_FEATURE_TESTS } from './mixin';
+import { HyDrawer, VANILLA_FEATURE_TESTS } from './vanilla';
+import { HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS } from './webcomponent';
 
-export { drawerMixin, Drawer, HTMLDrawerElement };
+export {
+  drawerMixin, MIXIN_FEATURE_TESTS,
+  HyDrawer, VANILLA_FEATURE_TESTS,
+  HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS,
+};

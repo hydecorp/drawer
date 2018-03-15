@@ -5,7 +5,10 @@ const { resolve } = require('path');
 const {
   BannerPlugin,
   EnvironmentPlugin,
-  optimize: { UglifyJsPlugin },
+  optimize: {
+    UglifyJsPlugin,
+    ModuleConcatenationPlugin,
+  },
 } = require('webpack');
 
 const merge = require('webpack-merge');
@@ -16,9 +19,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const { name: filename } = require('./package.json');
 
-const min = env === 'lite'
-  ? '-lite.min'
-  : env === 'prod' ? '.min' : '';
+const min = env === 'prod' ? '.min' : '';
 const library = camelcase(filename);
 const banner = readFileSync(resolve('./header.txt'), 'utf-8');
 
@@ -28,17 +29,6 @@ function envConfig() {
   switch (env) {
     case 'prod':
       return {
-        plugins: [
-          new BannerPlugin({ banner }),
-          new EnvironmentPlugin({ DEBUG: false }),
-          new UglifyJsPlugin(),
-        ],
-      };
-
-    // same as prod, but does not bundle core-js polyfills
-    case 'lite':
-      return {
-        externals: [/^core-js/],
         plugins: [
           new BannerPlugin({ banner }),
           new EnvironmentPlugin({ DEBUG: false }),
@@ -68,6 +58,10 @@ const baseConfig = merge({
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel-loader',
+        options: {
+          presets: [['env', { modules: false }]],
+          babelrc: false,
+        },
       },
       {
         test: /\.html$/,
@@ -88,6 +82,9 @@ const baseConfig = merge({
     extensions: ['.json', '.js'],
     symlinks: true,
   },
+  plugins: [
+    new ModuleConcatenationPlugin(),
+  ],
 }, envConfig());
 
 const cssRawLoaderConfig = {
@@ -128,17 +125,6 @@ const config = [
       jquery: 'jQuery',
     }],
   }),
-
-  // // React
-  // merge(baseConfig, {
-  //   entry: resolve('./src/react/index.jsx'),
-  //   output: {
-  //     path: resolve('./dist/react'),
-  //   },
-  //   externals: {
-  //     react: 'React',
-  //   },
-  // }),
 
   // WebComponent Standalone
   merge(baseConfig, {

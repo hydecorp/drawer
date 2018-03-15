@@ -14,20 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-```js
-
 import 'core-js/fn/array/from';
-```
 
 We start by importing form the hy-component library...
 
 
 ```js
-import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS }
-  from 'hy-component/src/custom-element';
-
-import { Set } from 'qd-set';
+import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS, Set }
+  from 'hy-component/esm/custom-element';
 ```
 
 ...and our own component.
@@ -53,6 +47,8 @@ export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
   ...MIXIN_FEATURE_TESTS,
 ]);
+
+export { Set };
 ```
 
 The exported class follows the HTML naming convetion.

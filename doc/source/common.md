@@ -17,10 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { Set } from 'qd-set';
-
-export { Set };
-
 export function easeOutSine(t, b, c, d) {
   return c * Math.sin(t/d * (Math.PI/2)) + b; // eslint-disable-line
 }

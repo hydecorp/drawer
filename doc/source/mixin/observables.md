@@ -17,17 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
+import { combineLatest } from 'rxjs/_esm5/observable/combineLatest';
+import { fromEvent } from 'rxjs/_esm5/observable/fromEvent';
+import { merge } from 'rxjs/_esm5/observable/merge';
 
-import { tap } from 'rxjs/operators/tap';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { mapTo } from 'rxjs/operators/mapTo';
-import { skipWhile } from 'rxjs/operators/skipWhile';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
+import { tap } from 'rxjs/_esm5/operators/tap';
+import { filter } from 'rxjs/_esm5/operators/filter';
+import { map } from 'rxjs/_esm5/operators/map';
+import { mapTo } from 'rxjs/_esm5/operators/mapTo';
+import { skipWhile } from 'rxjs/_esm5/operators/skipWhile';
+import { switchMap } from 'rxjs/_esm5/operators/switchMap';
+import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
 
 import { subscribeWhen } from './operators';
 ```

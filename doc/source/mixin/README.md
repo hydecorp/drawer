@@ -24,30 +24,19 @@ The mixin in the main export of this file.
 
 ## Imports
 ES6+ functions that we use.
-
-
-```js
 import 'core-js/fn/array/from';
 import 'core-js/fn/function/bind';
 import 'core-js/fn/object/assign';
-```
 
 Importing the hy-compontent base libary,
 which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
 
 
 ```js
-import { componentMixin, COMPONENT_FEATURE_TESTS } from 'hy-component/src/component';
-```
+import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/esm/component';
+import { arrayOf, bool, number, oneOf } from 'hy-component/esm/types';
 
-Small little helpers:
-
-
-```js
-import { arrayOf, bool, number, oneOf } from 'attr-types';
-import { Set } from 'qd-set';
-
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs/_esm5/Subject';
 ```
 
 TODO
@@ -71,6 +60,8 @@ export const MIXIN_FEATURE_TESTS = new Set([
   'csstransforms',
   'csspointerevents',
 ]);
+
+export { Set };
 ```
 
 ## Drawer Mixin

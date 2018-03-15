@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { never } from 'rxjs/observable/never';
+import { never } from 'rxjs/_esm5/observable/never';
 
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
+import { filter } from 'rxjs/_esm5/operators/filter';
+import { map } from 'rxjs/_esm5/operators/map';
+import { switchMap } from 'rxjs/_esm5/operators/switchMap';
+import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
 
 // ### Observable extensions
 // #### Subscribe when

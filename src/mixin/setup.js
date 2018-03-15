@@ -15,25 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // As mentioned before, we only import the RxJS function that we need.
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { defer } from 'rxjs/observable/defer';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
-import { never } from 'rxjs/observable/never';
+import { combineLatest } from 'rxjs/_esm5/observable/combineLatest';
+import { defer } from 'rxjs/_esm5/observable/defer';
+import { fromEvent } from 'rxjs/_esm5/observable/fromEvent';
+import { merge } from 'rxjs/_esm5/observable/merge';
+import { never } from 'rxjs/_esm5/observable/never';
 
-import { tap } from 'rxjs/operators/tap';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { pairwise } from 'rxjs/operators/pairwise';
-import { repeatWhen } from 'rxjs/operators/repeatWhen';
-import { sample } from 'rxjs/operators/sample';
-import { share } from 'rxjs/operators/share';
-import { startWith } from 'rxjs/operators/startWith';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { take } from 'rxjs/operators/take';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { timestamp } from 'rxjs/operators/timestamp';
-import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
+import { tap } from 'rxjs/_esm5/operators/tap';
+import { filter } from 'rxjs/_esm5/operators/filter';
+import { map } from 'rxjs/_esm5/operators/map';
+import { pairwise } from 'rxjs/_esm5/operators/pairwise';
+import { repeatWhen } from 'rxjs/_esm5/operators/repeatWhen';
+import { sample } from 'rxjs/_esm5/operators/sample';
+import { share } from 'rxjs/_esm5/operators/share';
+import { startWith } from 'rxjs/_esm5/operators/startWith';
+import { switchMap } from 'rxjs/_esm5/operators/switchMap';
+import { take } from 'rxjs/_esm5/operators/take';
+import { takeUntil } from 'rxjs/_esm5/operators/takeUntil';
+import { timestamp } from 'rxjs/_esm5/operators/timestamp';
+import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
 
 import { createTween } from 'rxjs-create-tween';
 

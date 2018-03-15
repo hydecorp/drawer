@@ -6,11 +6,10 @@
   "scripts": {
     "test": "eslint src webpack.config.js",
     "clean": "rm -rf dist lib doc/source",
-    "build": "npm run build:dev & npm run build:prod & npm run build:lite & npm run build:lib & npm run build:doc & wait; cp src/style.css dist",
+    "build": "npm run build:dev & npm run build:prod & npm run build:lib & npm run build:doc & wait; cp src/style.css dist",
     "build:lib": "babel src --out-dir lib",
-    "build:prod": "webpack --env prod",
-    "build:lite": "webpack --env lite",
-    "build:dev": "webpack --env dev",
+    "build:prod": "webpack --env prod --display-optimization-bailout",
+    "build:dev": "webpack --env dev --display-optimization-bailout",
     "build:doc": ".scripts/gen-doc.js & .scripts/gen-readme.js & wait",
     "watch": "npm run watch:src & npm run watch:doc",
     "watch:src": "webpack --progress --colors --watch --env dev",
@@ -49,13 +48,10 @@
     "yargs": "^11.1.0"
   },
   "dependencies": {
-    "attr-types": "^1.0.0",
-    "core-js": "^2.5.3",
     "create-element-x": "^1.0.3",
-    "hy-component": "^1.0.0-pre.2",
-    "qd-set": "^1.0.2",
-    "rxjs": "^5.5.6",
-    "rxjs-create-tween": "^1.0.2"
+    "hy-component": "^1.0.0-pre.4",
+    "rxjs": "^5.5.7",
+    "rxjs-create-tween": "^1.1.0"
   },
   "optionalDependencies": {
     "jquery": "^3.3.1"
@@ -79,6 +75,7 @@
     ],
     "only": [
       "./src",
+      "rxjs",
       "hy-component",
       "camelcase"
     ]
@@ -93,6 +90,7 @@
           ],
           "only": [
             "./src",
+            "rxjs",
             "hy-component",
             "camelcase"
           ]
