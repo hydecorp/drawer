@@ -4,8 +4,9 @@
   "description": "A drawer component for the modern web.",
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint src webpack.config.js",
     "clean": "rm -rf dist lib doc/source",
+    "test": "eslint src webpack.config.js",
+    "format": "prettier-eslint --write \"src/**/*.js\"",
     "build": "npm run build:dev & npm run build:prod & npm run build:lib & npm run build:doc & wait; cp src/style.css dist",
     "build:lib": "babel src --out-dir lib",
     "build:prod": "webpack --env prod --display-optimization-bailout",
@@ -17,7 +18,7 @@
     "serve": "http-server -s -p $npm_package_config_port",
     "dev": "npm run watch & npm run serve",
     "prepublishOnly": "npm run test && npm run clean && npm run build",
-    "version": "npm run build:doc && git add ."
+    "version": "npm run format && npm run build:doc && git add ."
   },
   "config": {
     "port": "8080"
@@ -41,6 +42,7 @@
     "eslint-plugin-react": "^7.7.0",
     "html-webpack-plugin": "^2.30.1",
     "onchange": "^3.3.0",
+    "prettier-eslint-cli": "^4.7.1",
     "raw-loader": "^0.5.1",
     "underscore-template-loader": "^1.0.0",
     "webpack": "3.11.0",
