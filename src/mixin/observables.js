@@ -39,24 +39,22 @@ const abs = Math.abs.bind(this);
 // we may listen for `mousedown` events.
 export function getStartObservable() {
   // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-  return combineLatest(this.document$, this.mouseEvents$)
-    .pipe(switchMap(([doc, mouseEvents]) => {
-      // The touchstart observable is passive since we won't be calling `preventDefault`.
-      // Also, we're only interested in the first `touchstart`.
-      const touchstart$ = fromEvent(doc, 'touchstart', { passive: true }).pipe(
-        filter(({ touches }) => touches.length === 1),
-        map(({ touches }) => touches[0]),
-      );
+  return combineLatest(this.document$, this.mouseEvents$).pipe(switchMap(([doc, mouseEvents]) => {
+    // The touchstart observable is passive since we won't be calling `preventDefault`.
+    // Also, we're only interested in the first `touchstart`.
+    const touchstart$ = fromEvent(doc, 'touchstart', { passive: true }).pipe(
+      filter(({ touches }) => touches.length === 1),
+      map(({ touches }) => touches[0]),
+    );
 
       // If mouse events aren't enabled, we're done here.
-      if (!mouseEvents) return touchstart$;
+    if (!mouseEvents) return touchstart$;
 
-      // Otherwise we also include `mousedown` events in the output.
-      const mousedown$ = fromEvent(doc, 'mousedown')
-        .pipe(tap(event => assign(event, { event })));
+    // Otherwise we also include `mousedown` events in the output.
+    const mousedown$ = fromEvent(doc, 'mousedown').pipe(tap(event => assign(event, { event })));
 
-      return merge(touchstart$, mousedown$);
-    }));
+    return merge(touchstart$, mousedown$);
+  }));
 }
 
 // #### Get move observable
@@ -67,33 +65,28 @@ export function getMoveObservable(start$, end$) {
   // we `switchMap` to reflect the changes.
   // Nice: `combineLatest` provides us with the functionality of emitting
   // when either of the inputs change, but not before all inputs have their first value set.
-  return combineLatest(this.document$, this.mouseEvents$, this.preventDefault$)
-    .pipe(switchMap(([doc, mouseEvents, preventDefault]) => {
-      // We're only keeping track of the first finger.
-      // Should the user remove the finger that started the interaction, we use the next instead.
-      // Note that this doesn't occur under normal circumstances,
-      // and exists primarliy to ensure that the interaction continues without hiccups.
-      // Note that the event listener is only passive when the `preventDefault` option is falsy.
-      const touchmove$ = fromEvent(doc, 'touchmove', { passive: !preventDefault })
-        .pipe(map(event => assign(event.touches[0], { event })));
+  return combineLatest(this.document$, this.mouseEvents$, this.preventDefault$).pipe(switchMap(([doc, mouseEvents, preventDefault]) => {
+    // We're only keeping track of the first finger.
+    // Should the user remove the finger that started the interaction, we use the next instead.
+    // Note that this doesn't occur under normal circumstances,
+    // and exists primarliy to ensure that the interaction continues without hiccups.
+    // Note that the event listener is only passive when the `preventDefault` option is falsy.
+    const touchmove$ = fromEvent(doc, 'touchmove', { passive: !preventDefault }).pipe(map(event => assign(event.touches[0], { event })));
 
-      // If mouse events aren't enabled, we're done here.
-      if (!mouseEvents) return touchmove$;
+    // If mouse events aren't enabled, we're done here.
+    if (!mouseEvents) return touchmove$;
 
-      // Otherwise we listen for `mousemove` events,
-      // but only those between a `start` and `end` event, i.e. while the user is sliding.
-      // We unsubscribe form the source observable outside of those contraints.
-      // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
-      const mousemove$ = fromEvent(doc, 'mousemove', { passive: !preventDefault }).pipe(
-        subscribeWhen(merge(
-          start$.pipe(mapTo(true)),
-          end$.pipe(mapTo(false)),
-        )),
-        map(event => assign(event, { event })),
-      );
+    // Otherwise we listen for `mousemove` events,
+    // but only those between a `start` and `end` event, i.e. while the user is sliding.
+    // We unsubscribe form the source observable outside of those contraints.
+    // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
+    const mousemove$ = fromEvent(doc, 'mousemove', { passive: !preventDefault }).pipe(
+      subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
+      map(event => assign(event, { event })),
+    );
 
-      return merge(touchmove$, mousemove$);
-    }));
+    return merge(touchmove$, mousemove$);
+  }));
 }
 
 // #### Get end observable
@@ -102,23 +95,22 @@ export function getMoveObservable(start$, end$) {
 // when the `mouseEvents` option is enabled.
 export function getEndObservable() {
   // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-  return combineLatest(this.document$, this.mouseEvents$)
-    .pipe(switchMap(([doc, mouseEvents]) => {
-      // We're only interested in the last `touchend`.
-      // Otherwise there's at least one finger left on the screen,
-      // that can be used to slide the drawer.
-      const touchend$ = fromEvent(doc, 'touchend', { passive: true }).pipe(
-        filter(({ touches }) => touches.length === 0),
-        map(event => event.changedTouches[0]),
-      );
+  return combineLatest(this.document$, this.mouseEvents$).pipe(switchMap(([doc, mouseEvents]) => {
+    // We're only interested in the last `touchend`.
+    // Otherwise there's at least one finger left on the screen,
+    // that can be used to slide the drawer.
+    const touchend$ = fromEvent(doc, 'touchend', { passive: true }).pipe(
+      filter(({ touches }) => touches.length === 0),
+      map(event => event.changedTouches[0]),
+    );
 
       // If mouse events aren't enabled, we're done here.
-      if (!mouseEvents) return touchend$;
+    if (!mouseEvents) return touchend$;
 
-      // Otherwise we include `mouseup` events.
-      const mouseup$ = fromEvent(doc, 'mouseup', { passive: true });
-      return merge(touchend$, mouseup$);
-    }));
+    // Otherwise we include `mouseup` events.
+    const mouseup$ = fromEvent(doc, 'mouseup', { passive: true });
+    return merge(touchend$, mouseup$);
+  }));
 }
 
 // #### Get "Is sliding?" observable
@@ -137,10 +129,10 @@ export function getIsSlidingObservable(move$, start$) {
         abs(startX - clientX) >= abs(startY - clientY)),
     );
 
-  // If the threshold option is set to `0` (or `false`) we make a decision immediately.
-  // This is intended for Safari and possibly other browsers that have a built-in threshold.
-  // Additionally, Safari ignores all calls to `preventDefault`, except on the first move event
-  // after a start event, so that we *have to* make a decision immediately.
+    // If the threshold option is set to `0` (or `false`) we make a decision immediately.
+    // This is intended for Safari and possibly other browsers that have a built-in threshold.
+    // Additionally, Safari ignores all calls to `preventDefault`, except on the first move event
+    // after a start event, so that we *have to* make a decision immediately.
   } else {
     return move$.pipe(
       withLatestFrom(start$),

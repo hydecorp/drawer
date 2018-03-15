@@ -57,7 +57,9 @@ export function drawerMixin(C) {
   // TODO: see ES6 mixins...
   return class extends componentMixin(C) {
     // The name of the component (required by hy-component)
-    static get componentName() { return 'hy-drawer'; }
+    static get componentName() {
+      return 'hy-drawer';
+    }
 
     // ### Options
     // The default values (and types) of the configuration options (required by hy-component)
@@ -92,11 +94,21 @@ export function drawerMixin(C) {
     // Mostly we just put the value on an observable and deal with it from there.
     static get sideEffects() {
       return {
-        opened(x) { this.opened$.next(x); },
-        align(x) { this.align$.next(x); },
-        persistent(x) { this.persitent$.next(x); },
-        preventDefault(x) { this.preventDefault$.next(x); },
-        mouseEvents(x) { this.mouseEvents$.next(x); },
+        opened(x) {
+          this.opened$.next(x);
+        },
+        align(x) {
+          this.align$.next(x);
+        },
+        persistent(x) {
+          this.persitent$.next(x);
+        },
+        preventDefault(x) {
+          this.preventDefault$.next(x);
+        },
+        mouseEvents(x) {
+          this.mouseEvents$.next(x);
+        },
         /* _backButton(x) { this.backButton$.next(x); }, */
       };
     }

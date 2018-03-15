@@ -17,8 +17,13 @@
 // import 'core-js/fn/array/from';
 
 // We start by importing form the hy-component library...
-import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS, Set }
-  from 'hy-component/src/custom-element';
+import {
+  customElementMixin,
+  CustomElement,
+  fragmentFromString,
+  CUSTOM_ELEMENT_FEATURE_TESTS,
+  Set,
+} from 'hy-component/src/custom-element';
 
 // ...and our own component.
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
@@ -26,7 +31,6 @@ import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
 // Unlike the [HTML Import version](./html-import.md), this version bundles the template
 // as a string.
 import { template } from './template';
-
 
 // The set of Modernizr feature tests required for *this* version of the component.
 export const WEBCOMPONENT_FEATURE_TESTS = new Set([
@@ -44,9 +48,13 @@ export { Set };
 // reflecting options as HTML attributes, etc...
 export class HyDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
   // The CustomElements spec demands that we provide a list of attributes (i.e. our options).
-  static get observedAttributes() { return this.getObservedAttributes(); }
+  static get observedAttributes() {
+    return this.getObservedAttributes();
+  }
 
   // We override the `getTemplate` method and return a document fragment
   // obtained from parsing the template string.
-  getTemplate() { return fragmentFromString(template); }
+  getTemplate() {
+    return fragmentFromString(template);
+  }
 }

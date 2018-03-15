@@ -24,10 +24,15 @@ import { customElementMixin, CustomElement } from 'hy-component/src/custom-eleme
 import { drawerMixin } from '../mixin';
 
 const define = () => {
-  customElements.define('hy-drawer', class extends customElementMixin(drawerMixin(CustomElement)) {
-    // The CustomElements spec demands that we provide a list of attributes (i.e. our options).
-    static get observedAttributes() { return this.getObservedAttributes(); }
-  });
+  customElements.define(
+    'hy-drawer',
+    class extends customElementMixin(drawerMixin(CustomElement)) {
+      // The CustomElements spec demands that we provide a list of attributes (i.e. our options).
+      static get observedAttributes() {
+        return this.getObservedAttributes();
+      }
+    },
+  );
 };
 
 // Make sure the polyfills are ready (if they are being used).
@@ -39,5 +44,5 @@ if (
 } else if (window.WebComponents) {
   window.addEventListener('WebComponentsReady', define);
 } else if (process.env.DEBUG) {
-  console.warn('Couldn\'t register component. Did you forget to include a WebComponents polyfill?');
+  console.warn("Couldn't register component. Did you forget to include a WebComponents polyfill?");
 }

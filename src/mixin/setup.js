@@ -39,10 +39,7 @@ import { createTween } from 'rxjs-create-tween';
 
 import { easeOutSine } from '../common';
 
-import {
-  BASE_DURATION,
-  WIDTH_CONTRIBUTION,
-} from './constants';
+import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
 
 import { filterWhen /* , subscribeWhen */ } from './operators';
 
@@ -81,21 +78,15 @@ export function setupObservables() {
 
   // Keep measurements up-to-date.
   // Note that we need to temporarily remove the opened class to get the correct measures.
-  resize$
-    .pipe(takeUntil(this.teardown$))
-    .subscribe(() => {
-      if (this.opened) this.contentEl.classList.remove('hy-drawer-opened');
-      this.drawerWidth = calcMovableDrawerWidth.call(this);
-      if (this.opened) this.contentEl.classList.add('hy-drawer-opened');
-    });
+  resize$.pipe(takeUntil(this.teardown$)).subscribe(() => {
+    if (this.opened) this.contentEl.classList.remove('hy-drawer-opened');
+    this.drawerWidth = calcMovableDrawerWidth.call(this);
+    if (this.opened) this.contentEl.classList.add('hy-drawer-opened');
+  });
 
   // Emitts a value every time you change the `persistent` property of the drawer.
   // Interally, we invert it and call it `active`.
-  const active$ = this.persitent$.pipe(
-    takeUntil(this.teardown$),
-    map(x => !x),
-    share(),
-  );
+  const active$ = this.persitent$.pipe(takeUntil(this.teardown$), map(x => !x), share());
 
   // We use this to get references to observables that aren't defined yet.
   const ref = {};
@@ -103,19 +94,15 @@ export function setupObservables() {
   // #### Start observable
   // Emits a value every time a start event *could* intiate an interaction.
   // Each emitted value is a hash containing a `clientX` and `clientY` key.
-  const start$ = getStartObservable.call(this).pipe(
-    takeUntil(this.teardown$),
-    filterWhen(active$),
-    share(),
-  );
+  const start$ = getStartObservable
+    .call(this)
+    .pipe(takeUntil(this.teardown$), filterWhen(active$), share());
 
   // An observable that emits `true`, as long as the drawer isn't fully closed
   // (as long as the scrim is visible the user can still "catch" the drawer).
   // It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside a `defer`.
   const isScrimVisible$ = defer(() =>
-    ref.translateX$.pipe(map(translateX => (this.align === 'left' ?
-      translateX > 0 :
-      translateX < this.drawerWidth))));
+    ref.translateX$.pipe(map(translateX => (this.align === 'left' ? translateX > 0 : translateX < this.drawerWidth))));
 
   // TODO: ...
   const isInRange$ = start$.pipe(
@@ -132,19 +119,15 @@ export function setupObservables() {
 
   // #### End observable
   // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
-  const end$ = getEndObservable.call(this).pipe(
-    takeUntil(this.teardown$),
-    filterWhen(active$, isInRange$),
-    share(),
-  );
+  const end$ = getEndObservable
+    .call(this)
+    .pipe(takeUntil(this.teardown$), filterWhen(active$, isInRange$), share());
 
   // #### Move observable
   // The observable of all relevant "move" events.
-  const move$ = getMoveObservable.call(this, start$, end$).pipe(
-    takeUntil(this.teardown$),
-    filterWhen(active$, isInRange$),
-    share(),
-  );
+  const move$ = getMoveObservable
+    .call(this, start$, end$)
+    .pipe(takeUntil(this.teardown$), filterWhen(active$, isInRange$), share());
 
   // #### 'Is sliding?' observable
   // An observable that emits `true` when the user is *sliding* the drawer,
@@ -173,45 +156,43 @@ export function setupObservables() {
   // 3. direct modifications of the `opened` state.
   //
   // It is wrapped in a `defer` because it depends on previous values of itself.
-  ref.translateX$ = defer(() => merge(
-    // 1)
-    // We only let move events modify the drawer's position when we are sure
-    // that the user is sliding. In case the `preventDefault` option is enabled,
-    // this is also when we're sure to call `preventDefault`.
-    move$.pipe(
-      filterWhen(isSliding$),
-      tap(({ event }) => { if (this.preventDefault) event.preventDefault(); }),
+  ref.translateX$ = defer(() =>
+    merge(
+      // 1)
+      // We only let move events modify the drawer's position when we are sure
+      // that the user is sliding. In case the `preventDefault` option is enabled,
+      // this is also when we're sure to call `preventDefault`.
+      move$.pipe(
+        filterWhen(isSliding$),
+        tap(({ event }) => {
+          if (this.preventDefault) event.preventDefault();
+        }),
 
-      // Finally, we take the start position of the finger, the start position of the drawer,
-      // and the current position of the finger to calculate the next `translateX` value.
-      withLatestFrom(start$, ref.startTranslateX$),
-      map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
-        calcTranslateX.call(this, clientX, startX, startTranslateX)),
-    ),
+        // Finally, we take the start position of the finger, the start position of the drawer,
+        // and the current position of the finger to calculate the next `translateX` value.
+        withLatestFrom(start$, ref.startTranslateX$),
+        map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
+          calcTranslateX.call(this, clientX, startX, startTranslateX)),
+      ),
 
-    // 2)
-    // The tween observable can be used unmodified (see below),
-    // but isn't defined yet, because it depends on previous values of `translateX$`.
-    ref.tween$,
+      // 2)
+      // The tween observable can be used unmodified (see below),
+      // but isn't defined yet, because it depends on previous values of `translateX$`.
+      ref.tween$,
 
-    // 3)
-    // When the `opened` state changes, we "jump" to the new position,
-    // which is either 0 (when closed) or the width of the drawer (when open).
-    // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
-    combineLatest(this.opened$, this.align$).pipe(
-      // Usually the cleanup code would run at the end of the fling animation,
-      // but since there is no animation in this case, we call it directly.
-      tap(([opened]) => cleanupInteraction.call(this, opened)),
-      map(([opened, align]) => (!opened
-        ? 0
-        : this.drawerWidth * (align === 'left' ? 1 : -1))),
-    ),
-  ))
+      // 3)
+      // When the `opened` state changes, we "jump" to the new position,
+      // which is either 0 (when closed) or the width of the drawer (when open).
+      // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
+      combineLatest(this.opened$, this.align$).pipe(
+        // Usually the cleanup code would run at the end of the fling animation,
+        // but since there is no animation in this case, we call it directly.
+        tap(([opened]) => cleanupInteraction.call(this, opened)),
+        map(([opened, align]) => (!opened ? 0 : this.drawerWidth * (align === 'left' ? 1 : -1))),
+      ),
+    ))
     // `share`ing the observable between many subscribers:
-    .pipe(
-      takeUntil(this.teardown$),
-      share(),
-    );
+    .pipe(takeUntil(this.teardown$), share());
 
   // The `translateX` value at the start of an interaction.
   // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
@@ -231,17 +212,17 @@ export function setupObservables() {
     // we make sure that some time has passed since the last move event.
     filter(([{ timestamp: prevTime }, { timestamp: time }]) => time - prevTime > 0),
     // Now we are save to calculate the current velocity without divide by zero errors.
-    map(([
-      { value: prevX, timestamp: prevTime },
-      { value: x, timestamp: time },
-    ]) => (x - prevX) / (time - prevTime)),
+    map(([{ value: prevX, timestamp: prevTime }, { value: x, timestamp: time }]) =>
+      (x - prevX) / (time - prevTime)),
     // The initial velocity is zero.
     startWith(0),
   );
 
   // TODO
   const willOpen$ = end$.pipe(
-    tap(() => { this.contentEl.classList.remove('hy-drawer-grabbing'); }),
+    tap(() => {
+      this.contentEl.classList.remove('hy-drawer-grabbing');
+    }),
     withLatestFrom(start$, ref.translateX$, velocity$),
     filter(calcIsSwipe.bind(this)),
     map(calcWillOpen.bind(this)),
@@ -254,10 +235,7 @@ export function setupObservables() {
   // 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
   //    Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
   //    prior `touchdown`/`mousedown` event in this case.
-  const tweenTrigger$ = merge(
-    willOpen$,
-    this.animateTo$.pipe(tap(prepareInteraction.bind(this))),
-  );
+  const tweenTrigger$ = merge(willOpen$, this.animateTo$.pipe(tap(prepareInteraction.bind(this))));
 
   // We silently set the new `opened` state here,
   // so that the next interaction will do the right thing even while the animation is
@@ -276,7 +254,7 @@ export function setupObservables() {
       const inv = this.align === 'left' ? 1 : -1;
       const endTranslateX = opened ? this.drawerWidth * inv : 0;
       const diffTranslateX = endTranslateX - translateX;
-      const duration = BASE_DURATION + (this.drawerWidth * WIDTH_CONTRIBUTION);
+      const duration = BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
 
       return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
         tap({ complete: () => this.opened$.next(opened) }),
@@ -300,20 +278,16 @@ export function setupObservables() {
     .subscribe(() => this.close());
 
   // Other than preventing sliding, setting `persistent` will also hide the scrim.
-  active$
-    .pipe(takeUntil(this.teardown$))
-    .subscribe((active) => {
-      this.scrimEl.style.display = active ? 'block' : 'none';
-    });
+  active$.pipe(takeUntil(this.teardown$)).subscribe((active) => {
+    this.scrimEl.style.display = active ? 'block' : 'none';
+  });
 
   // Whenever the alignment of the drawer changes, update the CSS classes.
-  this.align$
-    .pipe(takeUntil(this.teardown$))
-    .subscribe((align) => {
-      const oldAlign = align === 'left' ? 'right' : 'left';
-      this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-      this.contentEl.classList.add(`hy-drawer-${align}`);
-    });
+  this.align$.pipe(takeUntil(this.teardown$)).subscribe((align) => {
+    const oldAlign = align === 'left' ? 'right' : 'left';
+    this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
+    this.contentEl.classList.add(`hy-drawer-${align}`);
+  });
 
   // If the experimental back button feature is enabled, handle popstate events...
   /*
@@ -332,17 +306,16 @@ export function setupObservables() {
   // When drawing with mouse is enabled, we add the grab cursor to the drawer.
   // We also want to call `preventDefault` when `mousedown` is within the drawer range
   // to prevent text selection while sliding.
-  this.mouseEvents$.pipe(
-    takeUntil(this.teardown$),
-    switchMap((mouseEvents) => {
-      if (mouseEvents) this.contentEl.classList.add('hy-drawer-grab');
-      else this.contentEl.classList.remove('hy-drawer-grab');
+  this.mouseEvents$
+    .pipe(
+      takeUntil(this.teardown$),
+      switchMap((mouseEvents) => {
+        if (mouseEvents) this.contentEl.classList.add('hy-drawer-grab');
+        else this.contentEl.classList.remove('hy-drawer-grab');
 
-      return mouseEvents ?
-        start$.pipe(withLatestFrom(isInRange$)) :
-        never();
-    }),
-  )
+        return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
+      }),
+    )
     .subscribe(([{ event }, isInRange]) => {
       if (isInRange && event) event.preventDefault();
     });

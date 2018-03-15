@@ -28,11 +28,12 @@ const max = Math.max.bind(this);
 export function calcIsInRange(clientX, opened) {
   switch (this.align) {
     case 'left':
-      return clientX > this.range[0]
-        && (opened || clientX < this.range[1]);
+      return clientX > this.range[0] && (opened || clientX < this.range[1]);
     case 'right':
-      return clientX < window.innerWidth - this.range[0]
-        && (opened || clientX > window.innerWidth - this.range[1]);
+      return (
+        clientX < window.innerWidth - this.range[0] &&
+        (opened || clientX > window.innerWidth - this.range[1])
+      );
     default:
       throw Error();
   }
@@ -54,7 +55,7 @@ export function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]
 // Based on current velocity and position of the drawer,
 // should the drawer slide open, or snap back?
 // TODO: could incorporate the current open state of the drawer.
-export function calcWillOpen([,, translateX, velocity]) {
+export function calcWillOpen([, , translateX, velocity]) {
   switch (this.align) {
     case 'left': {
       if (velocity > VELOCITY_THRESHOLD) return true;
