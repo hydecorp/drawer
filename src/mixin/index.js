@@ -30,8 +30,8 @@
 
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
-import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/esm/component';
-import { arrayOf, bool, number, oneOf } from 'hy-component/esm/types';
+import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/src/component';
+import { arrayOf, bool, number, oneOf } from 'hy-component/src/types';
 
 import { Subject } from 'rxjs/_esm5/Subject';
 

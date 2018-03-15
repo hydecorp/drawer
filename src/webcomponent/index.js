@@ -18,7 +18,7 @@
 
 // We start by importing form the hy-component library...
 import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS, Set }
-  from 'hy-component/esm/custom-element';
+  from 'hy-component/src/custom-element';
 
 // ...and our own component.
 import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';

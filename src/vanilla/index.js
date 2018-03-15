@@ -16,7 +16,7 @@
 
 // import 'core-js/fn/array/from';
 
-import { VanillaComponent, Set } from 'hy-component/esm/vanilla';
+import { VanillaComponent, Set } from 'hy-component/src/vanilla';
 
 import { createElement } from 'create-element-x/library';
 
