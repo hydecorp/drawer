@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 const { readFileSync } = require('fs');
 const { resolve } = require('path');
 
