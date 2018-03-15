@@ -4,10 +4,7 @@ const { resolve } = require('path');
 const {
   BannerPlugin,
   EnvironmentPlugin,
-  optimize: {
-    UglifyJsPlugin,
-    ModuleConcatenationPlugin,
-  },
+  optimize: { UglifyJsPlugin, ModuleConcatenationPlugin },
 } = require('webpack');
 
 const merge = require('webpack-merge');
@@ -38,53 +35,52 @@ function envConfig() {
     default:
       return {
         devtool: 'source-map',
-        plugins: [
-          new EnvironmentPlugin({ DEBUG: true }),
-        ],
+        plugins: [new EnvironmentPlugin({ DEBUG: true })],
       };
   }
 }
 
-const baseConfig = merge({
-  output: {
-    filename: `${filename}${min}.js`,
-    library,
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
-  },
-  module: {
-    rules: [
-      {
-        test: /(\.jsx|\.js)$/,
-        loader: 'babel-loader',
-        options: {
-          presets: [['env', { modules: false }]],
-          babelrc: false,
+const baseConfig = merge(
+  {
+    output: {
+      filename: `${filename}${min}.js`,
+      library,
+      libraryTarget: 'umd',
+      umdNamedDefine: true,
+    },
+    module: {
+      rules: [
+        {
+          test: /(\.jsx|\.js)$/,
+          loader: 'babel-loader',
+          options: {
+            presets: [['env', { modules: false }]],
+            babelrc: false,
+          },
         },
-      },
-      {
-        test: /\.html$/,
-        use: 'raw-loader',
-      },
-      {
-        test: /\.ejs$/,
-        loader: 'underscore-template-loader',
-      },
-    ],
+        {
+          test: /\.html$/,
+          use: 'raw-loader',
+        },
+        {
+          test: /\.ejs$/,
+          loader: 'underscore-template-loader',
+        },
+      ],
+    },
+    resolve: {
+      modules: [
+        resolve('./src'),
+        resolve('./node_modules'),
+        process.env.NODE_PATH ? resolve(process.env.NODE_PATH) : [],
+      ].reduce(...flatten),
+      extensions: ['.json', '.js'],
+      symlinks: true,
+    },
+    plugins: [new ModuleConcatenationPlugin()],
   },
-  resolve: {
-    modules: [
-      resolve('./src'),
-      resolve('./node_modules'),
-      process.env.NODE_PATH ? resolve(process.env.NODE_PATH) : [],
-    ].reduce(...flatten),
-    extensions: ['.json', '.js'],
-    symlinks: true,
-  },
-  plugins: [
-    new ModuleConcatenationPlugin(),
-  ],
-}, envConfig());
+  envConfig(),
+);
 
 const cssRawLoaderConfig = {
   module: {
@@ -120,9 +116,11 @@ const config = [
     output: {
       path: resolve('./dist/jquery'),
     },
-    externals: [{
-      jquery: 'jQuery',
-    }],
+    externals: [
+      {
+        jquery: 'jQuery',
+      },
+    ],
   }),
 
   // WebComponent Standalone
