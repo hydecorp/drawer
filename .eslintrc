@@ -9,6 +9,7 @@
     "no-else-return": "off",
     "no-multi-assign": "off",
     "no-underscore-dangle": "off",
+    "no-mixed-operators": "off",
     "import/prefer-default-export": "off",
   },
 }

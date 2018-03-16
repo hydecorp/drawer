@@ -65,13 +65,15 @@ export function getMoveObservable(start$, end$) {
   // we `switchMap` to reflect the changes.
   // Nice: `combineLatest` provides us with the functionality of emitting
   // when either of the inputs change, but not before all inputs have their first value set.
-  return combineLatest(this.document$, this.mouseEvents$, this.preventDefault$).pipe(switchMap(([doc, mouseEvents, preventDefault]) => {
+  const input$ = combineLatest(this.document$, this.mouseEvents$, this.preventDefault$);
+  return input$.pipe(switchMap(([doc, mouseEvents, preventDefault]) => {
     // We're only keeping track of the first finger.
     // Should the user remove the finger that started the interaction, we use the next instead.
     // Note that this doesn't occur under normal circumstances,
     // and exists primarliy to ensure that the interaction continues without hiccups.
     // Note that the event listener is only passive when the `preventDefault` option is falsy.
-    const touchmove$ = fromEvent(doc, 'touchmove', { passive: !preventDefault }).pipe(map(event => assign(event.touches[0], { event })));
+    const s = { passive: !preventDefault };
+    const touchmove$ = fromEvent(doc, 'touchmove', s).pipe(map(e => assign(e.touches[0], { event: e })));
 
     // If mouse events aren't enabled, we're done here.
     if (!mouseEvents) return touchmove$;
