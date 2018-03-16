@@ -49,6 +49,6 @@ react
 /_config.yml
 /404.md
 /Gemfile*
-/scripts
+/.scripts
 /webpack.config.js
 /.travis.yml

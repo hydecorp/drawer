@@ -7,9 +7,7 @@ const { promisify } = require('util');
 
 const docco = promisify(require('docco').document); // eslint-disable-line
 const fs = require('fs');
-const {
-  basename, dirname, extname, relative, resolve,
-} = require('path');
+const { basename, dirname, extname, relative, resolve } = require('path');
 
 const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
@@ -25,18 +23,20 @@ const TARGET_EXT = '.md';
 // <https://stackoverflow.com/a/45130990/870615>
 async function getFiles(dir) {
   const subdirs = await readdir(dir);
-  const files = await Promise.all(subdirs.map(async (subdir) => {
-    const res = resolve(dir, subdir);
-    return (await stat(res)).isDirectory() ? getFiles(res) : res;
-  }));
+  const files = await Promise.all(
+    subdirs.map(async subdir => {
+      const res = resolve(dir, subdir);
+      return (await stat(res)).isDirectory() ? getFiles(res) : res;
+    }),
+  );
   return files.reduce((a, f) => a.concat(f), []);
 }
 
 async function genDoc(dir) {
   const files = process.argv.length > 2 ? [process.argv[2]] : await getFiles(dir);
-  return Promise.all(files
-    .filter(file => EXTENSIONS.has(extname(file)))
-    .map(async (file) => { // e.g. `~/GitHub/hy-comp/src/mixin/index.js`
+  return Promise.all(
+    files.filter(file => EXTENSIONS.has(extname(file))).map(async file => {
+      // e.g. `~/GitHub/hy-comp/src/mixin/index.js`
       const ext = extname(file); // e.g. `.js`
       const bname = basename(file, ext); // e.g. `index`
       const name = bname === 'index' ? 'README' : bname; // e.g. `index` => `README`
@@ -55,9 +55,13 @@ async function genDoc(dir) {
         resolve(output, bname + DOCCO_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/index.html`
         resolve(output, name + TARGET_EXT), // e.g. `~/GitHub/hy-comp/doc/src/mixin/README.md`
       );
-    }));
+    }),
+  );
 }
 
 genDoc(SOURCE_DIR)
   .then(() => process.exit(0))
-  .catch((e) => { console.error(e); process.exit(1); });
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  });

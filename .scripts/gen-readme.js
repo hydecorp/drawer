@@ -13,24 +13,23 @@ const DOCS = [
   resolve(`./doc/README.md`),
 ];
 
-const INC_HEADING_REGEX = /^(#+\s+.*)/ugm;
+const INC_HEADING_REGEX = /^(#+\s+.*)/gmu;
 
-const RE_LINK   = /\[([^\]]+?)\]\(([^.][^)]+?)\.md\)/ugm
-const RE_DIR    = /\[([^\]]+?)\]\(\.\/([^)]+?)\.md\)/ugm;
-const RE_PARENT = /\[([^\]]+?)\]\(\.\.\/([^)]+?)\.md\)/ugm;
+const RE_LINK = /\[([^\]]+?)\]\(([^.][^)]+?)\.md\)/gmu;
+const RE_DIR = /\[([^\]]+?)\]\(\.\/([^)]+?)\.md\)/gmu;
+const RE_PARENT = /\[([^\]]+?)\]\(\.\.\/([^)]+?)\.md\)/gmu;
 
-const RE_REF_LINK   = /\[([^\]]+?)\]:\s+([^.][^)]+?)\.md/ugm
-const RE_REF_DIR    = /\[([^\]]+?)\]:\s+\.\/([^)]+?)\.md/ugm;
-const RE_REF_PARENT = /\[([^\]]+?)\]:\s+\.\.\/([^)]+?)\.md/ugm;
+const RE_REF_LINK = /\[([^\]]+?)\]:\s+([^.][^)]+?)\.md/gmu;
+const RE_REF_DIR = /\[([^\]]+?)\]:\s+\.\/([^)]+?)\.md/gmu;
+const RE_REF_PARENT = /\[([^\]]+?)\]:\s+\.\.\/([^)]+?)\.md/gmu;
 
 (async function main() {
   try {
-    const baseFile = (await readFile(resolve('./README.md'), 'utf8'))
-      .split('<!--more-->')[0] + '<!--more-->';
+    const baseFile =
+      (await readFile(resolve('./README.md'), 'utf8')).split('<!--more-->')[0] + '<!--more-->';
 
-    const readme = await DOCS
-      .map(async f => [f, await readFile(f, 'utf-8')])
-      .map(async (p) => {
+    const readme = await DOCS.map(async f => [f, await readFile(f, 'utf-8')])
+      .map(async p => {
         const [f, fileContent] = await p;
         const bname = relative(resolve(), dirname(f));
 
@@ -47,10 +46,7 @@ const RE_REF_PARENT = /\[([^\]]+?)\]:\s+\.\.\/([^)]+?)\.md/ugm;
 
         return content;
       })
-      .reduce(
-        async (base, content) => `${await base}\n\n${await content}\n`,
-        baseFile,
-      );
+      .reduce(async (base, content) => `${await base}\n\n${await content}\n`, baseFile);
 
     await writeFile(resolve(`./README.md`), readme, 'utf-8');
 
@@ -59,4 +55,4 @@ const RE_REF_PARENT = /\[([^\]]+?)\]:\s+\.\.\/([^)]+?)\.md/ugm;
     console.error(e); // eslint-disable-line
     process.exit(1);
   }
-}());
+})();
