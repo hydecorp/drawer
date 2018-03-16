@@ -131,8 +131,8 @@ export function drawerMixin(C) {
       /* this.backButton$ = new Subject(); */
 
       // Cache DOM elements.
-      this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
-      this.contentEl = this.root.querySelector('.hy-drawer-content');
+      this.scrimEl = this.sroot.querySelector('.hy-drawer-scrim');
+      this.contentEl = this.sroot.querySelector('.hy-drawer-content');
 
       // Set the initial alignment class.
       this.contentEl.classList.add(`hy-drawer-${this.align}`);

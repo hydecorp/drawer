@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "create-element-x": "^1.0.3",
-    "hy-component": "^1.0.0-pre.4",
+    "hy-component": "^1.0.0-pre.5",
     "rxjs": "^5.5.7",
     "rxjs-create-tween": "^1.1.0"
   },
