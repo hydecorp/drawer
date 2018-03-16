@@ -39,7 +39,7 @@ if (
 } else if (window.WebComponents) {
   window.addEventListener('WebComponentsReady', define);
 } else if (process.env.DEBUG) {
-  console.warn('Couldn\'t register component. Did you forget to include a WebComponents polyfill?');
+  console.warn("Couldn't register component. Did you forget to include a WebComponents polyfill?");
 }
 ```
 

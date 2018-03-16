@@ -22,9 +22,12 @@ import { HyDrawer, VANILLA_FEATURE_TESTS } from './vanilla';
 import { HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS } from './webcomponent';
 
 export {
-  drawerMixin, MIXIN_FEATURE_TESTS,
-  HyDrawer, VANILLA_FEATURE_TESTS,
-  HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS,
+  drawerMixin,
+  MIXIN_FEATURE_TESTS,
+  HyDrawer,
+  VANILLA_FEATURE_TESTS,
+  HyDrawerElement,
+  WEBCOMPONENT_FEATURE_TESTS,
 };
 ```
 

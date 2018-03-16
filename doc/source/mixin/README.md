@@ -33,8 +33,8 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 
 
 ```js
-import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/esm/component';
-import { arrayOf, bool, number, oneOf } from 'hy-component/esm/types';
+import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/src/component';
+import { arrayOf, bool, number, oneOf } from 'hy-component/src/types';
 
 import { Subject } from 'rxjs/_esm5/Subject';
 ```
@@ -82,7 +82,9 @@ The name of the component (required by hy-component)
 
 
 ```js
-    static get componentName() { return 'hy-drawer'; }
+    static get componentName() {
+      return 'hy-drawer';
+    }
 ```
 
 ### Options
@@ -125,11 +127,21 @@ Mostly we just put the value on an observable and deal with it from there.
 ```js
     static get sideEffects() {
       return {
-        opened(x) { this.opened$.next(x); },
-        align(x) { this.align$.next(x); },
-        persistent(x) { this.persitent$.next(x); },
-        preventDefault(x) { this.preventDefault$.next(x); },
-        mouseEvents(x) { this.mouseEvents$.next(x); },
+        opened(x) {
+          this.opened$.next(x);
+        },
+        align(x) {
+          this.align$.next(x);
+        },
+        persistent(x) {
+          this.persitent$.next(x);
+        },
+        preventDefault(x) {
+          this.preventDefault$.next(x);
+        },
+        mouseEvents(x) {
+          this.mouseEvents$.next(x);
+        },
         /* _backButton(x) { this.backButton$.next(x); }, */
       };
     }
@@ -164,8 +176,8 @@ Cache DOM elements.
 
 
 ```js
-      this.scrimEl = this.root.querySelector('.hy-drawer-scrim');
-      this.contentEl = this.root.querySelector('.hy-drawer-content');
+      this.scrimEl = this.sroot.querySelector('.hy-drawer-scrim');
+      this.contentEl = this.sroot.querySelector('.hy-drawer-content');
 ```
 
 Set the initial alignment class.

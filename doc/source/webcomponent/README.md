@@ -20,8 +20,13 @@ We start by importing form the hy-component library...
 
 
 ```js
-import { customElementMixin, CustomElement, fragmentFromString, CUSTOM_ELEMENT_FEATURE_TESTS, Set }
-  from 'hy-component/esm/custom-element';
+import {
+  customElementMixin,
+  CustomElement,
+  fragmentFromString,
+  CUSTOM_ELEMENT_FEATURE_TESTS,
+  Set,
+} from 'hy-component/src/custom-element';
 ```
 
 ...and our own component.
@@ -67,7 +72,9 @@ The CustomElements spec demands that we provide a list of attributes (i.e. our o
 
 
 ```js
-  static get observedAttributes() { return this.getObservedAttributes(); }
+  static get observedAttributes() {
+    return this.getObservedAttributes();
+  }
 ```
 
 We override the `getTemplate` method and return a document fragment
@@ -75,7 +82,9 @@ obtained from parsing the template string.
 
 
 ```js
-  getTemplate() { return fragmentFromString(template); }
+  getTemplate() {
+    return fragmentFromString(template);
+  }
 }
 ```
 

@@ -103,7 +103,7 @@ export function updateDOM(translateX) {
   this.translateX = translateX;
 
   const inv = this.align === 'left' ? 1 : -1;
-  const opacity = this.opacity = (translateX / this.drawerWidth) * inv;
+  const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
   this.contentEl.style.transform = `translateX(${translateX}px)`;
   this.scrimEl.style.opacity = this.opacity;

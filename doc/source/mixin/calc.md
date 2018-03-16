@@ -39,11 +39,12 @@ Otherwise it must be below the upper bound.
 export function calcIsInRange(clientX, opened) {
   switch (this.align) {
     case 'left':
-      return clientX > this.range[0]
-        && (opened || clientX < this.range[1]);
+      return clientX > this.range[0] && (opened || clientX < this.range[1]);
     case 'right':
-      return clientX < window.innerWidth - this.range[0]
-        && (opened || clientX > window.innerWidth - this.range[1]);
+      return (
+        clientX < window.innerWidth - this.range[0] &&
+        (opened || clientX > window.innerWidth - this.range[1])
+      );
     default:
       throw Error();
   }
@@ -73,7 +74,7 @@ TODO: could incorporate the current open state of the drawer.
 
 
 ```js
-export function calcWillOpen([,, translateX, velocity]) {
+export function calcWillOpen([, , translateX, velocity]) {
   switch (this.align) {
     case 'left': {
       if (velocity > VELOCITY_THRESHOLD) return true;
