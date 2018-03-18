@@ -36,7 +36,7 @@ import { arrayOf, bool, number, oneOf } from 'hy-component/src/types';
 import { Subject } from 'rxjs/_esm5/Subject';
 
 // TODO
-import { setupObservables } from './setup';
+import { setupObservablesMixin } from './setup';
 
 // A set of [Modernizr] tests that are required for this component to work.
 export const MIXIN_FEATURE_TESTS = new Set([
@@ -53,9 +53,8 @@ export const MIXIN_FEATURE_TESTS = new Set([
 export { Set };
 
 // ## Drawer Mixin
-export function drawerMixin(C) {
-  // TODO: see ES6 mixins...
-  return class extends componentMixin(C) {
+export const drawerMixin = C =>
+  class extends setupObservablesMixin(componentMixin(C)) {
     // The name of the component (required by hy-component)
     static get componentName() {
       return 'hy-drawer';
@@ -140,7 +139,7 @@ export function drawerMixin(C) {
 
     // Calling the [setup observables function](./setup.md) function.
     connectComponent() {
-      setupObservables.call(this);
+      this.setupObservables();
 
       // Firing an event to let the outside world know the drawer is ready.
       this.fireEvent('init', { detail: this.opened });
@@ -171,7 +170,6 @@ export function drawerMixin(C) {
       else this.opened = !this.opened;
     }
   };
-}
 
 // [rxjs]: https://github.com/ReactiveX/rxjs
 // [esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
