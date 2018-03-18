@@ -43,7 +43,7 @@ function envConfig() {
 const baseConfig = merge(
   {
     output: {
-      filename: `${filename}${min}.js`,
+      filename: `index${min}.js`,
       library,
       libraryTarget: 'umd',
       umdNamedDefine: true,
@@ -136,7 +136,7 @@ const config = [
     entry: resolve('./src/webcomponent/module.js'),
     output: {
       path: resolve('./dist/webcomponent'),
-      filename: `${filename}-module${min}.js`,
+      filename: `module${min}.js`,
     },
   }),
 
@@ -145,7 +145,7 @@ const config = [
     entry: resolve('./src/webcomponent/html-import.js'),
     output: {
       path: resolve('./dist/webcomponent'),
-      filename: `${filename}-html-import${min}.js`,
+      filename: `html-import${min}.js`,
     },
     plugins: [
       new HtmlWebpackPlugin({
