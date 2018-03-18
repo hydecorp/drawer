@@ -123,7 +123,7 @@ Yes.
 
 > ✓ Default Colors — By default, does the component make use of the inherited forecolor and backcolor?
 
-No, background color is set via CSS custom property. TODO: Look into how this could work.
+Yes TODO
 
 > ✓ Focus Visible — Can you easily see when the component has focus?
 
@@ -269,7 +269,7 @@ Yes.
 
 > ✓ Overridable Methods — Does the component provide internal methods for key functionality, such that a subclass can override those methods to refine their behavior?
 
-No, currently does not expose enough of its internal methods. TODO
+Yes.
 
 
 ## Development
