@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { VELOCITY_THRESHOLD } from './constants';
+import { VELOCITY_THRESHOLD } from "./constants";
 
 // Using shorthands for common functions
 const min = Math.min.bind(Math);
@@ -29,9 +29,9 @@ export const calcMixin = C =>
     // Otherwise it must be below the upper bound.
     calcIsInRange(clientX, opened) {
       switch (this.align) {
-        case 'left':
+        case "left":
           return clientX > this.range[0] && (opened || clientX < this.range[1]);
-        case 'right':
+        case "right":
           return (
             clientX < window.innerWidth - this.range[0] &&
             (opened || clientX > window.innerWidth - this.range[1])
@@ -50,7 +50,9 @@ export const calcMixin = C =>
     // because it would not pass the condition below, unless we introduce the second term.
     // TODO: reuse isSlidign observable?
     calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-      return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
+      return (
+        endX !== startX || (translateX > 0 && translateX < this.drawerWidth)
+      );
     }
 
     // #### Calculate 'Will open?'
@@ -59,13 +61,13 @@ export const calcMixin = C =>
     // TODO: could incorporate the current open state of the drawer.
     calcWillOpen([, , translateX, velocity]) {
       switch (this.align) {
-        case 'left': {
+        case "left": {
           if (velocity > VELOCITY_THRESHOLD) return true;
           else if (velocity < -VELOCITY_THRESHOLD) return false;
           else if (translateX >= this.drawerWidth / 2) return true;
           else return false;
         }
-        case 'right': {
+        case "right": {
           if (-velocity > VELOCITY_THRESHOLD) return true;
           else if (-velocity < -VELOCITY_THRESHOLD) return false;
           else if (translateX <= -this.drawerWidth / 2) return true;
@@ -84,12 +86,12 @@ export const calcMixin = C =>
     // The function will also clip the position at 0 and the width of the drawer.
     calcTranslateX(clientX, startX, startTranslateX) {
       switch (this.align) {
-        case 'left': {
+        case "left": {
           const deltaX = clientX - startX;
           const translateX = startTranslateX + deltaX;
           return max(0, min(this.drawerWidth, translateX));
         }
-        case 'right': {
+        case "right": {
           const deltaX = clientX - startX;
           const translateX = startTranslateX + deltaX;
           return min(0, max(-this.drawerWidth, translateX));

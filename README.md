@@ -1,30 +1,3 @@
-# hy-drawer
-
-[![npm version](https://badge.fury.io/js/hy-drawer.svg)](https://badge.fury.io/js/hy-drawer)
-
-**hy-drawer** is a touch-enabled drawer component for the modern web.
-It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
-while being performant and easy to use.
-It is the perfect companion for mobile-first web pages and progressive web apps.
-
-> A touch-enabled drawer component for the modern web.
-{:.lead}
-
-**hy-drawer** can be used in a variety of ways:
-* As **Vanilla** JavaScript class
-* As **jQuery** plugin
-* As **WebComponent**, both as *ES6 Module* and *HTML Import*
-* Possibly as part of your own component hierarchy via [ES6 Mixin][esmixins].
-
-**hy-drawer** is used by hundreds of sites as part of the [Hydejack]{:.external} Jekyll theme.
-
-**NOTE**: The current version is a pre-release. The public API may still change in important ways.
-{:.message}
-
-[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
-[rxjs]: https://github.com/ReactiveX/rxjs
-[hydejack]: https://qwtel.com/hydejack/
-
 <!--more-->
 
 ## Examples

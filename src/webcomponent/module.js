@@ -17,20 +17,22 @@
 // ## Overview
 // TODO
 
-import { HyDrawerElement } from './index';
+import { HyDrawerElement } from "./index";
 
 const define = () => {
-  window.customElements.define('hy-drawer', HyDrawerElement);
+  window.customElements.define("hy-drawer", HyDrawerElement);
 };
 
 // Make sure the polyfills are ready (if they are being used).
 if (
-  ('customElements' in window && 'attachShadow' in Element.prototype) ||
+  ("customElements" in window && "attachShadow" in Element.prototype) ||
   (window.WebComponents && window.WebComponents.ready)
 ) {
   define();
 } else if (window.WebComponents) {
-  window.addEventListener('WebComponentsReady', define);
+  window.addEventListener("WebComponentsReady", define);
 } else if (process.env.DEBUG) {
-  console.warn("Couldn't register component. Did you forget to include a WebComponents polyfill?");
+  console.warn(
+    "Couldn't register component. Did you forget to include a WebComponents polyfill?"
+  );
 }

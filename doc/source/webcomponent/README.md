@@ -25,15 +25,15 @@ import {
   CustomElement,
   fragmentFromString,
   CUSTOM_ELEMENT_FEATURE_TESTS,
-  Set,
-} from 'hy-component/src/custom-element';
+  Set
+} from "hy-component/src/custom-element";
 ```
 
 ...and our own component.
 
 
 ```js
-import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
+import { drawerMixin, MIXIN_FEATURE_TESTS } from "../mixin";
 ```
 
 Unlike the [HTML Import version](./html-import.md), this version bundles the template
@@ -41,7 +41,7 @@ as a string.
 
 
 ```js
-import { template } from './template';
+import { template } from "./template";
 ```
 
 The set of Modernizr feature tests required for *this* version of the component.
@@ -50,7 +50,7 @@ The set of Modernizr feature tests required for *this* version of the component.
 ```js
 export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
-  ...MIXIN_FEATURE_TESTS,
+  ...MIXIN_FEATURE_TESTS
 ]);
 
 export { Set };
@@ -65,7 +65,9 @@ reflecting options as HTML attributes, etc...
 
 
 ```js
-export class HyDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
+export class HyDrawerElement extends customElementMixin(
+  drawerMixin(CustomElement)
+) {
 ```
 
 The CustomElements spec demands that we provide a list of attributes (i.e. our options).

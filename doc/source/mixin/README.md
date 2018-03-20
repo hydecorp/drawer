@@ -33,17 +33,21 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 
 
 ```js
-import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/src/component';
-import { arrayOf, bool, number, oneOf } from 'hy-component/src/types';
+import {
+  componentMixin,
+  COMPONENT_FEATURE_TESTS,
+  Set
+} from "hy-component/src/component";
+import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
-import { Subject } from 'rxjs/_esm5/Subject';
+import { Subject } from "rxjs/_esm5/Subject";
 ```
 
 TODO
 
 
 ```js
-import { setupObservables } from './setup';
+import { setupObservablesMixin } from "./setup";
 ```
 
 A set of [Modernizr] tests that are required for this component to work.
@@ -52,13 +56,13 @@ A set of [Modernizr] tests that are required for this component to work.
 ```js
 export const MIXIN_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
-  'eventlistener',
-  'queryselector',
-  'requestanimationframe',
-  'classlist',
-  'opacity',
-  'csstransforms',
-  'csspointerevents',
+  "eventlistener",
+  "queryselector",
+  "requestanimationframe",
+  "classlist",
+  "opacity",
+  "csstransforms",
+  "csspointerevents"
 ]);
 
 export { Set };
@@ -68,14 +72,8 @@ export { Set };
 
 
 ```js
-export function drawerMixin(C) {
-```
-
-TODO: see ES6 mixins...
-
-
-```js
-  return class extends componentMixin(C) {
+export const drawerMixin = C =>
+  class extends setupObservablesMixin(componentMixin(C)) {
 ```
 
 The name of the component (required by hy-component)
@@ -83,7 +81,7 @@ The name of the component (required by hy-component)
 
 ```js
     static get componentName() {
-      return 'hy-drawer';
+      return "hy-drawer";
     }
 ```
 
@@ -96,12 +94,12 @@ See [Options](../../options.md) for usage information.
     static get defaults() {
       return {
         opened: false,
-        align: 'left',
+        align: "left",
         persistent: false,
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
-        mouseEvents: false,
+        mouseEvents: false
         /* _backButton: false, */
       };
     }
@@ -109,12 +107,12 @@ See [Options](../../options.md) for usage information.
     static get types() {
       return {
         opened: bool,
-        align: oneOf(['left', 'right']),
+        align: oneOf(["left", "right"]),
         persistent: bool,
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
-        mouseEvents: bool,
+        mouseEvents: bool
         /* _backButton: bool, */
       };
     }
@@ -141,7 +139,7 @@ Mostly we just put the value on an observable and deal with it from there.
         },
         mouseEvents(x) {
           this.mouseEvents$.next(x);
-        },
+        }
         /* _backButton(x) { this.backButton$.next(x); }, */
       };
     }
@@ -176,8 +174,8 @@ Cache DOM elements.
 
 
 ```js
-      this.scrimEl = this.sroot.querySelector('.hy-drawer-scrim');
-      this.contentEl = this.sroot.querySelector('.hy-drawer-content');
+      this.scrimEl = this.sroot.querySelector(".hy-drawer-scrim");
+      this.contentEl = this.sroot.querySelector(".hy-drawer-content");
 ```
 
 Set the initial alignment class.
@@ -193,14 +191,14 @@ Calling the [setup observables function](./setup.md) function.
 
 ```js
     connectComponent() {
-      setupObservables.call(this);
+      this.setupObservables();
 ```
 
 Firing an event to let the outside world know the drawer is ready.
 
 
 ```js
-      this.fireEvent('init', { detail: this.opened });
+      this.fireEvent("init", { detail: this.opened });
     }
 
     disconnectComponent() {
@@ -232,7 +230,6 @@ Public methods of this component. See [Methods](../../methods.md) for more.
       else this.opened = !this.opened;
     }
   };
-}
 ```
 
 [rxjs]: https://github.com/ReactiveX/rxjs

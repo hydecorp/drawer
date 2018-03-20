@@ -18,55 +18,37 @@ As mentioned before, we only import the RxJS function that we need.
 
 
 ```js
-import { combineLatest } from 'rxjs/_esm5/observable/combineLatest';
-import { defer } from 'rxjs/_esm5/observable/defer';
-import { fromEvent } from 'rxjs/_esm5/observable/fromEvent';
-import { merge } from 'rxjs/_esm5/observable/merge';
-import { never } from 'rxjs/_esm5/observable/never';
+import { combineLatest } from "rxjs/_esm5/observable/combineLatest";
+import { defer } from "rxjs/_esm5/observable/defer";
+import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
+import { merge } from "rxjs/_esm5/observable/merge";
+import { never } from "rxjs/_esm5/observable/never";
 
-import { tap } from 'rxjs/_esm5/operators/tap';
-import { filter } from 'rxjs/_esm5/operators/filter';
-import { map } from 'rxjs/_esm5/operators/map';
-import { pairwise } from 'rxjs/_esm5/operators/pairwise';
-import { repeatWhen } from 'rxjs/_esm5/operators/repeatWhen';
-import { sample } from 'rxjs/_esm5/operators/sample';
-import { share } from 'rxjs/_esm5/operators/share';
-import { startWith } from 'rxjs/_esm5/operators/startWith';
-import { switchMap } from 'rxjs/_esm5/operators/switchMap';
-import { take } from 'rxjs/_esm5/operators/take';
-import { takeUntil } from 'rxjs/_esm5/operators/takeUntil';
-import { timestamp } from 'rxjs/_esm5/operators/timestamp';
-import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
+import { tap } from "rxjs/_esm5/operators/tap";
+import { filter } from "rxjs/_esm5/operators/filter";
+import { map } from "rxjs/_esm5/operators/map";
+import { pairwise } from "rxjs/_esm5/operators/pairwise";
+import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
+import { sample } from "rxjs/_esm5/operators/sample";
+import { share } from "rxjs/_esm5/operators/share";
+import { startWith } from "rxjs/_esm5/operators/startWith";
+import { switchMap } from "rxjs/_esm5/operators/switchMap";
+import { take } from "rxjs/_esm5/operators/take";
+import { takeUntil } from "rxjs/_esm5/operators/takeUntil";
+import { timestamp } from "rxjs/_esm5/operators/timestamp";
+import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
 
-import { createTween } from 'rxjs-create-tween';
+import { createTween } from "rxjs-create-tween";
 
-import { easeOutSine } from '../common';
+import { easeOutSine } from "../common";
 
-import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
+import { BASE_DURATION, WIDTH_CONTRIBUTION } from "./constants";
 
-import { filterWhen /* , subscribeWhen */ } from './operators';
+import { filterWhen /* , subscribeWhen */ } from "./operators";
 
-import {
-  calcIsInRange,
-  calcIsSwipe,
-  calcWillOpen,
-  calcTranslateX,
-  calcMovableDrawerWidth,
-} from './calc';
-
-import {
-  /* histId, */
-  prepareInteraction,
-  cleanupInteraction,
-  updateDOM,
-} from './update';
-
-import {
-  getStartObservable,
-  getMoveObservable,
-  getEndObservable,
-  getIsSlidingObservable,
-} from './observables';
+import { calcMixin } from "./calc";
+import { updateMixin } from "./update";
+import { baseObservablesMixin } from "./observables";
 ```
 
 ### Setup observables
@@ -74,19 +56,21 @@ This function sets up the observable "pipeline".
 
 
 ```js
-export function setupObservables() {
+export const setupObservablesMixin = C =>
+  class extends baseObservablesMixin(updateMixin(calcMixin(C))) {
+    setupObservables() {
 ```
 
 An observable of resize events.
 
 
 ```js
-  const resize$ = fromEvent(window, 'resize', { passive: true }).pipe(
-    takeUntil(this.teardown$),
-    /* debounceTime(100), */
-    share(),
-    startWith({}),
-  );
+      const resize$ = fromEvent(window, "resize", { passive: true }).pipe(
+        takeUntil(this.teardown$),
+        /* debounceTime(100), */
+        share(),
+        startWith({})
+      );
 ```
 
 Keep measurements up-to-date.
@@ -94,11 +78,11 @@ Note that we need to temporarily remove the opened class to get the correct meas
 
 
 ```js
-  resize$.pipe(takeUntil(this.teardown$)).subscribe(() => {
-    if (this.opened) this.contentEl.classList.remove('hy-drawer-opened');
-    this.drawerWidth = calcMovableDrawerWidth.call(this);
-    if (this.opened) this.contentEl.classList.add('hy-drawer-opened');
-  });
+      resize$.pipe(takeUntil(this.teardown$)).subscribe(() => {
+        if (this.opened) this.contentEl.classList.remove("hy-drawer-opened");
+        this.drawerWidth = this.calcMovableDrawerWidth();
+        if (this.opened) this.contentEl.classList.add("hy-drawer-opened");
+      });
 ```
 
 Emitts a value every time you change the `persistent` property of the drawer.
@@ -106,14 +90,18 @@ Interally, we invert it and call it `active`.
 
 
 ```js
-  const active$ = this.persitent$.pipe(takeUntil(this.teardown$), map(x => !x), share());
+      const active$ = this.persitent$.pipe(
+        takeUntil(this.teardown$),
+        map(x => !x),
+        share()
+      );
 ```
 
 We use this to get references to observables that aren't defined yet.
 
 
 ```js
-  const ref = {};
+      const ref = {};
 ```
 
 #### Start observable
@@ -122,9 +110,11 @@ Each emitted value is a hash containing a `clientX` and `clientY` key.
 
 
 ```js
-  const start$ = getStartObservable
-    .call(this)
-    .pipe(takeUntil(this.teardown$), filterWhen(active$), share());
+      const start$ = this.getStartObservable().pipe(
+        takeUntil(this.teardown$),
+        filterWhen(active$),
+        share()
+      );
 ```
 
 An observable that emits `true`, as long as the drawer isn't fully closed
@@ -133,25 +123,36 @@ It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside
 
 
 ```js
-  const isScrimVisible$ = defer(() =>
-    ref.translateX$.pipe(map(translateX => (this.align === 'left' ? translateX > 0 : translateX < this.drawerWidth))));
+      const isScrimVisible$ = defer(() =>
+        ref.translateX$.pipe(
+          map(
+            translateX =>
+              this.align === "left"
+                ? translateX > 0
+                : translateX < this.drawerWidth
+          )
+        )
+      );
 ```
 
 TODO: ...
 
 
 ```js
-  const isInRange$ = start$.pipe(
-    withLatestFrom(isScrimVisible$),
-    map(([{ clientX }, isScrimVisible]) => calcIsInRange.call(this, clientX, isScrimVisible)),
-    tap((inRange) => {
-      if (inRange) {
-        if (this.mouseEvents) this.contentEl.classList.add('hy-drawer-grabbing');
-        prepareInteraction.call(this);
-      }
-    }),
-    share(),
-  );
+      const isInRange$ = start$.pipe(
+        withLatestFrom(isScrimVisible$),
+        map(([{ clientX }, isScrimVisible]) =>
+          this.calcIsInRange(clientX, isScrimVisible)
+        ),
+        tap(inRange => {
+          if (inRange) {
+            if (this.mouseEvents)
+              this.contentEl.classList.add("hy-drawer-grabbing");
+            this.prepareInteraction();
+          }
+        }),
+        share()
+      );
 ```
 
 #### End observable
@@ -159,9 +160,11 @@ The observable of all relevant "end" events, i.e. the last `touchend` (or `mouse
 
 
 ```js
-  const end$ = getEndObservable
-    .call(this)
-    .pipe(takeUntil(this.teardown$), filterWhen(active$, isInRange$), share());
+      const end$ = this.getEndObservable().pipe(
+        takeUntil(this.teardown$),
+        filterWhen(active$, isInRange$),
+        share()
+      );
 ```
 
 #### Move observable
@@ -169,9 +172,11 @@ The observable of all relevant "move" events.
 
 
 ```js
-  const move$ = getMoveObservable
-    .call(this, start$, end$)
-    .pipe(takeUntil(this.teardown$), filterWhen(active$, isInRange$), share());
+      const move$ = this.getMoveObservable(start$, end$).pipe(
+        takeUntil(this.teardown$),
+        filterWhen(active$, isInRange$),
+        share()
+      );
 ```
 
 #### 'Is sliding?' observable
@@ -183,20 +188,20 @@ See [`getIsSlidingObservable`](./observables.md#get-is-sliding-observable).
 
 
 ```js
-  const isSliding$ = getIsSlidingObservable.call(this, move$, start$).pipe(
-    take(1),
-    startWith(undefined),
-    repeatWhen(() => end$),
+      const isSliding$ = this.getIsSlidingObservable(move$, start$).pipe(
+        take(1),
+        startWith(undefined),
+        repeatWhen(() => end$),
 ```
 
 When the user is sliding, fire the `slidestart` event.
 
 
 ```js
-    tap((isSliding) => {
-      if (isSliding) this.fireEvent('slidestart', { detail: this.opened });
-    }),
-  );
+        tap(isSliding => {
+          if (isSliding) this.fireEvent("slidestart", { detail: this.opened });
+        })
+      );
 ```
 
 #### Translate X observable
@@ -212,8 +217,8 @@ It is wrapped in a `defer` because it depends on previous values of itself.
 
 
 ```js
-  ref.translateX$ = defer(() =>
-    merge(
+      ref.translateX$ = defer(() =>
+        merge(
 ```
 
 1)
@@ -223,11 +228,11 @@ this is also when we're sure to call `preventDefault`.
 
 
 ```js
-      move$.pipe(
-        filterWhen(isSliding$),
-        tap(({ event }) => {
-          if (this.preventDefault) event.preventDefault();
-        }),
+          move$.pipe(
+            filterWhen(isSliding$),
+            tap(({ event }) => {
+              if (this.preventDefault) event.preventDefault();
+            }),
 ```
 
 Finally, we take the start position of the finger, the start position of the drawer,
@@ -235,10 +240,11 @@ and the current position of the finger to calculate the next `translateX` value.
 
 
 ```js
-        withLatestFrom(start$, ref.startTranslateX$),
-        map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
-          calcTranslateX.call(this, clientX, startX, startTranslateX)),
-      ),
+            withLatestFrom(start$, ref.startTranslateX$),
+            map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
+              this.calcTranslateX(clientX, startX, startTranslateX)
+            )
+          ),
 ```
 
 2)
@@ -247,7 +253,7 @@ but isn't defined yet, because it depends on previous values of `translateX$`.
 
 
 ```js
-      ref.tween$,
+          ref.tween$,
 ```
 
 3)
@@ -257,7 +263,7 @@ We also want to jump when `align` chagnes, in this case to the other side of the
 
 
 ```js
-      combineLatest(this.opened$, this.align$).pipe(
+          combineLatest(this.opened$, this.align$).pipe(
 ```
 
 Usually the cleanup code would run at the end of the fling animation,
@@ -265,17 +271,21 @@ but since there is no animation in this case, we call it directly.
 
 
 ```js
-        tap(([opened]) => cleanupInteraction.call(this, opened)),
-        map(([opened, align]) => (!opened ? 0 : this.drawerWidth * (align === 'left' ? 1 : -1))),
-      ),
-    ))
+            tap(([opened]) => this.cleanupInteraction(opened)),
+            map(
+              ([opened, align]) =>
+                !opened ? 0 : this.drawerWidth * (align === "left" ? 1 : -1)
+            )
+          )
+        )
+      )
 ```
 
 `share`ing the observable between many subscribers:
 
 
 ```js
-    .pipe(takeUntil(this.teardown$), share());
+        .pipe(takeUntil(this.teardown$), share());
 ```
 
 The `translateX` value at the start of an interaction.
@@ -285,7 +295,7 @@ We obtain it by sampling the translate-x observable at the beginning of each int
 
 
 ```js
-  ref.startTranslateX$ = ref.translateX$.pipe(sample(start$));
+      ref.startTranslateX$ = ref.translateX$.pipe(sample(start$));
 ```
 
 #### Tween observable
@@ -296,9 +306,9 @@ or snap back into place.
 
 
 ```js
-  const velocity$ = ref.translateX$.pipe(
-    timestamp(),
-    pairwise(),
+      const velocity$ = ref.translateX$.pipe(
+        timestamp(),
+        pairwise(),
 ```
 
 Since we are at the mercy of the browser firing move events,
@@ -306,44 +316,51 @@ we make sure that some time has passed since the last move event.
 
 
 ```js
-    filter(([{ timestamp: prevTime }, { timestamp: time }]) => time - prevTime > 0),
+        filter(
+          ([{ timestamp: prevTime }, { timestamp: time }]) =>
+            time - prevTime > 0
+        ),
 ```
 
 Now we are save to calculate the current velocity without divide by zero errors.
 
 
 ```js
-    map(([{ value: prevX, timestamp: prevTime }, { value: x, timestamp: time }]) =>
-      (x - prevX) / (time - prevTime)),
+        map(
+          ([
+            { value: prevX, timestamp: prevTime },
+            { value: x, timestamp: time }
+          ]) => (x - prevX) / (time - prevTime)
+        ),
 ```
 
 The initial velocity is zero.
 
 
 ```js
-    startWith(0),
-  );
+        startWith(0)
+      );
 ```
 
 TODO
 
 
 ```js
-  const willOpen$ = end$.pipe(
-    tap(() => {
-      this.contentEl.classList.remove('hy-drawer-grabbing');
-    }),
-    withLatestFrom(start$, ref.translateX$, velocity$),
-    filter(calcIsSwipe.bind(this)),
-    map(calcWillOpen.bind(this)),
+      const willOpen$ = end$.pipe(
+        tap(() => {
+          this.contentEl.classList.remove("hy-drawer-grabbing");
+        }),
+        withLatestFrom(start$, ref.translateX$, velocity$),
+        filter(this.calcIsSwipe.bind(this)),
+        map(this.calcWillOpen.bind(this)),
 ```
 
 TODO: only fire `slideend` event when slidestart fired as well?
 
 
 ```js
-    tap(willOpen => this.fireEvent('slideend', { detail: willOpen })),
-  );
+        tap(willOpen => this.fireEvent("slideend", { detail: willOpen }))
+      );
 ```
 
 There are 2 things that can trigger an animation:
@@ -354,7 +371,10 @@ There are 2 things that can trigger an animation:
 
 
 ```js
-  const tweenTrigger$ = merge(willOpen$, this.animateTo$.pipe(tap(prepareInteraction.bind(this))));
+      const tweenTrigger$ = merge(
+        willOpen$,
+        this.animateTo$.pipe(tap(this.prepareInteraction.bind(this)))
+      );
 ```
 
 We silently set the new `opened` state here,
@@ -364,10 +384,10 @@ and initiate an animation to the opposite state.
 
 
 ```js
-  ref.tween$ = tweenTrigger$.pipe(
-    tap((willOpen) => {
-      this.setInternalState('opened', willOpen);
-    }),
+      ref.tween$ = tweenTrigger$.pipe(
+        tap(willOpen => {
+          this.setInternalState("opened", willOpen);
+        }),
 ```
 
 By using `switchMap` we ensure that subsequent events that trigger an animation
@@ -375,8 +395,8 @@ don't cause more than one animation to be played at a time.
 
 
 ```js
-    withLatestFrom(ref.translateX$),
-    switchMap(([opened, translateX]) => {
+        withLatestFrom(ref.translateX$),
+        switchMap(([opened, translateX]) => {
 ```
 
 We return a tween observable that runs cleanup code when it completes
@@ -384,18 +404,24 @@ We return a tween observable that runs cleanup code when it completes
 
 
 ```js
-      const inv = this.align === 'left' ? 1 : -1;
-      const endTranslateX = opened ? this.drawerWidth * inv : 0;
-      const diffTranslateX = endTranslateX - translateX;
-      const duration = BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
+          const inv = this.align === "left" ? 1 : -1;
+          const endTranslateX = opened ? this.drawerWidth * inv : 0;
+          const diffTranslateX = endTranslateX - translateX;
+          const duration =
+            BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
 
-      return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
-        tap({ complete: () => this.opened$.next(opened) }),
-        takeUntil(start$),
-        takeUntil(this.align$),
+          return createTween(
+            easeOutSine,
+            translateX,
+            diffTranslateX,
+            duration
+          ).pipe(
+            tap({ complete: () => this.opened$.next(opened) }),
+            takeUntil(start$),
+            takeUntil(this.align$)
+          );
+        })
       );
-    }),
-  );
 ```
 
 #### Subscriptions
@@ -407,54 +433,54 @@ and causes the code inside the above `defer` observables to run.
 
 
 ```js
-  ref.translateX$.subscribe(updateDOM.bind(this));
+      ref.translateX$.subscribe(this.updateDOM.bind(this));
 ```
 
 A click on the scrim should close the drawer.
 
 
 ```js
-  fromEvent(this.scrimEl, 'click')
-    .pipe(takeUntil(this.teardown$))
-    .subscribe(() => this.close());
+      fromEvent(this.scrimEl, "click")
+        .pipe(takeUntil(this.teardown$))
+        .subscribe(() => this.close());
 ```
 
 Other than preventing sliding, setting `persistent` will also hide the scrim.
 
 
 ```js
-  active$.pipe(takeUntil(this.teardown$)).subscribe((active) => {
-    this.scrimEl.style.display = active ? 'block' : 'none';
-  });
+      active$.pipe(takeUntil(this.teardown$)).subscribe(active => {
+        this.scrimEl.style.display = active ? "block" : "none";
+      });
 ```
 
 Whenever the alignment of the drawer changes, update the CSS classes.
 
 
 ```js
-  this.align$.pipe(takeUntil(this.teardown$)).subscribe((align) => {
-    const oldAlign = align === 'left' ? 'right' : 'left';
-    this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-    this.contentEl.classList.add(`hy-drawer-${align}`);
-  });
+      this.align$.pipe(takeUntil(this.teardown$)).subscribe(align => {
+        const oldAlign = align === "left" ? "right" : "left";
+        this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
+        this.contentEl.classList.add(`hy-drawer-${align}`);
+      });
 ```
 
 If the experimental back button feature is enabled, handle popstate events...
 
 
 ```js
-  /*
-  fromEvent(window, 'popstate')
-    .pipe(
-      takeUntil(this.teardown$),
-      subscribeWhen(this.backButton$),
-    )
-    .subscribe(() => {
-      const hash = `#${histId.call(this)}--opened`;
-      const willOpen = window.location.hash === hash;
-      if (willOpen !== this.opened) this.animateTo$.next(willOpen);
-    });
-  */
+      /*
+      fromEvent(window, 'popstate')
+        .pipe(
+          takeUntil(this.teardown$),
+          subscribeWhen(this.backButton$),
+        )
+        .subscribe(() => {
+          const hash = `#${histId.call(this)}--opened`;
+          const willOpen = window.location.hash === hash;
+          if (willOpen !== this.opened) this.animateTo$.next(willOpen);
+        });
+      */
 ```
 
 When drawing with mouse is enabled, we add the grab cursor to the drawer.
@@ -463,19 +489,21 @@ to prevent text selection while sliding.
 
 
 ```js
-  this.mouseEvents$
-    .pipe(
-      takeUntil(this.teardown$),
-      switchMap((mouseEvents) => {
-        if (mouseEvents) this.contentEl.classList.add('hy-drawer-grab');
-        else this.contentEl.classList.remove('hy-drawer-grab');
+      this.mouseEvents$
+        .pipe(
+          takeUntil(this.teardown$),
+          switchMap(mouseEvents => {
+            if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
+            else this.contentEl.classList.remove("hy-drawer-grab");
 
-        return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
-      }),
-    )
-    .subscribe(([{ event }, isInRange]) => {
-      if (isInRange && event) event.preventDefault();
-    });
+            return mouseEvents
+              ? start$.pipe(withLatestFrom(isInRange$))
+              : never();
+          })
+        )
+        .subscribe(([{ event }, isInRange]) => {
+          if (isInRange && event) event.preventDefault();
+        });
 ```
 
 Now we set the initial opend state.
@@ -483,27 +511,28 @@ If the experimental back button feature is enabled, we check the location hash..
 
 
 ```js
-  /*
-  if (this._backButton) {
-    const hash = `#${histId.call(this)}--opened`;
-    if (window.location.hash === hash) this.setInternalState('opened', true);
-  }
-  */
+      /*
+      if (this._backButton) {
+        const hash = `#${histId.call(this)}--opened`;
+        if (window.location.hash === hash) this.setInternalState('opened', true);
+      }
+      */
 ```
 
 Putting initial values on the side-effect--observables:
 
 
 ```js
-  this.document$.next(document);
+      this.document$.next(document);
 
-  this.opened$.next(this.opened);
-  this.align$.next(this.align);
-  this.persitent$.next(this.persistent);
-  this.preventDefault$.next(this.preventDefault);
-  this.mouseEvents$.next(this.mouseEvents);
-  /* this.backButton$.next(this._backButton); */
-}
+      this.opened$.next(this.opened);
+      this.align$.next(this.align);
+      this.persitent$.next(this.persistent);
+      this.preventDefault$.next(this.preventDefault);
+      this.mouseEvents$.next(this.mouseEvents);
+      /* this.backButton$.next(this._backButton); */
+    }
+  };
 ```
 
 

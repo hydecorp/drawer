@@ -30,24 +30,24 @@ export const updateMixin = C =>
     // recalculate `translateX` on every `resize`.
     // However, it has to be removed before we move the drawer via `translateX` again.
     prepareInteraction() {
-      this.contentEl.style.willChange = 'transform';
-      this.scrimEl.style.willChange = 'opacity';
-      this.contentEl.classList.remove('hy-drawer-opened');
-      this.fireEvent('prepare');
+      this.contentEl.style.willChange = "transform";
+      this.scrimEl.style.willChange = "opacity";
+      this.contentEl.classList.remove("hy-drawer-opened");
+      this.fireEvent("prepare");
     }
 
     // Cleanup code after a completed interaction.
     // Will add/remove the beforementioned `hy-drawer-opened` class.
     cleanupInteraction(opened) {
-      this.scrimEl.style.willChange = '';
-      this.contentEl.style.willChange = '';
+      this.scrimEl.style.willChange = "";
+      this.contentEl.style.willChange = "";
 
       if (opened) {
-        this.scrimEl.style.pointerEvents = 'all';
-        this.contentEl.classList.add('hy-drawer-opened');
+        this.scrimEl.style.pointerEvents = "all";
+        this.contentEl.classList.add("hy-drawer-opened");
       } else {
-        this.scrimEl.style.pointerEvents = '';
-        this.contentEl.classList.remove('hy-drawer-opened');
+        this.scrimEl.style.pointerEvents = "";
+        this.contentEl.classList.remove("hy-drawer-opened");
       }
 
       // If the experimental back button feature is enabled we hack the history API,
@@ -70,7 +70,7 @@ export const updateMixin = C =>
       */
 
       // Once we're finished cleaning up, we fire the `transitioned` event.
-      this.fireEvent('transitioned', { detail: opened });
+      this.fireEvent("transitioned", { detail: opened });
     }
     // #### Update DOM
     // In the end, we only modify two properties: The x-coordinate of the drawer,
@@ -78,12 +78,12 @@ export const updateMixin = C =>
     updateDOM(translateX) {
       this.translateX = translateX;
 
-      const inv = this.align === 'left' ? 1 : -1;
+      const inv = this.align === "left" ? 1 : -1;
       const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
       this.contentEl.style.transform = `translateX(${translateX}px)`;
       this.scrimEl.style.opacity = this.opacity;
 
-      this.fireEvent('move', { detail: { translateX, opacity } });
+      this.fireEvent("move", { detail: { translateX, opacity } });
     }
   };

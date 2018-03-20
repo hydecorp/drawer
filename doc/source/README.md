@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { drawerMixin, MIXIN_FEATURE_TESTS } from './mixin';
-import { HyDrawer, VANILLA_FEATURE_TESTS } from './vanilla';
-import { HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS } from './webcomponent';
+import { drawerMixin, MIXIN_FEATURE_TESTS } from "./mixin";
+import { HyDrawer, VANILLA_FEATURE_TESTS } from "./vanilla";
+import { HyDrawerElement, WEBCOMPONENT_FEATURE_TESTS } from "./webcomponent";
 
 export {
   drawerMixin,
@@ -27,7 +27,7 @@ export {
   HyDrawer,
   VANILLA_FEATURE_TESTS,
   HyDrawerElement,
-  WEBCOMPONENT_FEATURE_TESTS,
+  WEBCOMPONENT_FEATURE_TESTS
 };
 ```
 

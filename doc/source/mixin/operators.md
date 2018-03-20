@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { never } from 'rxjs/_esm5/observable/never';
+import { never } from "rxjs/_esm5/observable/never";
 
-import { filter } from 'rxjs/_esm5/operators/filter';
-import { map } from 'rxjs/_esm5/operators/map';
-import { switchMap } from 'rxjs/_esm5/operators/switchMap';
-import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
+import { filter } from "rxjs/_esm5/operators/filter";
+import { map } from "rxjs/_esm5/operators/map";
+import { switchMap } from "rxjs/_esm5/operators/switchMap";
+import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
 ```
 
 ### Observable extensions
@@ -32,7 +32,7 @@ when the input observable emits `false`, and re-subscribe when it emits `true`.
 
 
 ```js
-export const subscribeWhen = p$ => (source) => {
+export const subscribeWhen = p$ => source => {
   if (process.env.DEBUG && !p$) throw Error();
   return p$.pipe(switchMap(p => (p ? source : never())));
 };
@@ -44,10 +44,14 @@ instead of a predicate function.
 
 
 ```js
-export const filterWhen = (p$, ...others) => (source) => {
+export const filterWhen = (p$, ...others) => source => {
   if (process.env.DEBUG && !p$) throw Error();
   else if (others.length === 0) {
-    return source.pipe(withLatestFrom(p$), filter(([, p]) => p), map(([x]) => x));
+    return source.pipe(
+      withLatestFrom(p$),
+      filter(([, p]) => p),
+      map(([x]) => x)
+    );
 ```
 
 When providing more than one observable, the result observable will only emit values
@@ -59,7 +63,7 @@ when `every` input observable has emitted a truthy value.
     return source.pipe(
       withLatestFrom(p$, ...others),
       filter(([, ...ps]) => ps.every(p => p)),
-      map(([x]) => x),
+      map(([x]) => x)
     );
   }
 };

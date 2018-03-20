@@ -22,13 +22,16 @@ This file is included via `script` tag in `hy-drawer.html` and shouldn't be used
 
 ```js
 
-import { customElementMixin, CustomElement } from 'hy-component/src/custom-element';
+import {
+  customElementMixin,
+  CustomElement
+} from "hy-component/src/custom-element";
 
-import { drawerMixin } from '../mixin';
+import { drawerMixin } from "../mixin";
 
 const define = () => {
   customElements.define(
-    'hy-drawer',
+    "hy-drawer",
     class extends customElementMixin(drawerMixin(CustomElement)) {
 ```
 
@@ -39,7 +42,7 @@ The CustomElements spec demands that we provide a list of attributes (i.e. our o
       static get observedAttributes() {
         return this.getObservedAttributes();
       }
-    },
+    }
   );
 };
 ```
@@ -49,14 +52,16 @@ Make sure the polyfills are ready (if they are being used).
 
 ```js
 if (
-  ('customElements' in window && 'attachShadow' in Element.prototype) ||
+  ("customElements" in window && "attachShadow" in Element.prototype) ||
   (window.WebComponents && window.WebComponents.ready)
 ) {
   define();
 } else if (window.WebComponents) {
-  window.addEventListener('WebComponentsReady', define);
+  window.addEventListener("WebComponentsReady", define);
 } else if (process.env.DEBUG) {
-  console.warn("Couldn't register component. Did you forget to include a WebComponents polyfill?");
+  console.warn(
+    "Couldn't register component. Did you forget to include a WebComponents polyfill?"
+  );
 }
 ```
 

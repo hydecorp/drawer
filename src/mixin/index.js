@@ -30,24 +30,28 @@
 
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
-import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from 'hy-component/src/component';
-import { arrayOf, bool, number, oneOf } from 'hy-component/src/types';
+import {
+  componentMixin,
+  COMPONENT_FEATURE_TESTS,
+  Set
+} from "hy-component/src/component";
+import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
-import { Subject } from 'rxjs/_esm5/Subject';
+import { Subject } from "rxjs/_esm5/Subject";
 
 // TODO
-import { setupObservablesMixin } from './setup';
+import { setupObservablesMixin } from "./setup";
 
 // A set of [Modernizr] tests that are required for this component to work.
 export const MIXIN_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
-  'eventlistener',
-  'queryselector',
-  'requestanimationframe',
-  'classlist',
-  'opacity',
-  'csstransforms',
-  'csspointerevents',
+  "eventlistener",
+  "queryselector",
+  "requestanimationframe",
+  "classlist",
+  "opacity",
+  "csstransforms",
+  "csspointerevents"
 ]);
 
 export { Set };
@@ -57,7 +61,7 @@ export const drawerMixin = C =>
   class extends setupObservablesMixin(componentMixin(C)) {
     // The name of the component (required by hy-component)
     static get componentName() {
-      return 'hy-drawer';
+      return "hy-drawer";
     }
 
     // ### Options
@@ -66,12 +70,12 @@ export const drawerMixin = C =>
     static get defaults() {
       return {
         opened: false,
-        align: 'left',
+        align: "left",
         persistent: false,
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
-        mouseEvents: false,
+        mouseEvents: false
         /* _backButton: false, */
       };
     }
@@ -79,12 +83,12 @@ export const drawerMixin = C =>
     static get types() {
       return {
         opened: bool,
-        align: oneOf(['left', 'right']),
+        align: oneOf(["left", "right"]),
         persistent: bool,
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
-        mouseEvents: bool,
+        mouseEvents: bool
         /* _backButton: bool, */
       };
     }
@@ -107,7 +111,7 @@ export const drawerMixin = C =>
         },
         mouseEvents(x) {
           this.mouseEvents$.next(x);
-        },
+        }
         /* _backButton(x) { this.backButton$.next(x); }, */
       };
     }
@@ -130,8 +134,8 @@ export const drawerMixin = C =>
       /* this.backButton$ = new Subject(); */
 
       // Cache DOM elements.
-      this.scrimEl = this.sroot.querySelector('.hy-drawer-scrim');
-      this.contentEl = this.sroot.querySelector('.hy-drawer-content');
+      this.scrimEl = this.sroot.querySelector(".hy-drawer-scrim");
+      this.contentEl = this.sroot.querySelector(".hy-drawer-content");
 
       // Set the initial alignment class.
       this.contentEl.classList.add(`hy-drawer-${this.align}`);
@@ -142,7 +146,7 @@ export const drawerMixin = C =>
       this.setupObservables();
 
       // Firing an event to let the outside world know the drawer is ready.
-      this.fireEvent('init', { detail: this.opened });
+      this.fireEvent("init", { detail: this.opened });
     }
 
     disconnectComponent() {

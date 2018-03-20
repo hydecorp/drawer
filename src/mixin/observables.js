@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { combineLatest } from 'rxjs/_esm5/observable/combineLatest';
-import { fromEvent } from 'rxjs/_esm5/observable/fromEvent';
-import { merge } from 'rxjs/_esm5/observable/merge';
+import { combineLatest } from "rxjs/_esm5/observable/combineLatest";
+import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
+import { merge } from "rxjs/_esm5/observable/merge";
 
-import { tap } from 'rxjs/_esm5/operators/tap';
-import { filter } from 'rxjs/_esm5/operators/filter';
-import { map } from 'rxjs/_esm5/operators/map';
-import { mapTo } from 'rxjs/_esm5/operators/mapTo';
-import { skipWhile } from 'rxjs/_esm5/operators/skipWhile';
-import { switchMap } from 'rxjs/_esm5/operators/switchMap';
-import { withLatestFrom } from 'rxjs/_esm5/operators/withLatestFrom';
+import { tap } from "rxjs/_esm5/operators/tap";
+import { filter } from "rxjs/_esm5/operators/filter";
+import { map } from "rxjs/_esm5/operators/map";
+import { mapTo } from "rxjs/_esm5/operators/mapTo";
+import { skipWhile } from "rxjs/_esm5/operators/skipWhile";
+import { switchMap } from "rxjs/_esm5/operators/switchMap";
+import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
 
-import { subscribeWhen } from './operators';
+import { subscribeWhen } from "./operators";
 
 // Using shorthands for common functions
 const assign = Object.assign.bind(Object);
@@ -41,22 +41,28 @@ export const baseObservablesMixin = C =>
   class extends C {
     getStartObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.document$, this.mouseEvents$).pipe(switchMap(([doc, mouseEvents]) => {
-        // The touchstart observable is passive since we won't be calling `preventDefault`.
-        // Also, we're only interested in the first `touchstart`.
-        const touchstart$ = fromEvent(doc, 'touchstart', { passive: true }).pipe(
-          filter(({ touches }) => touches.length === 1),
-          map(({ touches }) => touches[0]),
-        );
+      return combineLatest(this.document$, this.mouseEvents$).pipe(
+        switchMap(([doc, mouseEvents]) => {
+          // The touchstart observable is passive since we won't be calling `preventDefault`.
+          // Also, we're only interested in the first `touchstart`.
+          const touchstart$ = fromEvent(doc, "touchstart", {
+            passive: true
+          }).pipe(
+            filter(({ touches }) => touches.length === 1),
+            map(({ touches }) => touches[0])
+          );
 
           // If mouse events aren't enabled, we're done here.
-        if (!mouseEvents) return touchstart$;
+          if (!mouseEvents) return touchstart$;
 
-        // Otherwise we also include `mousedown` events in the output.
-        const mousedown$ = fromEvent(doc, 'mousedown').pipe(tap(event => assign(event, { event })));
+          // Otherwise we also include `mousedown` events in the output.
+          const mousedown$ = fromEvent(doc, "mousedown").pipe(
+            tap(event => assign(event, { event }))
+          );
 
-        return merge(touchstart$, mousedown$);
-      }));
+          return merge(touchstart$, mousedown$);
+        })
+      );
     }
 
     // #### Get move observable
@@ -67,30 +73,42 @@ export const baseObservablesMixin = C =>
       // we `switchMap` to reflect the changes.
       // Nice: `combineLatest` provides us with the functionality of emitting
       // when either of the inputs change, but not before all inputs have their first value set.
-      const input$ = combineLatest(this.document$, this.mouseEvents$, this.preventDefault$);
-      return input$.pipe(switchMap(([doc, mouseEvents, preventDefault]) => {
-        // We're only keeping track of the first finger.
-        // Should the user remove the finger that started the interaction, we use the next instead.
-        // Note that this doesn't occur under normal circumstances,
-        // and exists primarliy to ensure that the interaction continues without hiccups.
-        // Note that the event listener is only passive when the `preventDefault` option is falsy.
-        const s = { passive: !preventDefault };
-        const touchmove$ = fromEvent(doc, 'touchmove', s).pipe(map(e => assign(e.touches[0], { event: e })));
+      const input$ = combineLatest(
+        this.document$,
+        this.mouseEvents$,
+        this.preventDefault$
+      );
+      return input$.pipe(
+        switchMap(([doc, mouseEvents, preventDefault]) => {
+          // We're only keeping track of the first finger.
+          // Should the user remove the finger that started the interaction, we use the next instead.
+          // Note that this doesn't occur under normal circumstances,
+          // and exists primarliy to ensure that the interaction continues without hiccups.
+          // Note that the event listener is only passive when the `preventDefault` option is falsy.
+          const s = { passive: !preventDefault };
+          const touchmove$ = fromEvent(doc, "touchmove", s).pipe(
+            map(e => assign(e.touches[0], { event: e }))
+          );
 
-        // If mouse events aren't enabled, we're done here.
-        if (!mouseEvents) return touchmove$;
+          // If mouse events aren't enabled, we're done here.
+          if (!mouseEvents) return touchmove$;
 
-        // Otherwise we listen for `mousemove` events,
-        // but only those between a `start` and `end` event, i.e. while the user is sliding.
-        // We unsubscribe form the source observable outside of those contraints.
-        // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
-        const mousemove$ = fromEvent(doc, 'mousemove', { passive: !preventDefault }).pipe(
-          subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
-          map(event => assign(event, { event })),
-        );
+          // Otherwise we listen for `mousemove` events,
+          // but only those between a `start` and `end` event, i.e. while the user is sliding.
+          // We unsubscribe form the source observable outside of those contraints.
+          // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
+          const mousemove$ = fromEvent(doc, "mousemove", {
+            passive: !preventDefault
+          }).pipe(
+            subscribeWhen(
+              merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))
+            ),
+            map(event => assign(event, { event }))
+          );
 
-        return merge(touchmove$, mousemove$);
-      }));
+          return merge(touchmove$, mousemove$);
+        })
+      );
     }
 
     // #### Get end observable
@@ -99,22 +117,24 @@ export const baseObservablesMixin = C =>
     // when the `mouseEvents` option is enabled.
     getEndObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.document$, this.mouseEvents$).pipe(switchMap(([doc, mouseEvents]) => {
-        // We're only interested in the last `touchend`.
-        // Otherwise there's at least one finger left on the screen,
-        // that can be used to slide the drawer.
-        const touchend$ = fromEvent(doc, 'touchend', { passive: true }).pipe(
-          filter(({ touches }) => touches.length === 0),
-          map(event => event.changedTouches[0]),
-        );
+      return combineLatest(this.document$, this.mouseEvents$).pipe(
+        switchMap(([doc, mouseEvents]) => {
+          // We're only interested in the last `touchend`.
+          // Otherwise there's at least one finger left on the screen,
+          // that can be used to slide the drawer.
+          const touchend$ = fromEvent(doc, "touchend", { passive: true }).pipe(
+            filter(({ touches }) => touches.length === 0),
+            map(event => event.changedTouches[0])
+          );
 
           // If mouse events aren't enabled, we're done here.
-        if (!mouseEvents) return touchend$;
+          if (!mouseEvents) return touchend$;
 
-        // Otherwise we include `mouseup` events.
-        const mouseup$ = fromEvent(doc, 'mouseup', { passive: true });
-        return merge(touchend$, mouseup$);
-      }));
+          // Otherwise we include `mouseup` events.
+          const mouseup$ = fromEvent(doc, "mouseup", { passive: true });
+          return merge(touchend$, mouseup$);
+        })
+      );
     }
 
     // #### Get "Is sliding?" observable
@@ -127,10 +147,15 @@ export const baseObservablesMixin = C =>
       if (this.threshold) {
         return move$.pipe(
           withLatestFrom(start$),
-          skipWhile(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-            abs(startY - clientY) < this.threshold && abs(startX - clientX) < this.threshold),
-          map(([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-            abs(startX - clientX) >= abs(startY - clientY)),
+          skipWhile(
+            ([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
+              abs(startY - clientY) < this.threshold &&
+              abs(startX - clientX) < this.threshold
+          ),
+          map(
+            ([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
+              abs(startX - clientX) >= abs(startY - clientY)
+          )
         );
 
         // If the threshold option is set to `0` (or `false`) we make a decision immediately.
@@ -140,11 +165,16 @@ export const baseObservablesMixin = C =>
       } else {
         return move$.pipe(
           withLatestFrom(start$),
-          map(([{ clientX, clientY, event }, { clientX: startX, clientY: startY }]) => {
-            const isSliding = abs(startX - clientX) >= abs(startY - clientY);
-            if (this.preventDefault && isSliding) event.preventDefault();
-            return isSliding;
-          }),
+          map(
+            ([
+              { clientX, clientY, event },
+              { clientX: startX, clientY: startY }
+            ]) => {
+              const isSliding = abs(startX - clientX) >= abs(startY - clientY);
+              if (this.preventDefault && isSliding) event.preventDefault();
+              return isSliding;
+            }
+          )
         );
       }
     }

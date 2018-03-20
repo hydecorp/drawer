@@ -19,11 +19,11 @@ import 'core-js/fn/array/from';
 
 ```js
 
-import { VanillaComponent, Set } from 'hy-component/src/vanilla';
+import { VanillaComponent, Set } from "hy-component/src/vanilla";
 
-import { createElement } from 'create-element-x/library';
+import { createElement } from "create-element-x/library";
 
-import { drawerMixin, MIXIN_FEATURE_TESTS } from '../mixin';
+import { drawerMixin, MIXIN_FEATURE_TESTS } from "../mixin";
 
 export const VANILLA_FEATURE_TESTS = MIXIN_FEATURE_TESTS;
 
@@ -31,11 +31,13 @@ export { Set };
 
 export class HyDrawer extends drawerMixin(VanillaComponent) {
   setupShadowDOM(el) {
-    if (!el) throw Error('No element provided');
+    if (!el) throw Error("No element provided");
 
     const df = new DocumentFragment();
-    df.appendChild(createElement('div', { class: 'hy-drawer-scrim' }));
-    df.appendChild(createElement('div', { class: 'hy-drawer-content' }, el.children));
+    df.appendChild(createElement("div", { class: "hy-drawer-scrim" }));
+    df.appendChild(
+      createElement("div", { class: "hy-drawer-content" }, el.children)
+    );
 
     el.appendChild(df);
 

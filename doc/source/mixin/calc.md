@@ -17,15 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { VELOCITY_THRESHOLD } from './constants';
+import { VELOCITY_THRESHOLD } from "./constants";
 ```
 
 Using shorthands for common functions
 
 
 ```js
-const min = Math.min.bind(this);
-const max = Math.max.bind(this);
+const min = Math.min.bind(Math);
+const max = Math.max.bind(Math);
+
+export const calcMixin = C =>
+  class extends C {
 ```
 
 #### Is in range?
@@ -36,19 +39,19 @@ Otherwise it must be below the upper bound.
 
 
 ```js
-export function calcIsInRange(clientX, opened) {
-  switch (this.align) {
-    case 'left':
-      return clientX > this.range[0] && (opened || clientX < this.range[1]);
-    case 'right':
-      return (
-        clientX < window.innerWidth - this.range[0] &&
-        (opened || clientX > window.innerWidth - this.range[1])
-      );
-    default:
-      throw Error();
-  }
-}
+    calcIsInRange(clientX, opened) {
+      switch (this.align) {
+        case "left":
+          return clientX > this.range[0] && (opened || clientX < this.range[1]);
+        case "right":
+          return (
+            clientX < window.innerWidth - this.range[0] &&
+            (opened || clientX > window.innerWidth - this.range[1])
+          );
+        default:
+          throw Error();
+      }
+    }
 ```
 
 #### Calculate 'Is swipe?'
@@ -62,9 +65,11 @@ TODO: reuse isSlidign observable?
 
 
 ```js
-export function calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-  return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
-}
+    calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
+      return (
+        endX !== startX || (translateX > 0 && translateX < this.drawerWidth)
+      );
+    }
 ```
 
 #### Calculate 'Will open?'
@@ -74,24 +79,24 @@ TODO: could incorporate the current open state of the drawer.
 
 
 ```js
-export function calcWillOpen([, , translateX, velocity]) {
-  switch (this.align) {
-    case 'left': {
-      if (velocity > VELOCITY_THRESHOLD) return true;
-      else if (velocity < -VELOCITY_THRESHOLD) return false;
-      else if (translateX >= this.drawerWidth / 2) return true;
-      else return false;
+    calcWillOpen([, , translateX, velocity]) {
+      switch (this.align) {
+        case "left": {
+          if (velocity > VELOCITY_THRESHOLD) return true;
+          else if (velocity < -VELOCITY_THRESHOLD) return false;
+          else if (translateX >= this.drawerWidth / 2) return true;
+          else return false;
+        }
+        case "right": {
+          if (-velocity > VELOCITY_THRESHOLD) return true;
+          else if (-velocity < -VELOCITY_THRESHOLD) return false;
+          else if (translateX <= -this.drawerWidth / 2) return true;
+          else return false;
+        }
+        default:
+          throw Error();
+      }
     }
-    case 'right': {
-      if (-velocity > VELOCITY_THRESHOLD) return true;
-      else if (-velocity < -VELOCITY_THRESHOLD) return false;
-      else if (translateX <= -this.drawerWidth / 2) return true;
-      else return false;
-    }
-    default:
-      throw Error();
-  }
-}
 ```
 
 #### Calculate translate X
@@ -103,22 +108,22 @@ The function will also clip the position at 0 and the width of the drawer.
 
 
 ```js
-export function calcTranslateX(clientX, startX, startTranslateX) {
-  switch (this.align) {
-    case 'left': {
-      const deltaX = clientX - startX;
-      const translateX = startTranslateX + deltaX;
-      return max(0, min(this.drawerWidth, translateX));
+    calcTranslateX(clientX, startX, startTranslateX) {
+      switch (this.align) {
+        case "left": {
+          const deltaX = clientX - startX;
+          const translateX = startTranslateX + deltaX;
+          return max(0, min(this.drawerWidth, translateX));
+        }
+        case "right": {
+          const deltaX = clientX - startX;
+          const translateX = startTranslateX + deltaX;
+          return min(0, max(-this.drawerWidth, translateX));
+        }
+        default:
+          throw Error();
+      }
     }
-    case 'right': {
-      const deltaX = clientX - startX;
-      const translateX = startTranslateX + deltaX;
-      return min(0, max(-this.drawerWidth, translateX));
-    }
-    default:
-      throw Error();
-  }
-}
 ```
 
 #### Get movable drawer width
@@ -130,9 +135,10 @@ See [Styling](../../styling.md) for more.
 
 
 ```js
-export function calcMovableDrawerWidth() {
-  return -parseFloat(getComputedStyle(this.contentEl)[this.align]);
-}
+    calcMovableDrawerWidth() {
+      return -parseFloat(getComputedStyle(this.contentEl)[this.align]);
+    }
+  };
 ```
 
 

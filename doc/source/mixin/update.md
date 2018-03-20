@@ -14,14 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### Private Methods
-The functions are used as "private" methods on the mixin, using the `::` syntax.
-
 
 ```js
-export function histId() {
-  return this.el.id || this.constructor.componentName;
-}
+
+export const updateMixin = C =>
+  class extends C {
+    histId() {
+      return this.el.id || this.constructor.componentName;
+    }
 ```
 
 #### Prepare and cleanup interaction
@@ -36,12 +36,12 @@ However, it has to be removed before we move the drawer via `translateX` again.
 
 
 ```js
-export function prepareInteraction() {
-  this.contentEl.style.willChange = 'transform';
-  this.scrimEl.style.willChange = 'opacity';
-  this.contentEl.classList.remove('hy-drawer-opened');
-  this.fireEvent('prepare');
-}
+    prepareInteraction() {
+      this.contentEl.style.willChange = "transform";
+      this.scrimEl.style.willChange = "opacity";
+      this.contentEl.classList.remove("hy-drawer-opened");
+      this.fireEvent("prepare");
+    }
 ```
 
 Cleanup code after a completed interaction.
@@ -49,17 +49,17 @@ Will add/remove the beforementioned `hy-drawer-opened` class.
 
 
 ```js
-export function cleanupInteraction(opened) {
-  this.scrimEl.style.willChange = '';
-  this.contentEl.style.willChange = '';
+    cleanupInteraction(opened) {
+      this.scrimEl.style.willChange = "";
+      this.contentEl.style.willChange = "";
 
-  if (opened) {
-    this.scrimEl.style.pointerEvents = 'all';
-    this.contentEl.classList.add('hy-drawer-opened');
-  } else {
-    this.scrimEl.style.pointerEvents = '';
-    this.contentEl.classList.remove('hy-drawer-opened');
-  }
+      if (opened) {
+        this.scrimEl.style.pointerEvents = "all";
+        this.contentEl.classList.add("hy-drawer-opened");
+      } else {
+        this.scrimEl.style.pointerEvents = "";
+        this.contentEl.classList.remove("hy-drawer-opened");
+      }
 ```
 
 If the experimental back button feature is enabled we hack the history API,
@@ -67,30 +67,30 @@ so that it matches the state of the drawer...
 
 
 ```js
-  /*
-  if (this._backButton) {
-    const id = histId.call(this);
-    const hash = `#${id}--opened`;
+      /*
+      if (this._backButton) {
+        const id = histId.call(this);
+        const hash = `#${id}--opened`;
 
-    if (opened && window.location.hash !== hash) {
-      window.history.pushState({ [id]: true }, document.title, hash);
-    }
+        if (opened && window.location.hash !== hash) {
+          window.history.pushState({ [id]: true }, document.title, hash);
+        }
 
-    if (!opened
-        && (window.history.state && window.history.state[histId.call(this)])
-        && window.location.hash !== '') {
-      window.history.back();
-    }
-  }
-  */
+        if (!opened
+            && (window.history.state && window.history.state[histId.call(this)])
+            && window.location.hash !== '') {
+          window.history.back();
+        }
+      }
+      */
 ```
 
 Once we're finished cleaning up, we fire the `transitioned` event.
 
 
 ```js
-  this.fireEvent('transitioned', { detail: opened });
-}
+      this.fireEvent("transitioned", { detail: opened });
+    }
 ```
 
 #### Update DOM
@@ -99,17 +99,18 @@ and the opacity of the scrim, which is handled by `updateDOM`.
 
 
 ```js
-export function updateDOM(translateX) {
-  this.translateX = translateX;
+    updateDOM(translateX) {
+      this.translateX = translateX;
 
-  const inv = this.align === 'left' ? 1 : -1;
-  const opacity = (this.opacity = translateX / this.drawerWidth * inv);
+      const inv = this.align === "left" ? 1 : -1;
+      const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
-  this.contentEl.style.transform = `translateX(${translateX}px)`;
-  this.scrimEl.style.opacity = this.opacity;
+      this.contentEl.style.transform = `translateX(${translateX}px)`;
+      this.scrimEl.style.opacity = this.opacity;
 
-  this.fireEvent('move', { detail: { translateX, opacity } });
-}
+      this.fireEvent("move", { detail: { translateX, opacity } });
+    }
+  };
 ```
 
 
