@@ -1,3 +1,22 @@
+# hy-drawer
+
+[![npm version](https://badge.fury.io/js/hy-drawer.svg)](https://badge.fury.io/js/hy-drawer)
+
+**hy-drawer** is a touch-enabled drawer component for the modern web.
+It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
+while being performant and easy to use.
+It is the perfect companion for mobile-first web pages and progressive web apps.
+
+> A touch-enabled drawer component for the modern web.
+{:.lead}
+
+**hy-drawer** is used by hundreds of sites as part of the [Hydejack]{:.external} Jekyll theme.
+
+**NOTE**: The current version is a pre-release. The public API may still change in important ways.
+{:.message}
+
+[hydejack]: https://qwtel.com/hydejack/
+
 <!--more-->
 
 ## Examples
@@ -30,26 +49,106 @@ Unless you've obtained one of the licenses above, **hy-drawer** must be used in 
 
 ## Documentation
 
-* [Options](doc/options.md){:.flip-title}
-* [Methods](doc/methods.md){:.flip-title}
-* [Events](doc/events.md){:.flip-title}
-* [Styling](doc/styling.md){:.flip-title}
+* [Options](doc/options.md)
+* [Methods](doc/methods.md)
+* [Events](doc/events.md)
+* [Styling](doc/styling.md)
 
 ### Usage
-The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
+**hy-drawer** can be used in a variety of ways:
+* As [Web Component](#web-component), both as *ES6 Module* and *HTML Import*
+* As [jQuery](#jquery)
+* As [Vanilla](#vanilla) JavaScript class
+* (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
+* (Advanced) As part of your bundled frontend code.
+
+[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+
+#### Web Component
+The Web Component is the preferred way of using **hy-drawer**, but requires Web Component [support] in the browser or a [polyfill].
+
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
+
+##### Bundled ES6 Module
+This is the version that is going to have native support across all major browsers the soonest.
 
 ~~~html
-<link rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/style.css">
-<script src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
+<script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
 ~~~
 
+##### HTML Import
+Some browsers have decided against implementing HTML Imports, but they are easily polyfilled.
+
 ~~~html
-<aside id="drawerEl"><!--content--></aside>
+<link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
+~~~
+
+##### Unbundled ES6 Module (experimental)
+The unpkg CDN can rewrite all "bare" import paths with valid unpkg URLs by passing the `?module` query parameter.
+This allows importing **hy-drawer**'s source directly.
+Note that this will result in possibly hundreds of separate requests.
+
+~~~html
+<script>window.process = { env: { DEBUG: true } };</script>
+
+<script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
+~~~
+
+#### jQuery
+
+~~~html
+<aside id="drawer" data-align="left" data-prevent-default="true"><!-- ... --></aside>
+
+<script src="https://unpkg.com/jquery"></script>
+<script src="https://unpkg.com/hy-drawer/dist/jquery"></script>
+<script>$('#drawer').drawer()</script>
+~~~
+
+#### Vanilla
+~~~html
+<aside id="drawer"><!--content--></aside>
+
+<script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
 <script>
   var HyDrawer = window.hyDrawer.HyDrawer;
-  var drawer = new HyDrawer(window.drawerEl, { /* options */ });
+  var drawerEl = document.getElementById('drawer');
+  drawerEl.component = new HyDrawer(drawerEl, {
+    align: 'left',
+    preventDefault: true,
+  });
 </script>
 ~~~
+
+### Size
+The size of the minified bundle hovers around 75kb, or ~15kb gzipped.
+
+| File | Size |
+|:-----|-----:|
+| `dist/jquery/index.js` | 296K |
+| `dist/jquery/index.min.js` |  71K |
+| `dist/mixin/index.js` | 284K |
+| `dist/mixin/index.min.js` |  67K |
+| `dist/vanilla/index.js` | 289K |
+| `dist/vanilla/index.min.js` |  69K |
+| `dist/webcomponent/html-import.js` | 298K |
+| `dist/webcomponent/html-import.min.js` |  73K |
+| `dist/webcomponent/index.js` | 301K |
+| `dist/webcomponent/index.min.js` |  75K |
+| `dist/webcomponent/module.js` | 302K |
+| `dist/webcomponent/module.min.js` |  75K |
 
 ### Gold Standard
 This component follows the WebComponents [Gold Standard](doc/gold-standard.md){:.flip-title}.
@@ -79,3 +178,5 @@ which is used to create the framework-specific versions of the component.
   * [`module.js`](doc/source/webcomponent/module.md)
 * [`common.js`](doc/source/common.md)
 * [`index.js`](doc/source/README.md)
+
+[rxjs]: https://github.com/ReactiveX/rxjs

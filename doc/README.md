@@ -1,25 +1,105 @@
 # Documentation
 
-* [Options](options.md){:.flip-title}
-* [Methods](methods.md){:.flip-title}
-* [Events](events.md){:.flip-title}
-* [Styling](styling.md){:.flip-title}
+* [Options](options.md)
+* [Methods](methods.md)
+* [Events](events.md)
+* [Styling](styling.md)
 
 ## Usage
-The most straight-forward way to use **hy-drawer** is by using the vanilla JS version and load it from a CDN:
+**hy-drawer** can be used in a variety of ways:
+* As [Web Component](#web-component), both as *ES6 Module* and *HTML Import*
+* As [jQuery](#jquery)
+* As [Vanilla](#vanilla) JavaScript class
+* (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
+* (Advanced) As part of your bundled frontend code.
+
+[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+
+### Web Component
+The Web Component is the preferred way of using **hy-drawer**, but requires Web Component [support] in the browser or a [polyfill].
+
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
+
+#### Bundled ES6 Module
+This is the version that is going to have native support across all major browsers the soonest.
 
 ~~~html
-<link rel="stylesheet" href="https://unpkg.com/hy-drawer/dist/style.css">
-<script src="https://unpkg.com/hy-drawer/dist/vanilla/hy-drawer.min.js"></script>
+<script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
 ~~~
 
+#### HTML Import
+Some browsers have decided against implementing HTML Imports, but they are easily polyfilled.
+
 ~~~html
-<aside id="drawerEl"><!--content--></aside>
+<link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
+~~~
+
+#### Unbundled ES6 Module (experimental)
+The unpkg CDN can rewrite all "bare" import paths with valid unpkg URLs by passing the `?module` query parameter.
+This allows importing **hy-drawer**'s source directly.
+Note that this will result in possibly hundreds of separate requests.
+
+~~~html
+<script>window.process = { env: { DEBUG: true } };</script>
+
+<script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
+
+<hy-drawer align="left" prevent-default>
+  <aside><!-- ... --></aside>
+</hy-drawer>
+~~~
+
+### jQuery
+
+~~~html
+<aside id="drawer" data-align="left" data-prevent-default="true"><!-- ... --></aside>
+
+<script src="https://unpkg.com/jquery"></script>
+<script src="https://unpkg.com/hy-drawer/dist/jquery"></script>
+<script>$('#drawer').drawer()</script>
+~~~
+
+### Vanilla
+~~~html
+<aside id="drawer"><!--content--></aside>
+
+<script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
 <script>
   var HyDrawer = window.hyDrawer.HyDrawer;
-  var drawer = new HyDrawer(window.drawerEl, { /* options */ });
+  var drawerEl = document.getElementById('drawer');
+  drawerEl.component = new HyDrawer(drawerEl, {
+    align: 'left',
+    preventDefault: true,
+  });
 </script>
 ~~~
+
+## Size
+The size of the minified bundle hovers around 75kb, or ~15kb gzipped.
+
+| File | Size |
+|:-----|-----:|
+| `dist/jquery/index.js` | 296K |
+| `dist/jquery/index.min.js` |  71K |
+| `dist/mixin/index.js` | 284K |
+| `dist/mixin/index.min.js` |  67K |
+| `dist/vanilla/index.js` | 289K |
+| `dist/vanilla/index.min.js` |  69K |
+| `dist/webcomponent/html-import.js` | 298K |
+| `dist/webcomponent/html-import.min.js` |  73K |
+| `dist/webcomponent/index.js` | 301K |
+| `dist/webcomponent/index.min.js` |  75K |
+| `dist/webcomponent/module.js` | 302K |
+| `dist/webcomponent/module.min.js` |  75K |
 
 ## Gold Standard
 This component follows the WebComponents [Gold Standard](gold-standard.md){:.flip-title}.
@@ -49,3 +129,5 @@ which is used to create the framework-specific versions of the component.
   * [`module.js`](source/webcomponent/module.md)
 * [`common.js`](source/common.md)
 * [`index.js`](source/README.md)
+
+[rxjs]: https://github.com/ReactiveX/rxjs

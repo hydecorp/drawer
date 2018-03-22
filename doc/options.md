@@ -83,12 +83,12 @@ HTML attribute
 ***
 
 ## `preventDefault`
-When true, hy-drawer will call `preventDefault` on every (touch-)move event,
+When true, **hy-drawer** will call `preventDefault` on every (touch-)move event,
 effectively preventing scrolling while sliding the drawer.
 
 This results in much better experience on devices that can handle the scripting load.
 However, since the `touchmove` listener has to be registered with the `passive: false` flag set in this case,
-this also means that *all* page scrolling is delayed by the time it takes the move handler to complete.
+this also means that page scrolling is delayed by the time it takes the move handler to complete.
 
 Type
 : `Boolean`
