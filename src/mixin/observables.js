@@ -29,7 +29,6 @@ import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
 import { subscribeWhen } from "./operators";
 
 // Using shorthands for common functions
-const assign = Object.assign.bind(Object);
 const abs = Math.abs.bind(Math);
 
 // #### Get start observable
@@ -41,7 +40,7 @@ export const baseObservablesMixin = C =>
   class extends C {
     getStartObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.document$, this.mouseEvents$).pipe(
+      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
           // The touchstart observable is passive since we won't be calling `preventDefault`.
           // Also, we're only interested in the first `touchstart`.
@@ -57,7 +56,7 @@ export const baseObservablesMixin = C =>
 
           // Otherwise we also include `mousedown` events in the output.
           const mousedown$ = fromEvent(doc, "mousedown").pipe(
-            tap(event => assign(event, { event }))
+            tap(event => Object.assign(event, { event }))
           );
 
           return merge(touchstart$, mousedown$);
@@ -74,9 +73,9 @@ export const baseObservablesMixin = C =>
       // Nice: `combineLatest` provides us with the functionality of emitting
       // when either of the inputs change, but not before all inputs have their first value set.
       const input$ = combineLatest(
-        this.document$,
-        this.mouseEvents$,
-        this.preventDefault$
+        this.subjects.adapt,
+        this.subjects.mouseEvents,
+        this.subjects.preventDefault
       );
       return input$.pipe(
         switchMap(([doc, mouseEvents, preventDefault]) => {
@@ -87,7 +86,7 @@ export const baseObservablesMixin = C =>
           // Note that the event listener is only passive when the `preventDefault` option is falsy.
           const s = { passive: !preventDefault };
           const touchmove$ = fromEvent(doc, "touchmove", s).pipe(
-            map(e => assign(e.touches[0], { event: e }))
+            map(e => Object.assign(e.touches[0], { event: e }))
           );
 
           // If mouse events aren't enabled, we're done here.
@@ -103,7 +102,7 @@ export const baseObservablesMixin = C =>
             subscribeWhen(
               merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))
             ),
-            map(event => assign(event, { event }))
+            map(event => Object.assign(event, { event }))
           );
 
           return merge(touchmove$, mousemove$);
@@ -117,7 +116,7 @@ export const baseObservablesMixin = C =>
     // when the `mouseEvents` option is enabled.
     getEndObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.document$, this.mouseEvents$).pipe(
+      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
           // We're only interested in the last `touchend`.
           // Otherwise there's at least one finger left on the screen,

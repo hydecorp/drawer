@@ -54,7 +54,7 @@ export const setupObservablesMixin = C =>
     setupObservables() {
       // An observable of resize events.
       const resize$ = fromEvent(window, "resize", { passive: true }).pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         /* debounceTime(100), */
         share(),
         startWith({})
@@ -62,7 +62,7 @@ export const setupObservablesMixin = C =>
 
       // Keep measurements up-to-date.
       // Note that we need to temporarily remove the opened class to get the correct measures.
-      resize$.pipe(takeUntil(this.teardown$)).subscribe(() => {
+      resize$.pipe(takeUntil(this.subjects.disconnect)).subscribe(() => {
         if (this.opened) this.contentEl.classList.remove("hy-drawer-opened");
         this.drawerWidth = this.calcMovableDrawerWidth();
         if (this.opened) this.contentEl.classList.add("hy-drawer-opened");
@@ -70,8 +70,8 @@ export const setupObservablesMixin = C =>
 
       // Emitts a value every time you change the `persistent` property of the drawer.
       // Interally, we invert it and call it `active`.
-      const active$ = this.persitent$.pipe(
-        takeUntil(this.teardown$),
+      const active$ = this.subjects.persistent.pipe(
+        takeUntil(this.subjects.disconnect),
         map(x => !x),
         share()
       );
@@ -83,7 +83,7 @@ export const setupObservablesMixin = C =>
       // Emits a value every time a start event *could* intiate an interaction.
       // Each emitted value is a hash containing a `clientX` and `clientY` key.
       const start$ = this.getStartObservable().pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$),
         share()
       );
@@ -121,7 +121,7 @@ export const setupObservablesMixin = C =>
       // #### End observable
       // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
       const end$ = this.getEndObservable().pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
       );
@@ -129,7 +129,7 @@ export const setupObservablesMixin = C =>
       // #### Move observable
       // The observable of all relevant "move" events.
       const move$ = this.getMoveObservable(start$, end$).pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
       );
@@ -190,7 +190,7 @@ export const setupObservablesMixin = C =>
           // When the `opened` state changes, we "jump" to the new position,
           // which is either 0 (when closed) or the width of the drawer (when open).
           // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
-          combineLatest(this.opened$, this.align$).pipe(
+          combineLatest(this.subjects.opened, this.subjects.align).pipe(
             // Usually the cleanup code would run at the end of the fling animation,
             // but since there is no animation in this case, we call it directly.
             tap(([opened]) => this.cleanupInteraction(opened)),
@@ -202,7 +202,7 @@ export const setupObservablesMixin = C =>
         )
       )
         // `share`ing the observable between many subscribers:
-        .pipe(takeUntil(this.teardown$), share());
+        .pipe(takeUntil(this.subjects.disconnect), share());
 
       // The `translateX` value at the start of an interaction.
       // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
@@ -283,9 +283,9 @@ export const setupObservablesMixin = C =>
             diffTranslateX,
             duration
           ).pipe(
-            tap({ complete: () => this.opened$.next(opened) }),
+            tap({ complete: () => this.subjects.opened.next(opened) }),
             takeUntil(start$),
-            takeUntil(this.align$)
+            takeUntil(this.subjects.align)
           );
         })
       );
@@ -300,26 +300,28 @@ export const setupObservablesMixin = C =>
 
       // A click on the scrim should close the drawer.
       fromEvent(this.scrimEl, "click")
-        .pipe(takeUntil(this.teardown$))
+        .pipe(takeUntil(this.subjects.disconnect))
         .subscribe(() => this.close());
 
       // Other than preventing sliding, setting `persistent` will also hide the scrim.
-      active$.pipe(takeUntil(this.teardown$)).subscribe(active => {
+      active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
         this.scrimEl.style.display = active ? "block" : "none";
       });
 
       // Whenever the alignment of the drawer changes, update the CSS classes.
-      this.align$.pipe(takeUntil(this.teardown$)).subscribe(align => {
-        const oldAlign = align === "left" ? "right" : "left";
-        this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-        this.contentEl.classList.add(`hy-drawer-${align}`);
-      });
+      this.subjects.align
+        .pipe(takeUntil(this.subjects.disconnect))
+        .subscribe(align => {
+          const oldAlign = align === "left" ? "right" : "left";
+          this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
+          this.contentEl.classList.add(`hy-drawer-${align}`);
+        });
 
       // If the experimental back button feature is enabled, handle popstate events...
       /*
       fromEvent(window, 'popstate')
         .pipe(
-          takeUntil(this.teardown$),
+          takeUntil(this.subjects.disconnect),
           subscribeWhen(this.backButton$),
         )
         .subscribe(() => {
@@ -332,9 +334,9 @@ export const setupObservablesMixin = C =>
       // When drawing with mouse is enabled, we add the grab cursor to the drawer.
       // We also want to call `preventDefault` when `mousedown` is within the drawer range
       // to prevent text selection while sliding.
-      this.mouseEvents$
+      this.subjects.mouseEvents
         .pipe(
-          takeUntil(this.teardown$),
+          takeUntil(this.subjects.disconnect),
           switchMap(mouseEvents => {
             if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
             else this.contentEl.classList.remove("hy-drawer-grab");
@@ -358,13 +360,15 @@ export const setupObservablesMixin = C =>
       */
 
       // Putting initial values on the side-effect--observables:
-      this.document$.next(document);
+      // this.document$.next(document);
 
+      /*
       this.opened$.next(this.opened);
       this.align$.next(this.align);
       this.persitent$.next(this.persistent);
       this.preventDefault$.next(this.preventDefault);
       this.mouseEvents$.next(this.mouseEvents);
+      */
       /* this.backButton$.next(this._backButton); */
     }
   };

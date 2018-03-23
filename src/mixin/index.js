@@ -35,6 +35,7 @@ import {
   COMPONENT_FEATURE_TESTS,
   Set
 } from "hy-component/src/component";
+import { rxjsMixin } from "hy-component/src/rxjs";
 import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
 import { Subject } from "rxjs/_esm5/Subject";
@@ -58,7 +59,7 @@ export { Set };
 
 // ## Drawer Mixin
 export const drawerMixin = C =>
-  class extends setupObservablesMixin(componentMixin(C)) {
+  class extends setupObservablesMixin(rxjsMixin(componentMixin(C))) {
     // The name of the component (required by hy-component)
     static get componentName() {
       return "hy-drawer";
@@ -67,19 +68,6 @@ export const drawerMixin = C =>
     // ### Options
     // The default values (and types) of the configuration options (required by hy-component)
     // See [Options](../../options.md) for usage information.
-    static get defaults() {
-      return {
-        opened: false,
-        align: "left",
-        persistent: false,
-        range: [0, 100],
-        threshold: 10,
-        preventDefault: false,
-        mouseEvents: false
-        /* _backButton: false, */
-      };
-    }
-
     static get types() {
       return {
         opened: bool,
@@ -89,30 +77,18 @@ export const drawerMixin = C =>
         threshold: number,
         preventDefault: bool,
         mouseEvents: bool
-        /* _backButton: bool, */
       };
     }
 
-    // Side effects of changing configuration options (if any).
-    // Mostly we just put the value on an observable and deal with it from there.
-    static get sideEffects() {
+    static get defaults() {
       return {
-        opened(x) {
-          this.opened$.next(x);
-        },
-        align(x) {
-          this.align$.next(x);
-        },
-        persistent(x) {
-          this.persitent$.next(x);
-        },
-        preventDefault(x) {
-          this.preventDefault$.next(x);
-        },
-        mouseEvents(x) {
-          this.mouseEvents$.next(x);
-        }
-        /* _backButton(x) { this.backButton$.next(x); }, */
+        opened: false,
+        align: "left",
+        persistent: false,
+        range: [0, 100],
+        threshold: 10,
+        preventDefault: false,
+        mouseEvents: false
       };
     }
 
@@ -121,17 +97,7 @@ export const drawerMixin = C =>
     setupComponent(el, props) {
       super.setupComponent(el, props);
 
-      // Observables used for side effects caused by changing settings on the component.
-      // The are used to emit the new vale whenever properties get changed on the component.
-      this.opened$ = new Subject();
-      this.align$ = new Subject();
-      this.persitent$ = new Subject();
-      this.preventDefault$ = new Subject();
-      this.mouseEvents$ = new Subject();
       this.animateTo$ = new Subject();
-      this.teardown$ = new Subject();
-      this.document$ = new Subject();
-      /* this.backButton$ = new Subject(); */
 
       // Cache DOM elements.
       this.scrimEl = this.sroot.querySelector(".hy-drawer-scrim");
@@ -144,17 +110,10 @@ export const drawerMixin = C =>
     // Calling the [setup observables function](./setup.md) function.
     connectComponent() {
       this.setupObservables();
+      super.connectComponent();
 
       // Firing an event to let the outside world know the drawer is ready.
       this.fireEvent("init", { detail: this.opened });
-    }
-
-    disconnectComponent() {
-      this.teardown$.next({});
-    }
-
-    adoptComponent() {
-      this.document$.next(document);
     }
 
     // ### Methods
