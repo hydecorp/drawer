@@ -9,9 +9,11 @@
   "homepage": "https://qwtel.com/hy-drawer/",
   "ignore": [
     "**/.*",
+    "**/_*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "Gemfile*",
+    "webpack.config.js"
+    "404.md",
   ]
 }
