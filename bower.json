@@ -13,7 +13,7 @@
     "node_modules",
     "bower_components",
     "Gemfile*",
-    "webpack.config.js"
-    "404.md",
+    "webpack.config.js",
+    "404.md"
   ]
 }
