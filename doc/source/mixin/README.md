@@ -38,6 +38,7 @@ import {
   COMPONENT_FEATURE_TESTS,
   Set
 } from "hy-component/src/component";
+import { rxjsMixin } from "hy-component/src/rxjs";
 import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
 import { Subject } from "rxjs/_esm5/Subject";
@@ -73,7 +74,7 @@ export { Set };
 
 ```js
 export const drawerMixin = C =>
-  class extends setupObservablesMixin(componentMixin(C)) {
+  class extends setupObservablesMixin(rxjsMixin(componentMixin(C))) {
 ```
 
 The name of the component (required by hy-component)
@@ -91,19 +92,6 @@ See [Options](../../options.md) for usage information.
 
 
 ```js
-    static get defaults() {
-      return {
-        opened: false,
-        align: "left",
-        persistent: false,
-        range: [0, 100],
-        threshold: 10,
-        preventDefault: false,
-        mouseEvents: false
-        /* _backButton: false, */
-      };
-    }
-
     static get types() {
       return {
         opened: bool,
@@ -113,34 +101,18 @@ See [Options](../../options.md) for usage information.
         threshold: number,
         preventDefault: bool,
         mouseEvents: bool
-        /* _backButton: bool, */
       };
     }
-```
 
-Side effects of changing configuration options (if any).
-Mostly we just put the value on an observable and deal with it from there.
-
-
-```js
-    static get sideEffects() {
+    static get defaults() {
       return {
-        opened(x) {
-          this.opened$.next(x);
-        },
-        align(x) {
-          this.align$.next(x);
-        },
-        persistent(x) {
-          this.persitent$.next(x);
-        },
-        preventDefault(x) {
-          this.preventDefault$.next(x);
-        },
-        mouseEvents(x) {
-          this.mouseEvents$.next(x);
-        }
-        /* _backButton(x) { this.backButton$.next(x); }, */
+        opened: false,
+        align: "left",
+        persistent: false,
+        range: [0, 100],
+        threshold: 10,
+        preventDefault: false,
+        mouseEvents: false
       };
     }
 ```
@@ -152,22 +124,8 @@ Overriding the setup function.
 ```js
     setupComponent(el, props) {
       super.setupComponent(el, props);
-```
 
-Observables used for side effects caused by changing settings on the component.
-The are used to emit the new vale whenever properties get changed on the component.
-
-
-```js
-      this.opened$ = new Subject();
-      this.align$ = new Subject();
-      this.persitent$ = new Subject();
-      this.preventDefault$ = new Subject();
-      this.mouseEvents$ = new Subject();
       this.animateTo$ = new Subject();
-      this.teardown$ = new Subject();
-      this.document$ = new Subject();
-      /* this.backButton$ = new Subject(); */
 ```
 
 Cache DOM elements.
@@ -192,6 +150,7 @@ Calling the [setup observables function](./setup.md) function.
 ```js
     connectComponent() {
       this.setupObservables();
+      super.connectComponent();
 ```
 
 Firing an event to let the outside world know the drawer is ready.
@@ -199,14 +158,6 @@ Firing an event to let the outside world know the drawer is ready.
 
 ```js
       this.fireEvent("init", { detail: this.opened });
-    }
-
-    disconnectComponent() {
-      this.teardown$.next({});
-    }
-
-    adoptComponent() {
-      this.document$.next(document);
     }
 ```
 

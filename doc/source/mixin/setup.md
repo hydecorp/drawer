@@ -66,7 +66,7 @@ An observable of resize events.
 
 ```js
       const resize$ = fromEvent(window, "resize", { passive: true }).pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         /* debounceTime(100), */
         share(),
         startWith({})
@@ -78,7 +78,7 @@ Note that we need to temporarily remove the opened class to get the correct meas
 
 
 ```js
-      resize$.pipe(takeUntil(this.teardown$)).subscribe(() => {
+      resize$.pipe(takeUntil(this.subjects.disconnect)).subscribe(() => {
         if (this.opened) this.contentEl.classList.remove("hy-drawer-opened");
         this.drawerWidth = this.calcMovableDrawerWidth();
         if (this.opened) this.contentEl.classList.add("hy-drawer-opened");
@@ -90,8 +90,8 @@ Interally, we invert it and call it `active`.
 
 
 ```js
-      const active$ = this.persitent$.pipe(
-        takeUntil(this.teardown$),
+      const active$ = this.subjects.persistent.pipe(
+        takeUntil(this.subjects.disconnect),
         map(x => !x),
         share()
       );
@@ -111,7 +111,7 @@ Each emitted value is a hash containing a `clientX` and `clientY` key.
 
 ```js
       const start$ = this.getStartObservable().pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$),
         share()
       );
@@ -161,7 +161,7 @@ The observable of all relevant "end" events, i.e. the last `touchend` (or `mouse
 
 ```js
       const end$ = this.getEndObservable().pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
       );
@@ -173,7 +173,7 @@ The observable of all relevant "move" events.
 
 ```js
       const move$ = this.getMoveObservable(start$, end$).pipe(
-        takeUntil(this.teardown$),
+        takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
       );
@@ -263,7 +263,7 @@ We also want to jump when `align` chagnes, in this case to the other side of the
 
 
 ```js
-          combineLatest(this.opened$, this.align$).pipe(
+          combineLatest(this.subjects.opened, this.subjects.align).pipe(
 ```
 
 Usually the cleanup code would run at the end of the fling animation,
@@ -285,7 +285,7 @@ but since there is no animation in this case, we call it directly.
 
 
 ```js
-        .pipe(takeUntil(this.teardown$), share());
+        .pipe(takeUntil(this.subjects.disconnect), share());
 ```
 
 The `translateX` value at the start of an interaction.
@@ -416,9 +416,9 @@ We return a tween observable that runs cleanup code when it completes
             diffTranslateX,
             duration
           ).pipe(
-            tap({ complete: () => this.opened$.next(opened) }),
+            tap({ complete: () => this.subjects.opened.next(opened) }),
             takeUntil(start$),
-            takeUntil(this.align$)
+            takeUntil(this.subjects.align)
           );
         })
       );
@@ -441,7 +441,7 @@ A click on the scrim should close the drawer.
 
 ```js
       fromEvent(this.scrimEl, "click")
-        .pipe(takeUntil(this.teardown$))
+        .pipe(takeUntil(this.subjects.disconnect))
         .subscribe(() => this.close());
 ```
 
@@ -449,7 +449,7 @@ Other than preventing sliding, setting `persistent` will also hide the scrim.
 
 
 ```js
-      active$.pipe(takeUntil(this.teardown$)).subscribe(active => {
+      active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
         this.scrimEl.style.display = active ? "block" : "none";
       });
 ```
@@ -458,11 +458,13 @@ Whenever the alignment of the drawer changes, update the CSS classes.
 
 
 ```js
-      this.align$.pipe(takeUntil(this.teardown$)).subscribe(align => {
-        const oldAlign = align === "left" ? "right" : "left";
-        this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-        this.contentEl.classList.add(`hy-drawer-${align}`);
-      });
+      this.subjects.align
+        .pipe(takeUntil(this.subjects.disconnect))
+        .subscribe(align => {
+          const oldAlign = align === "left" ? "right" : "left";
+          this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
+          this.contentEl.classList.add(`hy-drawer-${align}`);
+        });
 ```
 
 If the experimental back button feature is enabled, handle popstate events...
@@ -472,7 +474,7 @@ If the experimental back button feature is enabled, handle popstate events...
       /*
       fromEvent(window, 'popstate')
         .pipe(
-          takeUntil(this.teardown$),
+          takeUntil(this.subjects.disconnect),
           subscribeWhen(this.backButton$),
         )
         .subscribe(() => {
@@ -489,9 +491,9 @@ to prevent text selection while sliding.
 
 
 ```js
-      this.mouseEvents$
+      this.subjects.mouseEvents
         .pipe(
-          takeUntil(this.teardown$),
+          takeUntil(this.subjects.disconnect),
           switchMap(mouseEvents => {
             if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
             else this.contentEl.classList.remove("hy-drawer-grab");
@@ -520,16 +522,18 @@ If the experimental back button feature is enabled, we check the location hash..
 ```
 
 Putting initial values on the side-effect--observables:
+this.document$.next(document);
 
 
 ```js
-      this.document$.next(document);
 
+      /*
       this.opened$.next(this.opened);
       this.align$.next(this.align);
       this.persitent$.next(this.persistent);
       this.preventDefault$.next(this.preventDefault);
       this.mouseEvents$.next(this.mouseEvents);
+      */
       /* this.backButton$.next(this._backButton); */
     }
   };

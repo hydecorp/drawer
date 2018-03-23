@@ -36,7 +36,6 @@ Using shorthands for common functions
 
 
 ```js
-const assign = Object.assign.bind(Object);
 const abs = Math.abs.bind(Math);
 ```
 
@@ -57,7 +56,7 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.document$, this.mouseEvents$).pipe(
+      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
 ```
 
@@ -86,7 +85,7 @@ Otherwise we also include `mousedown` events in the output.
 
 ```js
           const mousedown$ = fromEvent(doc, "mousedown").pipe(
-            tap(event => assign(event, { event }))
+            tap(event => Object.assign(event, { event }))
           );
 
           return merge(touchstart$, mousedown$);
@@ -112,9 +111,9 @@ when either of the inputs change, but not before all inputs have their first val
 
 ```js
       const input$ = combineLatest(
-        this.document$,
-        this.mouseEvents$,
-        this.preventDefault$
+        this.subjects.adapt,
+        this.subjects.mouseEvents,
+        this.subjects.preventDefault
       );
       return input$.pipe(
         switchMap(([doc, mouseEvents, preventDefault]) => {
@@ -130,7 +129,7 @@ Note that the event listener is only passive when the `preventDefault` option is
 ```js
           const s = { passive: !preventDefault };
           const touchmove$ = fromEvent(doc, "touchmove", s).pipe(
-            map(e => assign(e.touches[0], { event: e }))
+            map(e => Object.assign(e.touches[0], { event: e }))
           );
 ```
 
@@ -154,7 +153,7 @@ Again, the listener is only marked as passive when the `preventDefault` option i
             subscribeWhen(
               merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))
             ),
-            map(event => assign(event, { event }))
+            map(event => Object.assign(event, { event }))
           );
 
           return merge(touchmove$, mousemove$);
@@ -177,7 +176,7 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.document$, this.mouseEvents$).pipe(
+      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
 ```
 
