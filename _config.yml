@@ -99,3 +99,22 @@ data_social:
   download:
     name: Download
     icon: icon-box-add
+
+keywords:
+  - drawer
+  - touch-events
+  - swipe-gestures
+  - webcomponent
+  - jquery
+  - rxjs
+  - hydejack
+  - jquery-plugin
+  - vanilla-js
+  - drawer-layout
+  - custom-element
+  - vanilla
+  - web-components
+  - ui-component
+  - reactive
+  - menu
+  - menu-navigation
