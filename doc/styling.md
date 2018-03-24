@@ -67,7 +67,7 @@ CSS equivalent
 The Z index of the drawer.
 
 Default
-: `3`
+: `30`
 
 CSS equivalent
 : `.hy-drawer-content { z-index: $value }`
@@ -78,7 +78,7 @@ CSS equivalent
 The Z index of the scrim. Must be lower than `--hy-drawer-z-index`.
 
 Default
-: `2`
+: `20`
 
 CSS equivalent
 : `.hy-drawer-scrim { z-index: $value }`

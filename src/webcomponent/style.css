@@ -4,7 +4,7 @@
     width: var(--hy-drawer-width, 300px);
     background: var(--hy-drawer-background, #e8e8e8);
     box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
-    z-index: var(--hy-drawer-z-index, 3);
+    z-index: var(--hy-drawer-z-index, 30);
   }
 
   .hy-drawer-content.hy-drawer-left {
@@ -22,6 +22,6 @@
   .hy-drawer-scrim {
     @apply --hy-drawer-scrim-container;
     background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
-    z-index: var(--hy-drawer-scrim-z-index, 2);
+    z-index: var(--hy-drawer-scrim-z-index, 20);
   }
 }
