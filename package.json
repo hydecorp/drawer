@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-pre.9",
+  "version": "1.0.0-pre.10",
   "description": "A drawer component for the modern web.",
   "main": "src/index.js",
   "scripts": {
