@@ -22,7 +22,7 @@ The example below will render on [webcomponents.org](https://www.webcomponents.o
 <a onclick="window.drawer.toggle()">☰</a>
 ```
 
-When viewing this document on qwtel.com, GitHub, npm, or elsewhere, you can check out the links to standalone examples:
+When viewing this document on GitHub, npm, or elsewhere, you can check out the standalone examples:
 
 * [WebComponent Example](https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
 * [jQuery Example](https://qwtel.com/hy-drawer/example/jquery/){:.external}
