@@ -56,18 +56,36 @@
     "jquery": "^3.3.1"
   },
   "directories": {
-    "lib": "./lib",
-    "doc": "./doc",
-    "example": "./example"
+    "doc": "doc",
+    "example": "example"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/qwtel/hy-drawer.git"
+    "url": "git+https://github.com/qwtel/hy-drawer.git"
   },
   "bugs": {
     "url": "https://github.com/qwtel/hy-drawer/issues"
   },
   "homepage": "https://qwtel.com/hy-drawer/",
+  "keywords": [
+    "drawer",
+    "touch-events",
+    "swipe-gestures",
+    "webcomponent",
+    "jquery",
+    "rxjs",
+    "hydejack",
+    "jquery-plugin",
+    "vanilla-js",
+    "drawer-layout",
+    "custom-element",
+    "vanilla",
+    "web-components",
+    "ui-component",
+    "reactive",
+    "menu",
+    "menu-navigation"
+  ],
   "babel": {
     "presets": [
       "env"
