@@ -5,7 +5,7 @@ The example below will render on [webcomponents.org](https://www.webcomponents.o
 ```
 <custom-element-demo height="250">
   <template>
-    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@1.1.0"></script>
     <link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
     <next-code-block></next-code-block>
   </template>
