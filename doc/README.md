@@ -44,13 +44,11 @@ Some browsers have decided against implementing HTML Imports, but they are easil
 ~~~
 
 #### Unbundled ES6 Module (experimental)
-The unpkg CDN can rewrite all "bare" import paths with valid unpkg URLs by passing the `?module` query parameter.
+The [unpkg CDN](https://unpkg.com/) can rewrite all bare import paths with valid unpkg URLs by passing the `?module` query parameter.
 This allows importing **hy-drawer**'s source directly.
 Note that this will result in possibly hundreds of separate requests.
 
 ~~~html
-<script>window.process = { env: { DEBUG: true } };</script>
-
 <script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
 
 <hy-drawer align="left" prevent-default>
