@@ -50,9 +50,7 @@ export const calcMixin = C =>
     // because it would not pass the condition below, unless we introduce the second term.
     // TODO: reuse isSlidign observable?
     calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-      return (
-        endX !== startX || (translateX > 0 && translateX < this.drawerWidth)
-      );
+      return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
     }
 
     // #### Calculate 'Will open?'

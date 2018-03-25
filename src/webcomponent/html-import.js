@@ -19,10 +19,7 @@
 // See [here](index.md) for the standalone version.
 // This file is included via `script` tag in `hy-drawer.html` and shouldn't be used via ES import.
 
-import {
-  customElementMixin,
-  CustomElement
-} from "hy-component/src/custom-element";
+import { customElementMixin, CustomElement } from "hy-component/src/custom-element";
 
 import { drawerMixin } from "../mixin";
 
@@ -47,7 +44,5 @@ if (
 } else if (window.WebComponents) {
   window.addEventListener("WebComponentsReady", define);
 } else if (process.env.DEBUG) {
-  console.warn(
-    "Couldn't register component. Did you forget to include a WebComponents polyfill?"
-  );
+  console.warn("Couldn't register component. Did you forget to include a WebComponents polyfill?");
 }

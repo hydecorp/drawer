@@ -11,7 +11,7 @@
     "build:lib": "babel src --out-dir lib",
     "build:prod": "webpack --env prod --display-optimization-bailout",
     "build:dev": "webpack --env dev --display-optimization-bailout",
-    "build:doc": ".scripts/gen-doc.js & .scripts/gen-readme.js & wait",
+    "build:doc": ".scripts/gen-doc.js && .scripts/gen-readme.js",
     "watch": "npm run watch:src & npm run watch:doc",
     "watch:src": "webpack --progress --colors --watch --env dev",
     "watch:doc": "npm run build:doc && onchange 'src/**/*.js' -- npm run build:doc '{{changed}}'",
@@ -86,6 +86,9 @@
     "menu",
     "menu-navigation"
   ],
+  "prettier": {
+    "printWidth": 100
+  },
   "babel": {
     "presets": [
       "env"
