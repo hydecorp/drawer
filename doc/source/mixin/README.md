@@ -33,11 +33,7 @@ which helps with making multiple versions of the component (Vanilla JS, WebCompo
 
 
 ```js
-import {
-  componentMixin,
-  COMPONENT_FEATURE_TESTS,
-  Set
-} from "hy-component/src/component";
+import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from "hy-component/src/component";
 import { rxjsMixin } from "hy-component/src/rxjs";
 import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 

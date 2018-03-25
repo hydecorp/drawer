@@ -126,10 +126,7 @@ It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside
       const isScrimVisible$ = defer(() =>
         ref.translateX$.pipe(
           map(
-            translateX =>
-              this.align === "left"
-                ? translateX > 0
-                : translateX < this.drawerWidth
+            translateX => (this.align === "left" ? translateX > 0 : translateX < this.drawerWidth)
           )
         )
       );
@@ -141,13 +138,10 @@ TODO: ...
 ```js
       const isInRange$ = start$.pipe(
         withLatestFrom(isScrimVisible$),
-        map(([{ clientX }, isScrimVisible]) =>
-          this.calcIsInRange(clientX, isScrimVisible)
-        ),
+        map(([{ clientX }, isScrimVisible]) => this.calcIsInRange(clientX, isScrimVisible)),
         tap(inRange => {
           if (inRange) {
-            if (this.mouseEvents)
-              this.contentEl.classList.add("hy-drawer-grabbing");
+            if (this.mouseEvents) this.contentEl.classList.add("hy-drawer-grabbing");
             this.prepareInteraction();
           }
         }),
@@ -272,10 +266,7 @@ but since there is no animation in this case, we call it directly.
 
 ```js
             tap(([opened]) => this.cleanupInteraction(opened)),
-            map(
-              ([opened, align]) =>
-                !opened ? 0 : this.drawerWidth * (align === "left" ? 1 : -1)
-            )
+            map(([opened, align]) => (!opened ? 0 : this.drawerWidth * (align === "left" ? 1 : -1)))
           )
         )
       )
@@ -316,10 +307,7 @@ we make sure that some time has passed since the last move event.
 
 
 ```js
-        filter(
-          ([{ timestamp: prevTime }, { timestamp: time }]) =>
-            time - prevTime > 0
-        ),
+        filter(([{ timestamp: prevTime }, { timestamp: time }]) => time - prevTime > 0),
 ```
 
 Now we are save to calculate the current velocity without divide by zero errors.
@@ -327,10 +315,8 @@ Now we are save to calculate the current velocity without divide by zero errors.
 
 ```js
         map(
-          ([
-            { value: prevX, timestamp: prevTime },
-            { value: x, timestamp: time }
-          ]) => (x - prevX) / (time - prevTime)
+          ([{ value: prevX, timestamp: prevTime }, { value: x, timestamp: time }]) =>
+            (x - prevX) / (time - prevTime)
         ),
 ```
 
@@ -407,15 +393,9 @@ We return a tween observable that runs cleanup code when it completes
           const inv = this.align === "left" ? 1 : -1;
           const endTranslateX = opened ? this.drawerWidth * inv : 0;
           const diffTranslateX = endTranslateX - translateX;
-          const duration =
-            BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
+          const duration = BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
 
-          return createTween(
-            easeOutSine,
-            translateX,
-            diffTranslateX,
-            duration
-          ).pipe(
+          return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
             tap({ complete: () => this.subjects.opened.next(opened) }),
             takeUntil(start$),
             takeUntil(this.subjects.align)
@@ -458,13 +438,11 @@ Whenever the alignment of the drawer changes, update the CSS classes.
 
 
 ```js
-      this.subjects.align
-        .pipe(takeUntil(this.subjects.disconnect))
-        .subscribe(align => {
-          const oldAlign = align === "left" ? "right" : "left";
-          this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-          this.contentEl.classList.add(`hy-drawer-${align}`);
-        });
+      this.subjects.align.pipe(takeUntil(this.subjects.disconnect)).subscribe(align => {
+        const oldAlign = align === "left" ? "right" : "left";
+        this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
+        this.contentEl.classList.add(`hy-drawer-${align}`);
+      });
 ```
 
 If the experimental back button feature is enabled, handle popstate events...
@@ -498,9 +476,7 @@ to prevent text selection while sliding.
             if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
             else this.contentEl.classList.remove("hy-drawer-grab");
 
-            return mouseEvents
-              ? start$.pipe(withLatestFrom(isInRange$))
-              : never();
+            return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
           })
         )
         .subscribe(([{ event }, isInRange]) => {

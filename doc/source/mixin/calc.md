@@ -66,9 +66,7 @@ TODO: reuse isSlidign observable?
 
 ```js
     calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-      return (
-        endX !== startX || (translateX > 0 && translateX < this.drawerWidth)
-      );
+      return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
     }
 ```
 

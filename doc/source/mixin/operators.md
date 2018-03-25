@@ -47,11 +47,7 @@ instead of a predicate function.
 export const filterWhen = (p$, ...others) => source => {
   if (process.env.DEBUG && !p$) throw Error();
   else if (others.length === 0) {
-    return source.pipe(
-      withLatestFrom(p$),
-      filter(([, p]) => p),
-      map(([x]) => x)
-    );
+    return source.pipe(withLatestFrom(p$), filter(([, p]) => p), map(([x]) => x));
 ```
 
 When providing more than one observable, the result observable will only emit values

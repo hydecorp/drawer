@@ -35,9 +35,7 @@ The example below will render on [webcomponents.org](https://www.webcomponents.o
 -->
 ```html
 <hy-drawer id="drawer" align="left" mouse-events>
- <aside>
-   <p>Arbitrary content here.</p>
- </aside>
+  <p>Arbitrary content here.</p>
 </hy-drawer>
 
 <a onclick="window.drawer.toggle()">☰</a>
@@ -141,7 +139,7 @@ Note that this will result in possibly hundreds of separate requests.
 
 #### Vanilla
 ~~~html
-<aside id="drawer"><!--content--></aside>
+<aside id="drawer"><!-- ... --></aside>
 
 <script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
 <script>
@@ -157,20 +155,20 @@ Note that this will result in possibly hundreds of separate requests.
 ### Size
 The size of the minified bundle hovers around 75kb, or ~15kb gzipped.
 
-| File | Size |
-|:-----|-----:|
-| `dist/jquery/index.js` | 296K |
-| `dist/jquery/index.min.js` |  71K |
-| `dist/mixin/index.js` | 284K |
-| `dist/mixin/index.min.js` |  67K |
-| `dist/vanilla/index.js` | 289K |
-| `dist/vanilla/index.min.js` |  69K |
-| `dist/webcomponent/html-import.js` | 298K |
-| `dist/webcomponent/html-import.min.js` |  73K |
-| `dist/webcomponent/index.js` | 301K |
-| `dist/webcomponent/index.min.js` |  75K |
-| `dist/webcomponent/module.js` | 302K |
-| `dist/webcomponent/module.min.js` |  75K |
+| Size | File |
+|-----:|:-----|
+| 300K | `dist/jquery/index.dev.js` |
+|  73K | `dist/jquery/index.js` |
+| 288K | `dist/mixin/index.dev.js` |
+|  69K | `dist/mixin/index.js` |
+| 293K | `dist/vanilla/index.dev.js` |
+|  71K | `dist/vanilla/index.js` |
+| 301K | `dist/webcomponent/html-import.dev.js` |
+|  75K | `dist/webcomponent/html-import.js` |
+| 304K | `dist/webcomponent/index.dev.js` |
+|  77K | `dist/webcomponent/index.js` |
+| 305K | `dist/webcomponent/module.dev.js` |
+|  77K | `dist/webcomponent/module.js` |
 
 ### Gold Standard
 This component follows the WebComponents [Gold Standard](doc/gold-standard.md){:.flip-title}.

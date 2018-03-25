@@ -65,9 +65,7 @@ reflecting options as HTML attributes, etc...
 
 
 ```js
-export class HyDrawerElement extends customElementMixin(
-  drawerMixin(CustomElement)
-) {
+export class HyDrawerElement extends customElementMixin(drawerMixin(CustomElement)) {
 ```
 
 The CustomElements spec demands that we provide a list of attributes (i.e. our options).

@@ -35,9 +35,7 @@ export class HyDrawer extends drawerMixin(VanillaComponent) {
 
     const df = new DocumentFragment();
     df.appendChild(createElement("div", { class: "hy-drawer-scrim" }));
-    df.appendChild(
-      createElement("div", { class: "hy-drawer-content" }, el.children)
-    );
+    df.appendChild(createElement("div", { class: "hy-drawer-content" }, el.children));
 
     el.appendChild(df);
 

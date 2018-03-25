@@ -67,10 +67,7 @@ Also, we're only interested in the first `touchstart`.
 ```js
           const touchstart$ = fromEvent(doc, "touchstart", {
             passive: true
-          }).pipe(
-            filter(({ touches }) => touches.length === 1),
-            map(({ touches }) => touches[0])
-          );
+          }).pipe(filter(({ touches }) => touches.length === 1), map(({ touches }) => touches[0]));
 ```
 
 If mouse events aren't enabled, we're done here.
@@ -150,9 +147,7 @@ Again, the listener is only marked as passive when the `preventDefault` option i
           const mousemove$ = fromEvent(doc, "mousemove", {
             passive: !preventDefault
           }).pipe(
-            subscribeWhen(
-              merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))
-            ),
+            subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
             map(event => Object.assign(event, { event }))
           );
 
@@ -230,8 +225,7 @@ the finger has moved at least `threshold` pixels in either direction.
           withLatestFrom(start$),
           skipWhile(
             ([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
-              abs(startY - clientY) < this.threshold &&
-              abs(startX - clientX) < this.threshold
+              abs(startY - clientY) < this.threshold && abs(startX - clientX) < this.threshold
           ),
           map(
             ([{ clientX, clientY }, { clientX: startX, clientY: startY }]) =>
@@ -250,16 +244,11 @@ after a start event, so that we *have to* make a decision immediately.
       } else {
         return move$.pipe(
           withLatestFrom(start$),
-          map(
-            ([
-              { clientX, clientY, event },
-              { clientX: startX, clientY: startY }
-            ]) => {
-              const isSliding = abs(startX - clientX) >= abs(startY - clientY);
-              if (this.preventDefault && isSliding) event.preventDefault();
-              return isSliding;
-            }
-          )
+          map(([{ clientX, clientY, event }, { clientX: startX, clientY: startY }]) => {
+            const isSliding = abs(startX - clientX) >= abs(startY - clientY);
+            if (this.preventDefault && isSliding) event.preventDefault();
+            return isSliding;
+          })
         );
       }
     }
