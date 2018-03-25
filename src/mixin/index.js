@@ -53,10 +53,6 @@ export const MIXIN_FEATURE_TESTS = new Set([
 
 export { Set };
 
-// Prevent errors when loading component via native ES6 module support.
-window.process = window.process || {};
-window.process.env = window.process.env || {};
-
 // ## Drawer Mixin
 export const drawerMixin = C =>
   class extends setupObservablesMixin(rxjsMixin(componentMixin(C))) {
