@@ -89,6 +89,15 @@
   "prettier": {
     "printWidth": 100
   },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "extends": "prettier",
+    "parserOptions": {
+      "sourceType": "module"
+    }
+  },
   "babel": {
     "presets": [
       "env"
