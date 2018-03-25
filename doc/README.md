@@ -68,7 +68,7 @@ Note that this will result in possibly hundreds of separate requests.
 
 ### Vanilla
 ~~~html
-<aside id="drawer"><!--content--></aside>
+<aside id="drawer"><!-- ... --></aside>
 
 <script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
 <script>

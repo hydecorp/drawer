@@ -14,9 +14,7 @@ The example below will render on [webcomponents.org](https://www.webcomponents.o
 -->
 ```html
 <hy-drawer id="drawer" align="left" mouse-events>
- <aside>
-   <p>Arbitrary content here.</p>
- </aside>
+  <p>Arbitrary content here.</p>
 </hy-drawer>
 
 <a onclick="window.drawer.toggle()">☰</a>
