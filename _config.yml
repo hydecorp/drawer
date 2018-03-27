@@ -12,6 +12,7 @@ author:
     github: https://github.com/qwtel/hy-drawer
     npm: https://www.npmjs.com/package/hy-drawer
     download: https://github.com/qwtel/hy-drawer/releases
+    email: mailto:mail@qwtel.com
 
 copyright: © 2018 Florian Klampfer
 
@@ -54,6 +55,8 @@ hydejack:
   cookies_banner: true
   no_mark_external: true
 
+disqus: qwtel
+
 defaults:
   - scope:
       path: doc/options.md
@@ -75,6 +78,14 @@ defaults:
     values:
       menu: true
       order: 4
+  - scope:
+      path: README.md
+    values:
+      comments: true
+  - scope:
+      path: doc
+    values:
+      comments: true
 
 titles_from_headings:
   strip_title: true
@@ -99,6 +110,9 @@ data_social:
   download:
     name: Download
     icon: icon-box-add
+  email:
+    name: Email
+    icon: icon-mail
 
 keywords:
   - drawer
