@@ -18,7 +18,9 @@
     "serve": "http-server -s -p $npm_package_config_port",
     "dev": "npm run watch & npm run serve",
     "prepublishOnly": "npm run test && npm run clean && npm run build",
-    "version": "npm run format && npm run build:doc && git add ."
+    "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
+    "version": "npm run format && npm run build && git add .",
+    "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
   },
   "config": {
     "port": "8080"
