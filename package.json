@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-pre.13",
+  "version": "1.0.0-pre.14",
   "description": "A drawer component for the modern web.",
   "main": "src/index.js",
   "scripts": {
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "create-element-x": "^1.0.3",
-    "hy-component": "^1.0.0-pre.12",
+    "hy-component": "^1.0.0-pre.15",
     "rxjs": "^5.5.7",
     "rxjs-create-tween": "^1.1.0"
   },
