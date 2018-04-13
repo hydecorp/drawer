@@ -48,7 +48,7 @@ export const MIXIN_FEATURE_TESTS = new Set([
   "classlist",
   "opacity",
   "csstransforms",
-  "csspointerevents"
+  "csspointerevents",
 ]);
 
 export { Set };
@@ -72,7 +72,7 @@ export const drawerMixin = C =>
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
-        mouseEvents: bool
+        mouseEvents: bool,
       };
     }
 
@@ -84,7 +84,7 @@ export const drawerMixin = C =>
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
-        mouseEvents: false
+        mouseEvents: false,
       };
     }
 

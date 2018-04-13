@@ -45,7 +45,7 @@ export const baseObservablesMixin = C =>
           // The touchstart observable is passive since we won't be calling `preventDefault`.
           // Also, we're only interested in the first `touchstart`.
           const touchstart$ = fromEvent(doc, "touchstart", {
-            passive: true
+            passive: true,
           }).pipe(filter(({ touches }) => touches.length === 1), map(({ touches }) => touches[0]));
 
           // If mouse events aren't enabled, we're done here.
@@ -94,7 +94,7 @@ export const baseObservablesMixin = C =>
           // We unsubscribe form the source observable outside of those contraints.
           // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
           const mousemove$ = fromEvent(doc, "mousemove", {
-            passive: !preventDefault
+            passive: !preventDefault,
           }).pipe(
             subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
             map(event => Object.assign(event, { event }))

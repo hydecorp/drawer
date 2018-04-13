@@ -22,7 +22,7 @@ import {
   CustomElement,
   fragmentFromString,
   CUSTOM_ELEMENT_FEATURE_TESTS,
-  Set
+  Set,
 } from "hy-component/src/custom-element";
 
 // ...and our own component.
@@ -35,7 +35,7 @@ import { template } from "./template";
 // The set of Modernizr feature tests required for *this* version of the component.
 export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
-  ...MIXIN_FEATURE_TESTS
+  ...MIXIN_FEATURE_TESTS,
 ]);
 
 export { Set };
