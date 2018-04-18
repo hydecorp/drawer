@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+const hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && CSS.number;
+
 export const updateMixin = C =>
   class extends C {
     histId() {
@@ -30,8 +32,13 @@ export const updateMixin = C =>
     // recalculate `translateX` on every `resize`.
     // However, it has to be removed before we move the drawer via `translateX` again.
     prepareInteraction() {
-      this.contentEl.style.willChange = "transform";
-      this.scrimEl.style.willChange = "opacity";
+      if (hasCSSOM) {
+        this.contentEl.attributeStyleMap.set("will-change", "transform");
+        this.scrimEl.attributeStyleMap.set("will-change", "opacity");
+      } else {
+        this.contentEl.style.willChange = "transform";
+        this.scrimEl.style.willChange = "opacity";
+      }
       this.contentEl.classList.remove("hy-drawer-opened");
       this.fireEvent("prepare");
     }
@@ -39,15 +46,26 @@ export const updateMixin = C =>
     // Cleanup code after a completed interaction.
     // Will add/remove the beforementioned `hy-drawer-opened` class.
     cleanupInteraction(opened) {
-      this.scrimEl.style.willChange = "";
-      this.contentEl.style.willChange = "";
-
-      if (opened) {
-        this.scrimEl.style.pointerEvents = "all";
-        this.contentEl.classList.add("hy-drawer-opened");
+      if (hasCSSOM) {
+        this.contentEl.attributeStyleMap.delete("will-change");
+        this.scrimEl.attributeStyleMap.delete("will-change");
+        if (opened) {
+          this.scrimEl.attributeStyleMap.set("pointer-events", "all");
+          this.contentEl.classList.add("hy-drawer-opened");
+        } else {
+          this.scrimEl.attributeStyleMap.delete("pointer-events");
+          this.contentEl.classList.remove("hy-drawer-opened");
+        }
       } else {
-        this.scrimEl.style.pointerEvents = "";
-        this.contentEl.classList.remove("hy-drawer-opened");
+        this.scrimEl.style.willChange = "";
+        this.contentEl.style.willChange = "";
+        if (opened) {
+          this.scrimEl.style.pointerEvents = "all";
+          this.contentEl.classList.add("hy-drawer-opened");
+        } else {
+          this.scrimEl.style.pointerEvents = "";
+          this.contentEl.classList.remove("hy-drawer-opened");
+        }
       }
 
       // If the experimental back button feature is enabled we hack the history API,
@@ -81,8 +99,16 @@ export const updateMixin = C =>
       const inv = this.align === "left" ? 1 : -1;
       const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
-      this.contentEl.style.transform = `translateX(${translateX}px)`;
-      this.scrimEl.style.opacity = this.opacity;
+      if (hasCSSOM) {
+        this.contentEl.attributeStyleMap.set(
+          "transform",
+          new CSSTransformValue([new CSSTranslate(CSS.px(translateX), CSS.px(0))])
+        );
+        this.scrimEl.attributeStyleMap.set("opacity", this.opacity);
+      } else {
+        this.contentEl.style.transform = `translateX(${translateX}px)`;
+        this.scrimEl.style.opacity = this.opacity;
+      }
 
       this.fireEvent("move", { detail: { translateX, opacity } });
     }
