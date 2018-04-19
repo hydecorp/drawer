@@ -103,7 +103,7 @@ export const calcMixin = C =>
     // One feature of hy-drawer is to allow the drawer to "peek" over the edge.
     // This effect is achieved by setting a smaller negative `left` (`right`) CSS property,
     // than is the width of the drawer,
-    // The 'moveable' part of the drawer, then, is equal to that the inverse of that property.
+    // The 'moveable' part of the drawer, then, is equal to the inverse of that property.
     // See [Styling](../../styling.md) for more.
     calcMovableDrawerWidth() {
       return -parseFloat(getComputedStyle(this.contentEl)[this.align]);
