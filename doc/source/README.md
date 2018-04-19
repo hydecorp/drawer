@@ -27,7 +27,7 @@ export {
   HyDrawer,
   VANILLA_FEATURE_TESTS,
   HyDrawerElement,
-  WEBCOMPONENT_FEATURE_TESTS
+  WEBCOMPONENT_FEATURE_TESTS,
 };
 ```
 

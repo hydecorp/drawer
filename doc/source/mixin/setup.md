@@ -31,6 +31,7 @@ import { pairwise } from "rxjs/_esm5/operators/pairwise";
 import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
 import { sample } from "rxjs/_esm5/operators/sample";
 import { share } from "rxjs/_esm5/operators/share";
+import { skip } from "rxjs/_esm5/operators/skip";
 import { startWith } from "rxjs/_esm5/operators/startWith";
 import { switchMap } from "rxjs/_esm5/operators/switchMap";
 import { take } from "rxjs/_esm5/operators/take";
@@ -90,18 +91,7 @@ Interally, we invert it and call it `active`.
 
 
 ```js
-      const active$ = this.subjects.persistent.pipe(
-        takeUntil(this.subjects.disconnect),
-        map(x => !x),
-        share()
-      );
-```
-
-We use this to get references to observables that aren't defined yet.
-
-
-```js
-      const ref = {};
+      const active$ = this.subjects.persistent.pipe(map(x => !x));
 ```
 
 #### Start observable
@@ -124,7 +114,7 @@ It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside
 
 ```js
       const isScrimVisible$ = defer(() =>
-        ref.translateX$.pipe(
+        this.translateX$.pipe(
           map(
             translateX => (this.align === "left" ? translateX > 0 : translateX < this.drawerWidth)
           )
@@ -203,19 +193,28 @@ The `translateX` observable is the central observable of this component.
 It emits the current x-coordinate of the drawer, which
 can be modified by either of 3 incoming observables:
 
-1. The move observable (the user's finger/mouse moving across the screen),
-2. the animation/tween observable, and
+1. the animation/tween observable, and
+2. The move observable (the user's finger/mouse moving across the screen),
 3. direct modifications of the `opened` state.
 
 It is wrapped in a `defer` because it depends on previous values of itself.
 
 
 ```js
-      ref.translateX$ = defer(() =>
+      this.translateX$ = defer(() =>
         merge(
 ```
 
 1)
+The tween observable can be used unmodified (see below),
+but isn't defined yet, because it depends on previous values of `translateX$`.
+
+
+```js
+          this.tween$,
+```
+
+2)
 We only let move events modify the drawer's position when we are sure
 that the user is sliding. In case the `preventDefault` option is enabled,
 this is also when we're sure to call `preventDefault`.
@@ -234,26 +233,16 @@ and the current position of the finger to calculate the next `translateX` value.
 
 
 ```js
-            withLatestFrom(start$, ref.startTranslateX$),
+            withLatestFrom(start$, this.startTranslateX$),
             map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
               this.calcTranslateX(clientX, startX, startTranslateX)
             )
           ),
 ```
 
-2)
-The tween observable can be used unmodified (see below),
-but isn't defined yet, because it depends on previous values of `translateX$`.
-
-
-```js
-          ref.tween$,
-```
-
 3)
 When the `opened` state changes, we "jump" to the new position,
 which is either 0 (when closed) or the width of the drawer (when open).
-We also want to jump when `align` chagnes, in this case to the other side of the viewport.
 
 
 ```js
@@ -286,7 +275,7 @@ We obtain it by sampling the translate-x observable at the beginning of each int
 
 
 ```js
-      ref.startTranslateX$ = ref.translateX$.pipe(sample(start$));
+      this.startTranslateX$ = this.translateX$.pipe(sample(start$));
 ```
 
 #### Tween observable
@@ -297,7 +286,7 @@ or snap back into place.
 
 
 ```js
-      const velocity$ = ref.translateX$.pipe(
+      const velocity$ = this.translateX$.pipe(
         timestamp(),
         pairwise(),
 ```
@@ -336,7 +325,7 @@ TODO
         tap(() => {
           this.contentEl.classList.remove("hy-drawer-grabbing");
         }),
-        withLatestFrom(start$, ref.translateX$, velocity$),
+        withLatestFrom(start$, this.translateX$, velocity$),
         filter(this.calcIsSwipe.bind(this)),
         map(this.calcWillOpen.bind(this)),
 ```
@@ -370,10 +359,8 @@ and initiate an animation to the opposite state.
 
 
 ```js
-      ref.tween$ = tweenTrigger$.pipe(
-        tap(willOpen => {
-          this.setInternalState("opened", willOpen);
-        }),
+      this.tween$ = tweenTrigger$.pipe(
+        tap(willOpen => this.setInternalState("opened", willOpen)),
 ```
 
 By using `switchMap` we ensure that subsequent events that trigger an animation
@@ -381,7 +368,7 @@ don't cause more than one animation to be played at a time.
 
 
 ```js
-        withLatestFrom(ref.translateX$),
+        withLatestFrom(this.translateX$),
         switchMap(([opened, translateX]) => {
 ```
 
@@ -398,7 +385,8 @@ We return a tween observable that runs cleanup code when it completes
           return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
             tap({ complete: () => this.subjects.opened.next(opened) }),
             takeUntil(start$),
-            takeUntil(this.subjects.align)
+            takeUntil(this.subjects.align.pipe(skip(1))),
+            share()
           );
         })
       );
@@ -413,54 +401,55 @@ and causes the code inside the above `defer` observables to run.
 
 
 ```js
-      ref.translateX$.subscribe(this.updateDOM.bind(this));
+      requestIdleCallback(() => {
+        this.translateX$.subscribe(this.updateDOM.bind(this));
 ```
 
 A click on the scrim should close the drawer.
 
 
 ```js
-      fromEvent(this.scrimEl, "click")
-        .pipe(takeUntil(this.subjects.disconnect))
-        .subscribe(() => this.close());
+        fromEvent(this.scrimEl, "click")
+          .pipe(takeUntil(this.subjects.disconnect))
+          .subscribe(() => this.close());
 ```
 
 Other than preventing sliding, setting `persistent` will also hide the scrim.
 
 
 ```js
-      active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
-        this.scrimEl.style.display = active ? "block" : "none";
-      });
+        active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
+          this.scrimEl.style.display = active ? "block" : "none";
+        });
 ```
 
 Whenever the alignment of the drawer changes, update the CSS classes.
 
 
 ```js
-      this.subjects.align.pipe(takeUntil(this.subjects.disconnect)).subscribe(align => {
-        const oldAlign = align === "left" ? "right" : "left";
-        this.contentEl.classList.remove(`hy-drawer-${oldAlign}`);
-        this.contentEl.classList.add(`hy-drawer-${align}`);
-      });
+        this.subjects.align.pipe(takeUntil(this.subjects.disconnect)).subscribe(align => {
+          this.contentEl.classList.remove(`hy-drawer-left`);
+          this.contentEl.classList.remove(`hy-drawer-right`);
+          this.contentEl.classList.add(`hy-drawer-${align}`);
+        });
 ```
 
 If the experimental back button feature is enabled, handle popstate events...
 
 
 ```js
-      /*
-      fromEvent(window, 'popstate')
-        .pipe(
-          takeUntil(this.subjects.disconnect),
-          subscribeWhen(this.backButton$),
-        )
-        .subscribe(() => {
-          const hash = `#${histId.call(this)}--opened`;
-          const willOpen = window.location.hash === hash;
-          if (willOpen !== this.opened) this.animateTo$.next(willOpen);
-        });
-      */
+        /*
+        fromEvent(window, 'popstate')
+          .pipe(
+            takeUntil(this.subjects.disconnect),
+            subscribeWhen(this.backButton$),
+          )
+          .subscribe(() => {
+            const hash = `#${histId.call(this)}--opened`;
+            const willOpen = window.location.hash === hash;
+            if (willOpen !== this.opened) this.animateTo$.next(willOpen);
+          });
+        */
 ```
 
 When drawing with mouse is enabled, we add the grab cursor to the drawer.
@@ -469,19 +458,19 @@ to prevent text selection while sliding.
 
 
 ```js
-      this.subjects.mouseEvents
-        .pipe(
-          takeUntil(this.subjects.disconnect),
-          switchMap(mouseEvents => {
-            if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
-            else this.contentEl.classList.remove("hy-drawer-grab");
+        this.subjects.mouseEvents
+          .pipe(
+            takeUntil(this.subjects.disconnect),
+            switchMap(mouseEvents => {
+              if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
+              else this.contentEl.classList.remove("hy-drawer-grab");
 
-            return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
-          })
-        )
-        .subscribe(([{ event }, isInRange]) => {
-          if (isInRange && event) event.preventDefault();
-        });
+              return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
+            })
+          )
+          .subscribe(([{ event }, isInRange]) => {
+            if (isInRange && event) event.preventDefault();
+          });
 ```
 
 Now we set the initial opend state.
@@ -489,28 +478,13 @@ If the experimental back button feature is enabled, we check the location hash..
 
 
 ```js
-      /*
-      if (this._backButton) {
-        const hash = `#${histId.call(this)}--opened`;
-        if (window.location.hash === hash) this.setInternalState('opened', true);
-      }
+        /*
+        if (this._backButton) {
+          const hash = `#${histId.call(this)}--opened`;
+          if (window.location.hash === hash) this.setInternalState('opened', true);
+        }
       */
-```
-
-Putting initial values on the side-effect--observables:
-this.document$.next(document);
-
-
-```js
-
-      /*
-      this.opened$.next(this.opened);
-      this.align$.next(this.align);
-      this.persitent$.next(this.persistent);
-      this.preventDefault$.next(this.preventDefault);
-      this.mouseEvents$.next(this.mouseEvents);
-      */
-      /* this.backButton$.next(this._backButton); */
+      });
     }
   };
 ```

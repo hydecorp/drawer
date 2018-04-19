@@ -128,7 +128,7 @@ The function will also clip the position at 0 and the width of the drawer.
 One feature of hy-drawer is to allow the drawer to "peek" over the edge.
 This effect is achieved by setting a smaller negative `left` (`right`) CSS property,
 than is the width of the drawer,
-The 'moveable' part of the drawer, then, is equal to that the inverse of that property.
+The 'moveable' part of the drawer, then, is equal to the inverse of that property.
 See [Styling](../../styling.md) for more.
 
 

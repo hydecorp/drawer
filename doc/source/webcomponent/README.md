@@ -25,7 +25,7 @@ import {
   CustomElement,
   fragmentFromString,
   CUSTOM_ELEMENT_FEATURE_TESTS,
-  Set
+  Set,
 } from "hy-component/src/custom-element";
 ```
 
@@ -50,7 +50,7 @@ The set of Modernizr feature tests required for *this* version of the component.
 ```js
 export const WEBCOMPONENT_FEATURE_TESTS = new Set([
   ...CUSTOM_ELEMENT_FEATURE_TESTS,
-  ...MIXIN_FEATURE_TESTS
+  ...MIXIN_FEATURE_TESTS,
 ]);
 
 export { Set };

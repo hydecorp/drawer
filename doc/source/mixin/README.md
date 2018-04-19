@@ -59,7 +59,7 @@ export const MIXIN_FEATURE_TESTS = new Set([
   "classlist",
   "opacity",
   "csstransforms",
-  "csspointerevents"
+  "csspointerevents",
 ]);
 
 export { Set };
@@ -96,7 +96,7 @@ See [Options](../../options.md) for usage information.
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
-        mouseEvents: bool
+        mouseEvents: bool,
       };
     }
 
@@ -108,7 +108,7 @@ See [Options](../../options.md) for usage information.
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
-        mouseEvents: false
+        mouseEvents: false,
       };
     }
 ```
@@ -145,15 +145,23 @@ Calling the [setup observables function](./setup.md) function.
 
 ```js
     connectComponent() {
-      this.setupObservables();
-      super.connectComponent();
+      requestIdleCallback(() => {
+        this.setupObservables();
+```
+
+TODO: meh..
+
+
+```js
+        super.connectComponent();
 ```
 
 Firing an event to let the outside world know the drawer is ready.
 
 
 ```js
-      this.fireEvent("init", { detail: this.opened });
+        this.fireEvent("init", { detail: this.opened });
+      });
     }
 ```
 

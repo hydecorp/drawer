@@ -56,7 +56,7 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
+      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
 ```
 
@@ -66,7 +66,7 @@ Also, we're only interested in the first `touchstart`.
 
 ```js
           const touchstart$ = fromEvent(doc, "touchstart", {
-            passive: true
+            passive: true,
           }).pipe(filter(({ touches }) => touches.length === 1), map(({ touches }) => touches[0]));
 ```
 
@@ -107,12 +107,11 @@ when either of the inputs change, but not before all inputs have their first val
 
 
 ```js
-      const input$ = combineLatest(
-        this.subjects.adapt,
+      return combineLatest(
+        this.subjects.document,
         this.subjects.mouseEvents,
         this.subjects.preventDefault
-      );
-      return input$.pipe(
+      ).pipe(
         switchMap(([doc, mouseEvents, preventDefault]) => {
 ```
 
@@ -124,8 +123,7 @@ Note that the event listener is only passive when the `preventDefault` option is
 
 
 ```js
-          const s = { passive: !preventDefault };
-          const touchmove$ = fromEvent(doc, "touchmove", s).pipe(
+          const touchmove$ = fromEvent(doc, "touchmove", { passive: !preventDefault }).pipe(
             map(e => Object.assign(e.touches[0], { event: e }))
           );
 ```
@@ -145,7 +143,7 @@ Again, the listener is only marked as passive when the `preventDefault` option i
 
 ```js
           const mousemove$ = fromEvent(doc, "mousemove", {
-            passive: !preventDefault
+            passive: !preventDefault,
           }).pipe(
             subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
             map(event => Object.assign(event, { event }))
@@ -171,7 +169,7 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
+      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
 ```
 
