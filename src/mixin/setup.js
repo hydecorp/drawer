@@ -28,6 +28,7 @@ import { pairwise } from "rxjs/_esm5/operators/pairwise";
 import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
 import { sample } from "rxjs/_esm5/operators/sample";
 import { share } from "rxjs/_esm5/operators/share";
+import { skip } from "rxjs/_esm5/operators/skip";
 import { startWith } from "rxjs/_esm5/operators/startWith";
 import { switchMap } from "rxjs/_esm5/operators/switchMap";
 import { take } from "rxjs/_esm5/operators/take";
@@ -70,14 +71,7 @@ export const setupObservablesMixin = C =>
 
       // Emitts a value every time you change the `persistent` property of the drawer.
       // Interally, we invert it and call it `active`.
-      const active$ = this.subjects.persistent.pipe(
-        takeUntil(this.subjects.disconnect),
-        map(x => !x),
-        share()
-      );
-
-      // We use this to get references to observables that aren't defined yet.
-      const ref = {};
+      const active$ = this.subjects.persistent.pipe(map(x => !x));
 
       // #### Start observable
       // Emits a value every time a start event *could* intiate an interaction.
@@ -92,7 +86,7 @@ export const setupObservablesMixin = C =>
       // (as long as the scrim is visible the user can still "catch" the drawer).
       // It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside a `defer`.
       const isScrimVisible$ = defer(() =>
-        ref.translateX$.pipe(
+        this.translateX$.pipe(
           map(
             translateX => (this.align === "left" ? translateX > 0 : translateX < this.drawerWidth)
           )
@@ -150,14 +144,19 @@ export const setupObservablesMixin = C =>
       // It emits the current x-coordinate of the drawer, which
       // can be modified by either of 3 incoming observables:
       //
-      // 1. The move observable (the user's finger/mouse moving across the screen),
-      // 2. the animation/tween observable, and
+      // 1. the animation/tween observable, and
+      // 2. The move observable (the user's finger/mouse moving across the screen),
       // 3. direct modifications of the `opened` state.
       //
       // It is wrapped in a `defer` because it depends on previous values of itself.
-      ref.translateX$ = defer(() =>
+      this.translateX$ = defer(() =>
         merge(
           // 1)
+          // The tween observable can be used unmodified (see below),
+          // but isn't defined yet, because it depends on previous values of `translateX$`.
+          this.tween$,
+
+          // 2)
           // We only let move events modify the drawer's position when we are sure
           // that the user is sliding. In case the `preventDefault` option is enabled,
           // this is also when we're sure to call `preventDefault`.
@@ -169,21 +168,15 @@ export const setupObservablesMixin = C =>
 
             // Finally, we take the start position of the finger, the start position of the drawer,
             // and the current position of the finger to calculate the next `translateX` value.
-            withLatestFrom(start$, ref.startTranslateX$),
+            withLatestFrom(start$, this.startTranslateX$),
             map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
               this.calcTranslateX(clientX, startX, startTranslateX)
             )
           ),
 
-          // 2)
-          // The tween observable can be used unmodified (see below),
-          // but isn't defined yet, because it depends on previous values of `translateX$`.
-          ref.tween$,
-
           // 3)
           // When the `opened` state changes, we "jump" to the new position,
           // which is either 0 (when closed) or the width of the drawer (when open).
-          // We also want to jump when `align` chagnes, in this case to the other side of the viewport.
           combineLatest(this.subjects.opened, this.subjects.align).pipe(
             // Usually the cleanup code would run at the end of the fling animation,
             // but since there is no animation in this case, we call it directly.
@@ -199,14 +192,14 @@ export const setupObservablesMixin = C =>
       // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
       // an interaction *during the animation*, it could also be any value inbetween.
       // We obtain it by sampling the translate-x observable at the beginning of each interaction.
-      ref.startTranslateX$ = ref.translateX$.pipe(sample(start$));
+      this.startTranslateX$ = this.translateX$.pipe(sample(start$));
 
       // #### Tween observable
       // For the tween animations we first need an observable that tracks
       // the current velocity of the drawer,
       // which we will use to determine whether the drawer should flinging in its direction,
       // or snap back into place.
-      const velocity$ = ref.translateX$.pipe(
+      const velocity$ = this.translateX$.pipe(
         timestamp(),
         pairwise(),
         // Since we are at the mercy of the browser firing move events,
@@ -226,7 +219,7 @@ export const setupObservablesMixin = C =>
         tap(() => {
           this.contentEl.classList.remove("hy-drawer-grabbing");
         }),
-        withLatestFrom(start$, ref.translateX$, velocity$),
+        withLatestFrom(start$, this.translateX$, velocity$),
         filter(this.calcIsSwipe.bind(this)),
         map(this.calcWillOpen.bind(this)),
         // TODO: only fire `slideend` event when slidestart fired as well?
@@ -247,13 +240,11 @@ export const setupObservablesMixin = C =>
       // so that the next interaction will do the right thing even while the animation is
       // still playing, e.g. a call to `toggle` will cancel the current animation
       // and initiate an animation to the opposite state.
-      ref.tween$ = tweenTrigger$.pipe(
-        tap(willOpen => {
-          this.setInternalState("opened", willOpen);
-        }),
+      this.tween$ = tweenTrigger$.pipe(
+        tap(willOpen => this.setInternalState("opened", willOpen)),
         // By using `switchMap` we ensure that subsequent events that trigger an animation
         // don't cause more than one animation to be played at a time.
-        withLatestFrom(ref.translateX$),
+        withLatestFrom(this.translateX$),
         switchMap(([opened, translateX]) => {
           // We return a tween observable that runs cleanup code when it completes
           // --- unless a new interaction is initiated, in which case it is canceled.
@@ -265,7 +256,8 @@ export const setupObservablesMixin = C =>
           return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
             tap({ complete: () => this.subjects.opened.next(opened) }),
             takeUntil(start$),
-            takeUntil(this.subjects.align)
+            takeUntil(this.subjects.align.pipe(skip(1))),
+            share()
           );
         })
       );
