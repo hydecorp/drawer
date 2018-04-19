@@ -40,7 +40,7 @@ export const baseObservablesMixin = C =>
   class extends C {
     getStartObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
+      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
           // The touchstart observable is passive since we won't be calling `preventDefault`.
           // Also, we're only interested in the first `touchstart`.
@@ -69,20 +69,18 @@ export const baseObservablesMixin = C =>
       // we `switchMap` to reflect the changes.
       // Nice: `combineLatest` provides us with the functionality of emitting
       // when either of the inputs change, but not before all inputs have their first value set.
-      const input$ = combineLatest(
-        this.subjects.adapt,
+      return combineLatest(
+        this.subjects.document,
         this.subjects.mouseEvents,
         this.subjects.preventDefault
-      );
-      return input$.pipe(
+      ).pipe(
         switchMap(([doc, mouseEvents, preventDefault]) => {
           // We're only keeping track of the first finger.
           // Should the user remove the finger that started the interaction, we use the next instead.
           // Note that this doesn't occur under normal circumstances,
           // and exists primarliy to ensure that the interaction continues without hiccups.
           // Note that the event listener is only passive when the `preventDefault` option is falsy.
-          const s = { passive: !preventDefault };
-          const touchmove$ = fromEvent(doc, "touchmove", s).pipe(
+          const touchmove$ = fromEvent(doc, "touchmove", { passive: !preventDefault }).pipe(
             map(e => Object.assign(e.touches[0], { event: e }))
           );
 
@@ -111,7 +109,7 @@ export const baseObservablesMixin = C =>
     // when the `mouseEvents` option is enabled.
     getEndObservable() {
       // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-      return combineLatest(this.subjects.adapt, this.subjects.mouseEvents).pipe(
+      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
         switchMap(([doc, mouseEvents]) => {
           // We're only interested in the last `touchend`.
           // Otherwise there's at least one finger left on the screen,
