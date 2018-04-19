@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "create-element-x": "^1.0.3",
-    "hy-component": "^1.0.0-pre.15",
-    "rxjs": "^5.5.7",
+    "hy-component": "^1.0.0-pre.16",
+    "rxjs": "^5.5.10",
     "rxjs-create-tween": "^1.1.0"
   },
   "optionalDependencies": {
