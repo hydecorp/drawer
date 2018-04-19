@@ -49,8 +49,9 @@ export const updateMixin = C =>
       if (hasCSSOM) {
         this.contentEl.attributeStyleMap.delete("will-change");
         this.scrimEl.attributeStyleMap.delete("will-change");
+
         if (opened) {
-          this.scrimEl.attributeStyleMap.set("pointer-events", "all");
+          this.scrimEl.attributeStyleMap.set("pointer-events", new CSSKeywordValue("all"));
           this.contentEl.classList.add("hy-drawer-opened");
         } else {
           this.scrimEl.attributeStyleMap.delete("pointer-events");
@@ -59,6 +60,7 @@ export const updateMixin = C =>
       } else {
         this.scrimEl.style.willChange = "";
         this.contentEl.style.willChange = "";
+
         if (opened) {
           this.scrimEl.style.pointerEvents = "all";
           this.contentEl.classList.add("hy-drawer-opened");
