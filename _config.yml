@@ -59,17 +59,17 @@ disqus: qwtel
 
 defaults:
   - scope:
-      path: example/README.md
+      path: usage/README.md
     values:
       menu: true
       order: 1
   - scope:
-      path: usage/README.md
+      path: doc/README.md
     values:
       menu: true
       order: 2
   - scope:
-      path: doc/README.md
+      path: example/README.md
     values:
       menu: true
       order: 3
