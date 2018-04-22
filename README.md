@@ -2,17 +2,14 @@
 
 [![npm version](https://badge.fury.io/js/hy-drawer.svg)](https://badge.fury.io/js/hy-drawer)
 
-**hy-drawer** is a touch-enabled drawer component for the modern web.
-It focuses on providing a fun, natural feel in both the Android and iOS stock browser,
-while being performant and easy to use.
-It is the perfect companion for mobile-first web pages and progressive web apps.
+**hy-drawer** is a touch-enabled drawer component for the modern web. It focuses on providing a fun, natural feel in both the Android and iOS stock browser, while being performant and easy to use. It is the perfect companion for mobile-first web pages and progressive web apps.
 
 > A touch-enabled drawer component for the modern web.
 {:.lead}
 
 **hy-drawer** is used by hundreds of sites as part of the [Hydejack]{:.external} Jekyll theme.
 
-**NOTE**: The current version is a pre-release. The public API may still change in important ways.
+**NOTE**: The current version is still a pre-release. The public API may still change in important ways.
 {:.message}
 
 [hydejack]: https://qwtel.com/hydejack/
@@ -20,7 +17,7 @@ It is the perfect companion for mobile-first web pages and progressive web apps.
 <!--more-->
 
 ## Examples
-The example below will render on [webcomponents.org](https://www.webcomponents.org/element/qwtel/hy-drawer):
+The example below will render on [webcomponents.org](example/https://www.webcomponents.org/element/qwtel/hy-drawer):
 
 <!--
 ```
@@ -43,13 +40,19 @@ The example below will render on [webcomponents.org](https://www.webcomponents.o
 
 When viewing this document on GitHub, npm, or elsewhere, you can check out the standalone examples:
 
-* [WebComponent Example](https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
-* [jQuery Example](https://qwtel.com/hy-drawer/example/jquery/){:.external}
-* [Vanilla JS Example](https://qwtel.com/hy-drawer/example/vanilla/){:.external}
-* [Mixin Example](https://qwtel.com/hy-drawer/example/mixin/){:.external}
+* [WebComponent Example](example/https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
+* [jQuery Example](example/https://qwtel.com/hy-drawer/example/jquery/){:.external}
+* [Vanilla JS Example](example/https://qwtel.com/hy-drawer/example/vanilla/){:.external}
+* [Mixin Example](example/https://qwtel.com/hy-drawer/example/mixin/){:.external}
 
 
 ## License
+**hy-drawer** is Open Source but not free.
+
+You may use the component in accordance with the [GPL-3.0 license](licenses/GPL-3.0.md),
+but this means you must be willing to release your code under a GPLv3-compatible license in turn.
+
+For cases were this is not acceptable the following commercial licenses available:
 
 |              | Personal           | Startup            | Enterprise         |
 |:-------------|:------------------:|:------------------:|:------------------:|
@@ -59,14 +62,84 @@ When viewing this document on GitHub, npm, or elsewhere, you can check out the s
 | | [**Buy**][bp]{:.gumroad-button} | [**Buy**][bs]{:.gumroad-button} | [**Buy**][be]{:.gumroad-button} |
 {:.stretch-table}
 
-Unless you've obtained one of the licenses above, **hy-drawer** must be used in accordance with the [GPL-3.0](LICENSE.md) license.
 
 [pl]: licenses/personal.md
 [sl]: licenses/startup.md
 [el]: licenses/enterprise.md
-[bp]: https://gumroad.com/l/hy-drawer-personal
-[bs]: https://gumroad.com/l/hy-drawer-startup
-[be]: https://gumroad.com/l/hy-drawer-enterprise
+[bp]: licenses/https://gumroad.com/l/hy-drawer-personal
+[bs]: licenses/https://gumroad.com/l/hy-drawer-startup
+[be]: licenses/https://gumroad.com/l/hy-drawer-enterprise
+
+
+## Usage
+**hy-drawer** can be used in a variety of ways:
+* As [Web Component](usage/#web-component), both as *ES6 Module* and *HTML Import*
+* As [jQuery](usage/#jquery) plugin
+* As [Vanilla](usage/#vanilla) JavaScript class
+* As part of [bundled frontend code](usage/#bundlers).
+* (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
+
+[esmixins]: usage/http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+
+### Web Component
+The Web Component is the preferred way of using **hy-drawer**, but requires [support] in the browser or a [polyfill]. There are multiple ways of including it on your page:
+
+[support]: usage/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: usage/https://github.com/webcomponents/webcomponentsjs
+
+#### Bundled ES6 Module
+This is the version that is going to have native support across all major browsers the soonest.
+
+~~~html
+<script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
+
+<hy-drawer prevent-default><!-- ... --></hy-drawer>
+~~~
+
+#### HTML Import
+Some browsers have decided against implementing HTML Imports, but they are easily polyfilled.
+
+~~~html
+<link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
+
+<hy-drawer prevent-default><!-- ... --></hy-drawer>
+~~~
+
+#### Unbundled ES6 Module (experimental)
+When loading the component form the [unpkg] CDN, you can import the source directly by appending the `?module` query parameter.
+
+~~~html
+<script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
+
+<hy-drawer prevent-default><!-- ... --></hy-drawer>
+~~~
+
+Note that this approach will result in hundreds of separate HTTP requests (one for each module) and is intended for testing and prototypes only. Importing unbundled ES6 modules is much slower than bundled distributions and will remain so for the foreseeable future.
+
+One advantage of this approach is that shared dependencies will not be included twice when using more than one component from the hy-* component family. However, setting up webpack is a better solution in these cases:
+
+#### Bundlers
+You can use **hy-drawer** with a frontend bundler like webpack or rollup.
+Just install the component with npm or yarn and import the source in your code:
+
+```js
+import 'hy-drawer/src/webcomponent/module';
+```
+
+If you want to have control over when the custom element gets `define`d, you can also import the `HTMLElement` like so:
+
+```js
+import { HyDrawerElement } from 'hy-drawer/src/webcomponent';
+// ...
+customElements.define('hy-drawer', HyDrawerElement);
+```
+
+Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp] plugin.
+
+[support]: usage/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: usage/https://github.com/webcomponents/webcomponentsjs
+[unpkg]: usage/https://unpkg.com/
+[mcp]: usage/https://webpack.js.org/plugins/module-concatenation-plugin/
 
 
 ## Documentation
@@ -75,100 +148,6 @@ Unless you've obtained one of the licenses above, **hy-drawer** must be used in 
 * [Methods](doc/methods.md)
 * [Events](doc/events.md)
 * [Styling](doc/styling.md)
-
-### Usage
-**hy-drawer** can be used in a variety of ways:
-* As [Web Component](#web-component), both as *ES6 Module* and *HTML Import*
-* As [jQuery](#jquery)
-* As [Vanilla](#vanilla) JavaScript class
-* (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
-* (Advanced) As part of your bundled frontend code.
-
-[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
-
-#### Web Component
-The Web Component is the preferred way of using **hy-drawer**, but requires Web Component [support] in the browser or a [polyfill].
-
-[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
-[polyfill]: https://github.com/webcomponents/webcomponentsjs
-
-##### Bundled ES6 Module
-This is the version that is going to have native support across all major browsers the soonest.
-
-~~~html
-<script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-##### HTML Import
-Some browsers have decided against implementing HTML Imports, but they are easily polyfilled.
-
-~~~html
-<link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-##### Unbundled ES6 Module (experimental)
-The [unpkg CDN](https://unpkg.com/) can rewrite all bare import paths with valid unpkg URLs by passing the `?module` query parameter.
-This allows importing **hy-drawer**'s source directly.
-Note that this will result in possibly hundreds of separate requests.
-
-~~~html
-<script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-#### jQuery
-
-~~~html
-<aside id="drawer" data-align="left" data-prevent-default="true"><!-- ... --></aside>
-
-<script src="https://unpkg.com/jquery"></script>
-<script src="https://unpkg.com/hy-drawer/dist/jquery"></script>
-<script>$('#drawer').drawer()</script>
-~~~
-
-#### Vanilla
-~~~html
-<aside id="drawer"><!-- ... --></aside>
-
-<script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
-<script>
-  var HyDrawer = window.hyDrawer.HyDrawer;
-  var drawerEl = document.getElementById('drawer');
-  drawerEl.component = new HyDrawer(drawerEl, {
-    align: 'left',
-    preventDefault: true,
-  });
-</script>
-~~~
-
-### Size
-The size of the minified bundle hovers around 75kb, or ~15kb gzipped.
-
-| Size | File |
-|-----:|:-----|
-| 300K | `dist/jquery/index.dev.js` |
-|  73K | `dist/jquery/index.js` |
-| 288K | `dist/mixin/index.dev.js` |
-|  69K | `dist/mixin/index.js` |
-| 293K | `dist/vanilla/index.dev.js` |
-|  71K | `dist/vanilla/index.js` |
-| 301K | `dist/webcomponent/html-import.dev.js` |
-|  75K | `dist/webcomponent/html-import.js` |
-| 304K | `dist/webcomponent/index.dev.js` |
-|  77K | `dist/webcomponent/index.js` |
-| 305K | `dist/webcomponent/module.dev.js` |
-|  77K | `dist/webcomponent/module.js` |
 
 ### Gold Standard
 This component follows the WebComponents [Gold Standard](doc/gold-standard.md){:.flip-title}.
@@ -199,4 +178,28 @@ which is used to create the framework-specific versions of the component.
 * [`common.js`](doc/source/common.md)
 * [`index.js`](doc/source/README.md)
 
-[rxjs]: https://github.com/ReactiveX/rxjs
+### Size
+The size of the minified bundle is around 80kb, or ~17kb gzipped.
+The majority of it comes from RxJS. When already using RxJS in your project, or using more than one component of the Hydejack component family, consider using a [frontend bundler](usage/README.md#bundlers).
+
+| Size | File |
+|-----:|:-----|
+|  77K | `dist/jquery/index.js` |
+|  16K | `dist/jquery/index.js.gz` |
+|  73K | `dist/mixin/index.js` |
+|  15K | `dist/mixin/index.js.gz` |
+|  75K | `dist/vanilla/index.js` |
+|  16K | `dist/vanilla/index.js.gz` |
+|  78K | `dist/webcomponent/html-import.js` |
+|  16K | `dist/webcomponent/html-import.js.gz` |
+|  81K | `dist/webcomponent/index.js` |
+|  17K | `dist/webcomponent/index.js.gz` |
+|  81K | `dist/webcomponent/module.js` |
+|  17K | `dist/webcomponent/module.js.gz` |
+
+
+[rxjs]: doc/https://github.com/ReactiveX/rxjs
+[support]: doc/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: doc/https://github.com/webcomponents/webcomponentsjs
+[unpkg]: doc/https://unpkg.com/
+[mcp]: doc/https://webpack.js.org/plugins/module-concatenation-plugin/

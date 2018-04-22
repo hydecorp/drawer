@@ -5,102 +5,8 @@
 * [Events](events.md)
 * [Styling](styling.md)
 
-## Usage
-**hy-drawer** can be used in a variety of ways:
-* As [Web Component](#web-component), both as *ES6 Module* and *HTML Import*
-* As [jQuery](#jquery)
-* As [Vanilla](#vanilla) JavaScript class
-* (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
-* (Advanced) As part of your bundled frontend code.
-
-[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
-
-### Web Component
-The Web Component is the preferred way of using **hy-drawer**, but requires Web Component [support] in the browser or a [polyfill].
-
-[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
-[polyfill]: https://github.com/webcomponents/webcomponentsjs
-
-#### Bundled ES6 Module
-This is the version that is going to have native support across all major browsers the soonest.
-
-~~~html
-<script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-#### HTML Import
-Some browsers have decided against implementing HTML Imports, but they are easily polyfilled.
-
-~~~html
-<link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-#### Unbundled ES6 Module (experimental)
-The [unpkg CDN](https://unpkg.com/) can rewrite all bare import paths with valid unpkg URLs by passing the `?module` query parameter.
-This allows importing **hy-drawer**'s source directly.
-Note that this will result in possibly hundreds of separate requests.
-
-~~~html
-<script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
-
-<hy-drawer align="left" prevent-default>
-  <aside><!-- ... --></aside>
-</hy-drawer>
-~~~
-
-### jQuery
-
-~~~html
-<aside id="drawer" data-align="left" data-prevent-default="true"><!-- ... --></aside>
-
-<script src="https://unpkg.com/jquery"></script>
-<script src="https://unpkg.com/hy-drawer/dist/jquery"></script>
-<script>$('#drawer').drawer()</script>
-~~~
-
-### Vanilla
-~~~html
-<aside id="drawer"><!-- ... --></aside>
-
-<script src="https://unpkg.com/hy-drawer/dist/vanilla"></script>
-<script>
-  var HyDrawer = window.hyDrawer.HyDrawer;
-  var drawerEl = document.getElementById('drawer');
-  drawerEl.component = new HyDrawer(drawerEl, {
-    align: 'left',
-    preventDefault: true,
-  });
-</script>
-~~~
-
-## Size
-The size of the minified bundle hovers around 75kb, or ~15kb gzipped.
-
-| Size | File |
-|-----:|:-----|
-| 300K | `dist/jquery/index.dev.js` |
-|  73K | `dist/jquery/index.js` |
-| 288K | `dist/mixin/index.dev.js` |
-|  69K | `dist/mixin/index.js` |
-| 293K | `dist/vanilla/index.dev.js` |
-|  71K | `dist/vanilla/index.js` |
-| 301K | `dist/webcomponent/html-import.dev.js` |
-|  75K | `dist/webcomponent/html-import.js` |
-| 304K | `dist/webcomponent/index.dev.js` |
-|  77K | `dist/webcomponent/index.js` |
-| 305K | `dist/webcomponent/module.dev.js` |
-|  77K | `dist/webcomponent/module.js` |
-
 ## Gold Standard
-This component follows the WebComponents [Gold Standard](gold-standard.md){:.flip-title}.
+This component follows the WebComponents [Gold Standard](gold-standard.md).
 
 ## Source
 The source code is written in a *literal programming* style, and should be reasonably approachable.
@@ -128,4 +34,28 @@ which is used to create the framework-specific versions of the component.
 * [`common.js`](source/common.md)
 * [`index.js`](source/README.md)
 
+## Size
+The size of the minified bundle is around 80kb, or ~17kb gzipped.
+The majority of it comes from RxJS. When already using RxJS in your project, or using more than one component of the Hydejack component family, consider using a [frontend bundler](../usage/README.md#bundlers).
+
+| Size | File |
+|-----:|:-----|
+|  77K | `dist/jquery/index.js` |
+|  16K | `dist/jquery/index.js.gz` |
+|  73K | `dist/mixin/index.js` |
+|  15K | `dist/mixin/index.js.gz` |
+|  75K | `dist/vanilla/index.js` |
+|  16K | `dist/vanilla/index.js.gz` |
+|  78K | `dist/webcomponent/html-import.js` |
+|  16K | `dist/webcomponent/html-import.js.gz` |
+|  81K | `dist/webcomponent/index.js` |
+|  17K | `dist/webcomponent/index.js.gz` |
+|  81K | `dist/webcomponent/module.js` |
+|  17K | `dist/webcomponent/module.js.gz` |
+
+
 [rxjs]: https://github.com/ReactiveX/rxjs
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
+[unpkg]: https://unpkg.com/
+[mcp]: https://webpack.js.org/plugins/module-concatenation-plugin/

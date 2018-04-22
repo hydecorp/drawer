@@ -1,4 +1,10 @@
 # License
+**hy-drawer** is Open Source but not free.
+
+You may use the component in accordance with the [GPL-3.0 license](../licenses/GPL-3.0.md),
+but this means you must be willing to release your code under a GPLv3-compatible license in turn.
+
+For cases were this is not acceptable the following commercial licenses available:
 
 |              | Personal           | Startup            | Enterprise         |
 |:-------------|:------------------:|:------------------:|:------------------:|
@@ -8,7 +14,6 @@
 | | [**Buy**][bp]{:.gumroad-button} | [**Buy**][bs]{:.gumroad-button} | [**Buy**][be]{:.gumroad-button} |
 {:.stretch-table}
 
-Unless you've obtained one of the licenses above, **hy-drawer** must be used in accordance with the [GPL-3.0](../LICENSE.md) license.
 
 [pl]: personal.md
 [sl]: startup.md

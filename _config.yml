@@ -49,7 +49,7 @@ exclude:
 include:
   - LICENSE.md
 
-remote_theme: qwtel/hydejack@gem-7.5.0
+remote_theme: qwtel/hydejack@gem-7.5.1
 
 hydejack:
   cookies_banner: true
@@ -59,22 +59,22 @@ disqus: qwtel
 
 defaults:
   - scope:
-      path: doc/options.md
+      path: example/README.md
     values:
       menu: true
       order: 1
   - scope:
-      path: doc/methods.md
+      path: usage/README.md
     values:
       menu: true
       order: 2
   - scope:
-      path: doc/events.md
+      path: doc/README.md
     values:
       menu: true
       order: 3
   - scope:
-      path: doc/styling.md
+      path: licenses/README.md
     values:
       menu: true
       order: 4
