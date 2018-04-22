@@ -61,7 +61,7 @@ import { HyDrawerElement } from 'hy-drawer/src/webcomponent';
 customElements.define('hy-drawer', HyDrawerElement);
 ```
 
-Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp] plugin.
+Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp].
 
 [support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
 [polyfill]: https://github.com/webcomponents/webcomponentsjs
