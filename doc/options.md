@@ -16,11 +16,11 @@ Type
 Default
 : `false`
 
-jQuery attribute
-: `data-opened`
-
 HTML attribute
 : `opened`
+
+jQuery attribute
+: `data-opened`
 
 ***
 
@@ -34,11 +34,11 @@ Type
 Default
 : `left`
 
-jQuery attribute
-: `data-align`
-
 HTML attribute
 : `align`
+
+jQuery attribute
+: `data-align`
 
 ***
 
@@ -55,11 +55,11 @@ Type
 Default
 : `[0, 100]`
 
-jQuery attribute
-: `data-range` (e.g. `data-range="0,100"`)
-
 HTML attribute
 : `range` (e.g. `range="0,100"`)
+
+jQuery attribute
+: `data-range` (e.g. `data-range="0,100"`)
 
 ***
 
@@ -74,11 +74,11 @@ Type
 Default
 : `false`
 
-jQuery attribute
-: `data-persistent`
-
 HTML attribute
 : `persistent`
+
+jQuery attribute
+: `data-persistent`
 
 ***
 
@@ -96,11 +96,11 @@ Type
 Default
 : `false`  
 
-jQuery attribute
-: `data-prevent-default`
-
 HTML attribute
 : `prevent-default`
+
+jQuery attribute
+: `data-prevent-default`
 
 ***
 
@@ -114,11 +114,11 @@ Type
 Default
 : 10  
 
-jQuery attribute
-: `data-threshold`
-
 HTML attribute
 : `threshold`
+
+jQuery attribute
+: `data-threshold`
 
 ***
 
@@ -132,8 +132,8 @@ Type
 Default
 : `false`  
 
-jQuery attribute
-: `data-mouse-events`
-
 HTML attribute
 : `mouse-events`
+
+jQuery attribute
+: `data-mouse-events`
