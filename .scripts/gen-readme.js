@@ -16,11 +16,11 @@ const DOCS = [
 
 const INC_HEADING_REGEX = /^(#+\s+.*)/gmu;
 
-const RE_LINK = /\[([^\]]+?)\]\(([^.][^)]+?)\)/gmu;
+const RE_LINK = /\[([^\]]+?)\]\((?!http)([^.][^)]+?)\)/gmu;
 const RE_DIR = /\[([^\]]+?)\]\(\.\/([^)]+?)\)/gmu;
 const RE_PARENT = /\[([^\]]+?)\]\(\.\.\/([^)]+?)\)/gmu;
 
-const RE_REF_LINK = /\[([^\]]+?)\]:\s+([^.][^)]+?)/gmu;
+const RE_REF_LINK = /\[([^\]]+?)\]:\s+((?!http)[^.][^)]+?)/gmu;
 const RE_REF_DIR = /\[([^\]]+?)\]:\s+\.\/([^)]+?)/gmu;
 const RE_REF_PARENT = /\[([^\]]+?)\]:\s+\.\.\/([^)]+?)/gmu;
 

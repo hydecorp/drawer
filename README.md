@@ -17,7 +17,7 @@
 <!--more-->
 
 ## Examples
-The example below will render on [webcomponents.org](example/https://www.webcomponents.org/element/qwtel/hy-drawer):
+The example below will render on [webcomponents.org](https://www.webcomponents.org/element/qwtel/hy-drawer):
 
 <!--
 ```
@@ -40,10 +40,10 @@ The example below will render on [webcomponents.org](example/https://www.webcomp
 
 When viewing this document on GitHub, npm, or elsewhere, you can check out the standalone examples:
 
-* [WebComponent Example](example/https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
-* [jQuery Example](example/https://qwtel.com/hy-drawer/example/jquery/){:.external}
-* [Vanilla JS Example](example/https://qwtel.com/hy-drawer/example/vanilla/){:.external}
-* [Mixin Example](example/https://qwtel.com/hy-drawer/example/mixin/){:.external}
+* [WebComponent Example](https://qwtel.com/hy-drawer/example/webcomponent/){:.external}
+* [jQuery Example](https://qwtel.com/hy-drawer/example/jquery/){:.external}
+* [Vanilla JS Example](https://qwtel.com/hy-drawer/example/vanilla/){:.external}
+* [Mixin Example](https://qwtel.com/hy-drawer/example/mixin/){:.external}
 
 
 ## License
@@ -66,9 +66,9 @@ For cases were this is not acceptable the following commercial licenses availabl
 [pl]: licenses/personal.md
 [sl]: licenses/startup.md
 [el]: licenses/enterprise.md
-[bp]: licenses/https://gumroad.com/l/hy-drawer-personal
-[bs]: licenses/https://gumroad.com/l/hy-drawer-startup
-[be]: licenses/https://gumroad.com/l/hy-drawer-enterprise
+[bp]: https://gumroad.com/l/hy-drawer-personal
+[bs]: https://gumroad.com/l/hy-drawer-startup
+[be]: https://gumroad.com/l/hy-drawer-enterprise
 
 
 ## Usage
@@ -79,13 +79,13 @@ For cases were this is not acceptable the following commercial licenses availabl
 * As part of [bundled frontend code](usage/#bundlers).
 * (Advanced) Possibly as part of your own component hierarchy as [ES6 Mixin][esmixins].
 
-[esmixins]: usage/http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
+[esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
 
 ### Web Component
 The Web Component is the preferred way of using **hy-drawer**, but requires [support] in the browser or a [polyfill]. There are multiple ways of including it on your page:
 
-[support]: usage/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
-[polyfill]: usage/https://github.com/webcomponents/webcomponentsjs
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
 
 #### Bundled ES6 Module
 This is the version that is going to have native support across all major browsers the soonest.
@@ -136,10 +136,10 @@ customElements.define('hy-drawer', HyDrawerElement);
 
 Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp] plugin.
 
-[support]: usage/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
-[polyfill]: usage/https://github.com/webcomponents/webcomponentsjs
-[unpkg]: usage/https://unpkg.com/
-[mcp]: usage/https://webpack.js.org/plugins/module-concatenation-plugin/
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
+[unpkg]: https://unpkg.com/
+[mcp]: https://webpack.js.org/plugins/module-concatenation-plugin/
 
 
 ## Documentation
@@ -150,7 +150,7 @@ Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that the
 * [Styling](doc/styling.md)
 
 ### Gold Standard
-This component follows the WebComponents [Gold Standard](doc/gold-standard.md){:.flip-title}.
+This component follows the WebComponents [Gold Standard](doc/gold-standard.md).
 
 ### Source
 The source code is written in a *literal programming* style, and should be reasonably approachable.
@@ -198,8 +198,8 @@ The majority of it comes from RxJS. When already using RxJS in your project, or 
 |  17K | `dist/webcomponent/module.js.gz` |
 
 
-[rxjs]: doc/https://github.com/ReactiveX/rxjs
-[support]: doc/https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
-[polyfill]: doc/https://github.com/webcomponents/webcomponentsjs
-[unpkg]: doc/https://unpkg.com/
-[mcp]: doc/https://webpack.js.org/plugins/module-concatenation-plugin/
+[rxjs]: https://github.com/ReactiveX/rxjs
+[support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
+[polyfill]: https://github.com/webcomponents/webcomponentsjs
+[unpkg]: https://unpkg.com/
+[mcp]: https://webpack.js.org/plugins/module-concatenation-plugin/
