@@ -105,15 +105,13 @@ export const drawerMixin = C =>
 
     // Calling the [setup observables function](./setup.md) function.
     connectComponent() {
-      requestIdleCallback(() => {
-        this.setupObservables();
+      this.setupObservables();
 
-        // TODO: meh..
-        super.connectComponent();
+      // TODO: meh..
+      super.connectComponent();
 
-        // Firing an event to let the outside world know the drawer is ready.
-        this.fireEvent("init", { detail: this.opened });
-      });
+      // Firing an event to let the outside world know the drawer is ready.
+      this.fireEvent("init", { detail: this.opened });
     }
 
     // ### Methods
