@@ -145,23 +145,21 @@ Calling the [setup observables function](./setup.md) function.
 
 ```js
     connectComponent() {
-      requestIdleCallback(() => {
-        this.setupObservables();
+      this.setupObservables();
 ```
 
 TODO: meh..
 
 
 ```js
-        super.connectComponent();
+      super.connectComponent();
 ```
 
 Firing an event to let the outside world know the drawer is ready.
 
 
 ```js
-        this.fireEvent("init", { detail: this.opened });
-      });
+      this.fireEvent("init", { detail: this.opened });
     }
 ```
 

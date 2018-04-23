@@ -17,7 +17,9 @@
 <!--more-->
 
 ## Examples
-The example below will render on [webcomponents.org](https://www.webcomponents.org/element/qwtel/hy-drawer):
+When viewing this page on [webcomponents.org][wcorg], the example below will render as an interactive demo. Otherwise, find the standalone examples below.
+
+[wcorg]: https://www.webcomponents.org/element/qwtel/hy-drawer
 
 <!--
 ```
@@ -134,7 +136,7 @@ import { HyDrawerElement } from 'hy-drawer/src/webcomponent';
 customElements.define('hy-drawer', HyDrawerElement);
 ```
 
-Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp] plugin.
+Note that all of **hy-drawer**'s dependencies are valid ES6 modules, so that they can be inlined with webpack's [`ModuleConcatenationPlugin`][mcp].
 
 [support]: https://caniuse.com/#feat=template,custom-elementsv1,shadowdomv1,es6-module,imports
 [polyfill]: https://github.com/webcomponents/webcomponentsjs
