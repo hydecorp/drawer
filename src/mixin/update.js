@@ -101,6 +101,9 @@ export const updateMixin = C =>
       const inv = this.align === "left" ? 1 : -1;
       const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
+      if (this.moveCallback) this.moveCallback({ translateX, opacity });
+      /* this.fireEvent("move", { detail: { translateX, opacity } }); */
+
       if (hasCSSOM) {
         this.contentEl.attributeStyleMap.set(
           "transform",
@@ -111,7 +114,5 @@ export const updateMixin = C =>
         this.contentEl.style.transform = `translateX(${translateX}px)`;
         this.scrimEl.style.opacity = this.opacity;
       }
-
-      this.fireEvent("move", { detail: { translateX, opacity } });
     }
   };

@@ -54,13 +54,3 @@ The new `opened` state is provided in the `detail` field of the event.
 
 jQuery event name
 : `transitioned.hy.drawer`
-
-***
-
-## `hy-drawer-move`
-This event is fired on every frame while the drawer is moving  (both sliding and animations).
-The `detail` field of the event contains the `opacity` and `translateX` value of the current frame.
-You can use this to animate other elements in sync with the drawer.
-
-jQuery event name
-: `move.hy.drawer`
