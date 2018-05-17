@@ -24,17 +24,18 @@ import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
 import { merge } from "rxjs/_esm5/observable/merge";
 import { never } from "rxjs/_esm5/observable/never";
 
+import { animationFrame } from "rxjs/_esm5/scheduler/animationFrame";
+
 import { tap } from "rxjs/_esm5/operators/tap";
 import { filter } from "rxjs/_esm5/operators/filter";
 import { map } from "rxjs/_esm5/operators/map";
 import { pairwise } from "rxjs/_esm5/operators/pairwise";
-import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
 import { sample } from "rxjs/_esm5/operators/sample";
 import { share } from "rxjs/_esm5/operators/share";
 import { skip } from "rxjs/_esm5/operators/skip";
 import { startWith } from "rxjs/_esm5/operators/startWith";
 import { switchMap } from "rxjs/_esm5/operators/switchMap";
-import { take } from "rxjs/_esm5/operators/take";
+import { observeOn } from "rxjs/_esm5/operators/observeOn";
 import { takeUntil } from "rxjs/_esm5/operators/takeUntil";
 import { timestamp } from "rxjs/_esm5/operators/timestamp";
 import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
@@ -45,7 +46,7 @@ import { easeOutSine } from "../common";
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from "./constants";
 
-import { filterWhen /* , subscribeWhen */ } from "./operators";
+import { filterWhen } from "./operators";
 
 import { calcMixin } from "./calc";
 import { updateMixin } from "./update";
@@ -68,7 +69,6 @@ An observable of resize events.
 ```js
       const resize$ = fromEvent(window, "resize", { passive: true }).pipe(
         takeUntil(this.subjects.disconnect),
-        /* debounceTime(100), */
         share(),
         startWith({})
       );
@@ -157,6 +157,7 @@ The observable of all relevant "move" events.
 
 ```js
       const move$ = this.getMoveObservable(start$, end$).pipe(
+        observeOn(animationFrame),
         takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
@@ -172,16 +173,7 @@ See [`getIsSlidingObservable`](./observables.md#get-is-sliding-observable).
 
 
 ```js
-      const isSliding$ = this.getIsSlidingObservable(move$, start$).pipe(
-        take(1),
-        startWith(undefined),
-        repeatWhen(() => end$),
-```
-
-When the user is sliding, fire the `slidestart` event.
-
-
-```js
+      const isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(
         tap(isSliding => {
           if (isSliding) this.fireEvent("slidestart", { detail: this.opened });
         })
@@ -322,9 +314,7 @@ TODO
 
 ```js
       const willOpen$ = end$.pipe(
-        tap(() => {
-          this.contentEl.classList.remove("hy-drawer-grabbing");
-        }),
+        tap(() => this.contentEl.classList.remove("hy-drawer-grabbing")),
         withLatestFrom(start$, this.translateX$, velocity$),
         filter(this.calcIsSwipe.bind(this)),
         map(this.calcWillOpen.bind(this)),

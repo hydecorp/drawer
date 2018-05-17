@@ -125,6 +125,9 @@ and the opacity of the scrim, which is handled by `updateDOM`.
       const inv = this.align === "left" ? 1 : -1;
       const opacity = (this.opacity = translateX / this.drawerWidth * inv);
 
+      if (this.moveCallback) this.moveCallback({ translateX, opacity });
+      /* this.fireEvent("move", { detail: { translateX, opacity } }); */
+
       if (hasCSSOM) {
         this.contentEl.attributeStyleMap.set(
           "transform",
@@ -135,8 +138,6 @@ and the opacity of the scrim, which is handled by `updateDOM`.
         this.contentEl.style.transform = `translateX(${translateX}px)`;
         this.scrimEl.style.opacity = this.opacity;
       }
-
-      this.fireEvent("move", { detail: { translateX, opacity } });
     }
   };
 ```

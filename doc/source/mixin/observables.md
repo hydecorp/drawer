@@ -25,8 +25,11 @@ import { tap } from "rxjs/_esm5/operators/tap";
 import { filter } from "rxjs/_esm5/operators/filter";
 import { map } from "rxjs/_esm5/operators/map";
 import { mapTo } from "rxjs/_esm5/operators/mapTo";
+import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
 import { skipWhile } from "rxjs/_esm5/operators/skipWhile";
+import { startWith } from "rxjs/_esm5/operators/startWith";
 import { switchMap } from "rxjs/_esm5/operators/switchMap";
+import { take } from "rxjs/_esm5/operators/take";
 import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
 
 import { subscribeWhen } from "./operators";
@@ -210,7 +213,15 @@ An observable that emits `true` when the user is *sliding* the drawer,
 
 
 ```js
-    getIsSlidingObservable(move$, start$) {
+    getIsSlidingObservable(move$, start$, end$) {
+      return this.getIsSlidingObservable2(move$, start$).pipe(
+        take(1),
+        startWith(undefined),
+        repeatWhen(() => end$)
+      );
+    }
+
+    getIsSlidingObservable2(move$, start$) {
 ```
 
 If the threshold options is set, we delay the decision until
