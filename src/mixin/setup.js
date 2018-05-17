@@ -117,7 +117,6 @@ export const setupObservablesMixin = C =>
       // #### Move observable
       // The observable of all relevant "move" events.
       const move$ = this.getMoveObservable(start$, end$).pipe(
-        observeOn(animationFrame),
         takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
@@ -161,7 +160,7 @@ export const setupObservablesMixin = C =>
             tap(({ event }) => {
               if (this.preventDefault) event.preventDefault();
             }),
-
+            observeOn(animationFrame),
             // Finally, we take the start position of the finger, the start position of the drawer,
             // and the current position of the finger to calculate the next `translateX` value.
             withLatestFrom(start$, this.startTranslateX$),
