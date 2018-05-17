@@ -28,9 +28,9 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babelify": "^8.0.0",
     "browserify-css": "^0.14.0",
     "camelcase": "^4.1.0",
@@ -43,13 +43,13 @@
     "prettier": "^1.12.1",
     "raw-loader": "^0.5.1",
     "underscore-template-loader": "^1.0.0",
-    "webpack": "3.11.0",
+    "webpack": "^3.12.0",
     "webpack-merge": "^4.1.2",
     "yargs": "^11.1.0"
   },
   "dependencies": {
     "create-element-x": "^1.0.3",
-    "hy-component": "^1.0.0-pre.17",
+    "hy-component": "^1.0.0-pre.18",
     "rxjs": "^5.5.10",
     "rxjs-create-tween": "^1.1.0"
   },
