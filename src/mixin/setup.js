@@ -319,7 +319,10 @@ export const setupObservablesMixin = C =>
           const hash = `#${histId.call(this)}--opened`;
           if (window.location.hash === hash) this.setInternalState('opened', true);
         }
-      */
+        */
+
+        // Firing an event to let the outside world know the drawer is ready.
+        this.fireEvent("init", { detail: this.opened });
       });
     }
   };
