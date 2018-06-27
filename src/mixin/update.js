@@ -99,7 +99,7 @@ export const updateMixin = C =>
       this.translateX = translateX;
 
       const inv = this.align === "left" ? 1 : -1;
-      const opacity = (this.opacity = translateX / this.drawerWidth * inv);
+      const opacity = (this.opacity = (translateX / this.drawerWidth) * inv);
 
       if (this.moveCallback) this.moveCallback({ translateX, opacity });
       /* this.fireEvent("move", { detail: { translateX, opacity } }); */

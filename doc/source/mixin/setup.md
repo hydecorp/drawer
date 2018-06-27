@@ -157,7 +157,6 @@ The observable of all relevant "move" events.
 
 ```js
       const move$ = this.getMoveObservable(start$, end$).pipe(
-        observeOn(animationFrame),
         takeUntil(this.subjects.disconnect),
         filterWhen(active$, isInRange$),
         share()
@@ -218,6 +217,7 @@ this is also when we're sure to call `preventDefault`.
             tap(({ event }) => {
               if (this.preventDefault) event.preventDefault();
             }),
+            observeOn(animationFrame),
 ```
 
 Finally, we take the start position of the finger, the start position of the drawer,
@@ -257,7 +257,10 @@ but since there is no animation in this case, we call it directly.
 
 
 ```js
-        .pipe(takeUntil(this.subjects.disconnect), share());
+        .pipe(
+          takeUntil(this.subjects.disconnect),
+          share()
+        );
 ```
 
 The `translateX` value at the start of an interaction.
@@ -473,7 +476,14 @@ If the experimental back button feature is enabled, we check the location hash..
           const hash = `#${histId.call(this)}--opened`;
           if (window.location.hash === hash) this.setInternalState('opened', true);
         }
-      */
+        */
+```
+
+Firing an event to let the outside world know the drawer is ready.
+
+
+```js
+        this.fireEvent("init", { detail: this.opened });
       });
     }
   };

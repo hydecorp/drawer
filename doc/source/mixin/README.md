@@ -153,13 +153,6 @@ TODO: meh..
 
 ```js
       super.connectComponent();
-```
-
-Firing an event to let the outside world know the drawer is ready.
-
-
-```js
-      this.fireEvent("init", { detail: this.opened });
     }
 ```
 

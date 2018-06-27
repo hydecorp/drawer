@@ -70,7 +70,10 @@ Also, we're only interested in the first `touchstart`.
 ```js
           const touchstart$ = fromEvent(doc, "touchstart", {
             passive: true,
-          }).pipe(filter(({ touches }) => touches.length === 1), map(({ touches }) => touches[0]));
+          }).pipe(
+            filter(({ touches }) => touches.length === 1),
+            map(({ touches }) => touches[0])
+          );
 ```
 
 If mouse events aren't enabled, we're done here.
