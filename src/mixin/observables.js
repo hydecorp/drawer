@@ -59,7 +59,7 @@ export const baseObservablesMixin = C =>
 
           // Otherwise we also include `mousedown` events in the output.
           const mousedown$ = fromEvent(doc, "mousedown").pipe(
-            tap(event => Object.assign(event, { event }))
+            tap(event => ((event.event = event), event))
           );
 
           return merge(touchstart$, mousedown$);
@@ -87,7 +87,7 @@ export const baseObservablesMixin = C =>
           // and exists primarliy to ensure that the interaction continues without hiccups.
           // Note that the event listener is only passive when the `preventDefault` option is falsy.
           const touchmove$ = fromEvent(doc, "touchmove", { passive: !preventDefault }).pipe(
-            map(e => Object.assign(e.touches[0], { event: e }))
+            map(e => ((e.touches[0].event = e), e.touches[0]))
           );
 
           // If mouse events aren't enabled, we're done here.
@@ -101,7 +101,7 @@ export const baseObservablesMixin = C =>
             passive: !preventDefault,
           }).pipe(
             subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
-            map(event => Object.assign(event, { event }))
+            tap(event => ((event.event = event), event))
           );
 
           return merge(touchmove$, mousemove$);

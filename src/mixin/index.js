@@ -26,7 +26,6 @@
 // ES6+ functions that we use.
 // import 'core-js/fn/array/from';
 // import 'core-js/fn/function/bind';
-// import 'core-js/fn/object/assign';
 
 // Importing the hy-compontent base libary,
 // which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
