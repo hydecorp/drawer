@@ -10,3 +10,7 @@ deploy:
     tags: true
     repo: qwtel/hy-drawer
   skip_cleanup: true
+notifications:
+  email:
+    on_success: never
+    on_failure: always
