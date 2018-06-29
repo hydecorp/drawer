@@ -40,18 +40,18 @@ The majority of it comes from RxJS. When already using RxJS in your project, or 
 
 | Size | File |
 |-----:|:-----|
-|  77K | `dist/jquery/index.js` |
-|  16K | `dist/jquery/index.js.gz` |
-|  73K | `dist/mixin/index.js` |
-|  15K | `dist/mixin/index.js.gz` |
-|  75K | `dist/vanilla/index.js` |
-|  16K | `dist/vanilla/index.js.gz` |
-|  78K | `dist/webcomponent/html-import.js` |
-|  16K | `dist/webcomponent/html-import.js.gz` |
-|  81K | `dist/webcomponent/index.js` |
-|  17K | `dist/webcomponent/index.js.gz` |
-|  81K | `dist/webcomponent/module.js` |
-|  17K | `dist/webcomponent/module.js.gz` |
+|  67K | `dist/jquery/index.js` |
+|  15K | `dist/jquery/index.js.gz` |
+|  63K | `dist/mixin/index.js` |
+|  14K | `dist/mixin/index.js.gz` |
+|  65K | `dist/vanilla/index.js` |
+|  14K | `dist/vanilla/index.js.gz` |
+|  69K | `dist/webcomponent/html-import.js` |
+|  15K | `dist/webcomponent/html-import.js.gz` |
+|  71K | `dist/webcomponent/index.js` |
+|  16K | `dist/webcomponent/index.js.gz` |
+|  71K | `dist/webcomponent/module.js` |
+|  16K | `dist/webcomponent/module.js.gz` |
 
 
 [rxjs]: https://github.com/ReactiveX/rxjs
