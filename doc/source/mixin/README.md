@@ -26,7 +26,6 @@ The mixin in the main export of this file.
 ES6+ functions that we use.
 import 'core-js/fn/array/from';
 import 'core-js/fn/function/bind';
-import 'core-js/fn/object/assign';
 
 Importing the hy-compontent base libary,
 which helps with making multiple versions of the component (Vanilla JS, WebComponent, etc...).
@@ -37,7 +36,7 @@ import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from "hy-component/src/c
 import { rxjsMixin } from "hy-component/src/rxjs";
 import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
-import { Subject } from "rxjs/_esm5/Subject";
+import { Subject } from "rxjs/_esm5";
 ```
 
 TODO

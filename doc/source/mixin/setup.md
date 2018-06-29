@@ -18,27 +18,23 @@ As mentioned before, we only import the RxJS function that we need.
 
 
 ```js
-import { combineLatest } from "rxjs/_esm5/observable/combineLatest";
-import { defer } from "rxjs/_esm5/observable/defer";
-import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
-import { merge } from "rxjs/_esm5/observable/merge";
-import { never } from "rxjs/_esm5/observable/never";
+import { combineLatest, defer, fromEvent, merge, never, animationFrameScheduler } from "rxjs/_esm5";
 
-import { animationFrame } from "rxjs/_esm5/scheduler/animationFrame";
-
-import { tap } from "rxjs/_esm5/operators/tap";
-import { filter } from "rxjs/_esm5/operators/filter";
-import { map } from "rxjs/_esm5/operators/map";
-import { pairwise } from "rxjs/_esm5/operators/pairwise";
-import { sample } from "rxjs/_esm5/operators/sample";
-import { share } from "rxjs/_esm5/operators/share";
-import { skip } from "rxjs/_esm5/operators/skip";
-import { startWith } from "rxjs/_esm5/operators/startWith";
-import { switchMap } from "rxjs/_esm5/operators/switchMap";
-import { observeOn } from "rxjs/_esm5/operators/observeOn";
-import { takeUntil } from "rxjs/_esm5/operators/takeUntil";
-import { timestamp } from "rxjs/_esm5/operators/timestamp";
-import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
+import {
+  tap,
+  filter,
+  map,
+  pairwise,
+  sample,
+  share,
+  skip,
+  startWith,
+  switchMap,
+  observeOn,
+  takeUntil,
+  timestamp,
+  withLatestFrom,
+} from "rxjs/_esm5/operators";
 
 import { createTween } from "rxjs-create-tween";
 
@@ -217,7 +213,7 @@ this is also when we're sure to call `preventDefault`.
             tap(({ event }) => {
               if (this.preventDefault) event.preventDefault();
             }),
-            observeOn(animationFrame),
+            observeOn(animationFrameScheduler),
 ```
 
 Finally, we take the start position of the finger, the start position of the drawer,

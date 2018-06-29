@@ -17,20 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { combineLatest } from "rxjs/_esm5/observable/combineLatest";
-import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
-import { merge } from "rxjs/_esm5/observable/merge";
+import { combineLatest, fromEvent, merge } from "rxjs/_esm5";
 
-import { tap } from "rxjs/_esm5/operators/tap";
-import { filter } from "rxjs/_esm5/operators/filter";
-import { map } from "rxjs/_esm5/operators/map";
-import { mapTo } from "rxjs/_esm5/operators/mapTo";
-import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
-import { skipWhile } from "rxjs/_esm5/operators/skipWhile";
-import { startWith } from "rxjs/_esm5/operators/startWith";
-import { switchMap } from "rxjs/_esm5/operators/switchMap";
-import { take } from "rxjs/_esm5/operators/take";
-import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
+import {
+  tap,
+  filter,
+  map,
+  mapTo,
+  repeatWhen,
+  skipWhile,
+  startWith,
+  switchMap,
+  take,
+  withLatestFrom,
+} from "rxjs/_esm5/operators";
 
 import { subscribeWhen } from "./operators";
 ```
@@ -88,7 +88,7 @@ Otherwise we also include `mousedown` events in the output.
 
 ```js
           const mousedown$ = fromEvent(doc, "mousedown").pipe(
-            tap(event => Object.assign(event, { event }))
+            tap(event => ((event.event = event), event))
           );
 
           return merge(touchstart$, mousedown$);
@@ -130,7 +130,7 @@ Note that the event listener is only passive when the `preventDefault` option is
 
 ```js
           const touchmove$ = fromEvent(doc, "touchmove", { passive: !preventDefault }).pipe(
-            map(e => Object.assign(e.touches[0], { event: e }))
+            map(e => ((e.touches[0].event = e), e.touches[0]))
           );
 ```
 
@@ -152,7 +152,7 @@ Again, the listener is only marked as passive when the `preventDefault` option i
             passive: !preventDefault,
           }).pipe(
             subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
-            map(event => Object.assign(event, { event }))
+            tap(event => ((event.event = event), event))
           );
 
           return merge(touchmove$, mousemove$);
