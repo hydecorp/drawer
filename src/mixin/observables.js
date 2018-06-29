@@ -14,20 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { combineLatest } from "rxjs/_esm5/observable/combineLatest";
-import { fromEvent } from "rxjs/_esm5/observable/fromEvent";
-import { merge } from "rxjs/_esm5/observable/merge";
+import { combineLatest, fromEvent, merge } from "rxjs/_esm5";
 
-import { tap } from "rxjs/_esm5/operators/tap";
-import { filter } from "rxjs/_esm5/operators/filter";
-import { map } from "rxjs/_esm5/operators/map";
-import { mapTo } from "rxjs/_esm5/operators/mapTo";
-import { repeatWhen } from "rxjs/_esm5/operators/repeatWhen";
-import { skipWhile } from "rxjs/_esm5/operators/skipWhile";
-import { startWith } from "rxjs/_esm5/operators/startWith";
-import { switchMap } from "rxjs/_esm5/operators/switchMap";
-import { take } from "rxjs/_esm5/operators/take";
-import { withLatestFrom } from "rxjs/_esm5/operators/withLatestFrom";
+import {
+  tap,
+  filter,
+  map,
+  mapTo,
+  repeatWhen,
+  skipWhile,
+  startWith,
+  switchMap,
+  take,
+  withLatestFrom,
+} from "rxjs/_esm5/operators";
 
 import { subscribeWhen } from "./operators";
 

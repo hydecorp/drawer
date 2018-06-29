@@ -33,7 +33,7 @@ import { componentMixin, COMPONENT_FEATURE_TESTS, Set } from "hy-component/src/c
 import { rxjsMixin } from "hy-component/src/rxjs";
 import { arrayOf, bool, number, oneOf } from "hy-component/src/types";
 
-import { Subject } from "rxjs/_esm5/Subject";
+import { Subject } from "rxjs/_esm5";
 
 // TODO
 import { setupObservablesMixin } from "./setup";
