@@ -14,6 +14,8 @@ author:
     download: https://github.com/qwtel/hy-drawer/releases
     email: mailto:mail@qwtel.com
 
+logo: /assets/icons/icon.svg
+
 copyright: © 2018 Florian Klampfer
 
 permalink: pretty
@@ -49,15 +51,17 @@ exclude:
 include:
   - LICENSE.md
 
-remote_theme: qwtel/hydejack@gem-7.5.1
+remote_theme: qwtel/hydejack@v8
 
 hydejack:
   cookies_banner: true
   no_mark_external: true
 
-disqus: qwtel
-
 defaults:
+  - scope:
+      path: README.md
+    values:
+      cover: true
   - scope:
       path: usage/README.md
     values:
@@ -78,14 +82,6 @@ defaults:
     values:
       menu: true
       order: 4
-  - scope:
-      path: README.md
-    values:
-      comments: true
-  - scope:
-      path: doc
-    values:
-      comments: true
 
 titles_from_headings:
   strip_title: true
@@ -99,6 +95,7 @@ optional_front_matter:
 
 readme_index:
   remove_originals: true
+  with_frontmatter: true
 
 data_social:
   github:
