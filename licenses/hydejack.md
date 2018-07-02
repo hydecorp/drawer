@@ -137,4 +137,4 @@ relation to this license and to compensate Licensor for any legal fees, cost or 
 brought by Licensee against Licensor be denied, in part or in full.
 
 [1]: https://qwtel.com/hy-drawer/
-[2]: https://qwtel.com/hydejack/
+[2]: https://hydejack.com/

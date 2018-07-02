@@ -12,7 +12,7 @@
 **NOTE**: The current version is still a pre-release. The public API may still change in important ways.
 {:.message}
 
-[hydejack]: https://qwtel.com/hydejack/
+[hydejack]: https://hydejack.com/
 
 <!--more-->
 
