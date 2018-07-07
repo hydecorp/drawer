@@ -390,44 +390,43 @@ and causes the code inside the above `defer` observables to run.
 
 
 ```js
-      requestIdleCallback(() => {
-        this.translateX$.subscribe(this.updateDOM.bind(this));
+      this.translateX$.subscribe(this.updateDOM.bind(this));
 ```
 
 A click on the scrim should close the drawer.
 
 
 ```js
-        fromEvent(this.scrimEl, "click")
-          .pipe(takeUntil(this.subjects.disconnect))
-          .subscribe(() => this.close());
+      fromEvent(this.scrimEl, "click")
+        .pipe(takeUntil(this.subjects.disconnect))
+        .subscribe(() => this.close());
 ```
 
 Other than preventing sliding, setting `persistent` will also hide the scrim.
 
 
 ```js
-        active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
-          this.scrimEl.style.display = active ? "block" : "none";
-        });
+      active$.pipe(takeUntil(this.subjects.disconnect)).subscribe(active => {
+        this.scrimEl.style.display = active ? "block" : "none";
+      });
 ```
 
 Whenever the alignment of the drawer changes, update the CSS classes.
 
 
 ```js
-        this.subjects.align.pipe(takeUntil(this.subjects.disconnect)).subscribe(align => {
-          this.contentEl.classList.remove(`hy-drawer-left`);
-          this.contentEl.classList.remove(`hy-drawer-right`);
-          this.contentEl.classList.add(`hy-drawer-${align}`);
-        });
+      this.subjects.align.pipe(takeUntil(this.subjects.disconnect)).subscribe(align => {
+        this.contentEl.classList.remove(`hy-drawer-left`);
+        this.contentEl.classList.remove(`hy-drawer-right`);
+        this.contentEl.classList.add(`hy-drawer-${align}`);
+      });
 ```
 
 If the experimental back button feature is enabled, handle popstate events...
 
 
 ```js
-        /*
+      /*
         fromEvent(window, 'popstate')
           .pipe(
             takeUntil(this.subjects.disconnect),
@@ -447,19 +446,19 @@ to prevent text selection while sliding.
 
 
 ```js
-        this.subjects.mouseEvents
-          .pipe(
-            takeUntil(this.subjects.disconnect),
-            switchMap(mouseEvents => {
-              if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
-              else this.contentEl.classList.remove("hy-drawer-grab");
+      this.subjects.mouseEvents
+        .pipe(
+          takeUntil(this.subjects.disconnect),
+          switchMap(mouseEvents => {
+            if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
+            else this.contentEl.classList.remove("hy-drawer-grab");
 
-              return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
-            })
-          )
-          .subscribe(([{ event }, isInRange]) => {
-            if (isInRange && event) event.preventDefault();
-          });
+            return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
+          })
+        )
+        .subscribe(([{ event }, isInRange]) => {
+          if (isInRange && event) event.preventDefault();
+        });
 ```
 
 Now we set the initial opend state.
@@ -467,7 +466,7 @@ If the experimental back button feature is enabled, we check the location hash..
 
 
 ```js
-        /*
+      /*
         if (this._backButton) {
           const hash = `#${histId.call(this)}--opened`;
           if (window.location.hash === hash) this.setInternalState('opened', true);
@@ -479,8 +478,7 @@ Firing an event to let the outside world know the drawer is ready.
 
 
 ```js
-        this.fireEvent("init", { detail: this.opened });
-      });
+      this.fireEvent("init", { detail: this.opened });
     }
   };
 ```
