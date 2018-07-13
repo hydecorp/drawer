@@ -15,7 +15,7 @@ When viewing this page on [webcomponents.org][wcorg], the example below will ren
 ```
 -->
 ```html
-<hy-drawer id="drawer" align="left" mouse-events>
+<hy-drawer id="drawer" align="left" touch-events mouse-events>
   <p>Arbitrary content here.</p>
 </hy-drawer>
 

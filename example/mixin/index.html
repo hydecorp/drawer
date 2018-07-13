@@ -74,8 +74,9 @@
       window.drawer.setupComponent(window.drawerEl, {
         range: isMobileSafari ? [35, 150] : [0, 150],
         threshold: isSafari ? 0 : 10,
-        preventDefault: true,
+        touchEvents: true,
         mouseEvents: true,
+        preventDefault: true,
       });
       window.drawer.connectComponent();
 
