@@ -71,6 +71,7 @@ export const drawerMixin = C =>
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
+        touchEvents: bool,
         mouseEvents: bool,
       };
     }
@@ -83,6 +84,7 @@ export const drawerMixin = C =>
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
+        touchEvents: false,
         mouseEvents: false,
       };
     }

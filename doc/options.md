@@ -137,3 +137,21 @@ HTML attribute
 
 jQuery attribute
 : `data-mouse-events`
+
+***
+
+## `mouseEvents`
+Allows the drawer to be pulled with the mouse. This is mostly for presentation purposes,
+as pulling things with the mouse isn't a common pattern (other than to resize things).
+
+Type
+: `Boolean`
+
+Default
+: `false`  
+
+HTML attribute
+: `mouse-events`
+
+jQuery attribute
+: `data-mouse-events`

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { never } from "rxjs/_esm5";
+import { NEVER } from "rxjs/_esm5";
 
 import { filter, map, switchMap, withLatestFrom } from "rxjs/_esm5/operators";
 
@@ -24,7 +24,7 @@ import { filter, map, switchMap, withLatestFrom } from "rxjs/_esm5/operators";
 // when the input observable emits `false`, and re-subscribe when it emits `true`.
 export const subscribeWhen = p$ => source => {
   if (process.env.DEBUG && !p$) throw Error();
-  return p$.pipe(switchMap(p => (p ? source : never())));
+  return p$.pipe(switchMap(p => (p ? source : NEVER)));
 };
 
 // #### Filter when

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // As mentioned before, we only import the RxJS function that we need.
-import { combineLatest, defer, fromEvent, merge, never, animationFrameScheduler } from "rxjs/_esm5";
+import { animationFrameScheduler, combineLatest, defer, fromEvent, merge, NEVER } from "rxjs/_esm5";
 
 import {
   tap,
@@ -303,7 +303,7 @@ export const setupObservablesMixin = C =>
             if (mouseEvents) this.contentEl.classList.add("hy-drawer-grab");
             else this.contentEl.classList.remove("hy-drawer-grab");
 
-            return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : never();
+            return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : NEVER;
           })
         )
         .subscribe(([{ event }, isInRange]) => {
