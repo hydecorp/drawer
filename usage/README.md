@@ -20,7 +20,7 @@ This is the version that is going to have native support across all major browse
 ~~~html
 <script type="module" href="https://unpkg.com/hy-drawer/dist/webcomponent/module.js"></script>
 
-<hy-drawer prevent-default><!-- ... --></hy-drawer>
+<hy-drawer touch-events prevent-default><!-- ... --></hy-drawer>
 ~~~
 
 ### HTML Import
@@ -29,7 +29,7 @@ Some browsers have decided against implementing HTML Imports, but they are easil
 ~~~html
 <link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html">
 
-<hy-drawer prevent-default><!-- ... --></hy-drawer>
+<hy-drawer touch-events prevent-default><!-- ... --></hy-drawer>
 ~~~
 
 ### Unbundled ES6 Module (experimental)
@@ -38,7 +38,7 @@ When loading the component form the [unpkg] CDN, you can import the source direc
 ~~~html
 <script type="module" src="https://unpkg.com/hy-drawer/src/webcomponent/module?module"></script>
 
-<hy-drawer prevent-default><!-- ... --></hy-drawer>
+<hy-drawer touch-events prevent-default><!-- ... --></hy-drawer>
 ~~~
 
 Note that this approach will result in hundreds of separate HTTP requests (one for each module) and is intended for testing and prototypes only. Importing unbundled ES6 modules is much slower than bundled distributions and will remain so for the foreseeable future.
@@ -84,6 +84,7 @@ Events are of the form `<name>.hy.drawer`.
 <script src="https://unpkg.com/jquery"></script>
 <script src="https://unpkg.com/hy-drawer/dist/jquery"></script>
 <script>$('.hy-drawer').drawer({
+  touchEvents: true,
   preventDefault: true
 })</script>
 ~~~
@@ -99,6 +100,7 @@ Note that you are responsible for calling the `disconnectComponent` function on 
 <script>
   var HyDrawer = window.hyDrawer.HyDrawer;
   var drawer = new HyDrawer(document.getElementById('drawer-el'), {
+    touchEvents: true,
     preventDefault: true
   });
 </script>
