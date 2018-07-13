@@ -95,6 +95,7 @@ See [Options](../../options.md) for usage information.
         range: arrayOf(number),
         threshold: number,
         preventDefault: bool,
+        touchEvents: bool,
         mouseEvents: bool,
       };
     }
@@ -107,6 +108,7 @@ See [Options](../../options.md) for usage information.
         range: [0, 100],
         threshold: 10,
         preventDefault: false,
+        touchEvents: false,
         mouseEvents: false,
       };
     }

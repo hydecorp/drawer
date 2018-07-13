@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ```js
 
-import { combineLatest, fromEvent, merge } from "rxjs/_esm5";
+import { combineLatest, fromEvent, merge, NEVER } from "rxjs/_esm5";
 
 import {
   tap,
@@ -59,8 +59,12 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
-        switchMap(([doc, mouseEvents]) => {
+      return combineLatest(
+        this.subjects.document,
+        this.subjects.touchEvents,
+        this.subjects.mouseEvents
+      ).pipe(
+        switchMap(([document, touchEvents, mouseEvents]) => {
 ```
 
 The touchstart observable is passive since we won't be calling `preventDefault`.
@@ -68,28 +72,23 @@ Also, we're only interested in the first `touchstart`.
 
 
 ```js
-          const touchstart$ = fromEvent(doc, "touchstart", {
-            passive: true,
-          }).pipe(
-            filter(({ touches }) => touches.length === 1),
-            map(({ touches }) => touches[0])
-          );
-```
-
-If mouse events aren't enabled, we're done here.
-
-
-```js
-          if (!mouseEvents) return touchstart$;
+          const touchstart$ = touchEvents
+            ? fromEvent(document, "touchstart", {
+                passive: true,
+              }).pipe(
+                filter(({ touches }) => touches.length === 1),
+                map(({ touches }) => touches[0])
+              )
+            : NEVER;
 ```
 
 Otherwise we also include `mousedown` events in the output.
 
 
 ```js
-          const mousedown$ = fromEvent(doc, "mousedown").pipe(
-            tap(event => ((event.event = event), event))
-          );
+          const mousedown$ = mouseEvents
+            ? fromEvent(document, "mousedown").pipe(tap(event => ((event.event = event), event)))
+            : NEVER;
 
           return merge(touchstart$, mousedown$);
         })
@@ -115,10 +114,11 @@ when either of the inputs change, but not before all inputs have their first val
 ```js
       return combineLatest(
         this.subjects.document,
+        this.subjects.touchEvents,
         this.subjects.mouseEvents,
         this.subjects.preventDefault
       ).pipe(
-        switchMap(([doc, mouseEvents, preventDefault]) => {
+        switchMap(([document, touchEvents, mouseEvents, preventDefault]) => {
 ```
 
 We're only keeping track of the first finger.
@@ -129,16 +129,11 @@ Note that the event listener is only passive when the `preventDefault` option is
 
 
 ```js
-          const touchmove$ = fromEvent(doc, "touchmove", { passive: !preventDefault }).pipe(
-            map(e => ((e.touches[0].event = e), e.touches[0]))
-          );
-```
-
-If mouse events aren't enabled, we're done here.
-
-
-```js
-          if (!mouseEvents) return touchmove$;
+          const touchmove$ = touchEvents
+            ? fromEvent(document, "touchmove", { passive: !preventDefault }).pipe(
+                map(e => ((e.touches[0].event = e), e.touches[0]))
+              )
+            : NEVER;
 ```
 
 Otherwise we listen for `mousemove` events,
@@ -148,12 +143,14 @@ Again, the listener is only marked as passive when the `preventDefault` option i
 
 
 ```js
-          const mousemove$ = fromEvent(doc, "mousemove", {
-            passive: !preventDefault,
-          }).pipe(
-            subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
-            tap(event => ((event.event = event), event))
-          );
+          const mousemove$ = mouseEvents
+            ? fromEvent(document, "mousemove", {
+                passive: !preventDefault,
+              }).pipe(
+                subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
+                tap(event => ((event.event = event), event))
+              )
+            : NEVER;
 
           return merge(touchmove$, mousemove$);
         })
@@ -175,8 +172,12 @@ Since the `mouseEvents` option may change at any point, we `switchMap` to reflec
 
 
 ```js
-      return combineLatest(this.subjects.document, this.subjects.mouseEvents).pipe(
-        switchMap(([doc, mouseEvents]) => {
+      return combineLatest(
+        this.subjects.document,
+        this.subjects.touchEvents,
+        this.subjects.mouseEvents
+      ).pipe(
+        switchMap(([document, touchEvents, mouseEvents]) => {
 ```
 
 We're only interested in the last `touchend`.
@@ -185,24 +186,20 @@ that can be used to slide the drawer.
 
 
 ```js
-          const touchend$ = fromEvent(doc, "touchend", { passive: true }).pipe(
-            filter(({ touches }) => touches.length === 0),
-            map(event => event.changedTouches[0])
-          );
-```
-
-If mouse events aren't enabled, we're done here.
-
-
-```js
-          if (!mouseEvents) return touchend$;
+          const touchend$ = touchEvents
+            ? fromEvent(document, "touchend", { passive: true }).pipe(
+                filter(({ touches }) => touches.length === 0),
+                map(event => event.changedTouches[0])
+              )
+            : NEVER;
 ```
 
 Otherwise we include `mouseup` events.
 
 
 ```js
-          const mouseup$ = fromEvent(doc, "mouseup", { passive: true });
+          const mouseup$ = mouseEvents ? fromEvent(document, "mouseup", { passive: true }) : NEVER;
+
           return merge(touchend$, mouseup$);
         })
       );
