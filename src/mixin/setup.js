@@ -281,17 +281,17 @@ export const setupObservablesMixin = C =>
 
       // If the experimental back button feature is enabled, handle popstate events...
       /*
-        fromEvent(window, 'popstate')
-          .pipe(
-            takeUntil(this.subjects.disconnect),
-            subscribeWhen(this.backButton$),
-          )
-          .subscribe(() => {
-            const hash = `#${histId.call(this)}--opened`;
-            const willOpen = window.location.hash === hash;
-            if (willOpen !== this.opened) this.animateTo$.next(willOpen);
-          });
-        */
+      fromEvent(window, "popstate")
+        .pipe(
+          takeUntil(this.subjects.disconnect),
+          subscribeWhen(this.backButton$)
+        )
+        .subscribe(() => {
+          const hash = `#${histId.call(this)}--opened`;
+          const willOpen = window.location.hash === hash;
+          if (willOpen !== this.opened) this.animateTo$.next(willOpen);
+        });
+      */
 
       // When drawing with mouse is enabled, we add the grab cursor to the drawer.
       // We also want to call `preventDefault` when `mousedown` is within the drawer range
@@ -310,14 +310,13 @@ export const setupObservablesMixin = C =>
           if (isInRange && event) event.preventDefault();
         });
 
-      // Now we set the initial opend state.
       // If the experimental back button feature is enabled, we check the location hash...
       /*
-        if (this._backButton) {
-          const hash = `#${histId.call(this)}--opened`;
-          if (window.location.hash === hash) this.setInternalState('opened', true);
-        }
-        */
+      if (this._backButton) {
+        const hash = `#${histId.call(this)}--opened`;
+        if (window.location.hash === hash) this.setInternalState('opened', true);
+      }
+      */
 
       // Firing an event to let the outside world know the drawer is ready.
       this.fireEvent("init", { detail: this.opened });
