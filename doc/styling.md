@@ -17,7 +17,7 @@ CSS equivalent
 
 ***
 
-## `--hy-drawer-slide-width`
+<!-- ## `--hy-drawer-slide-width`
 Specifies the width of the sliding area. Must be less than or equal to the drawer width.
 By providing a value that is different from with drawer width, you can let the drawer 'peek' over the edge.
 
@@ -28,7 +28,7 @@ CSS equivalent
 : `.hy-drawer-content.hy-drawer-left { left: -$value }` and  
   `.hy-drawer-content.hy-drawer-right { right: -$value }`
 
-***
+*** -->
 
 ## `--hy-drawer-background`
 The background CSS property of the drawer.

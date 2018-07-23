@@ -15,7 +15,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // As mentioned before, we only import the RxJS function that we need.
-import { animationFrameScheduler, combineLatest, defer, fromEvent, merge, NEVER } from "rxjs/_esm5";
+import {
+  animationFrameScheduler,
+  combineLatest,
+  defer,
+  fromEvent,
+  merge,
+  NEVER,
+  of,
+} from "rxjs/_esm5";
 
 import {
   tap,
@@ -35,10 +43,11 @@ import {
 
 import { createTween } from "rxjs-create-tween";
 
+import { createXObservable } from "hy-component/src/rxjs";
+
 import { easeOutSine } from "../common";
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from "./constants";
-
 import { filterWhen } from "./operators";
 
 import { calcMixin } from "./calc";
@@ -50,20 +59,26 @@ import { baseObservablesMixin } from "./observables";
 export const setupObservablesMixin = C =>
   class extends baseObservablesMixin(updateMixin(calcMixin(C))) {
     setupObservables() {
-      // An observable of resize events.
-      const resize$ = fromEvent(window, "resize", { passive: true }).pipe(
+      const initialRect = { contentRect: this.contentEl.getBoundingClientRect() };
+
+      const resize$ =
+        "ResizeObserver" in window
+          ? createXObservable(ResizeObserver)(this.contentEl).pipe(startWith(initialRect))
+          : of(initialRect);
+
+      let drawerWidth$ = resize$.pipe(
         takeUntil(this.subjects.disconnect),
+        map(({ contentRect }) => contentRect.width),
         share(),
-        startWith({})
+        startWith(initialRect.contentRect.width)
       );
 
-      // Keep measurements up-to-date.
-      // Note that we need to temporarily remove the opened class to get the correct measures.
-      resize$.pipe(takeUntil(this.subjects.disconnect)).subscribe(() => {
-        if (this.opened) this.contentEl.classList.remove("hy-drawer-opened");
-        this.drawerWidth = this.calcMovableDrawerWidth();
-        if (this.opened) this.contentEl.classList.add("hy-drawer-opened");
-      });
+      // HACK: peek feature has been removed, but still needed for hydejack...
+      if (process.env.HYDEJACK && this._peek$) {
+        drawerWidth$ = combineLatest(drawerWidth$, this._peek$).pipe(
+          map(([drawerWidth, peek]) => drawerWidth - peek)
+        );
+      }
 
       // Emitts a value every time you change the `persistent` property of the drawer.
       // Interally, we invert it and call it `active`.
@@ -149,26 +164,26 @@ export const setupObservablesMixin = C =>
           // this is also when we're sure to call `preventDefault`.
           move$.pipe(
             filterWhen(isSliding$),
-            tap(({ event }) => {
-              if (this.preventDefault) event.preventDefault();
-            }),
-            observeOn(animationFrameScheduler),
+            tap(({ event }) => this.preventDefault && event.preventDefault()),
             // Finally, we take the start position of the finger, the start position of the drawer,
             // and the current position of the finger to calculate the next `translateX` value.
-            withLatestFrom(start$, this.startTranslateX$),
-            map(([{ clientX }, { clientX: startX }, startTranslateX]) =>
-              this.calcTranslateX(clientX, startX, startTranslateX)
-            )
+            withLatestFrom(start$, this.startTranslateX$, drawerWidth$),
+            observeOn(animationFrameScheduler),
+            map(([{ clientX }, { clientX: startX }, startTranslateX, drawerWidth]) => {
+              return this.calcTranslateX(clientX, startX, startTranslateX, drawerWidth);
+            })
           ),
 
           // 3)
           // When the `opened` state changes, we "jump" to the new position,
           // which is either 0 (when closed) or the width of the drawer (when open).
-          combineLatest(this.subjects.opened, this.subjects.align).pipe(
+          combineLatest(this.subjects.opened, this.subjects.align, drawerWidth$).pipe(
             // Usually the cleanup code would run at the end of the fling animation,
             // but since there is no animation in this case, we call it directly.
             tap(([opened]) => this.cleanupInteraction(opened)),
-            map(([opened, align]) => (!opened ? 0 : this.drawerWidth * (align === "left" ? 1 : -1)))
+            map(([opened, align, drawerWidth]) => {
+              return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
+            })
           )
         )
       )
@@ -207,7 +222,7 @@ export const setupObservablesMixin = C =>
       // TODO
       const willOpen$ = end$.pipe(
         tap(() => this.contentEl.classList.remove("hy-drawer-grabbing")),
-        withLatestFrom(start$, this.translateX$, velocity$),
+        withLatestFrom(start$, this.translateX$, drawerWidth$, velocity$),
         filter(this.calcIsSwipe.bind(this)),
         map(this.calcWillOpen.bind(this)),
         // TODO: only fire `slideend` event when slidestart fired as well?
@@ -219,7 +234,7 @@ export const setupObservablesMixin = C =>
       // 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
       //    Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
       //    prior `touchdown`/`mousedown` event in this case.
-      const tweenTrigger$ = merge(
+      const willOpen2$ = merge(
         willOpen$,
         this.animateTo$.pipe(tap(this.prepareInteraction.bind(this)))
       );
@@ -228,18 +243,18 @@ export const setupObservablesMixin = C =>
       // so that the next interaction will do the right thing even while the animation is
       // still playing, e.g. a call to `toggle` will cancel the current animation
       // and initiate an animation to the opposite state.
-      this.tween$ = tweenTrigger$.pipe(
+      this.tween$ = willOpen2$.pipe(
         tap(willOpen => this.setInternalState("opened", willOpen)),
         // By using `switchMap` we ensure that subsequent events that trigger an animation
         // don't cause more than one animation to be played at a time.
-        withLatestFrom(this.translateX$),
-        switchMap(([opened, translateX]) => {
+        withLatestFrom(this.translateX$, drawerWidth$),
+        switchMap(([opened, translateX, drawerWidth]) => {
           // We return a tween observable that runs cleanup code when it completes
           // --- unless a new interaction is initiated, in which case it is canceled.
           const inv = this.align === "left" ? 1 : -1;
-          const endTranslateX = opened ? this.drawerWidth * inv : 0;
+          const endTranslateX = opened ? drawerWidth * inv : 0;
           const diffTranslateX = endTranslateX - translateX;
-          const duration = BASE_DURATION + this.drawerWidth * WIDTH_CONTRIBUTION;
+          const duration = BASE_DURATION + drawerWidth * WIDTH_CONTRIBUTION;
 
           return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
             tap({ complete: () => this.subjects.opened.next(opened) }),
@@ -256,7 +271,9 @@ export const setupObservablesMixin = C =>
       // The end result is always to update the (shadow) DOM, which happens here.
       // Note that the call to subscribe sets the whole process in motion,
       // and causes the code inside the above `defer` observables to run.
-      this.translateX$.subscribe(this.updateDOM.bind(this));
+      this.translateX$
+        .pipe(withLatestFrom(drawerWidth$))
+        .subscribe(([translateX, drawerWidth]) => this.updateDOM(translateX, drawerWidth));
 
       // A click on the scrim should close the drawer.
       fromEvent(this.scrimEl, "click")
@@ -302,9 +319,7 @@ export const setupObservablesMixin = C =>
             return mouseEvents ? start$.pipe(withLatestFrom(isInRange$)) : NEVER;
           })
         )
-        .subscribe(([{ event }, isInRange]) => {
-          if (isInRange && event) event.preventDefault();
-        });
+        .subscribe(([{ event }, isInRange]) => isInRange && event && event.preventDefault());
 
       // If the experimental back button feature is enabled, we check the location hash...
       /*
