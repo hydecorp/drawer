@@ -41,13 +41,16 @@ Otherwise it must be below the upper bound.
 ```js
     calcIsInRange(clientX, opened) {
       switch (this.align) {
-        case "left":
-          return clientX > this.range[0] && (opened || clientX < this.range[1]);
-        case "right":
-          return (
-            clientX < window.innerWidth - this.range[0] &&
-            (opened || clientX > window.innerWidth - this.range[1])
-          );
+        case "left": {
+          const lower = this.range[0];
+          const upper = this.range[1];
+          return clientX > lower && (opened || clientX < upper);
+        }
+        case "right": {
+          const upper = window.innerWidth - this.range[0];
+          const lower = window.innerWidth - this.range[1];
+          return clientX < upper && (opened || clientX > lower);
+        }
         default:
           throw Error();
       }
