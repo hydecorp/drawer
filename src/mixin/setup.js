@@ -82,11 +82,7 @@ export const setupObservablesMixin = C =>
       // (as long as the scrim is visible the user can still "catch" the drawer).
       // It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside a `defer`.
       const isScrimVisible$ = defer(() =>
-        this.translateX$.pipe(
-          map(
-            translateX => (this.align === "left" ? translateX > 0 : translateX < this.drawerWidth)
-          )
-        )
+        this.translateX$.pipe(map(translateX => translateX != 0))
       );
 
       // TODO: ...
