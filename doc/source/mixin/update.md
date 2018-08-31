@@ -46,7 +46,6 @@ However, it has to be removed before we move the drawer via `translateX` again.
         this.contentEl.style.willChange = "transform";
         this.scrimEl.style.willChange = "opacity";
       }
-      this.contentEl.classList.remove("hy-drawer-opened");
       this.fireEvent("prepare");
     }
 ```
@@ -63,10 +62,8 @@ Will add/remove the beforementioned `hy-drawer-opened` class.
 
         if (opened) {
           this.scrimEl.attributeStyleMap.set("pointer-events", new CSSKeywordValue("all"));
-          this.contentEl.classList.add("hy-drawer-opened");
         } else {
           this.scrimEl.attributeStyleMap.delete("pointer-events");
-          this.contentEl.classList.remove("hy-drawer-opened");
         }
       } else {
         this.scrimEl.style.willChange = "";
@@ -74,15 +71,13 @@ Will add/remove the beforementioned `hy-drawer-opened` class.
 
         if (opened) {
           this.scrimEl.style.pointerEvents = "all";
-          this.contentEl.classList.add("hy-drawer-opened");
         } else {
           this.scrimEl.style.pointerEvents = "";
-          this.contentEl.classList.remove("hy-drawer-opened");
         }
       }
 ```
 
-If the experimental back button feature is enabled we hack the history API,
+If the xperimental back button feature is enabled we hack the history API,
 so that it matches the state of the drawer...
 
 
@@ -119,11 +114,11 @@ and the opacity of the scrim, which is handled by `updateDOM`.
 
 
 ```js
-    updateDOM(translateX) {
+    updateDOM(translateX, drawerWidth) {
       this.translateX = translateX;
 
       const inv = this.align === "left" ? 1 : -1;
-      const opacity = (this.opacity = (translateX / this.drawerWidth) * inv);
+      const opacity = (this.opacity = (translateX / drawerWidth) * inv);
 
       if (this.moveCallback) this.moveCallback({ translateX, opacity });
       /* this.fireEvent("move", { detail: { translateX, opacity } }); */

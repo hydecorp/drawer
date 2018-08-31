@@ -68,8 +68,8 @@ TODO: reuse isSlidign observable?
 
 
 ```js
-    calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX]) {
-      return endX !== startX || (translateX > 0 && translateX < this.drawerWidth);
+    calcIsSwipe([{ clientX: endX }, { clientX: startX }, translateX, drawerWidth]) {
+      return endX !== startX || (translateX > 0 && translateX < drawerWidth);
     }
 ```
 
@@ -80,18 +80,18 @@ TODO: could incorporate the current open state of the drawer.
 
 
 ```js
-    calcWillOpen([, , translateX, velocity]) {
+    calcWillOpen([, , translateX, drawerWidth, velocity]) {
       switch (this.align) {
         case "left": {
           if (velocity > VELOCITY_THRESHOLD) return true;
           else if (velocity < -VELOCITY_THRESHOLD) return false;
-          else if (translateX >= this.drawerWidth / 2) return true;
+          else if (translateX >= drawerWidth / 2) return true;
           else return false;
         }
         case "right": {
           if (-velocity > VELOCITY_THRESHOLD) return true;
           else if (-velocity < -VELOCITY_THRESHOLD) return false;
-          else if (translateX <= -this.drawerWidth / 2) return true;
+          else if (translateX <= -drawerWidth / 2) return true;
           else return false;
         }
         default:
@@ -109,35 +109,21 @@ The function will also clip the position at 0 and the width of the drawer.
 
 
 ```js
-    calcTranslateX(clientX, startX, startTranslateX) {
+    calcTranslateX(clientX, startX, startTranslateX, drawerWidth) {
       switch (this.align) {
         case "left": {
           const deltaX = clientX - startX;
           const translateX = startTranslateX + deltaX;
-          return max(0, min(this.drawerWidth, translateX));
+          return max(0, min(drawerWidth, translateX));
         }
         case "right": {
           const deltaX = clientX - startX;
           const translateX = startTranslateX + deltaX;
-          return min(0, max(-this.drawerWidth, translateX));
+          return min(0, max(-drawerWidth, translateX));
         }
         default:
           throw Error();
       }
-    }
-```
-
-#### Get movable drawer width
-One feature of hy-drawer is to allow the drawer to "peek" over the edge.
-This effect is achieved by setting a smaller negative `left` (`right`) CSS property,
-than is the width of the drawer,
-The 'moveable' part of the drawer, then, is equal to the inverse of that property.
-See [Styling](../../styling.md) for more.
-
-
-```js
-    calcMovableDrawerWidth() {
-      return -parseFloat(getComputedStyle(this.contentEl)[this.align]);
     }
   };
 ```
