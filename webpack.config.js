@@ -23,7 +23,7 @@ function envConfig() {
   switch (mode) {
     case "production":
       return {
-        plugins: [new BannerPlugin({ banner }), new EnvironmentPlugin({ DEBUG: false })],
+        plugins: [new EnvironmentPlugin({ DEBUG: false }), new BannerPlugin({ banner })],
       };
 
     default:
@@ -48,7 +48,7 @@ const baseConfig = merge(
           test: /(\.jsx|\.js)$/,
           loader: "babel-loader",
           options: {
-            presets: [["env", { modules: false }]],
+            presets: [["@babel/preset-env", { modules: false }]],
             babelrc: false,
           },
         },
