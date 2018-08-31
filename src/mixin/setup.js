@@ -74,7 +74,7 @@ export const setupObservablesMixin = C =>
       );
 
       // HACK: peek feature has been removed, but still needed for hydejack...
-      if (process.env.HYDEJACK && this._peek$) {
+      if (/* process.env.HYDEJACK && */ this._peek$) {
         drawerWidth$ = combineLatest(drawerWidth$, this._peek$).pipe(
           map(([drawerWidth, peek]) => drawerWidth - peek)
         );
