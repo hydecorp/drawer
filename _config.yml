@@ -53,7 +53,6 @@ include:
 remote_theme: qwtel/hydejack@v8
 
 hydejack:
-  cookies_banner: true
   no_mark_external: true
 
 defaults:
