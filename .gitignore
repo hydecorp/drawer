@@ -40,7 +40,7 @@ _drafts
 
 # Bundler
 .bundle
-/vendor/bundle
+/vendor
 
 # Temp
 react

@@ -1,95 +1,44 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-pre.27",
-  "description": "A drawer component for the modern web.",
-  "main": "src/index.js",
+  "version": "1.0.0-stencil",
+  "description": "",
+  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "unpkg": "dist/index.js",
+  "types": "dist/types/components.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rm -rf dist lib doc/source",
     "test": "exit 0",
-    "format": "prettier --write \"src/**/*.js\"",
-    "build": "npm run build:dev & npm run build:prod & npm run build:lib & npm run build:doc & wait; cp src/style.css dist",
-    "build:lib": "babel src --out-dir lib",
-    "build:prod": "webpack --mode production --display-optimization-bailout",
-    "build:dev": "webpack --mode development --display-optimization-bailout",
-    "build:doc": ".scripts/gen-doc.js && .scripts/gen-readme.js",
-    "watch": "npm run watch:src & npm run watch:doc",
-    "watch:src": "webpack --watch --mode development --progress --colors",
-    "watch:doc": "npm run build:doc && onchange 'src/**/*.js' -- npm run build:doc '{{changed}}'",
-    "serve": "http-server -s -p $npm_package_config_port",
-    "dev": "npm run watch:src & npm run serve",
+    "build": "stencil build --docs",
+    "watch": "stencil build --dev --watch --serve",
+    "build-doc": ".scripts/gen-doc.js && .scripts/gen-readme.js",
     "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
     "version": "npm run format && npm run build && git add .",
     "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
   },
   "config": {
-    "port": "8080"
+    "port": "8082"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-loader": "^8.0.5",
-    "camelcase": "^5.2.0",
-    "docco": "0.7.0",
-    "html-webpack-plugin": "^3.2.0",
-    "onchange": "^5.2.0",
-    "prettier": "^1.16.4",
-    "raw-loader": "^1.0.0",
-    "underscore-template-loader": "^1.0.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-merge": "^4.2.1",
-    "yargs": "^13.2.2"
+    "@stencil/core": "^0.18.1",
+    "@stencil/sass": "^0.1.1"
   },
   "dependencies": {
-    "create-element-x": "^1.1.1",
-    "hy-component": "^1.0.0-pre.27",
     "rxjs": "^6.4.0",
-    "rxjs-create-tween": "^2.0.1"
-  },
-  "optionalDependencies": {
-    "jquery": "^3.3.1"
-  },
-  "directories": {
-    "doc": "doc",
-    "example": "example"
+    "rxjs-create-tween": "^2.0.2"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qwtel/hy-drawer.git"
+    "url": "https://github.com/qwtel/hy-drawer.git"
   },
   "bugs": {
     "url": "https://github.com/qwtel/hy-drawer/issues"
   },
-  "homepage": "https://qwtel.com/hy-drawer/",
-  "keywords": [
-    "drawer",
-    "touch-events",
-    "swipe-gestures",
-    "webcomponent",
-    "jquery",
-    "rxjs",
-    "hydejack",
-    "jquery-plugin",
-    "vanilla-js",
-    "drawer-layout",
-    "custom-element",
-    "vanilla",
-    "web-components",
-    "ui-component",
-    "reactive",
-    "menu",
-    "menu-navigation"
-  ],
-  "prettier": {
-    "printWidth": 100,
-    "trailingComma": "es5"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  }
+  "homepage": "https://qwtel.com/hy-drawer/"
 }
