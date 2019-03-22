@@ -1,0 +1,55 @@
+{
+  "tags": [
+    {
+      "label": "hy-drawer",
+      "description": "",
+      "attributes": [
+        {
+          "label": "align",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "mouse-events",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "opacity",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "opened",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "persistent",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "prevent-default",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "threshold",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "touch-events",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "translate-x",
+          "description": "",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

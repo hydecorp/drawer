@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-stencil",
+  "version": "1.0.0-stencil.0",
   "description": "A touch-enabled drawer component for the modern web",
   "module": "dist/esm/index.js",
   "main": "dist/index.js",

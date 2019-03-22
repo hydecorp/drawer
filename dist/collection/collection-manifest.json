@@ -1,0 +1,141 @@
+{
+  "components": [
+    {
+      "tag": "hy-drawer",
+      "dependencies": [],
+      "componentClass": "HyDrawer",
+      "componentPath": "components/hy-drawer/index.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/hy-drawer/style.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "align",
+          "type": "String",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "align",
+          "watch": [
+            "setAlign"
+          ]
+        },
+        {
+          "name": "mouseEvents",
+          "type": "Boolean",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "mouse-events",
+          "watch": [
+            "setMouseEvents"
+          ]
+        },
+        {
+          "name": "opacity",
+          "type": "Number",
+          "mutable": true,
+          "attr": "opacity"
+        },
+        {
+          "name": "opened",
+          "type": "Boolean",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "opened",
+          "watch": [
+            "setOpened"
+          ]
+        },
+        {
+          "name": "persistent",
+          "type": "Boolean",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "persistent",
+          "watch": [
+            "setPersistent"
+          ]
+        },
+        {
+          "name": "preventDefault",
+          "type": "Boolean",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "prevent-default",
+          "watch": [
+            "setPreventDefault"
+          ]
+        },
+        {
+          "name": "range",
+          "mutable": true,
+          "attr": "range"
+        },
+        {
+          "name": "threshold",
+          "type": "Number",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "threshold"
+        },
+        {
+          "name": "touchEvents",
+          "type": "Boolean",
+          "mutable": true,
+          "reflectToAttr": true,
+          "attr": "touch-events",
+          "watch": [
+            "setTouchEvents"
+          ]
+        },
+        {
+          "name": "translateX",
+          "type": "Number",
+          "mutable": true,
+          "attr": "translate-x"
+        }
+      ],
+      "states": [
+        {
+          "name": "isSliding"
+        },
+        {
+          "name": "willChange"
+        }
+      ],
+      "methods": [
+        {
+          "name": "close"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "toggle"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "slideEnd"
+        },
+        {
+          "event": "slideStart"
+        }
+      ],
+      "shadow": true
+    }
+  ],
+  "collections": [],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.18.1",
+    "typescriptVersion": "3.3.3"
+  },
+  "bundles": []
+}

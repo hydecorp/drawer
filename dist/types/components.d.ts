@@ -5,7 +5,7 @@
  */
 
 
-import '@stencil/core';
+import './stencil.core';
 
 
 
@@ -67,13 +67,5 @@ declare global {
     'hy-drawer': HTMLHyDrawerElement;
   }
 
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
 
 }
