@@ -42,12 +42,12 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   @Prop({ mutable: true, reflectToAttr: true }) opened: boolean = false;
   @Prop({ mutable: true, reflectToAttr: true }) align: "left" | "right" = "left";
   @Prop({ mutable: true, reflectToAttr: true }) persistent: boolean = false;
-  @Prop({ mutable: true, reflectToAttr: true }) range: [number, number] = [0, 100];
   @Prop({ mutable: true, reflectToAttr: true }) threshold: number = 10;
   @Prop({ mutable: true, reflectToAttr: true }) preventDefault: boolean = false;
   @Prop({ mutable: true, reflectToAttr: true }) touchEvents: boolean = false;
   @Prop({ mutable: true, reflectToAttr: true }) mouseEvents: boolean = false;
 
+  @Prop({ mutable: true }) range: [number, number] = [0, 100];
   @Prop({ mutable: true }) translateX: number;
   @Prop({ mutable: true }) opacity: number;
 
@@ -68,16 +68,8 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   @Watch('touchEvents') setTouchEvents(_: boolean) { this.touchEvents$.next(_); }
   @Watch('mouseEvents') setMouseEvents(_: boolean) { this.mouseEvents$.next(_); }
 
-  @Event() slideStart: EventEmitter;
-  @Event() slideEnd: EventEmitter;
-
-  fireSlideStart(opened: boolean) {
-    this.slideStart.emit(opened);
-  }
-
-  fireSlideEnd(willOpen: boolean) {
-    this.slideEnd.emit(willOpen);
-  }
+  @Event() slideStart: EventEmitter<boolean>;
+  @Event() slideEnd: EventEmitter<boolean>;
 
   animateTo$: Subject<boolean>;
 
@@ -184,7 +176,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
     const isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(
       tap(isSliding => {
         this.isSliding = isSliding;
-        if (isSliding) this.fireSlideStart(this.opened);
+        if (isSliding) this.slideStart.emit(this.opened);
       })
     );
 
@@ -229,7 +221,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       filter(args => this.calcIsSwipe(...args)),
       map(args => this.calcWillOpen(...args)),
       // TODO: only fire `slideend` event when slidestart fired as well?
-      tap(willOpen => this.fireSlideEnd(willOpen)),
+      tap(willOpen => this.slideEnd.emit(willOpen)),
     );
 
     deferred.tweenTranslateX$ = merge(willOpen$, this.animateTo$).pipe(

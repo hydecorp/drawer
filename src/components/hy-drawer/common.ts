@@ -40,7 +40,7 @@ export function filterWhen<T>(p$: Observable<boolean>, ...others: Observable<boo
 
 export function createResizeObservable(el: HTMLElement): Observable<ResizeObserverEntry> {
   return Observable.create((obs: PartialObserver<ResizeObserverEntry>) => {
-    const observer = new window.ResizeObserver(xs => Array.from(xs).forEach(x => obs.next(x)));
+    const observer = new window.ResizeObserver(xs => xs.forEach(x => obs.next(x)));
     observer.observe(el);
     return () => { observer.unobserve(el); };
   });

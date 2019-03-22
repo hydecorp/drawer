@@ -1,7 +1,7 @@
 {
   "name": "hy-drawer",
   "version": "1.0.0-stencil",
-  "description": "",
+  "description": "A touch-enabled drawer component for the modern web",
   "module": "dist/esm/index.js",
   "main": "dist/index.js",
   "unpkg": "dist/index.js",
@@ -11,13 +11,12 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -rf dist lib doc/source",
+    "clean": "rm -rf dist www",
     "test": "exit 0",
     "build": "stencil build --docs",
     "watch": "stencil build --dev --watch --serve",
-    "build-doc": ".scripts/gen-doc.js && .scripts/gen-readme.js",
     "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
-    "version": "npm run format && npm run build && git add .",
+    "version": "npm run build && git add .",
     "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
   },
   "config": {
