@@ -42,9 +42,9 @@ _drafts
 .bundle
 /vendor
 
-# Temp
-react
+# Stencil
+.stencil
 
 # Build artifacts
 /dist
-/lib
+/www
