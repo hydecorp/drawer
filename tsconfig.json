@@ -18,7 +18,7 @@
   },
   "include": [
     "src",
-    "types/jsx.d.ts"
+    "types/ResizeObserver.d.ts"
   ],
   "exclude": [
     "node_modules"
