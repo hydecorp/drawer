@@ -50,7 +50,7 @@ export class StyleUpdater extends Updater {
 
 export class AttributeStyleMapUpdater extends Updater {
   // @ts-ignore
-  transformValue: CSSTransformValue;
+  private transformValue: CSSTransformValue;
 
   constructor(parent: UpdateMixin) {
     super(parent);

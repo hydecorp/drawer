@@ -30,11 +30,11 @@
   }
 
   .content.left {
-    left:  calc(-1 * var(--hy-drawer-width, 300px));
+    left:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
   }
 
   .content.right {
-    right: calc(-1 * var(--hy-drawer-width, 300px));
+    right:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
   }
 
   .content .overflow {

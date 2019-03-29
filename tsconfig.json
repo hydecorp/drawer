@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "declaration": false,
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2017"
+      "es2018"
     ],
     "moduleResolution": "node",
     "module": "esnext",
-    "target": "es2017",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "target": "esnext",
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "outDir": "dist",
   },
   "include": [
-    "src",
-    "types/ResizeObserver.d.ts"
+    "src/components/hy-drawer/index.tsx",
+    "types/*.d.ts",
   ],
-  "exclude": [
-    "node_modules"
-  ]
 }

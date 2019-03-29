@@ -17,7 +17,7 @@
  * @license 
  * @nocompile
  */
-import { Component, Prop, Element, Watch, Method, State, Event, EventEmitter } from '@stencil/core';
+import { h, Component, Prop, Element, Watch, Method, State, Event, EventEmitter } from 'pencil-runtime';
 
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
@@ -31,7 +31,7 @@ import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater } from './
 
 @Component({
   tag: 'hy-drawer',
-  styleUrl: 'style.scss',
+  styleUrl: 'style.css',
   shadow: true,
 })
 export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
@@ -39,17 +39,17 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   scrimEl: HTMLElement;
   contentEl: HTMLElement;
 
-  @Prop({ mutable: true, reflectToAttr: true }) opened: boolean = false;
-  @Prop({ mutable: true, reflectToAttr: true }) align: "left" | "right" = "left";
-  @Prop({ mutable: true, reflectToAttr: true }) persistent: boolean = false;
-  @Prop({ mutable: true, reflectToAttr: true }) threshold: number = 10;
-  @Prop({ mutable: true, reflectToAttr: true }) preventDefault: boolean = false;
-  @Prop({ mutable: true, reflectToAttr: true }) touchEvents: boolean = false;
-  @Prop({ mutable: true, reflectToAttr: true }) mouseEvents: boolean = false;
+  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) opened: boolean = false;
+  @Prop({ type: String, mutable: true, reflectToAttr: true }) align: "left" | "right" = "left";
+  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) persistent: boolean = false;
+  @Prop({ type: Number, mutable: true, reflectToAttr: true }) threshold: number = 10;
+  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) preventDefault: boolean = false;
+  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) touchEvents: boolean = false;
+  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) mouseEvents: boolean = false;
 
-  @Prop({ mutable: true }) range: [number, number] = [0, 100];
-  @Prop({ mutable: true }) translateX: number;
-  @Prop({ mutable: true }) opacity: number;
+  @Prop({ type: 'Any', mutable: true }) range: [number, number] = [0, 100];
+  @Prop({ type: Number, mutable: true }) translateX: number;
+  @Prop({ type: Number, mutable: true }) opacity: number;
 
   @State() isSliding: boolean = false;
   @State() willChange: boolean = false;
@@ -184,7 +184,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       const jumpTranslateX$ = combineLatest(this.opened$, this.align$, drawerWidth$).pipe(
         tap(() => (this.willChange = false)),
         map(([opened, align, drawerWidth]) => {
-          console.log(drawerWidth);
+          // console.log(drawerWidth);
           return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
         }),
       );
@@ -341,6 +341,81 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   @Method()
   toggle() {
     this.animateTo$.next(!this.opened);
+  }
+
+  get style() {
+    return `
+@media screen {
+  .scrim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(0);
+    -webkit-tap-highlight-color: transparent;
+
+    /* @apply --hy-drawer-scrim-container; */
+    background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
+    z-index: var(--hy-drawer-scrim-z-index, 20);
+  }
+
+  .content {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    transform: translateX(0);
+    contain: strict;
+
+    /* @apply --hy-drawer-content-container; */
+    width: var(--hy-drawer-width, 300px);
+    background: var(--hy-drawer-background, inherit);
+    box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
+    z-index: var(--hy-drawer-z-index, 30);
+  }
+
+  .content.left {
+    left:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+  }
+
+  .content.right {
+    right:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+  }
+
+  .content .overflow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+  }
+
+  .grab {
+    cursor: move;
+    cursor: grab;
+  }
+
+  .grabbing {
+    cursor: grabbing;
+  }
+}
+
+@media print {
+  .scrim {
+    display: none !important;
+  }
+
+  .content {
+    transform: none !important;
+  }
+}
+    `;
   }
 }
 
