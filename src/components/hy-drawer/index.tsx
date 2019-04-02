@@ -68,6 +68,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   @Watch('touchEvents') setTouchEvents(_: boolean) { this.touchEvents$.next(_); }
   @Watch('mouseEvents') setMouseEvents(_: boolean) { this.mouseEvents$.next(_); }
 
+  @Event() prepare: EventEmitter<void>;
   @Event() slideStart: EventEmitter<boolean>;
   @Event() slideEnd: EventEmitter<boolean>;
   @Event() transitioned: EventEmitter<void>;
