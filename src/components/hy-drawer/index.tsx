@@ -27,7 +27,7 @@ import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
 import { applyMixins, createResizeObservable, filterWhen, easeOutSine } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
-import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater } from './update';
+import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater, CallbackValue } from './update';
 
 @Component({
   tag: 'hy-drawer',
@@ -70,6 +70,8 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
 
   @Event() slideStart: EventEmitter<boolean>;
   @Event() slideEnd: EventEmitter<boolean>;
+  @Event() transitioned: EventEmitter<void>;
+  @Event({ bubbles: false }) move: EventEmitter<CallbackValue>;
 
   animateTo$: Subject<boolean>;
 
@@ -91,24 +93,20 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   updater: Updater;
 
   // HACK: Ugly, ugly hack to enable Hydejack usecase...
-  _peek$?: Observable<number>;
+  // @Prop({ type: Number, mutable: true }) _peek?: number = 0;
 
   getDrawerWidth() {
     const resize$ = "ResizeObserver" in window
       ? createResizeObservable(this.contentEl)
-      : of({ contentRect: { width: this.contentEl.clientWidth }});
+      : of({ contentRect: { width: this.contentEl.clientWidth } });
 
     const drawerWidth$ = resize$.pipe(
       // takeUntil(this.subjects.disconnect),
-      map((x) => x.contentRect.width),
+      map(x => x.contentRect.width),
+      // map(x => x - (this._peek || 0)),
       share(),
     );
 
-    if (this._peek$) {
-      return combineLatest(drawerWidth$, this._peek$).pipe(
-        map(([drawerWidth, peek]) => drawerWidth - peek),
-      );
-    }
     return drawerWidth$;
   }
 
@@ -141,8 +139,8 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       share(),
     );
 
-    const deferred: { 
-      translateX$?: Observable<number> 
+    const deferred: {
+      translateX$?: Observable<number>
       startTranslateX$?: Observable<number>;
       tweenTranslateX$?: Observable<number>;
     } = {};
@@ -156,7 +154,10 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       withLatestFrom(isScrimVisible$),
       map(args => this.calcIsInRange(...args)),
       tap((inRange) => {
-        if (inRange) this.willChange = true;
+        if (inRange) {
+          this.willChange = true;
+          this.prepare.emit();
+        }
       }),
       share(),
     );
@@ -238,7 +239,13 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
         // console.log('switcham');
 
         return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
-          tap({ complete: () => (this.opened = opened, this.willChange = false) }),
+          tap({
+            complete: () => {
+              this.opened = opened;
+              this.willChange = false;
+              this.transitioned.emit();
+            }
+          }),
           takeUntil(start$),
           takeUntil(this.align$.pipe(skip(1))),
           share(),
@@ -343,7 +350,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
     this.animateTo$.next(!this.opened);
   }
 
-  get style() {
+  static get style() {
     return `
 @media screen {
   .scrim {

@@ -1,4 +1,6 @@
-type CallbackValue = { translateX: number, opacity: number };
+import { EventEmitter } from "pencil-runtime";
+
+export type CallbackValue = { translateX: number, opacity: number };
 
 export class UpdateMixin {
   el: HTMLElement;
@@ -9,11 +11,10 @@ export class UpdateMixin {
   align: string;
   opacity: number;
 
-  moveCallback?: (x: CallbackValue) => {};
-
   updater: Updater;
 
-  // @ts-ignore
+  move: EventEmitter<CallbackValue>;
+
   updateDOM(translateX: number, drawerWidth: number) {
     const inv = this.align === "left" ? 1 : -1;
     const opacity = (translateX / drawerWidth) * inv || 0;
@@ -21,21 +22,19 @@ export class UpdateMixin {
     this.translateX = translateX;
     this.opacity = opacity;
 
-    // TODO: revert back to event?
-    if (this.moveCallback) this.moveCallback({ translateX, opacity });
-    /* this.fireEvent("move", { detail: { translateX, opacity } }); */
-
+    this.move.emit({ translateX, opacity });
     this.updater.updateDOM(translateX, opacity);
   }
 }
 
 export abstract class Updater {
-  contentEl: HTMLElement;
-  scrimEl: HTMLElement;
+  private parent: UpdateMixin;
   constructor(parent: UpdateMixin) {
-    this.contentEl = parent.contentEl;
-    this.scrimEl = parent.scrimEl;
+    this.parent = parent;
   }
+  get contentEl() { return this.parent.contentEl }
+  get scrimEl() { return this.parent.scrimEl }
+
   abstract updateDOM(translateX: number, opacity: number): void;
 }
 
