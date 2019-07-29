@@ -29,15 +29,17 @@ export type Coord = {
 }
 
 export class ObservablesMixin {
-  touchEvents$: Observable<boolean>;
-  mouseEvents$: Observable<boolean>;
-  preventDefault$: Observable<boolean>;
+  $: {
+    touchEvents?: Observable<boolean>;
+    mouseEvents?: Observable<boolean>;
+    preventDefault?: Observable<boolean>;
+  }
 
   threshold: number;
   preventDefault: boolean;
 
   getStartObservable() {
-    return combineLatest(this.touchEvents$, this.mouseEvents$).pipe(
+    return combineLatest(this.$.touchEvents, this.$.mouseEvents).pipe(
       switchMap(([touchEvents, mouseEvents]) => {
         const touchstart$ = !touchEvents
           ? NEVER
@@ -60,7 +62,7 @@ export class ObservablesMixin {
   }
 
   getMoveObservable(start$: Observable<Coord>, end$: Observable<Coord>) {
-    return combineLatest(this.touchEvents$, this.mouseEvents$, this.preventDefault$).pipe(
+    return combineLatest(this.$.touchEvents, this.$.mouseEvents, this.$.preventDefault).pipe(
       switchMap(([touchEvents, mouseEvents, preventDefault]) => {
         const touchmove$ = !touchEvents
           ? NEVER
@@ -85,7 +87,7 @@ export class ObservablesMixin {
   }
 
   getEndObservable() {
-    return combineLatest(this.touchEvents$, this.mouseEvents$).pipe(
+    return combineLatest(this.$.touchEvents, this.$.mouseEvents).pipe(
       switchMap(([touchEvents, mouseEvents]) => {
         const touchend$ = !touchEvents
           ? NEVER

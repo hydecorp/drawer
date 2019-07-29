@@ -8,12 +8,10 @@
     "moduleResolution": "node",
     "module": "esnext",
     "target": "esnext",
-    "jsx": "react",
-    "jsxFactory": "h",
     "outDir": "dist",
   },
   "include": [
-    "src/components/hy-drawer/index.tsx",
+    "src/components/hy-drawer/index.ts",
     "types/*.d.ts",
   ],
 }

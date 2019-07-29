@@ -15,13 +15,8 @@
   "scripts": {
     "clean": "rm -rf dist lib",
     "test": "exit 0",
-    "build": "npm run build:pencil && npm run build:stencil",
-    "watch": "npm run watch:pencil",
-    "build:pencil": "find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib",
-    "watch:pencil": "find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib -w",
-    "build:stencil": "stencil build --docs",
-    "watch:stencil": "stencil build --dev --watch --serve",
-    "build-docs": "stencil build --docs",
+    "build": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib",
+    "watch": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib -w",
     "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
     "version": "npm run build && git add .",
     "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
@@ -29,16 +24,16 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@stencil/core": "^0.18.1",
-    "rollup": "^1.7.4",
-    "rollup-plugin-commonjs": "^9.2.2",
-    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup": "^1.17.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript": "^1.0.1"
   },
   "dependencies": {
-    "pencil-runtime": "^0.2.0",
-    "rxjs": "^6.4.0",
-    "rxjs-create-tween": "^2.0.2"
+    "lit-element": "^2.2.1",
+    "lit-html": "^1.1.1",
+    "rxjs": "^6.5.2",
+    "rxjs-create-tween": "^2.0.3"
   },
   "repository": {
     "type": "git",

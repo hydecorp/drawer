@@ -1,5 +1,3 @@
-import { EventEmitter } from "pencil-runtime";
-
 export type CallbackValue = { translateX: number, opacity: number };
 
 export class UpdateMixin {
@@ -13,8 +11,6 @@ export class UpdateMixin {
 
   updater: Updater;
 
-  move: EventEmitter<CallbackValue>;
-
   updateDOM(translateX: number, drawerWidth: number) {
     const inv = this.align === "left" ? 1 : -1;
     const opacity = (translateX / drawerWidth) * inv || 0;
@@ -22,7 +18,7 @@ export class UpdateMixin {
     this.translateX = translateX;
     this.opacity = opacity;
 
-    this.move.emit({ translateX, opacity });
+    this.el.dispatchEvent(new CustomEvent('move', { detail: { translateX, opacity }, bubbles: false }));
     this.updater.updateDOM(translateX, opacity);
   }
 }
@@ -49,22 +45,19 @@ export class StyleUpdater extends Updater {
 
 export class AttributeStyleMapUpdater extends Updater {
   // @ts-ignore
-  private transformValue: CSSTransformValue;
+  private tvalue: CSSTransformValue;
 
   constructor(parent: UpdateMixin) {
     super(parent);
     // @ts-ignore
-    this.transformValue = new CSSTransformValue([
-      // @ts-ignore
-      new CSSTranslate(CSS.px(0), CSS.px(0)),
-    ]);
+    this.tvalue = new CSSTransformValue([new CSSTranslate(CSS.px(0), CSS.px(0))]);
   }
 
   updateDOM(translateX: number, opacity: number) {
     // @ts-ignore
-    this.transformValue[0].x = CSS.px(translateX);
+    this.tvalue[0].x.value = translateX;
     // @ts-ignore
-    this.contentEl.attributeStyleMap.set("transform", this.transformValue);
+    this.contentEl.attributeStyleMap.set("transform", this.tvalue);
     // @ts-ignore
     this.scrimEl.attributeStyleMap.set("opacity", opacity);
   }

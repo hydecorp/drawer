@@ -17,62 +17,79 @@
  * @license 
  * @nocompile
  */
-import { h, Component, Prop, Element, Watch, Method, State, Event, EventEmitter } from 'pencil-runtime';
+import { LitElement, html, css, property, customElement, query } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map';
+import { styleMap } from 'lit-html/directives/style-map';
+import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
 import { createTween } from 'rxjs-create-tween';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, createResizeObservable, filterWhen, easeOutSine } from './common';
+import { applyMixins, createResizeObservable, filterWhen, easeOutSine, arrayOfConverter, numberConverter } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater, CallbackValue } from './update';
 
-@Component({
-  tag: 'hy-drawer',
-  styleUrl: 'style.css',
-  shadow: true,
-})
-export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
-  @Element() el: HTMLElement;
-  scrimEl: HTMLElement;
-  contentEl: HTMLElement;
+// HACK: Applying mixins to the base class so they are defined by the time `customElement` kicks in...
+@applyMixins(ObservablesMixin, UpdateMixin, CalcMixin)
+class RxLitElement extends LitElement {
+  $connected = new Subject<boolean>();
+  connectedCallback() { 
+    super.connectedCallback()
+    this.$connected.next(true) 
+  }
+  disconnectedCallback() { 
+    super.disconnectedCallback()
+    this.$connected.next(false) 
+  }
 
-  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) opened: boolean = false;
-  @Prop({ type: String, mutable: true, reflectToAttr: true }) align: "left" | "right" = "left";
-  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) persistent: boolean = false;
-  @Prop({ type: Number, mutable: true, reflectToAttr: true }) threshold: number = 10;
-  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) preventDefault: boolean = false;
-  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) touchEvents: boolean = false;
-  @Prop({ type: Boolean, mutable: true, reflectToAttr: true }) mouseEvents: boolean = false;
+  private firstUpdate: boolean
+  $: {}
 
-  @Prop({ type: 'Any', mutable: true }) range: [number, number] = [0, 100];
-  @Prop({ type: Number, mutable: true }) translateX: number;
-  @Prop({ type: Number, mutable: true }) opacity: number;
+  firstUpdated() {
+    this.firstUpdate = true
+  }
 
-  @State() isSliding: boolean = false;
-  @State() willChange: boolean = false;
+  updated(changedProperties: Map<string, any>) {
+    if (!this.firstUpdate) for (const prop of changedProperties.keys()) {
+      if (prop in this.$) this.$[prop].next(this[prop]);
+    }
+    this.firstUpdate = false
+  }
+}
 
-  opened$: Subject<boolean>;
-  align$: Subject<"left" | "right">;
-  persistent$: Subject<boolean>;
-  preventDefault$: Subject<boolean>;
-  touchEvents$: Subject<boolean>;
-  mouseEvents$: Subject<boolean>;
+@customElement('hy-drawer')
+export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMixin, CalcMixin {
+  el: HTMLElement = this
 
-  @Watch('opened') setOpened(_: boolean) { this.opened$.next(_); }
-  @Watch('align') setAlign(_: "left" | "right") { this.align$.next(_); }
-  @Watch('persistent') setPersistent(_: boolean) { this.persistent$.next(_); }
-  @Watch('preventDefault') setPreventDefault(_: boolean) { this.preventDefault$.next(_); }
-  @Watch('touchEvents') setTouchEvents(_: boolean) { this.touchEvents$.next(_); }
-  @Watch('mouseEvents') setMouseEvents(_: boolean) { this.mouseEvents$.next(_); }
+  @query('.scrim') scrimEl: HTMLElement;
+  @query('.content') contentEl: HTMLElement;
 
-  @Event() prepare: EventEmitter<void>;
-  @Event() slideStart: EventEmitter<boolean>;
-  @Event() slideEnd: EventEmitter<boolean>;
-  @Event() transitioned: EventEmitter<void>;
-  @Event({ bubbles: false }) move: EventEmitter<CallbackValue>;
+  @property({ type: Boolean, reflect: true }) opened: boolean = false;
+  @property({ type: String, reflect: true }) align: "left" | "right" = "left";
+  @property({ type: Boolean, reflect: true }) persistent: boolean = false;
+  @property({ type: Number, reflect: true }) threshold: number = 10;
+  @property({ type: Boolean, reflect: true, attribute: 'prevent-default' }) preventDefault: boolean = false;
+  @property({ type: Boolean, reflect: true, attribute: 'touch-events' }) touchEvents: boolean = false;
+  @property({ type: Boolean, reflect: true, attribute: 'mouse-events' }) mouseEvents: boolean = false;
+  @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
+
+  @property({ type: Number, reflect: false }) translateX: number;
+  @property({ type: Number, reflect: false }) opacity: number;
+
+  @property({ type: Boolean, reflect: false }) isSliding: boolean = false;
+  @property({ type: Boolean, reflect: false }) willChange: boolean = false;
+
+  $: {
+    opened?: Subject<boolean>;
+    align?: Subject<"left" | "right">;
+    persistent?: Subject<boolean>;
+    preventDefault?: Subject<boolean>;
+    touchEvents?: Subject<boolean>;
+    mouseEvents?: Subject<boolean>;
+  } = {}
 
   animateTo$: Subject<boolean>;
 
@@ -111,28 +128,27 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
     return drawerWidth$;
   }
 
-  componentWillLoad() {
-    this.opened$ = new BehaviorSubject(this.opened);
-    this.align$ = new BehaviorSubject(this.align);
-    this.persistent$ = new BehaviorSubject(this.persistent);
-    this.preventDefault$ = new BehaviorSubject(this.preventDefault);
-    this.touchEvents$ = new BehaviorSubject(this.touchEvents);
-    this.mouseEvents$ = new BehaviorSubject(this.mouseEvents);
+  async connectedCallback() {
+    super.connectedCallback();
+
+    this.$.opened = new BehaviorSubject(this.opened);
+    this.$.align = new BehaviorSubject(this.align);
+    this.$.persistent = new BehaviorSubject(this.persistent);
+    this.$.preventDefault = new BehaviorSubject(this.preventDefault);
+    this.$.touchEvents = new BehaviorSubject(this.touchEvents);
+    this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
 
     this.animateTo$ = new Subject<boolean>();
-  }
-
-  componentDidLoad() {
-    this.scrimEl = this.el.shadowRoot.querySelector('.scrim');
-    this.contentEl = this.el.shadowRoot.querySelector('.content');
 
     const hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && "number" in CSS;
     this.updater = hasCSSOM
       ? new AttributeStyleMapUpdater(this)
       : new StyleUpdater(this);
 
+    await this.updateComplete;
+
     const drawerWidth$ = this.getDrawerWidth();
-    const active$ = this.persistent$.pipe(map(_ => !_));
+    const active$ = this.$.persistent.pipe(map(_ => !_));
 
     const start$ = this.getStartObservable().pipe(
       // takeUntil(this.subjects.disconnect),
@@ -157,7 +173,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       tap((inRange) => {
         if (inRange) {
           this.willChange = true;
-          this.prepare.emit();
+          this.dispatchEvent(new CustomEvent('prepare'))
         }
       }),
       share(),
@@ -178,12 +194,12 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
     const isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(
       tap(isSliding => {
         this.isSliding = isSliding;
-        if (isSliding) this.slideStart.emit(this.opened);
+        if (isSliding) this.dispatchEvent(new CustomEvent('slideStart', { detail: this.opened }));
       })
     );
 
     const translateX$ = deferred.translateX$ = defer(() => {
-      const jumpTranslateX$ = combineLatest(this.opened$, this.align$, drawerWidth$).pipe(
+      const jumpTranslateX$ = combineLatest(this.$.opened, this.$.align, drawerWidth$).pipe(
         tap(() => (this.willChange = false)),
         map(([opened, align, drawerWidth]) => {
           // console.log(drawerWidth);
@@ -223,7 +239,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       filter(args => this.calcIsSwipe(...args)),
       map(args => this.calcWillOpen(...args)),
       // TODO: only fire `slideend` event when slidestart fired as well?
-      tap(willOpen => this.slideEnd.emit(willOpen)),
+      tap(willOpen => this.dispatchEvent(new CustomEvent('slideEnd', { detail: willOpen }))),
     );
 
     deferred.tweenTranslateX$ = merge(willOpen$, this.animateTo$).pipe(
@@ -244,11 +260,11 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
             complete: () => {
               this.opened = opened;
               this.willChange = false;
-              this.transitioned.emit();
+              this.dispatchEvent(new CustomEvent('transitioned'))
             }
           }),
           takeUntil(start$),
-          takeUntil(this.align$.pipe(skip(1))),
+          takeUntil(this.$.align.pipe(skip(1))),
           share(),
         );
       })
@@ -273,7 +289,7 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
       this.scrimEl.style.display = active ? "block" : "none";
     });
 
-    this.mouseEvents$.pipe(
+    this.$.mouseEvents.pipe(
       // takeUntil(this.subjects.disconnect),
       switchMap(mouseEvents => {
         return mouseEvents
@@ -311,120 +327,116 @@ export class HyDrawer implements ObservablesMixin, UpdateMixin, CalcMixin {
   }
 
   render() {
-    const classList = {
+    const classes = {
       content: true,
       [this.align]: true,
       grab: this.mouseEvents,
       grabbing: this.mouseEvents && this.isSliding,
     };
 
-    return [
+    return html`
       <div
         class="scrim"
-        style={{
+        style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
           pointerEvents: this.opened ? 'all' : '',
-        }} />,
+        })} />,
       <div
-        class={classList}
-        style={{ willChange: this.willChange ? 'transform' : '' }}
+        class=${classMap(classes)}
+        style=${styleMap({ willChange: this.willChange ? 'transform' : '' })}
       >
         <div class="overflow">
           <slot></slot>
         </div>
-      </div>,
-    ];
+      </div>
+    `;
   }
 
-  @Method()
+  @property()
   open() {
     this.animateTo$.next(true);
   }
 
-  @Method()
+  @property()
   close() {
     this.animateTo$.next(false);
   }
 
-  @Method()
+  @property()
   toggle() {
     this.animateTo$.next(!this.opened);
   }
 
-  static get style() {
-    return `
-@media screen {
-  .scrim {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(0);
-    -webkit-tap-highlight-color: transparent;
+  static styles = css`
+    @media screen {
+      .scrim {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(0);
+        -webkit-tap-highlight-color: transparent;
 
-    /* @apply --hy-drawer-scrim-container; */
-    background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
-    z-index: var(--hy-drawer-scrim-z-index, 20);
-  }
+        /* @apply --hy-drawer-scrim-container; */
+        background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
+        z-index: var(--hy-drawer-scrim-z-index, 20);
+      }
 
-  .content {
-    position: fixed;
-    top: 0;
-    height: 100vh;
-    transform: translateX(0);
-    contain: strict;
+      .content {
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        transform: translateX(0);
+        contain: strict;
 
-    /* @apply --hy-drawer-content-container; */
-    width: var(--hy-drawer-width, 300px);
-    background: var(--hy-drawer-background, inherit);
-    box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
-    z-index: var(--hy-drawer-z-index, 30);
-  }
+        /* @apply --hy-drawer-content-container; */
+        width: var(--hy-drawer-width, 300px);
+        background: var(--hy-drawer-background, inherit);
+        box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
+        z-index: var(--hy-drawer-z-index, 30);
+      }
 
-  .content.left {
-    left:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
-  }
+      .content.left {
+        left:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+      }
 
-  .content.right {
-    right:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
-  }
+      .content.right {
+        right:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+      }
 
-  .content .overflow {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
-  }
+      .content .overflow {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        will-change: scroll-position;
+      }
 
-  .grab {
-    cursor: move;
-    cursor: grab;
-  }
+      .grab {
+        cursor: move;
+        cursor: grab;
+      }
 
-  .grabbing {
-    cursor: grabbing;
-  }
+      .grabbing {
+        cursor: grabbing;
+      }
+    }
+
+    @media print {
+      .scrim {
+        display: none !important;
+      }
+
+      .content {
+        transform: none !important;
+      }
+    }
+  `;
 }
-
-@media print {
-  .scrim {
-    display: none !important;
-  }
-
-  .content {
-    transform: none !important;
-  }
-}
-    `;
-  }
-}
-
-applyMixins(HyDrawer, [ObservablesMixin, UpdateMixin, CalcMixin]);
