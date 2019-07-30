@@ -20,17 +20,16 @@
 import { LitElement, html, css, property, customElement, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { styleMap } from 'lit-html/directives/style-map';
-import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
 import { createTween } from 'rxjs-create-tween';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, createResizeObservable, filterWhen, easeOutSine, arrayOfConverter, numberConverter } from './common';
+import { applyMixins, createResizeObservable, filterWhen, easeOutSine } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
-import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater, CallbackValue } from './update';
+import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater } from './update';
 
 // HACK: Applying mixins to the base class so they are defined by the time `customElement` kicks in...
 @applyMixins(ObservablesMixin, UpdateMixin, CalcMixin)
@@ -76,11 +75,11 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
   @property({ type: Boolean, reflect: true, attribute: 'mouse-events' }) mouseEvents: boolean = false;
   @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
 
-  @property({ type: Number, reflect: false }) translateX: number;
-  @property({ type: Number, reflect: false }) opacity: number;
+  translateX: number;
+  opacity: number;
 
-  @property({ type: Boolean, reflect: false }) isSliding: boolean = false;
-  @property({ type: Boolean, reflect: false }) willChange: boolean = false;
+  isSliding: boolean = false;
+  willChange: boolean = false;
 
   $: {
     opened?: Subject<boolean>;
@@ -111,7 +110,7 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
   updater: Updater;
 
   // HACK: Ugly, ugly hack to enable Hydejack usecase...
-  // @Prop({ type: Number, mutable: true }) _peek?: number = 0;
+  _peek$?: Observable<number>;
 
   getDrawerWidth() {
     const resize$ = "ResizeObserver" in window
@@ -121,14 +120,19 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
     const drawerWidth$ = resize$.pipe(
       // takeUntil(this.subjects.disconnect),
       map(x => x.contentRect.width),
-      // map(x => x - (this._peek || 0)),
       share(),
     );
+
+    if (this._peek$) {
+      return combineLatest(drawerWidth$, this._peek$).pipe(
+        map(([drawerWidth, peek]) => drawerWidth - peek)
+      );
+    }
 
     return drawerWidth$;
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
 
     this.$.opened = new BehaviorSubject(this.opened);
@@ -145,8 +149,10 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
       ? new AttributeStyleMapUpdater(this)
       : new StyleUpdater(this);
 
-    await this.updateComplete;
+    this.updateComplete.then(this.upgrade);
+  }
 
+  upgrade = () => {
     const drawerWidth$ = this.getDrawerWidth();
     const active$ = this.$.persistent.pipe(map(_ => !_));
 
@@ -194,7 +200,7 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
     const isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(
       tap(isSliding => {
         this.isSliding = isSliding;
-        if (isSliding) this.dispatchEvent(new CustomEvent('slideStart', { detail: this.opened }));
+        // if (isSliding) this.dispatchEvent(new CustomEvent('slidestart', { detail: this.opened }));
       })
     );
 
@@ -239,7 +245,7 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
       filter(args => this.calcIsSwipe(...args)),
       map(args => this.calcWillOpen(...args)),
       // TODO: only fire `slideend` event when slidestart fired as well?
-      tap(willOpen => this.dispatchEvent(new CustomEvent('slideEnd', { detail: willOpen }))),
+      // tap(willOpen => this.dispatchEvent(new CustomEvent('slideend', { detail: willOpen }))),
     );
 
     deferred.tweenTranslateX$ = merge(willOpen$, this.animateTo$).pipe(
@@ -260,7 +266,7 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
             complete: () => {
               this.opened = opened;
               this.willChange = false;
-              this.dispatchEvent(new CustomEvent('transitioned'))
+              this.dispatchEvent(new CustomEvent('transitioned', { detail: opened }))
             }
           }),
           takeUntil(start$),
@@ -323,7 +329,7 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
     }
     */
 
-    //   this.fireEvent("init", { detail: this.opened });
+    this.dispatchEvent(new CustomEvent("init", { detail: this.opened }));
   }
 
   render() {
@@ -340,7 +346,8 @@ export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMi
         style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
           pointerEvents: this.opened ? 'all' : '',
-        })} />,
+        })}>
+      </div>
       <div
         class=${classMap(classes)}
         style=${styleMap({ willChange: this.willChange ? 'transform' : '' })}
