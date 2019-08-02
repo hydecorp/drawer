@@ -6,15 +6,13 @@ export function easeOutSine(t: number, b: number, c: number, d: number) {
   return c * Math.sin((t / d) * (Math.PI / 2)) + b;
 }
 
-export function applyMixins(...baseCtors: Constructor<any>[]) {
-  return <T>(derivedCtor: Constructor<T>) => {
-    baseCtors.forEach(baseCtor => {
-      Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
-        derivedCtor.prototype[name] = baseCtor.prototype[name];
-      });
+export function applyMixins<T>(derivedCtor: Constructor<T>, baseCtors: Constructor<any>[]) {
+  baseCtors.forEach(baseCtor => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+      derivedCtor.prototype[name] = baseCtor.prototype[name];
     });
-    return derivedCtor;
-  }
+  });
+  return derivedCtor;
 }
 
 export function subscribeWhen<T>(p$: Observable<boolean>) {

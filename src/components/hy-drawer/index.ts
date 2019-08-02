@@ -59,7 +59,7 @@ class RxLitElement extends LitElement {
 
 @customElement('hy-drawer')
 export class HyDrawer 
-    extends applyMixins(ObservablesMixin, UpdateMixin, CalcMixin)(RxLitElement) 
+    extends applyMixins(RxLitElement, [ObservablesMixin, UpdateMixin, CalcMixin])
     implements ObservablesMixin, UpdateMixin, CalcMixin {
 
   el: HTMLElement = this
