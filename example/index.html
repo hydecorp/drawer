@@ -19,7 +19,7 @@
       <main>
         <!-- A button that we will use to toggle the drawer.
         Neat trick: Set href to the id of the drawer, so that there is a fallback behavior in case JS is disabled. -->
-        <a id="menuEl" href="#drawerEl"><span class="sr-only">Menu</span></a>
+        <a id="menuEl" href="#drawerEl--opened"><span class="sr-only">Menu</span></a>
 
         <h1>Lorem ipsum</h1>
         <p>Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed vulputate odio ut enim blandit. Vel turpis nunc eget lorem dolor sed. Lorem ipsum dolor sit amet consectetur. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Nibh sit amet commodo nulla facilisi nullam. Ullamcorper velit sed ullamcorper morbi. At elementum eu facilisis sed odio morbi quis commodo odio. Sit amet consectetur adipiscing elit pellentesque habitant morbi tristique. Sem nulla pharetra diam sit amet. Lacus sed turpis tincidunt id aliquet risus feugiat in ante. Aliquam ut porttitor leo a diam sollicitudin. Lorem ipsum dolor sit amet consectetur adipiscing. Porta lorem mollis aliquam ut porttitor leo.
@@ -78,14 +78,6 @@
       // window.drawerEl.addEventListener('hy-drawer-transitioned', function (e) {
       //   console.log('hy-drawer transitioned to', e.detail);
       // });
-
-      menuEl.addEventListener('click', function (e) {
-        // Prevent default so the brwoser history doesn't get filled with # urls (see `a` tag above)
-        e.preventDefault();
-
-        // Call Methods on the drawer element.
-        window.drawerEl.toggle();
-      });
     </script>
   </body>
 </html>

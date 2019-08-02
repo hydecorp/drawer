@@ -78,6 +78,9 @@ export class HyDrawer
   @property() scrimClickable: boolean
   @property() grabbing: boolean
 
+  get histId() { return this.id || this.tagName}
+  get hashId() { return `#${this.histId}--opened` }
+
   translateX: number;
   opacity: number;
 
@@ -89,7 +92,6 @@ export class HyDrawer
     align?: Subject<"left" | "right">;
     persistent?: Subject<boolean>;
     preventDefault?: Subject<boolean>;
-    touchEvents?: Subject<boolean>;
     mouseEvents?: Subject<boolean>;
   } = {}
 
@@ -138,11 +140,43 @@ export class HyDrawer
   connectedCallback() {
     super.connectedCallback();
 
+    const hashOpened = location.hash === this.hashId
+
+    const isReload = history.state && history.state[this.histId]
+    if (isReload) {
+      if (!hashOpened && !this.opened) {}
+        // nothing to do here
+      if (hashOpened && !this.opened) {
+        this.opened = true
+        // history.pushState({ [this.histId]: { backable: true } }, document.title)
+      }
+      if (hashOpened && this.opened) {
+        // nothing to do here
+      }
+      if (!hashOpened && this.opened) {
+        this.opened = false
+        // history.pushState({ [this.histId]: { backable: true } }, document.title, `${location}${this.hashId}`)
+      }
+    } else {
+      if (!hashOpened && !this.opened) {}
+        // nothing to do here
+      if (hashOpened && !this.opened) {
+        this.opened = true
+        history.pushState({ [this.histId]: { backable: true } }, document.title)
+      }
+      if (hashOpened && this.opened) {
+        // nothing to do here
+      }
+      if (!hashOpened && this.opened) {
+        history.pushState({ [this.histId]: { backable: true } }, document.title, `${location}${this.hashId}`)
+      }
+    }
+    // }
+
     this.$.opened = new BehaviorSubject(this.opened);
     this.$.align = new BehaviorSubject(this.align);
     this.$.persistent = new BehaviorSubject(this.persistent);
     this.$.preventDefault = new BehaviorSubject(this.preventDefault);
-    this.$.touchEvents = new BehaviorSubject(this.touchEvents);
     this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
 
     this.scrimClickable = this.opened
@@ -174,7 +208,6 @@ export class HyDrawer
     } = {};
 
     const isScrimVisible$ = defer(() => {
-      // console.log('isScrimVisible', this.translateX$);
       return deferred.translateX$.pipe(map(translateX => translateX !== 0))
     });
 
@@ -215,7 +248,6 @@ export class HyDrawer
       const jumpTranslateX$ = combineLatest(this.$.opened, this.$.align, drawerWidth$).pipe(
         tap(() => (this.willChange = false)),
         map(([opened, align, drawerWidth]) => {
-          // console.log(drawerWidth);
           return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
         }),
       );
@@ -260,22 +292,14 @@ export class HyDrawer
       // TODO: is there a way to silently set a prop?
       // tap(willOpen => this.opened = willOpen),
       withLatestFrom(translateX$, drawerWidth$),
-      switchMap(([opened, translateX, drawerWidth]) => {
+      switchMap(([willOpen, translateX, drawerWidth]) => {
         const inv = this.align === "left" ? 1 : -1;
-        const endTranslateX = opened ? drawerWidth * inv : 0;
+        const endTranslateX = willOpen ? drawerWidth * inv : 0;
         const diffTranslateX = endTranslateX - translateX;
         const duration = BASE_DURATION + drawerWidth * WIDTH_CONTRIBUTION;
 
-        // console.log('switcham');
-
         return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
-          tap({
-            complete: () => {
-              this.opened = this.scrimClickable = opened;
-              this.willChange = false;
-              this.dispatchEvent(new CustomEvent('transitioned', { detail: opened }))
-            }
-          }),
+          tap({ complete: () => this.transitioned(willOpen) }),
           takeUntil(start$),
           takeUntil(this.$.align.pipe(skip(1))),
           share(),
@@ -283,12 +307,9 @@ export class HyDrawer
       })
     );
 
-    // console.log(drawerWidth$)
-
     translateX$
       .pipe(withLatestFrom(drawerWidth$))
       .subscribe(args => {
-        // console.log(args);
         this.updateDOM(...args);
       });
 
@@ -315,31 +336,47 @@ export class HyDrawer
         return event.preventDefault();
       });
 
-    /*
-    fromEvent(window, "popstate")
-      .pipe(
-        takeUntil(this.subjects.disconnect),
-        subscribeWhen(this.backButton$)
-      )
-      .subscribe(() => {
-        const hash = `#${histId.call(this)}--opened`;
-        const willOpen = window.location.hash === hash;
-        if (willOpen !== this.opened) this.animateTo$.next(willOpen);
-      });
-    */
+    fromEvent(window, 'hashchange')
+      .subscribe((e) => {
+        const opened = location.hash === this.hashId;
 
+        if (!history.state && opened) {
+          // added a new state to the history
+          // if the location hash matches this components hash,
+          // add the component now that we can call `history.back`.
+          history.replaceState({ [this.histId]: { backable: true } }, document.title, )
+        }
 
-    /*
-    if (this._backButton) {
-      const hash = `#${histId.call(this)}--opened`;
-      if (window.location.hash === hash) this.setInternalState('opened', true);
-    }
-    */
+        // If the state doesn't match open/close the drawer
+        this.animateTo$.next(opened);
+      })
 
     this.dispatchEvent(new CustomEvent("init", { detail: this.opened }));
   }
 
+  private transitioned = (hasOpened: boolean) => {
+    const hasClosed = !hasOpened;
+
+    this.opened = this.scrimClickable = hasOpened;
+    this.willChange = false;
+
+    const { backable } = history.state && history.state[this.histId] || { backable: false }
+    if (hasClosed && backable) {
+      history.back()
+    } 
+    if (hasOpened && location.hash !== this.hashId) {
+      location.hash = this.hashId;
+    }
+
+    this.dispatchEvent(new CustomEvent('transitioned', { detail: hasOpened }))
+  }
+
   render() {
+    // const [start, end] = this.range
+    // ${this.mouseEvents ? html`<div class="range grab" style=${styleMap({ 
+    //   [this.align]: `${start}px`,
+    //   width: `${end - start}px`
+    // })}></div>` : null}
 
     return html`
       <div
