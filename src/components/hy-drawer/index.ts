@@ -31,8 +31,6 @@ import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater } from './update';
 
-// HACK: Applying mixins to the base class so they are defined by the time `customElement` kicks in...
-@applyMixins(ObservablesMixin, UpdateMixin, CalcMixin)
 class RxLitElement extends LitElement {
   $connected = new Subject<boolean>();
   connectedCallback() { 
@@ -60,7 +58,10 @@ class RxLitElement extends LitElement {
 }
 
 @customElement('hy-drawer')
-export class HyDrawer extends RxLitElement implements ObservablesMixin, UpdateMixin, CalcMixin {
+export class HyDrawer 
+    extends applyMixins(ObservablesMixin, UpdateMixin, CalcMixin)(RxLitElement) 
+    implements ObservablesMixin, UpdateMixin, CalcMixin {
+
   el: HTMLElement = this
 
   @query('.scrim') scrimEl: HTMLElement;
