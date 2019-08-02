@@ -72,7 +72,6 @@ export class HyDrawer
   @property({ type: Boolean, reflect: true }) persistent: boolean = false;
   @property({ type: Number, reflect: true }) threshold: number = 10;
   @property({ type: Boolean, reflect: true, attribute: 'prevent-default' }) preventDefault: boolean = false;
-  @property({ type: Boolean, reflect: true, attribute: 'touch-events' }) touchEvents: boolean = false;
   @property({ type: Boolean, reflect: true, attribute: 'mouse-events' }) mouseEvents: boolean = false;
   @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
 

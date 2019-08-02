@@ -30,7 +30,6 @@ export type Coord = {
 
 export class ObservablesMixin {
   $: {
-    touchEvents?: Observable<boolean>;
     mouseEvents?: Observable<boolean>;
     preventDefault?: Observable<boolean>;
   }
@@ -39,11 +38,9 @@ export class ObservablesMixin {
   preventDefault: boolean;
 
   getStartObservable() {
-    return combineLatest(this.$.touchEvents, this.$.mouseEvents).pipe(
-      switchMap(([touchEvents, mouseEvents]) => {
-        const touchstart$ = !touchEvents
-          ? NEVER
-          : (fromEvent(document, "touchstart", {
+    return combineLatest(this.$.mouseEvents).pipe(
+      switchMap(([mouseEvents]) => {
+        const touchstart$ = (fromEvent(document, "touchstart", {
             passive: true,
           }) as Observable<TouchEvent>).pipe(
             filter(({ touches }) => touches.length === 1),
@@ -62,11 +59,9 @@ export class ObservablesMixin {
   }
 
   getMoveObservable(start$: Observable<Coord>, end$: Observable<Coord>) {
-    return combineLatest(this.$.touchEvents, this.$.mouseEvents, this.$.preventDefault).pipe(
-      switchMap(([touchEvents, mouseEvents, preventDefault]) => {
-        const touchmove$ = !touchEvents
-          ? NEVER
-          : (fromEvent(document, "touchmove", { 
+    return combineLatest(this.$.mouseEvents, this.$.preventDefault).pipe(
+      switchMap(([mouseEvents, preventDefault]) => {
+        const touchmove$ = (fromEvent(document, "touchmove", { 
             passive: !preventDefault 
           }) as Observable<TouchEvent>).pipe(
             map(e => (((e.touches[0] as Coord).event = e), e.touches[0] as Coord))
@@ -87,11 +82,9 @@ export class ObservablesMixin {
   }
 
   getEndObservable() {
-    return combineLatest(this.$.touchEvents, this.$.mouseEvents).pipe(
-      switchMap(([touchEvents, mouseEvents]) => {
-        const touchend$ = !touchEvents
-          ? NEVER
-          : (fromEvent(document, "touchend", { passive: true }) as Observable<TouchEvent>).pipe(
+    return combineLatest(this.$.mouseEvents).pipe(
+      switchMap(([mouseEvents]) => {
+        const touchend$ = (fromEvent(document, "touchend", { passive: true }) as Observable<TouchEvent>).pipe(
             filter(({ touches }) => touches.length === 0),
             map(event => event.changedTouches[0] as Coord)
           );
