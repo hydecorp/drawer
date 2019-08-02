@@ -46,5 +46,5 @@ _drafts
 .stencil
 
 # Build artifacts
-/dist
-/lib
+lib
+assets/hy-*

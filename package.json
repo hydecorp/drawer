@@ -2,18 +2,13 @@
   "name": "hy-drawer",
   "version": "1.0.0-stencil.0",
   "description": "A touch-enabled drawer component for the modern web",
-  "module": "dist/esm/index.js",
-  "main": "dist/index.js",
-  "unpkg": "dist/index.js",
-  "types": "dist/types/components.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
+  "module": "lib/index.js",
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "scripts": {
-    "clean": "rm -rf dist lib",
+    "clean": "rm -rf lib",
     "test": "exit 0",
     "copy": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\;",
     "build:tsc": "tsc -d --outDir lib",
@@ -23,9 +18,9 @@
     "build": "npm run copy && (npm run build:tsc & npm run build:rollup) & wait",
     "watch": "npm run copy && (npm run watch:tsc & npm run watch:rollup)",
     "dev": "npm run watch & http-server -p 3337",
-    "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
+    "preversion": "sed -i '' -E 's:^(lib|assets/hy-\\*)$:#<removed temporarily>\\1:' .gitignore",
     "version": "npm run build && git add .",
-    "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
+    "postversion": "sed -i '' -E 's:^#<removed temporarily>(lib|assets/hy-\\*)$:\\1:' .gitignore && git rm --cached -r lib assets/hy-* && git add . && git commit -m 'Restore preversion .gitignore'"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
