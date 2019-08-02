@@ -15,8 +15,14 @@
   "scripts": {
     "clean": "rm -rf dist lib",
     "test": "exit 0",
-    "build": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib",
-    "watch": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\; && tsc -d --outDir lib -w",
+    "copy": "mkdir -p lib && find src -name '*.js' -exec cp {} lib \\;",
+    "build:tsc": "tsc -d --outDir lib",
+    "watch:tsc": "tsc -d --outDir lib -w",
+    "build:rollup": "rollup -c",
+    "watch:rollup": "rollup -c -w",
+    "build": "npm run copy && (npm run build:tsc & npm run build:rollup) & wait",
+    "watch": "npm run copy && (npm run watch:tsc & npm run watch:rollup)",
+    "dev": "npm run watch & http-server -p 3337",
     "preversion": "sed -i '' 's:/dist:#/dist:' .gitignore",
     "version": "npm run build && git add .",
     "postversion": "sed -i '' 's:#/dist:/dist:' .gitignore && git rm --cached -r dist && git add . && git commit -m 'restore preversion .gitignore'"
