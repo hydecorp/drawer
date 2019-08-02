@@ -46,19 +46,26 @@ export class StyleUpdater extends Updater {
 export class AttributeStyleMapUpdater extends Updater {
   // @ts-ignore
   private tvalue: CSSTransformValue;
+  // @ts-ignore
+  private ovalue: CSSUnitValue;
 
   constructor(parent: UpdateMixin) {
     super(parent);
     // @ts-ignore
     this.tvalue = new CSSTransformValue([new CSSTranslate(CSS.px(0), CSS.px(0))]);
+    // @ts-ignore
+    this.ovalue = CSS.number(1);
   }
 
   updateDOM(translateX: number, opacity: number) {
     // @ts-ignore
     this.tvalue[0].x.value = translateX;
     // @ts-ignore
+    this.ovalue.value = opacity;
+
+    // @ts-ignore
     this.contentEl.attributeStyleMap.set("transform", this.tvalue);
     // @ts-ignore
-    this.scrimEl.attributeStyleMap.set("opacity", opacity);
+    this.scrimEl.attributeStyleMap.set("opacity", this.ovalue);
   }
 }
