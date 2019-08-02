@@ -21,7 +21,7 @@ import { LitElement, html, css, property, customElement, query } from 'lit-eleme
 import { classMap } from 'lit-html/directives/class-map';
 import { styleMap } from 'lit-html/directives/style-map';
 
-import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of } from "rxjs";
+import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of, fromEvent } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
 import { createTween } from 'rxjs-create-tween';
 
@@ -75,6 +75,8 @@ export class HyDrawer
   @property({ type: Boolean, reflect: true, attribute: 'touch-events' }) touchEvents: boolean = false;
   @property({ type: Boolean, reflect: true, attribute: 'mouse-events' }) mouseEvents: boolean = false;
   @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
+
+  @property() scrimClickable: boolean
 
   translateX: number;
   opacity: number;
@@ -142,6 +144,8 @@ export class HyDrawer
     this.$.preventDefault = new BehaviorSubject(this.preventDefault);
     this.$.touchEvents = new BehaviorSubject(this.touchEvents);
     this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
+
+    this.scrimClickable = this.opened
 
     this.animateTo$ = new Subject<boolean>();
 
@@ -216,9 +220,9 @@ export class HyDrawer
 
       const moveTranslateX$ = move$.pipe(
         filterWhen(isSliding$),
+        tap(() => (this.scrimClickable = false)),
         tap(({ event }) => this.preventDefault && event.preventDefault()),
         withLatestFrom(start$, deferred.startTranslateX$, drawerWidth$),
-        // observeOn(animationFrameScheduler),
         map(args => this.calcTranslateX(...args))
       );
 
@@ -265,7 +269,7 @@ export class HyDrawer
         return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
           tap({
             complete: () => {
-              this.opened = opened;
+              this.opened = this.scrimClickable = opened;
               this.willChange = false;
               this.dispatchEvent(new CustomEvent('transitioned', { detail: opened }))
             }
@@ -286,9 +290,9 @@ export class HyDrawer
         this.updateDOM(...args);
       });
 
-    // fromEvent(this.scrimEl, "click")
-    //   // .pipe(takeUntil(this.subjects.disconnect))
-    //   .subscribe(() => this.close());
+    fromEvent(this.scrimEl, "click")
+      // .pipe(takeUntil(this.subjects.disconnect))
+      .subscribe(() => this.close());
 
     active$.pipe(
       //takeUntil(this.subjects.disconnect)
@@ -346,7 +350,7 @@ export class HyDrawer
         class="scrim"
         style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
-          pointerEvents: this.opened ? 'all' : '',
+          pointerEvents: this.scrimClickable ? 'all' : '',
         })}>
       </div>
       <div
