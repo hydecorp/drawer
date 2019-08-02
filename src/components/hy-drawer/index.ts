@@ -77,6 +77,7 @@ export class HyDrawer
   @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
 
   @property() scrimClickable: boolean
+  @property() grabbing: boolean
 
   translateX: number;
   opacity: number;
@@ -193,6 +194,7 @@ export class HyDrawer
     const end$ = this.getEndObservable().pipe(
       // takeUntil(this.subjects.disconnect),
       filterWhen(active$, isInRange$),
+      tap(() => { if (this.mouseEvents) this.grabbing = false; }),
       share(),
     );
 
@@ -205,6 +207,7 @@ export class HyDrawer
     const isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(
       tap(isSliding => {
         this.isSliding = isSliding;
+        if (isSliding && this.mouseEvents) this.grabbing = true;
         // if (isSliding) this.dispatchEvent(new CustomEvent('slidestart', { detail: this.opened }));
       })
     );
@@ -338,24 +341,28 @@ export class HyDrawer
   }
 
   render() {
-    const classes = {
-      content: true,
-      [this.align]: true,
-      grab: this.mouseEvents,
-      grabbing: this.mouseEvents && this.isSliding,
-    };
 
     return html`
       <div
-        class="scrim"
+        class="screen scrim"
         style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
           pointerEvents: this.scrimClickable ? 'all' : '',
         })}>
       </div>
+      ${this.mouseEvents && this.grabbing && !this.scrimClickable 
+        ? html`<div class="screen grabbing-screen"></div>` 
+        : null}
       <div
-        class=${classMap(classes)}
-        style=${styleMap({ willChange: this.willChange ? 'transform' : '' })}
+        class=${classMap({
+          content: true,
+          [this.align]: true,
+          grab: this.mouseEvents,
+          grabbing: this.mouseEvents && this.grabbing,
+        })}
+        style=${styleMap({ 
+          willChange: this.willChange ? 'transform' : '',
+        })}
       >
         <div class="overflow">
           <slot></slot>
@@ -381,20 +388,37 @@ export class HyDrawer
 
   static styles = css`
     @media screen {
-      .scrim {
+      :host {
+        touch-action: pan-x;
+      }
+
+      .screen {
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
         width: 100vw;
+      }
+
+      .scrim {
         opacity: 0;
         pointer-events: none;
         transform: translateX(0);
-        -webkit-tap-highlight-color: transparent;
-
-        /* @apply --hy-drawer-scrim-container; */
         background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
-        z-index: var(--hy-drawer-scrim-z-index, 20);
+        z-index: var(--hy-drawer-z-index, 100);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .range {
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        z-index: calc(var(--hy-drawer-z-index, 100) + 1);
+      }
+
+      .grabbing-screen {
+        cursor: grabbing;
+        z-index: calc(var(--hy-drawer-z-index, 100) + 2);
       }
 
       .content {
@@ -404,11 +428,10 @@ export class HyDrawer
         transform: translateX(0);
         contain: strict;
 
-        /* @apply --hy-drawer-content-container; */
         width: var(--hy-drawer-width, 300px);
         background: var(--hy-drawer-background, inherit);
         box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
-        z-index: var(--hy-drawer-z-index, 30);
+        z-index: calc(var(--hy-drawer-z-index, 100) + 3);
       }
 
       .content.left {
@@ -427,8 +450,8 @@ export class HyDrawer
         left: 0;
         overflow-x: hidden;
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
         will-change: scroll-position;
+        -webkit-overflow-scrolling: touch;
       }
 
       .grab {
