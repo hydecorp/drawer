@@ -77,15 +77,14 @@ export class HyDrawer
 
   @property() scrimClickable: boolean
   @property() grabbing: boolean
+  @property() willChange: boolean = false;
 
   get histId() { return this.id || this.tagName}
   get hashId() { return `#${this.histId}--opened` }
 
   translateX: number;
   opacity: number;
-
-  isSliding: boolean = false;
-  willChange: boolean = false;
+  isSliding: boolean;
 
   $: {
     opened?: Subject<boolean>;
@@ -236,7 +235,6 @@ export class HyDrawer
 
     const translateX$ = deferred.translateX$ = defer(() => {
       const jumpTranslateX$ = combineLatest(this.$.opened, this.$.align, drawerWidth$).pipe(
-        tap(() => (this.willChange = false)),
         map(([opened, align, drawerWidth]) => {
           return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
         }),
@@ -269,7 +267,6 @@ export class HyDrawer
 
     // TODO
     const willOpen$ = end$.pipe(
-      tap(() => (this.willChange = false)),
       withLatestFrom(start$, translateX$, drawerWidth$, velocity$),
       filter(args => this.calcIsSwipe(...args)),
       map(args => this.calcWillOpen(...args)),
@@ -277,10 +274,12 @@ export class HyDrawer
       // tap(willOpen => this.dispatchEvent(new CustomEvent('slideend', { detail: willOpen }))),
     );
 
-    deferred.tweenTranslateX$ = merge(willOpen$, this.animateTo$).pipe(
-      tap(() => (this.willChange = true)),
-      // TODO: is there a way to silently set a prop?
-      // tap(willOpen => this.opened = willOpen),
+    const animateTo$ = this.animateTo$.pipe(tap(() => {
+      this.willChange = true;
+      this.dispatchEvent(new CustomEvent('prepare'));
+    }));
+
+    deferred.tweenTranslateX$ = merge(willOpen$, animateTo$).pipe(
       withLatestFrom(translateX$, drawerWidth$),
       switchMap(([willOpen, translateX, drawerWidth]) => {
         const inv = this.align === "left" ? 1 : -1;
