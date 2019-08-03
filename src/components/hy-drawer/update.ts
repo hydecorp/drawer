@@ -24,6 +24,13 @@ export class UpdateMixin {
 }
 
 export abstract class Updater {
+  static getUpdaterForPlatform(parent: UpdateMixin) {
+    const hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && "number" in CSS;
+    return hasCSSOM
+      ? new AttributeStyleMapUpdater(parent)
+      : new StyleUpdater(parent);
+  }
+
   private parent: UpdateMixin;
   constructor(parent: UpdateMixin) {
     this.parent = parent;

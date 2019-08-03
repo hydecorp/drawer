@@ -29,7 +29,7 @@ import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
 import { applyMixins, createResizeObservable, filterWhen, easeOutSine } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
-import { UpdateMixin, AttributeStyleMapUpdater, StyleUpdater, Updater } from './update';
+import { UpdateMixin, Updater } from './update';
 
 class RxLitElement extends LitElement {
   $connected = new Subject<boolean>();
@@ -183,10 +183,7 @@ export class HyDrawer
 
     this.animateTo$ = new Subject<boolean>();
 
-    const hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && "number" in CSS;
-    this.updater = hasCSSOM
-      ? new AttributeStyleMapUpdater(this)
-      : new StyleUpdater(this);
+    this.updater = Updater.getUpdaterForPlatform(this);
 
     this.updateComplete.then(this.upgrade);
   }
