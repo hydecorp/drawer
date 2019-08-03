@@ -137,41 +137,34 @@ export class HyDrawer
     return drawerWidth$;
   }
 
+  consolidateState() {
+    const hashOpened = location.hash === this.hashId;
+    const isReload = history.state && history.state[this.histId];
+    if (isReload) {
+      if (hashOpened !== this.opened) {
+        this.opened = hashOpened;
+      }
+    } else {
+      if (hashOpened && !this.opened) {
+        const url = new URL(location.href);
+        url.hash = '';
+        history.replaceState({ [this.histId]: { backable: false } }, document.title, url.href);
+        url.hash = this.hashId;
+        history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
+        this.opened = true;
+      }
+      if (!hashOpened && this.opened) {
+        const url = new URL(location.href);
+        url.hash = this.hashId;
+        history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
+      }
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
-    const hashOpened = location.hash === this.hashId
-
-    const isReload = history.state && history.state[this.histId]
-    if (isReload) {
-      if (!hashOpened && !this.opened) {}
-        // nothing to do here
-      if (hashOpened && !this.opened) {
-        this.opened = true
-        // history.pushState({ [this.histId]: { backable: true } }, document.title)
-      }
-      if (hashOpened && this.opened) {
-        // nothing to do here
-      }
-      if (!hashOpened && this.opened) {
-        this.opened = false
-        // history.pushState({ [this.histId]: { backable: true } }, document.title, `${location}${this.hashId}`)
-      }
-    } else {
-      if (!hashOpened && !this.opened) {}
-        // nothing to do here
-      if (hashOpened && !this.opened) {
-        this.opened = true
-        history.pushState({ [this.histId]: { backable: true } }, document.title)
-      }
-      if (hashOpened && this.opened) {
-        // nothing to do here
-      }
-      if (!hashOpened && this.opened) {
-        history.pushState({ [this.histId]: { backable: true } }, document.title, `${location}${this.hashId}`)
-      }
-    }
-    // }
+    this.consolidateState()
 
     this.$.opened = new BehaviorSubject(this.opened);
     this.$.align = new BehaviorSubject(this.align);
