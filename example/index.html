@@ -12,7 +12,10 @@
     <!-- <link rel="import" href="https://unpkg.com/hy-drawer/dist/webcomponent/hy-drawer.html"> -->
     <script type="module" src='../assets/hy-drawer.js'></script>
 
-    <style>aside { color: #fff; background: #f17641; display: block; }</style>
+    <style>
+      hy-drawer { --hy-drawer-width: 300px; --hy-drawer-peek-width: 1%; }
+      aside { color: #fff; background: #f17641; display: block; }
+    </style>
   </head>
   <body>
     <div class="wrapper">
@@ -39,7 +42,7 @@
 
       <!-- HTML import above will register the hy-drawer custom element.
       We can set Properties directly (using param-case). -->
-      <hy-drawer id="drawerEl" opened prevent-default mouse-events>
+      <hy-drawer id="drawerEl" prevent-default mouse-events>
         <aside>
           <ul>
             <li><span>Mixin Example</span></li>

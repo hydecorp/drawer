@@ -1,4 +1,4 @@
-import { Observable, NEVER, PartialObserver } from "rxjs";
+import { Observable, of, NEVER, PartialObserver } from "rxjs";
 
 import { filter, map, switchMap, withLatestFrom } from "rxjs/operators";
 
@@ -47,6 +47,14 @@ export function createResizeObservable(el: HTMLElement): Observable<ResizeObserv
   });
 }
 
+export function observeWidth(el: HTMLElement) {
+  const resize$ = "ResizeObserver" in window
+    ? createResizeObservable(el)
+    : of({ contentRect: { width: el.clientWidth }});
+  return resize$.pipe(map(({ contentRect: { width } }) => width));
+}
+
+/*
 export const arrayConverter = {
   fromAttribute(attr) {
     if (attr == null) return null;
@@ -88,3 +96,4 @@ export const arrayOfConverter = (converter) => ({
     return null;
   },
 })
+*/

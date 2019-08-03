@@ -26,7 +26,7 @@ import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestam
 import { createTween } from 'rxjs-create-tween';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, createResizeObservable, filterWhen, easeOutSine } from './common';
+import { applyMixins, filterWhen, easeOutSine, observeWidth } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
@@ -66,6 +66,7 @@ export class HyDrawer
 
   @query('.scrim') scrimEl: HTMLElement;
   @query('.content') contentEl: HTMLElement;
+  @query('.peek') peekEl: HTMLElement;
 
   @property({ type: Boolean, reflect: true }) opened: boolean = false;
   @property({ type: String, reflect: true }) align: "left" | "right" = "left";
@@ -113,27 +114,15 @@ export class HyDrawer
   updateDOM: (translateX: number, drawerWidth: number) => void;
   updater: Updater;
 
-  // HACK: Ugly, ugly hack to enable Hydejack usecase...
-  _peek$?: Observable<number>;
-
   getDrawerWidth() {
-    const resize$ = "ResizeObserver" in window
-      ? createResizeObservable(this.contentEl)
-      : of({ contentRect: { width: this.contentEl.clientWidth } });
+    const content$ = observeWidth(this.contentEl);
+    const peek$ = observeWidth(this.peekEl);
 
-    const drawerWidth$ = resize$.pipe(
+    return combineLatest(content$, peek$).pipe(
       // takeUntil(this.subjects.disconnect),
-      map(x => x.contentRect.width),
+      map(([contentWidth, peekWidth]) => contentWidth - peekWidth),
       share(),
     );
-
-    if (this._peek$) {
-      return combineLatest(drawerWidth$, this._peek$).pipe(
-        map(([drawerWidth, peek]) => drawerWidth - peek)
-      );
-    }
-
-    return drawerWidth$;
   }
 
   consolidateState() {
@@ -368,6 +357,7 @@ export class HyDrawer
     // })}></div>` : null}
 
     return html`
+      <div class="peek span-height"></div>
       <div
         class="scrim span-screen"
         style=${styleMap({
@@ -431,6 +421,14 @@ export class HyDrawer
         top: 0;
         height: 100vh;
       }
+
+      .peek {
+        left: 0;
+        width: var(--hy-drawer-peek-width, 0px);
+        visibility: hidden;
+        z-index: calc(var(--hy-drawer-z-index, 100) - 1);
+      }
+
       .scrim {
         opacity: 0;
         pointer-events: none;
@@ -460,11 +458,11 @@ export class HyDrawer
       }
 
       .content.left {
-        left:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+        left:  calc(-1 * var(--hy-drawer-width, 300px) + var(--hy-drawer-peek-width, 0px));
       }
 
       .content.right {
-        right:  calc(-1 * var(--hy-drawer-slide-width, var(--hy-drawer-width, 300px)));
+        right:  calc(-1 * var(--hy-drawer-width, 300px) + var(--hy-drawer-peek-width, 0px));
       }
 
       .content > .overflow {
