@@ -338,7 +338,7 @@ export class HyDrawer
         }
 
         // If the state doesn't match open/close the drawer
-        this.animateTo$.next(opened);
+        if (opened !== this.opened) this.animateTo$.next(opened);
       })
 
     this.dispatchEvent(new CustomEvent("init", { detail: this.opened }));
