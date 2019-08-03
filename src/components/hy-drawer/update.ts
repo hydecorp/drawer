@@ -18,7 +18,6 @@ export class UpdateMixin {
     this.translateX = translateX;
     this.opacity = opacity;
 
-    this.el.dispatchEvent(new CustomEvent('move', { detail: { translateX, opacity }, bubbles: false }));
     this.updater.updateDOM(translateX, opacity);
   }
 }

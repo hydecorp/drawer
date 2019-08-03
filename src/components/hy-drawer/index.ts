@@ -289,6 +289,8 @@ export class HyDrawer
       .pipe(withLatestFrom(drawerWidth$))
       .subscribe(args => {
         this.updateDOM(...args);
+        const { translateX, opacity } = this
+        this.dispatchEvent(new CustomEvent('move', { detail: { translateX, opacity }, bubbles: false }));
       });
 
     fromEvent(this.scrimEl, "click")
