@@ -56,46 +56,19 @@ export function observeWidth(el: HTMLElement) {
   return resize$.pipe(map(({ contentRect: { width } }) => width));
 }
 
-/*
-export const arrayConverter = {
-  fromAttribute(attr) {
-    if (attr == null) return null;
-
-    const str = attr
-      .trim()
-      .replace(/^\[?(.*?)\]?$/, "$1")
+export const rangeConverter = {
+  fromAttribute(attr: string = '') {
+    return attr
+      .replace(/[\[\]]/g, '')
       .split(",")
-      .map(x => x.trim());
-
-    return str || null;
+      .map(Number);
   },
 
-  toAttribute(a) {
-    return a && a.length > 0 ? a.join(",") : null;
+  toAttribute(range: number[] = []) {
+    return range.join(',');
   },
 }
 
-export const numberConverter = {
-  fromAttribute(attr) { return Number(attr) },
-  toAttribute(x) { return x.toString() },
+export function rangeHasChanged(curr: number[], prev: number[] = []) {
+  return curr.length !== prev.length || curr.some((v, i) => v !== prev[i]);
 }
-
-export const arrayOfConverter = (converter) => ({
-  formAttribute(attr) {
-    if (attr == null) return null;
-    const a = arrayConverter.fromAttribute(attr).map(converter.fromAttribute);
-    if (a.every((x) => !!x)) {
-      return a;
-    }
-    return null;
-  },
-
-  toAttribute(a) {
-    const a2 = a && a.map && a.map(converter.toAttribute);
-    if (a2 && a2.every((x) => x !== null)) {
-      return arrayConverter.toAttribute(a2);
-    }
-    return null;
-  },
-})
-*/

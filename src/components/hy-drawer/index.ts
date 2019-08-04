@@ -26,7 +26,7 @@ import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestam
 import { createTween } from 'rxjs-create-tween';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, filterWhen, easeOutSine, observeWidth } from './common';
+import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
@@ -78,9 +78,9 @@ export class HyDrawer
   @property({ type: String, reflect: true }) side: "left" | "right" = "left";
   @property({ type: Boolean, reflect: true }) persistent: boolean = false;
   @property({ type: Number, reflect: true }) threshold: number = 10;
-  @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
   @property({ type: Boolean, reflect: true }) noScroll: boolean = false;
   @property({ type: Boolean, reflect: true }) mouseEvents: boolean = false;
+  @property({ reflect: true, converter: rangeConverter, hasChanged: rangeHasChanged }) range: [number, number] = [0, 100];
 
   // State
   @property() scrimClickable: boolean;
