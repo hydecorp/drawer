@@ -34,27 +34,30 @@ import { styles } from './styles';
 
 class RxLitElement extends LitElement {
   $connected = new Subject<boolean>();
+
   connectedCallback() { 
-    super.connectedCallback()
-    this.$connected.next(true) 
-  }
-  disconnectedCallback() { 
-    super.disconnectedCallback()
-    this.$connected.next(false) 
+    super.connectedCallback();
+    this.$connected.next(true);
   }
 
-  private firstUpdate: boolean
-  $: {}
+  disconnectedCallback() { 
+    super.disconnectedCallback();
+    this.$connected.next(false);
+  }
+
+  private firstUpdate: boolean;
+
+  $: {};
 
   firstUpdated() {
-    this.firstUpdate = true
+    this.firstUpdate = true;
   }
 
   updated(changedProperties: Map<string, any>) {
     if (!this.firstUpdate) for (const prop of changedProperties.keys()) {
       if (prop in this.$) this.$[prop].next(this[prop]);
     }
-    this.firstUpdate = false
+    this.firstUpdate = false;
   }
 }
 
@@ -72,19 +75,20 @@ export class HyDrawer
   @query('.peek') peekEl: HTMLElement;
 
   @property({ type: Boolean, reflect: true }) opened: boolean = false;
-  @property({ type: String, reflect: true }) align: "left" | "right" = "left";
+  @property({ type: String, reflect: true }) side: "left" | "right" = "left";
   @property({ type: Boolean, reflect: true }) persistent: boolean = false;
   @property({ type: Number, reflect: true }) threshold: number = 10;
-  @property({ type: Boolean, reflect: true, attribute: 'prevent-default' }) preventDefault: boolean = false;
-  @property({ type: Boolean, reflect: true, attribute: 'mouse-events' }) mouseEvents: boolean = false;
   @property({ type: Array, reflect: true }) range: [number, number] = [0, 100];
+  @property({ type: Boolean, reflect: true }) noScroll: boolean = false;
+  @property({ type: Boolean, reflect: true }) mouseEvents: boolean = false;
 
-  @property() scrimClickable: boolean
-  @property() grabbing: boolean
+  // State
+  @property() scrimClickable: boolean;
+  @property() grabbing: boolean;
   @property() willChange: boolean = false;
-
-  get histId() { return this.id || this.tagName}
-  get hashId() { return `#${this.histId}--opened` }
+ 
+  get histId() { return this.id || this.tagName; }
+  get hashId() { return `#${this.histId}--opened`; }
 
   translateX: number;
   opacity: number;
@@ -92,15 +96,15 @@ export class HyDrawer
 
   $: {
     opened?: Subject<boolean>;
-    align?: Subject<"left" | "right">;
+    side?: Subject<"left" | "right">;
     persistent?: Subject<boolean>;
     preventDefault?: Subject<boolean>;
     mouseEvents?: Subject<boolean>;
-  } = {}
+  } = {};
 
   animateTo$: Subject<boolean>;
 
-  // ObserablesMixin
+  // ObservablesMixin
   getStartObservable: () => Observable<Coord>;
   getMoveObservable: (start$: Observable<Coord>, end$: Observable<Coord>) => Observable<Coord>;
   getEndObservable: () => Observable<Coord>;
@@ -117,6 +121,7 @@ export class HyDrawer
   updateDOM: (translateX: number, drawerWidth: number) => void;
   updater: Updater;
 
+  // HyDrawer
   getDrawerWidth() {
     const content$ = observeWidth(this.contentEl);
     const peek$ = observeWidth(this.peekEl);
@@ -158,9 +163,9 @@ export class HyDrawer
     this.consolidateState()
 
     this.$.opened = new BehaviorSubject(this.opened);
-    this.$.align = new BehaviorSubject(this.align);
+    this.$.side = new BehaviorSubject(this.side);
     this.$.persistent = new BehaviorSubject(this.persistent);
-    this.$.preventDefault = new BehaviorSubject(this.preventDefault);
+    this.$.preventDefault = new BehaviorSubject(this.noScroll);
     this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
 
     this.scrimClickable = this.opened
@@ -226,16 +231,16 @@ export class HyDrawer
     );
 
     const translateX$ = deferred.translateX$ = defer(() => {
-      const jumpTranslateX$ = combineLatest(this.$.opened, this.$.align, drawerWidth$).pipe(
-        map(([opened, align, drawerWidth]) => {
-          return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
+      const jumpTranslateX$ = combineLatest(this.$.opened, this.$.side, drawerWidth$).pipe(
+        map(([opened, side, drawerWidth]) => {
+          return !opened ? 0 : drawerWidth * (side === "left" ? 1 : -1);
         }),
       );
 
       const moveTranslateX$ = move$.pipe(
         filterWhen(isSliding$),
         tap(() => (this.scrimClickable = false)),
-        tap(({ event }) => this.preventDefault && event.preventDefault()),
+        tap(({ event }) => this.noScroll && event.preventDefault()),
         withLatestFrom(start$, deferred.startTranslateX$, drawerWidth$),
         map(args => this.calcTranslateX(...args))
       );
@@ -253,11 +258,9 @@ export class HyDrawer
         ([{ value: prevX, timestamp: prevTime }, { value: x, timestamp: time }]) =>
           (x - prevX) / (time - prevTime)
       ),
-      // The initial velocity is zero.
       startWith(0),
     );
 
-    // TODO
     const willOpen$ = end$.pipe(
       withLatestFrom(start$, translateX$, drawerWidth$, velocity$),
       filter(args => this.calcIsSwipe(...args)),
@@ -274,7 +277,7 @@ export class HyDrawer
     deferred.tweenTranslateX$ = merge(willOpen$, animateTo$).pipe(
       withLatestFrom(translateX$, drawerWidth$),
       switchMap(([willOpen, translateX, drawerWidth]) => {
-        const inv = this.align === "left" ? 1 : -1;
+        const inv = this.side === "left" ? 1 : -1;
         const endTranslateX = willOpen ? drawerWidth * inv : 0;
         const diffTranslateX = endTranslateX - translateX;
         const duration = BASE_DURATION + drawerWidth * WIDTH_CONTRIBUTION;
@@ -282,29 +285,32 @@ export class HyDrawer
         return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
           tap({ complete: () => this.transitioned(willOpen) }),
           takeUntil(start$),
-          takeUntil(this.$.align.pipe(skip(1))),
+          takeUntil(this.$.side.pipe(skip(1))),
           share(),
         );
       })
     );
 
-    translateX$
-      .pipe(withLatestFrom(drawerWidth$))
-      .subscribe(args => {
+    translateX$.pipe(
+      withLatestFrom(drawerWidth$),
+      tap((args) => {
         this.updateDOM(...args);
-        const { translateX, opacity } = this
+        const { translateX, opacity } = this;
         this.dispatchEvent(new CustomEvent('move', { detail: { translateX, opacity }, bubbles: false }));
-      });
+      }),
+    ).subscribe();
 
-    fromEvent(this.scrimEl, "click")
-      // .pipe(takeUntil(this.subjects.disconnect))
-      .subscribe(() => this.close());
+    fromEvent(this.scrimEl, "click").pipe(
+      // takeUntil(this.subjects.disconnect),
+      tap(() => this.close()),
+    ).subscribe();
 
     active$.pipe(
-      //takeUntil(this.subjects.disconnect)
-    ).subscribe(active => {
-      this.scrimEl.style.display = active ? "block" : "none";
-    });
+      // takeUntil(this.subjects.disconnect),
+      tap((active) => {
+        this.scrimEl.style.display = active ? "block" : "none";
+      }),
+    ).subscribe();
 
     this.$.mouseEvents.pipe(
       // takeUntil(this.subjects.disconnect),
@@ -313,26 +319,25 @@ export class HyDrawer
           ? start$.pipe(withLatestFrom(isInRange$))
           : NEVER;
       }),
-      filter(([coord, isInRange]) => isInRange && coord.event != null)
-    )
-      .subscribe(([{ event }]) => {
-        return event.preventDefault();
-      });
+      filter(([coord, isInRange]) => isInRange && coord.event != null),
+      tap(([{ event }]) => event.preventDefault()),
+    ).subscribe();
 
-    fromEvent(window, 'hashchange')
-      .subscribe((e) => {
+    fromEvent(window, 'hashchange').pipe(
+      // takeUntil(this.subjects.disconnect),
+      tap(() => {
         const opened = location.hash === this.hashId;
-
         if (!history.state && opened) {
           // added a new state to the history
           // if the location hash matches this components hash,
           // add the component now that we can call `history.back`.
-          history.replaceState({ [this.histId]: { backable: true } }, document.title, )
+          history.replaceState({ [this.histId]: { backable: true } }, document.title)
         }
 
         // If the state doesn't match open/close the drawer
         if (opened !== this.opened) this.animateTo$.next(opened);
-      })
+      }),
+    ).subscribe();
 
     this.dispatchEvent(new CustomEvent("init", { detail: this.opened }));
   }
@@ -355,12 +360,6 @@ export class HyDrawer
   }
 
   render() {
-    // const [start, end] = this.range
-    // ${this.mouseEvents ? html`<div class="range grab" style=${styleMap({ 
-    //   [this.align]: `${start}px`,
-    //   width: `${end - start}px`
-    // })}></div>` : null}
-
     return html`
       <div class="peek span-height"></div>
       <div
@@ -377,7 +376,7 @@ export class HyDrawer
         class=${classMap({
           content: true,
           'span-height': true,
-          [this.align]: true,
+          [this.side]: true,
           grab: this.mouseEvents,
           grabbing: this.mouseEvents && this.grabbing,
         })}

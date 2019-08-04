@@ -35,7 +35,7 @@ export class ObservablesMixin {
   }
 
   threshold: number;
-  preventDefault: boolean;
+  noScroll: boolean;
 
   getStartObservable() {
     return combineLatest(this.$.mouseEvents).pipe(
@@ -124,7 +124,7 @@ export class ObservablesMixin {
         withLatestFrom(start$),
         map(([{ clientX, clientY, event }, { clientX: startX, clientY: startY }]) => {
           const isSliding = abs(startX - clientX) >= abs(startY - clientY);
-          if (this.preventDefault && isSliding) event.preventDefault();
+          if (this.noScroll && isSliding) event.preventDefault();
           return isSliding;
         })
       );

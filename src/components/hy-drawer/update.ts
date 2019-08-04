@@ -6,13 +6,13 @@ export class UpdateMixin {
   scrimEl: HTMLElement;
 
   translateX: number;
-  align: string;
+  side: string;
   opacity: number;
 
   updater: Updater;
 
   updateDOM(translateX: number, drawerWidth: number) {
-    const inv = this.align === "left" ? 1 : -1;
+    const inv = this.side === "left" ? 1 : -1;
     const opacity = (translateX / drawerWidth) * inv || 0;
 
     this.translateX = translateX;

@@ -7,12 +7,12 @@ const min = Math.min.bind(Math);
 const max = Math.max.bind(Math);
 
 export class CalcMixin {
-  align: 'left' | 'right';
+  side: 'left' | 'right';
   range: [number, number];
 
   calcIsInRange({ clientX }: Coord, opened: boolean) {
     // console.log(this.range, this.align);
-    switch (this.align) {
+    switch (this.side) {
       case "left": {
         const [lower, upper] = this.range;
         return clientX > lower && (opened || clientX < upper);
@@ -32,7 +32,7 @@ export class CalcMixin {
   }
 
   calcWillOpen(_: {}, __: {}, translateX: number, drawerWidth: number, velocity: number): boolean {
-    switch (this.align) {
+    switch (this.side) {
       case "left": {
         if (velocity > VELOCITY_THRESHOLD) return true;
         else if (velocity < -VELOCITY_THRESHOLD) return false;
@@ -51,7 +51,7 @@ export class CalcMixin {
   }
 
   calcTranslateX({ clientX: moveX }: Coord, { clientX: startX }: Coord, startTranslateX: number, drawerWidth: number): number {
-    switch (this.align) {
+    switch (this.side) {
       case "left": {
         const deltaX = moveX - startX;
         const translateX = startTranslateX + deltaX;
