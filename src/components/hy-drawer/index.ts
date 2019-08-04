@@ -21,7 +21,7 @@ import { LitElement, html, property, customElement, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { styleMap } from 'lit-html/directives/style-map';
 
-import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, of, fromEvent } from "rxjs";
+import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, fromEvent } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
 import { createTween } from 'rxjs-create-tween';
 
@@ -144,7 +144,8 @@ export class HyDrawer
       if (hashOpened && !this.opened) {
         const url = new URL(location.href);
         url.hash = '';
-        history.replaceState({ [this.histId]: { backable: false } }, document.title, url.href);
+        const newState = Object.assign(history.state || {}, { [this.histId]: { backable: false } })
+        history.replaceState(newState, document.title, url.href);
         url.hash = this.hashId;
         history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
         this.opened = true;
@@ -328,9 +329,6 @@ export class HyDrawer
       tap(() => {
         const opened = location.hash === this.hashId;
         if (!history.state && opened) {
-          // added a new state to the history
-          // if the location hash matches this components hash,
-          // add the component now that we can call `history.back`.
           history.replaceState({ [this.histId]: { backable: true } }, document.title)
         }
 
