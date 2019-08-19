@@ -50,32 +50,10 @@ exclude:
 include:
   - LICENSE.md
 
-remote_theme: qwtel/hydejack@v8
+remote_theme: hydecorp/hydejack
 
 hydejack:
   no_mark_external: true
-
-defaults:
-  - scope:
-      path: usage/README.md
-    values:
-      menu: true
-      order: 1
-  - scope:
-      path: doc/README.md
-    values:
-      menu: true
-      order: 2
-  - scope:
-      path: example/README.md
-    values:
-      menu: true
-      order: 3
-  - scope:
-      path: licenses/README.md
-    values:
-      menu: true
-      order: 4
 
 titles_from_headings:
   strip_title: true
