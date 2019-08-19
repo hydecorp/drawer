@@ -143,15 +143,22 @@ export class HyDrawer
     } else {
       if (hashOpened && !this.opened) {
         const url = new URL(location.href);
+
         url.hash = '';
         const newState = Object.assign(history.state || {}, { [this.histId]: { backable: false } })
         history.replaceState(newState, document.title, url.href);
+
         url.hash = this.hashId;
         history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
+
         this.opened = true;
       }
-      if (!hashOpened && this.opened) {
+      else if (!hashOpened && this.opened) {
         const url = new URL(location.href);
+
+        const newState = Object.assign(history.state || {}, { [this.histId]: { backable: false } })
+        history.replaceState(newState, document.title, url.href);
+
         url.hash = this.hashId;
         history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
       }
