@@ -1,12 +1,16 @@
 {
-  "name": "hy-drawer",
-  "version": "1.0.0-stencil.0",
+  "name": "@hydecorp/drawer",
+  "version": "1.0.0-alpha",
   "description": "A touch-enabled drawer component for the modern web",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "files": [
     "lib",
     "src"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rm -rf lib",
     "test": "exit 0",
@@ -18,9 +22,9 @@
     "build": "npm run copy && (npm run build:tsc & npm run build:rollup) & wait",
     "watch": "npm run copy && (npm run watch:tsc & npm run watch:rollup)",
     "dev": "npm run watch & http-server -p 3337",
-    "preversion": "sed -i '' -E 's:^(lib|assets/hy-\\*)$:#<removed temporarily>\\1:' .gitignore",
+    "preversion": "sed -i '' -E 's:^(lib|docs/assets/hy-\\*)$:#<removed temporarily>\\1:' .gitignore",
     "version": "npm run build && git add .",
-    "postversion": "sed -i '' -E 's:^#<removed temporarily>(lib|assets/hy-\\*)$:\\1:' .gitignore && git rm --cached -r lib assets/hy-* && git add . && git commit -m 'Restore preversion .gitignore'"
+    "postversion": "sed -i '' -E 's:^#<removed temporarily>(lib|docs/assets/hy-\\*)$:\\1:' .gitignore && git rm --cached -r lib docs/assets/hy-* && git add . && git commit -m 'Restore preversion .gitignore'"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
@@ -38,10 +42,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/qwtel/hy-drawer.git"
+    "url": "git+https://github.com/hydecorp/drawer.git"
   },
   "bugs": {
-    "url": "https://github.com/qwtel/hy-drawer/issues"
+    "url": "https://github.com/hydecorp/drawer/issues"
   },
-  "homepage": "https://qwtel.com/hy-drawer/"
+  "homepage": "https://hydecorp.github.io/drawer/",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  }
 }
