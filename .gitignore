@@ -13,6 +13,9 @@ node_modules
 # macOS
 .DS_Store
 
+# Packages
+*.tgz
+
 # Build artifacts
 lib
 docs/assets/hy-*

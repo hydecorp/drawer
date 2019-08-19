@@ -1,5 +1,5 @@
 {
-  "name": "hy-drawer",
+  "name": "@hydecorp/drawer",
   "description": "A drawer component for the modern web",
   "main": "lib/index.js",
   "authors": [
