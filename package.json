@@ -47,5 +47,24 @@
   "bugs": {
     "url": "https://github.com/hydecorp/drawer/issues"
   },
-  "homepage": "https://hydecorp.github.io/drawer/"
+  "homepage": "https://hydecorp.github.io/drawer/",
+  "tags": [
+    "drawer",
+    "touch-events",
+    "swipe-gestures",
+    "webcomponent",
+    "jquery",
+    "rxjs",
+    "hydejack",
+    "jquery-plugin",
+    "vanilla-js",
+    "drawer-layout",
+    "custom-element",
+    "vanilla",
+    "web-components",
+    "ui-component",
+    "reactive",
+    "menu",
+    "menu-navigation"
+  ]
 }
