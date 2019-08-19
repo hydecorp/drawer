@@ -1,7 +1,7 @@
 {
   "name": "@hydecorp/drawer",
   "description": "A drawer component for the modern web",
-  "main": "lib/index.js",
+  "main": "docs/assets/hy-drawer.js",
   "authors": [
     "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)"
   ],
