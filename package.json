@@ -46,9 +46,5 @@
   "bugs": {
     "url": "https://github.com/hydecorp/drawer/issues"
   },
-  "homepage": "https://hydecorp.github.io/drawer/",
-  "directories": {
-    "doc": "docs",
-    "lib": "lib"
-  }
+  "homepage": "https://hydecorp.github.io/drawer/"
 }

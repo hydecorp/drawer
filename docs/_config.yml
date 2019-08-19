@@ -3,15 +3,15 @@ email: mail@qwtel.com
 
 description: >
   A touch-enabled drawer component for the modern web.
-baseurl: /hy-drawer
-url: https://qwtel.com
+url: https://hydecorp.github.io
+baseurl: /drawer
 
 author:
   email: mail@qwtel.com
   social:
-    github: https://github.com/qwtel/hy-drawer
-    npm: https://www.npmjs.com/package/hy-drawer
-    download: https://github.com/qwtel/hy-drawer/releases
+    github: https://github.com/hydecorp/drawer
+    npm: https://www.npmjs.com/package/@hydecorp/drawer
+    download: https://github.com/hydecorp/drawer/releases
 
 logo: /assets/icons/icon.svg
 

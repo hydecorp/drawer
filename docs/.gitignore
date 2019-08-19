@@ -1,6 +1,6 @@
-_site
+/_site/
 _drafts
-.sass-cache
-Gemfile*
+/.sass-cache/
+/Gemfile*
 /.bundle/
 /vendor/
