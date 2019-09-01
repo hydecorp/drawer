@@ -211,7 +211,7 @@ export class HyDrawer
       tap((inRange) => {
         if (inRange) {
           this.willChange = true;
-          this.dispatchEvent(new CustomEvent('prepare'))
+          this.fireEvent('prepare');
         }
       }),
       share(),
@@ -234,7 +234,7 @@ export class HyDrawer
       tap(isSliding => {
         this.isSliding = isSliding;
         if (isSliding && this.mouseEvents) this.grabbing = true;
-        // if (isSliding) this.dispatchEvent(new CustomEvent('slidestart', { detail: this.opened }));
+        // if (isSliding) this.fireEvent('slidestart', { detail: this.opened });
       })
     );
 
@@ -274,12 +274,12 @@ export class HyDrawer
       filter(args => this.calcIsSwipe(...args)),
       map(args => this.calcWillOpen(...args)),
       // TODO: only fire `slideend` event when slidestart fired as well?
-      // tap(willOpen => this.dispatchEvent(new CustomEvent('slideend', { detail: willOpen }))),
+      // tap(willOpen => this.fireEvent('slideend', { detail: willOpen })),
     );
 
     const animateTo$ = this.animateTo$.pipe(tap(() => {
       this.willChange = true;
-      this.dispatchEvent(new CustomEvent('prepare'));
+      this.fireEvent('prepare');
     }));
 
     deferred.tweenTranslateX$ = merge(willOpen$, animateTo$).pipe(
@@ -304,7 +304,7 @@ export class HyDrawer
       tap((args) => {
         this.updateDOM(...args);
         const { translateX, opacity } = this;
-        this.dispatchEvent(new CustomEvent('move', { detail: { translateX, opacity }, bubbles: false }));
+        this.fireEvent('move', { detail: { translateX, opacity }, bubbles: false });
       }),
     ).subscribe();
 
@@ -344,7 +344,7 @@ export class HyDrawer
       }),
     ).subscribe();
 
-    this.dispatchEvent(new CustomEvent("init", { detail: this.opened }));
+    this.fireEvent("init", { detail: this.opened });
   }
 
   private transitioned = (hasOpened: boolean) => {
@@ -361,7 +361,7 @@ export class HyDrawer
       location.hash = this.hashId;
     }
 
-    this.dispatchEvent(new CustomEvent('transitioned', { detail: hasOpened }))
+    this.fireEvent('transitioned', { detail: hasOpened });
   }
 
   render() {
@@ -394,6 +394,11 @@ export class HyDrawer
         </div>
       </div>
     `;
+  }
+
+  fireEvent<T>(name: string, eventInitDict?: CustomEventInit<T>) {
+    this.dispatchEvent(new CustomEvent(name, eventInitDict));
+    this.dispatchEvent(new CustomEvent(`hy-drawer-${name}`, eventInitDict));
   }
 
   @property()
