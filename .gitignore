@@ -17,5 +17,5 @@ node_modules
 *.tgz
 
 # Build artifacts
-lib
-docs/assets/hy-*
+#<removed temporarily>lib
+#<removed temporarily>docs/assets/hy-*
