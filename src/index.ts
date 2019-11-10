@@ -26,7 +26,7 @@ import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestam
 import { createTween } from 'rxjs-create-tween';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged } from './common';
+import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, subscribeWhen } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
@@ -80,6 +80,7 @@ export class HyDrawer
   @property({ type: Number, reflect: true }) threshold: number = 10;
   @property({ type: Boolean, reflect: true }) noScroll: boolean = false;
   @property({ type: Boolean, reflect: true }) mouseEvents: boolean = false;
+  @property({ type: Boolean, reflect: true }) hashChange: boolean = false;
   @property({ reflect: true, converter: rangeConverter, hasChanged: rangeHasChanged }) range: [number, number] = [0, 100];
 
   // State
@@ -100,6 +101,7 @@ export class HyDrawer
     persistent?: Subject<boolean>;
     preventDefault?: Subject<boolean>;
     mouseEvents?: Subject<boolean>;
+    hashChange?: Subject<boolean>;
   } = {};
 
   animateTo$: Subject<boolean>;
@@ -168,13 +170,14 @@ export class HyDrawer
   connectedCallback() {
     super.connectedCallback();
 
-    this.consolidateState()
+    if (this.hashChange) this.consolidateState()
 
     this.$.opened = new BehaviorSubject(this.opened);
     this.$.side = new BehaviorSubject(this.side);
     this.$.persistent = new BehaviorSubject(this.persistent);
     this.$.preventDefault = new BehaviorSubject(this.noScroll);
     this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
+    this.$.hashChange = new BehaviorSubject(this.hashChange)
 
     this.scrimClickable = this.opened
 
@@ -333,6 +336,7 @@ export class HyDrawer
 
     fromEvent(window, 'hashchange').pipe(
       // takeUntil(this.subjects.disconnect),
+      subscribeWhen(this.$.hashChange),
       tap(() => {
         const opened = location.hash === this.hashId;
         if (!history.state && opened) {
@@ -348,11 +352,16 @@ export class HyDrawer
   }
 
   private transitioned = (hasOpened: boolean) => {
-    const hasClosed = !hasOpened;
-
     this.opened = this.scrimClickable = hasOpened;
     this.willChange = false;
 
+    if (this.hashChange) this.transitionedHash(hasOpened)
+
+    this.fireEvent('transitioned', { detail: hasOpened });
+  }
+
+  private transitionedHash(hasOpened: boolean) {
+    const hasClosed = !hasOpened;
     const { backable } = history.state && history.state[this.histId] || { backable: false }
     if (hasClosed && backable) {
       history.back()
@@ -360,8 +369,6 @@ export class HyDrawer
     if (hasOpened && location.hash !== this.hashId) {
       location.hash = this.hashId;
     }
-
-    this.fireEvent('transitioned', { detail: hasOpened });
   }
 
   render() {
