@@ -47,7 +47,7 @@ export const styles = css`
       z-index: calc(var(--hy-drawer-z-index, 100) + 2);
     }
 
-    .content {
+    .wrapper {
       width: var(--hy-drawer-width, 300px);
       background: var(--hy-drawer-background, inherit);
       box-shadow: var(--hy-drawer-box-shadow, 0 0 15px rgba(0, 0, 0, 0.25));
@@ -55,15 +55,15 @@ export const styles = css`
       contain: strict;
     }
 
-    .content.left {
+    .wrapper.left {
       left:  calc(-1 * var(--hy-drawer-width, 300px) + var(--hy-drawer-peek-width, 0px));
     }
 
-    .content.right {
+    .wrapper.right {
       right:  calc(-1 * var(--hy-drawer-width, 300px) + var(--hy-drawer-peek-width, 0px));
     }
 
-    .content > .overflow {
+    .wrapper > .overflow {
       position: absolute;
       top: 0;
       right: 0;
@@ -90,7 +90,7 @@ export const styles = css`
       display: none !important;
     }
 
-    .content {
+    .wrapper {
       transform: none !important;
     }
   }

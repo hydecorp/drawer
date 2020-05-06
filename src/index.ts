@@ -71,7 +71,7 @@ export class HyDrawer
   el: HTMLElement = this;
 
   @query('.scrim') scrimEl: HTMLElement;
-  @query('.content') contentEl: HTMLElement;
+  @query('.wrapper') contentEl: HTMLElement;
   @query('.peek') peekEl: HTMLElement;
 
   @property({ type: Boolean, reflect: true }) opened: boolean = false;
@@ -386,7 +386,7 @@ export class HyDrawer
         : null}
       <div
         class=${classMap({
-          content: true,
+          wrapper: true,
           'full-height': true,
           [this.side]: true,
           grab: this.mouseEvents,
