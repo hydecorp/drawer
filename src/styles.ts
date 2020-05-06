@@ -6,7 +6,7 @@ export const styles = css`
       touch-action: pan-x;
     }
 
-    .span-screen {
+    .full-screen {
       position: fixed;
       top: 0;
       left: 0;
@@ -14,7 +14,7 @@ export const styles = css`
       width: 100vw;
     }
 
-    .span-height {
+    .full-height {
       position: fixed;
       top: 0;
       height: 100vh;

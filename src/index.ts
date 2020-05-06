@@ -373,21 +373,21 @@ export class HyDrawer
 
   render() {
     return html`
-      <div class="peek span-height"></div>
+      <div class="peek full-height"></div>
       <div
-        class="scrim span-screen"
+        class="scrim full-screen"
         style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
           pointerEvents: this.scrimClickable ? 'all' : '',
         })}>
       </div>
       ${this.mouseEvents && this.grabbing && !this.scrimClickable 
-        ? html`<div class="grabbing-screen span-screen"></div>` 
+        ? html`<div class="grabbing-screen full-screen"></div>` 
         : null}
       <div
         class=${classMap({
           content: true,
-          'span-height': true,
+          'full-height': true,
           [this.side]: true,
           grab: this.mouseEvents,
           grabbing: this.mouseEvents && this.grabbing,
