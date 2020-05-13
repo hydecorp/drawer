@@ -28,6 +28,13 @@ export const styles = css`
     }
 
     .scrim {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 10vh;
+      width: 10vw;
+      transform: scale(10);
+      transform-origin: top left;
       opacity: 0;
       pointer-events: none;
       background: var(--hy-drawer-scrim-background, rgba(0, 0, 0, 0.5));
@@ -71,7 +78,6 @@ export const styles = css`
       left: 0;
       overflow-x: hidden;
       overflow-y: auto;
-      will-change: scroll-position;
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
     }

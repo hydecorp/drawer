@@ -375,7 +375,7 @@ export class HyDrawer
     return html`
       <div class="peek full-height"></div>
       <div
-        class="scrim full-screen"
+        class="scrim"
         style=${styleMap({
           willChange: this.willChange ? 'opacity' : '',
           pointerEvents: this.scrimClickable ? 'all' : '',
