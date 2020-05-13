@@ -72,6 +72,7 @@ export const styles = css`
       overflow-x: hidden;
       overflow-y: auto;
       will-change: scroll-position;
+      overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
     }
 
