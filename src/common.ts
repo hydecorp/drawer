@@ -1,6 +1,6 @@
-import { Observable, of, NEVER, PartialObserver } from "rxjs";
+import { Observable, of, NEVER, PartialObserver, animationFrames } from "rxjs";
 
-import { filter, map, switchMap, withLatestFrom } from "rxjs/operators";
+import { filter, map, switchMap, withLatestFrom, takeWhile, endWith, tap } from "rxjs/operators";
 
 export function easeOutSine(t: number, b: number, c: number, d: number) {
   return c * Math.sin((t / d) * (Math.PI / 2)) + b;
@@ -71,4 +71,12 @@ export const rangeConverter = {
 
 export function rangeHasChanged(curr: number[], prev: number[] = []) {
   return curr.length !== prev.length || curr.some((v, i) => v !== prev[i]);
+}
+
+export function tween(easingFn: (t: number, b: number, c: number, d: number, s?: number) => number, b: number, c: number, d: number, s?: number): Observable<number> {
+  return animationFrames().pipe(
+    takeWhile(t => t < d),
+    endWith(d),
+    map(t => easingFn(t, b, c, d, s)),
+  )
 }

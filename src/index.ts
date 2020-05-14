@@ -22,11 +22,10 @@ import { classMap } from 'lit-html/directives/class-map';
 import { styleMap } from 'lit-html/directives/style-map';
 
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, fromEvent } from "rxjs";
-import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip } from 'rxjs/operators';
-import { createTween } from 'rxjs-create-tween';
+import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip, finalize } from 'rxjs/operators';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, subscribeWhen } from './common';
+import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, subscribeWhen, tween } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
@@ -291,10 +290,10 @@ export class HyDrawer
         const inv = this.side === "left" ? 1 : -1;
         const endTranslateX = willOpen ? drawerWidth * inv : 0;
         const diffTranslateX = endTranslateX - translateX;
-        const duration = BASE_DURATION + drawerWidth * WIDTH_CONTRIBUTION;
+        const duration = Math.ceil(BASE_DURATION + drawerWidth * WIDTH_CONTRIBUTION);
 
-        return createTween(easeOutSine, translateX, diffTranslateX, duration).pipe(
-          tap({ complete: () => this.transitioned(willOpen) }),
+        return tween(easeOutSine, translateX, diffTranslateX, duration).pipe(
+          finalize(() => { this.transitioned(willOpen) }),
           takeUntil(start$),
           takeUntil(this.$.side.pipe(skip(1))),
           share(),
