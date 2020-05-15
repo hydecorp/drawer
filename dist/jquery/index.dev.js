@@ -443,21 +443,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var qd_set__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! qd-set */ "./node_modules/qd-set/esm/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Set", function() { return qd_set__WEBPACK_IMPORTED_MODULE_0__["Set"]; });
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -493,127 +497,126 @@ var Component = function Component() {
 
 var componentMixin = function componentMixin() {
   var C = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Component;
-  return (
-    /*#__PURE__*/
-    function (_C) {
-      _inherits(_class, _C);
+  return /*#__PURE__*/function (_C) {
+    _inherits(_class, _C);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
-      }
+    function _class() {
+      _classCallCheck(this, _class);
 
-      _createClass(_class, [{
-        key: "setupComponent",
-        value: function setupComponent(el, state) {
-          var defaults = this.constructor.defaults;
+      return _super.apply(this, arguments);
+    }
 
-          if (true) {
-            var _this$constructor = this.constructor,
-                componentName = _this$constructor.componentName,
-                sideEffects = _this$constructor.sideEffects;
+    _createClass(_class, [{
+      key: "setupComponent",
+      value: function setupComponent(el, state) {
+        var defaults = this.constructor.defaults;
 
-            if (!componentName) {
-              console.warn("Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.");
-            }
+        if (true) {
+          var _this$constructor = this.constructor,
+              componentName = _this$constructor.componentName,
+              sideEffects = _this$constructor.sideEffects;
 
-            if (!defaults) {
-              console.warn("No default properties provided. Implement a static getter called `defaults`.");
-            }
-
-            if (!sideEffects) {
-              console.warn("No side effects provided. Implement a static getter called `sideEffects`.");
-            }
+          if (!componentName) {
+            console.warn("Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.");
           }
 
-          this[sState] = Object.assign({}, defaults, state);
-          this.setupProperties(this);
-          this[sRoot] = this.setupShadowDOM(el);
-        }
-      }, {
-        key: "setupShadowDOM",
-        value: function setupShadowDOM(el) {
-          return el;
-        }
-      }, {
-        key: "connectComponent",
-        value: function connectComponent() {}
-      }, {
-        key: "disconnectComponent",
-        value: function disconnectComponent() {}
-      }, {
-        key: "adoptComponent",
-        value: function adoptComponent() {}
-      }, {
-        key: "getRoot",
-        value: function getRoot() {
-          return this[sRoot];
-        }
-      }, {
-        key: "getEl",
-        value: function getEl() {
-          return this[sRoot];
-        }
-      }, {
-        key: "fireEvent",
-        value: function fireEvent(eventName, data) {
-          var componentName = this.constructor.componentName;
-          var event = new CustomEvent("".concat(componentName, "-").concat(eventName), data);
-          this.el.dispatchEvent(event);
-        }
-      }, {
-        key: "setInternalState",
-        value: function setInternalState(key, value) {
-          this[sState][key] = value;
-        }
-      }, {
-        key: "setupProperties",
-        value: function setupProperties() {
-          var _this = this;
+          if (!defaults) {
+            console.warn("No default properties provided. Implement a static getter called `defaults`.");
+          }
 
-          var sideEffects = this.constructor.sideEffects;
-          Object.keys(this[sState]).forEach(function (key) {
-            var sideEffect = sideEffects[key];
-
-            _this.setupProperty(key, sideEffect);
-          });
+          if (!sideEffects) {
+            console.warn("No side effects provided. Implement a static getter called `sideEffects`.");
+          }
         }
-      }, {
-        key: "setupProperty",
-        value: function setupProperty(key, sideEffect) {
-          var _this2 = this;
 
-          Object.defineProperty(this, key, {
-            get: function get() {
-              return _this2[sState][key];
-            },
-            set: function set(value) {
-              var oldValue = _this2[sState][key];
+        this[sState] = Object.assign({}, defaults, state);
+        this.setupProperties(this);
+        this[sRoot] = this.setupShadowDOM(el);
+      }
+    }, {
+      key: "setupShadowDOM",
+      value: function setupShadowDOM(el) {
+        return el;
+      }
+    }, {
+      key: "connectComponent",
+      value: function connectComponent() {}
+    }, {
+      key: "disconnectComponent",
+      value: function disconnectComponent() {}
+    }, {
+      key: "adoptComponent",
+      value: function adoptComponent() {}
+    }, {
+      key: "getRoot",
+      value: function getRoot() {
+        return this[sRoot];
+      }
+    }, {
+      key: "getEl",
+      value: function getEl() {
+        return this[sRoot];
+      }
+    }, {
+      key: "fireEvent",
+      value: function fireEvent(eventName, data) {
+        var componentName = this.constructor.componentName;
+        var event = new CustomEvent("".concat(componentName, "-").concat(eventName), data);
+        this.el.dispatchEvent(event);
+      }
+    }, {
+      key: "setInternalState",
+      value: function setInternalState(key, value) {
+        this[sState][key] = value;
+      }
+    }, {
+      key: "setupProperties",
+      value: function setupProperties() {
+        var _this = this;
 
-              _this2.setInternalState(key, value);
+        var sideEffects = this.constructor.sideEffects;
+        Object.keys(this[sState]).forEach(function (key) {
+          var sideEffect = sideEffects[key];
 
-              if (sideEffect) sideEffect.call(_this2, value, oldValue);
-            },
-            enumerable: true,
-            configurable: true
-          });
-        }
-      }, {
-        key: "sroot",
-        get: function get() {
-          return this.getRoot();
-        }
-      }, {
-        key: "el",
-        get: function get() {
-          return this.getEl();
-        }
-      }]);
+          _this.setupProperty(key, sideEffect);
+        });
+      }
+    }, {
+      key: "setupProperty",
+      value: function setupProperty(key, sideEffect) {
+        var _this2 = this;
 
-      return _class;
-    }(C)
-  );
+        Object.defineProperty(this, key, {
+          get: function get() {
+            return _this2[sState][key];
+          },
+          set: function set(value) {
+            var oldValue = _this2[sState][key];
+
+            _this2.setInternalState(key, value);
+
+            if (sideEffect) sideEffect.call(_this2, value, oldValue);
+          },
+          enumerable: true,
+          configurable: true
+        });
+      }
+    }, {
+      key: "sroot",
+      get: function get() {
+        return this.getRoot();
+      }
+    }, {
+      key: "el",
+      get: function get() {
+        return this.getEl();
+      }
+    }]);
+
+    return _class;
+  }(C);
 };
 
 /***/ }),
@@ -636,7 +639,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./common */ "./node_modules/hy-component/src/common.js");
 /* harmony import */ var _vanilla__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vanilla */ "./node_modules/hy-component/src/vanilla.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -644,19 +647,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 // # src / define-jquery-compnent.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -679,15 +686,15 @@ var JQueryComponent = _vanilla__WEBPACK_IMPORTED_MODULE_3__["VanillaComponent"];
 function defineJQueryComponent(name, Component) {
   var ns = name.toLowerCase();
 
-  var Constructor =
-  /*#__PURE__*/
-  function (_Component) {
+  var Constructor = /*#__PURE__*/function (_Component) {
     _inherits(Constructor, _Component);
+
+    var _super = _createSuper(Constructor);
 
     function Constructor() {
       _classCallCheck(this, Constructor);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(Constructor).apply(this, arguments));
+      return _super.apply(this, arguments);
     }
 
     _createClass(Constructor, [{
@@ -762,7 +769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rxjsMixin", function() { return rxjsMixin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createXObservable", function() { return createXObservable; });
 /* harmony import */ var rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs/_esm5 */ "./node_modules/rxjs/_esm5/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -770,94 +777,97 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 // # src / rxjs.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
 var rxjsMixin = function rxjsMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_C) {
-      _inherits(_class, _C);
+  return /*#__PURE__*/function (_C) {
+    _inherits(_class, _C);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
+    function _class() {
+      _classCallCheck(this, _class);
+
+      return _super.apply(this, arguments);
+    }
+
+    _createClass(_class, [{
+      key: "setupComponent",
+      value: function setupComponent(el, opts) {
+        var _this = this;
+
+        var sideEffects = {};
+        this.subjects = {};
+        this.subjects.disconnect = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
+        this.subjects.document = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"]();
+        Object.keys(this.constructor.types).map(function (key) {
+          _this.subjects[key] = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"](1);
+
+          sideEffects[key] = function (x) {
+            return _this.subjects[key].next(x);
+          };
+        });
+        Object.defineProperty(this.constructor, "sideEffects", {
+          get: function get() {
+            return sideEffects;
+          },
+          set: function set() {},
+          enumerable: true,
+          configurable: true
+        });
+
+        _get(_getPrototypeOf(_class.prototype), "setupComponent", this).call(this, el, opts);
       }
+    }, {
+      key: "connectComponent",
+      value: function connectComponent() {
+        var _this2 = this;
 
-      _createClass(_class, [{
-        key: "setupComponent",
-        value: function setupComponent(el, opts) {
-          var _this = this;
+        _get(_getPrototypeOf(_class.prototype), "connectComponent", this).call(this);
 
-          var sideEffects = {};
-          this.subjects = {};
-          this.subjects.disconnect = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
-          this.subjects.document = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"]();
-          Object.keys(this.constructor.types).map(function (key) {
-            _this.subjects[key] = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"](1);
+        this.subjects.document.next(document);
+        Object.keys(this.constructor.types).map(function (key) {
+          return _this2.subjects[key].next(_this2[key]);
+        });
+      }
+    }, {
+      key: "disconnectComponent",
+      value: function disconnectComponent() {
+        _get(_getPrototypeOf(_class.prototype), "disconnectComponent", this).call(this);
 
-            sideEffects[key] = function (x) {
-              return _this.subjects[key].next(x);
-            };
-          });
-          Object.defineProperty(this.constructor, "sideEffects", {
-            get: function get() {
-              return sideEffects;
-            },
-            set: function set() {},
-            enumerable: true,
-            configurable: true
-          });
+        this.subjects.disconnect.next({});
+      }
+    }, {
+      key: "adaptComponent",
+      value: function adaptComponent() {
+        _get(_getPrototypeOf(_class.prototype), "adaptComponent", this).call(this);
 
-          _get(_getPrototypeOf(_class.prototype), "setupComponent", this).call(this, el, opts);
-        }
-      }, {
-        key: "connectComponent",
-        value: function connectComponent() {
-          var _this2 = this;
+        this.subjects.document.next(document);
+      }
+    }]);
 
-          _get(_getPrototypeOf(_class.prototype), "connectComponent", this).call(this);
-
-          this.subjects.document.next(document);
-          Object.keys(this.constructor.types).map(function (key) {
-            return _this2.subjects[key].next(_this2[key]);
-          });
-        }
-      }, {
-        key: "disconnectComponent",
-        value: function disconnectComponent() {
-          _get(_getPrototypeOf(_class.prototype), "disconnectComponent", this).call(this);
-
-          this.subjects.disconnect.next({});
-        }
-      }, {
-        key: "adaptComponent",
-        value: function adaptComponent() {
-          _get(_getPrototypeOf(_class.prototype), "adaptComponent", this).call(this);
-
-          this.subjects.document.next(document);
-        }
-      }]);
-
-      return _class;
-    }(C)
-  );
+    return _class;
+  }(C);
 };
 var createXObservable = function createXObservable(X) {
   return function (el, cOpts, oOpts) {
@@ -976,7 +986,7 @@ var _Set = typeof Set !== 'undefined' && new Set([1]).size === 1 ? Set : functio
     return a;
   };
 
-  a.delete = function (x) {
+  a["delete"] = function (x) {
     var t;
 
     if (t = a.has(x)) {
@@ -1065,7 +1075,7 @@ function createTween(easingFunction, b, c, d, s) {
 /*!******************************************!*\
   !*** ./node_modules/rxjs/_esm5/index.js ***!
   \******************************************/
-/*! exports provided: Observable, ConnectableObservable, GroupedObservable, observable, Subject, BehaviorSubject, ReplaySubject, AsyncSubject, asapScheduler, asyncScheduler, queueScheduler, animationFrameScheduler, VirtualTimeScheduler, VirtualAction, Scheduler, Subscription, Subscriber, Notification, pipe, noop, identity, isObservable, ArgumentOutOfRangeError, EmptyError, ObjectUnsubscribedError, UnsubscriptionError, TimeoutError, bindCallback, bindNodeCallback, combineLatest, concat, defer, empty, forkJoin, from, fromEvent, fromEventPattern, generate, iif, interval, merge, never, of, onErrorResumeNext, pairs, race, range, throwError, timer, using, zip, EMPTY, NEVER, config */
+/*! exports provided: Observable, ConnectableObservable, GroupedObservable, observable, Subject, BehaviorSubject, ReplaySubject, AsyncSubject, asapScheduler, asyncScheduler, queueScheduler, animationFrameScheduler, VirtualTimeScheduler, VirtualAction, Scheduler, Subscription, Subscriber, Notification, NotificationKind, pipe, noop, identity, isObservable, ArgumentOutOfRangeError, EmptyError, ObjectUnsubscribedError, UnsubscriptionError, TimeoutError, bindCallback, bindNodeCallback, combineLatest, concat, defer, empty, forkJoin, from, fromEvent, fromEventPattern, generate, iif, interval, merge, never, of, onErrorResumeNext, pairs, partition, race, range, throwError, timer, using, zip, scheduled, EMPTY, NEVER, config */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1122,6 +1132,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _internal_Notification__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./internal/Notification */ "./node_modules/rxjs/_esm5/internal/Notification.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Notification", function() { return _internal_Notification__WEBPACK_IMPORTED_MODULE_16__["Notification"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NotificationKind", function() { return _internal_Notification__WEBPACK_IMPORTED_MODULE_16__["NotificationKind"]; });
 
 /* harmony import */ var _internal_util_pipe__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./internal/util/pipe */ "./node_modules/rxjs/_esm5/internal/util/pipe.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pipe", function() { return _internal_util_pipe__WEBPACK_IMPORTED_MODULE_17__["pipe"]; });
@@ -1204,32 +1216,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _internal_observable_pairs__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./internal/observable/pairs */ "./node_modules/rxjs/_esm5/internal/observable/pairs.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pairs", function() { return _internal_observable_pairs__WEBPACK_IMPORTED_MODULE_43__["pairs"]; });
 
-/* harmony import */ var _internal_observable_race__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./internal/observable/race */ "./node_modules/rxjs/_esm5/internal/observable/race.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "race", function() { return _internal_observable_race__WEBPACK_IMPORTED_MODULE_44__["race"]; });
+/* harmony import */ var _internal_observable_partition__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./internal/observable/partition */ "./node_modules/rxjs/_esm5/internal/observable/partition.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return _internal_observable_partition__WEBPACK_IMPORTED_MODULE_44__["partition"]; });
 
-/* harmony import */ var _internal_observable_range__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./internal/observable/range */ "./node_modules/rxjs/_esm5/internal/observable/range.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "range", function() { return _internal_observable_range__WEBPACK_IMPORTED_MODULE_45__["range"]; });
+/* harmony import */ var _internal_observable_race__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./internal/observable/race */ "./node_modules/rxjs/_esm5/internal/observable/race.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "race", function() { return _internal_observable_race__WEBPACK_IMPORTED_MODULE_45__["race"]; });
 
-/* harmony import */ var _internal_observable_throwError__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./internal/observable/throwError */ "./node_modules/rxjs/_esm5/internal/observable/throwError.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "throwError", function() { return _internal_observable_throwError__WEBPACK_IMPORTED_MODULE_46__["throwError"]; });
+/* harmony import */ var _internal_observable_range__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./internal/observable/range */ "./node_modules/rxjs/_esm5/internal/observable/range.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "range", function() { return _internal_observable_range__WEBPACK_IMPORTED_MODULE_46__["range"]; });
 
-/* harmony import */ var _internal_observable_timer__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./internal/observable/timer */ "./node_modules/rxjs/_esm5/internal/observable/timer.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "timer", function() { return _internal_observable_timer__WEBPACK_IMPORTED_MODULE_47__["timer"]; });
+/* harmony import */ var _internal_observable_throwError__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./internal/observable/throwError */ "./node_modules/rxjs/_esm5/internal/observable/throwError.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "throwError", function() { return _internal_observable_throwError__WEBPACK_IMPORTED_MODULE_47__["throwError"]; });
 
-/* harmony import */ var _internal_observable_using__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./internal/observable/using */ "./node_modules/rxjs/_esm5/internal/observable/using.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "using", function() { return _internal_observable_using__WEBPACK_IMPORTED_MODULE_48__["using"]; });
+/* harmony import */ var _internal_observable_timer__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./internal/observable/timer */ "./node_modules/rxjs/_esm5/internal/observable/timer.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "timer", function() { return _internal_observable_timer__WEBPACK_IMPORTED_MODULE_48__["timer"]; });
 
-/* harmony import */ var _internal_observable_zip__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./internal/observable/zip */ "./node_modules/rxjs/_esm5/internal/observable/zip.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return _internal_observable_zip__WEBPACK_IMPORTED_MODULE_49__["zip"]; });
+/* harmony import */ var _internal_observable_using__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./internal/observable/using */ "./node_modules/rxjs/_esm5/internal/observable/using.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "using", function() { return _internal_observable_using__WEBPACK_IMPORTED_MODULE_49__["using"]; });
+
+/* harmony import */ var _internal_observable_zip__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./internal/observable/zip */ "./node_modules/rxjs/_esm5/internal/observable/zip.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return _internal_observable_zip__WEBPACK_IMPORTED_MODULE_50__["zip"]; });
+
+/* harmony import */ var _internal_scheduled_scheduled__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./internal/scheduled/scheduled */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduled.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "scheduled", function() { return _internal_scheduled_scheduled__WEBPACK_IMPORTED_MODULE_51__["scheduled"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EMPTY", function() { return _internal_observable_empty__WEBPACK_IMPORTED_MODULE_31__["EMPTY"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NEVER", function() { return _internal_observable_never__WEBPACK_IMPORTED_MODULE_40__["NEVER"]; });
 
-/* harmony import */ var _internal_config__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./internal/config */ "./node_modules/rxjs/_esm5/internal/config.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return _internal_config__WEBPACK_IMPORTED_MODULE_50__["config"]; });
+/* harmony import */ var _internal_config__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./internal/config */ "./node_modules/rxjs/_esm5/internal/config.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return _internal_config__WEBPACK_IMPORTED_MODULE_52__["config"]; });
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
+
+
 
 
 
@@ -1304,9 +1324,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AsyncSubject =
-/*@__PURE__*/
-function (_super) {
+var AsyncSubject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AsyncSubject, _super);
 
   function AsyncSubject() {
@@ -1379,9 +1397,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var BehaviorSubject =
-/*@__PURE__*/
-function (_super) {
+var BehaviorSubject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BehaviorSubject, _super);
 
   function BehaviorSubject(_value) {
@@ -1446,9 +1462,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var InnerSubscriber =
-/*@__PURE__*/
-function (_super) {
+var InnerSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](InnerSubscriber, _super);
 
   function InnerSubscriber(parent, outerValue, outerIndex) {
@@ -1509,40 +1523,38 @@ var NotificationKind;
   NotificationKind["COMPLETE"] = "C";
 })(NotificationKind || (NotificationKind = {}));
 
-var Notification =
-/*@__PURE__*/
-function () {
+var Notification = /*@__PURE__*/function () {
   function Notification(kind, value, error) {
     this.kind = kind;
     this.value = value;
     this.error = error;
-    this.hasValue = kind === "N";
+    this.hasValue = kind === 'N';
   }
 
   Notification.prototype.observe = function (observer) {
     switch (this.kind) {
-      case "N":
+      case 'N':
         return observer.next && observer.next(this.value);
 
-      case "E":
+      case 'E':
         return observer.error && observer.error(this.error);
 
-      case "C":
+      case 'C':
         return observer.complete && observer.complete();
     }
   };
 
-  Notification.prototype.do = function (next, error, complete) {
+  Notification.prototype["do"] = function (next, error, complete) {
     var kind = this.kind;
 
     switch (kind) {
-      case "N":
+      case 'N':
         return next && next(this.value);
 
-      case "E":
+      case 'E':
         return error && error(this.error);
 
-      case "C":
+      case 'C':
         return complete && complete();
     }
   };
@@ -1551,7 +1563,7 @@ function () {
     if (nextOrObserver && typeof nextOrObserver.next === 'function') {
       return this.observe(nextOrObserver);
     } else {
-      return this.do(nextOrObserver, error, complete);
+      return this["do"](nextOrObserver, error, complete);
     }
   };
 
@@ -1559,13 +1571,13 @@ function () {
     var kind = this.kind;
 
     switch (kind) {
-      case "N":
+      case 'N':
         return Object(_observable_of__WEBPACK_IMPORTED_MODULE_1__["of"])(this.value);
 
-      case "E":
+      case 'E':
         return Object(_observable_throwError__WEBPACK_IMPORTED_MODULE_2__["throwError"])(this.error);
 
-      case "C":
+      case 'C':
         return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_0__["empty"])();
     }
 
@@ -1574,22 +1586,22 @@ function () {
 
   Notification.createNext = function (value) {
     if (typeof value !== 'undefined') {
-      return new Notification("N", value);
+      return new Notification('N', value);
     }
 
     return Notification.undefinedValueNotification;
   };
 
   Notification.createError = function (err) {
-    return new Notification("E", undefined, err);
+    return new Notification('E', undefined, err);
   };
 
   Notification.createComplete = function () {
     return Notification.completeNotification;
   };
 
-  Notification.completeNotification = new Notification("C");
-  Notification.undefinedValueNotification = new Notification("N", undefined);
+  Notification.completeNotification = new Notification('C');
+  Notification.undefinedValueNotification = new Notification('N', undefined);
   return Notification;
 }();
 
@@ -1609,19 +1621,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Observable", function() { return Observable; });
 /* harmony import */ var _util_canReportError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/canReportError */ "./node_modules/rxjs/_esm5/internal/util/canReportError.js");
 /* harmony import */ var _util_toSubscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/toSubscriber */ "./node_modules/rxjs/_esm5/internal/util/toSubscriber.js");
-/* harmony import */ var _internal_symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../internal/symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
 /* harmony import */ var _util_pipe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/pipe */ "./node_modules/rxjs/_esm5/internal/util/pipe.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./config */ "./node_modules/rxjs/_esm5/internal/config.js");
-/** PURE_IMPORTS_START _util_canReportError,_util_toSubscriber,_internal_symbol_observable,_util_pipe,_config PURE_IMPORTS_END */
+/** PURE_IMPORTS_START _util_canReportError,_util_toSubscriber,_symbol_observable,_util_pipe,_config PURE_IMPORTS_END */
 
 
 
 
 
 
-var Observable =
-/*@__PURE__*/
-function () {
+var Observable = /*@__PURE__*/function () {
   function Observable(subscribe) {
     this._isScalar = false;
 
@@ -1702,7 +1712,7 @@ function () {
     return source && source.subscribe(subscriber);
   };
 
-  Observable.prototype[_internal_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]] = function () {
+  Observable.prototype[_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]] = function () {
     return this;
   };
 
@@ -1806,9 +1816,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var OuterSubscriber =
-/*@__PURE__*/
-function (_super) {
+var OuterSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](OuterSubscriber, _super);
 
   function OuterSubscriber() {
@@ -1860,9 +1868,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ReplaySubject =
-/*@__PURE__*/
-function (_super) {
+var ReplaySubject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ReplaySubject, _super);
 
   function ReplaySubject(bufferSize, windowTime, scheduler) {
@@ -1990,9 +1996,7 @@ function (_super) {
 
 
 
-var ReplayEvent =
-/*@__PURE__*/
-function () {
+var ReplayEvent = /*@__PURE__*/function () {
   function ReplayEvent(time, value) {
     this.time = time;
     this.value = value;
@@ -2013,9 +2017,7 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Scheduler", function() { return Scheduler; });
-var Scheduler =
-/*@__PURE__*/
-function () {
+var Scheduler = /*@__PURE__*/function () {
   function Scheduler(SchedulerAction, now) {
     if (now === void 0) {
       now = Scheduler.now;
@@ -2072,9 +2074,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var SubjectSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SubjectSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubjectSubscriber, _super);
 
   function SubjectSubscriber(destination) {
@@ -2089,9 +2089,7 @@ function (_super) {
 
 
 
-var Subject =
-/*@__PURE__*/
-function (_super) {
+var Subject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Subject, _super);
 
   function Subject() {
@@ -2211,9 +2209,7 @@ function (_super) {
 
 
 
-var AnonymousSubject =
-/*@__PURE__*/
-function (_super) {
+var AnonymousSubject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AnonymousSubject, _super);
 
   function AnonymousSubject(destination, source) {
@@ -2281,9 +2277,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var SubjectSubscription =
-/*@__PURE__*/
-function (_super) {
+var SubjectSubscription = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubjectSubscription, _super);
 
   function SubjectSubscription(subject, subscriber) {
@@ -2341,7 +2335,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../internal/symbol/rxSubscriber */ "./node_modules/rxjs/_esm5/internal/symbol/rxSubscriber.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./config */ "./node_modules/rxjs/_esm5/internal/config.js");
 /* harmony import */ var _util_hostReportError__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./util/hostReportError */ "./node_modules/rxjs/_esm5/internal/util/hostReportError.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /** PURE_IMPORTS_START tslib,_util_isFunction,_Observer,_Subscription,_internal_symbol_rxSubscriber,_config,_util_hostReportError PURE_IMPORTS_END */
 
@@ -2352,9 +2346,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 
 
-var Subscriber =
-/*@__PURE__*/
-function (_super) {
+var Subscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Subscriber, _super);
 
   function Subscriber(destinationOrNext, error, complete) {
@@ -2455,17 +2447,12 @@ function (_super) {
   };
 
   Subscriber.prototype._unsubscribeAndRecycle = function () {
-    var _a = this,
-        _parent = _a._parent,
-        _parents = _a._parents;
-
-    this._parent = null;
-    this._parents = null;
+    var _parentOrParents = this._parentOrParents;
+    this._parentOrParents = null;
     this.unsubscribe();
     this.closed = false;
     this.isStopped = false;
-    this._parent = _parent;
-    this._parents = _parents;
+    this._parentOrParents = _parentOrParents;
     return this;
   };
 
@@ -2474,9 +2461,7 @@ function (_super) {
 
 
 
-var SafeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SafeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SafeSubscriber, _super);
 
   function SafeSubscriber(_parentSubscriber, observerOrNext, error, complete) {
@@ -2649,7 +2634,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_isObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/isObject */ "./node_modules/rxjs/_esm5/internal/util/isObject.js");
 /* harmony import */ var _util_isFunction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./util/isFunction */ "./node_modules/rxjs/_esm5/internal/util/isFunction.js");
 /* harmony import */ var _util_UnsubscriptionError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/UnsubscriptionError */ "./node_modules/rxjs/_esm5/internal/util/UnsubscriptionError.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /** PURE_IMPORTS_START _util_isArray,_util_isObject,_util_isFunction,_util_UnsubscriptionError PURE_IMPORTS_END */
 
@@ -2657,13 +2642,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 
 
-var Subscription =
-/*@__PURE__*/
-function () {
+var Subscription = /*@__PURE__*/function () {
   function Subscription(unsubscribe) {
     this.closed = false;
-    this._parent = null;
-    this._parents = null;
+    this._parentOrParents = null;
     this._subscriptions = null;
 
     if (unsubscribe) {
@@ -2672,7 +2654,6 @@ function () {
   }
 
   Subscription.prototype.unsubscribe = function () {
-    var hasErrors = false;
     var errors;
 
     if (this.closed) {
@@ -2680,36 +2661,34 @@ function () {
     }
 
     var _a = this,
-        _parent = _a._parent,
-        _parents = _a._parents,
+        _parentOrParents = _a._parentOrParents,
         _unsubscribe = _a._unsubscribe,
         _subscriptions = _a._subscriptions;
 
     this.closed = true;
-    this._parent = null;
-    this._parents = null;
+    this._parentOrParents = null;
     this._subscriptions = null;
-    var index = -1;
-    var len = _parents ? _parents.length : 0;
 
-    while (_parent) {
-      _parent.remove(this);
-
-      _parent = ++index < len && _parents[index] || null;
+    if (_parentOrParents instanceof Subscription) {
+      _parentOrParents.remove(this);
+    } else if (_parentOrParents !== null) {
+      for (var index = 0; index < _parentOrParents.length; ++index) {
+        var parent_1 = _parentOrParents[index];
+        parent_1.remove(this);
+      }
     }
 
     if (Object(_util_isFunction__WEBPACK_IMPORTED_MODULE_2__["isFunction"])(_unsubscribe)) {
       try {
         _unsubscribe.call(this);
       } catch (e) {
-        hasErrors = true;
         errors = e instanceof _util_UnsubscriptionError__WEBPACK_IMPORTED_MODULE_3__["UnsubscriptionError"] ? flattenUnsubscriptionErrors(e.errors) : [e];
       }
     }
 
     if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(_subscriptions)) {
-      index = -1;
-      len = _subscriptions.length;
+      var index = -1;
+      var len = _subscriptions.length;
 
       while (++index < len) {
         var sub = _subscriptions[index];
@@ -2718,7 +2697,6 @@ function () {
           try {
             sub.unsubscribe();
           } catch (e) {
-            hasErrors = true;
             errors = errors || [];
 
             if (e instanceof _util_UnsubscriptionError__WEBPACK_IMPORTED_MODULE_3__["UnsubscriptionError"]) {
@@ -2731,13 +2709,17 @@ function () {
       }
     }
 
-    if (hasErrors) {
+    if (errors) {
       throw new _util_UnsubscriptionError__WEBPACK_IMPORTED_MODULE_3__["UnsubscriptionError"](errors);
     }
   };
 
   Subscription.prototype.add = function (teardown) {
     var subscription = teardown;
+
+    if (!teardown) {
+      return Subscription.EMPTY;
+    }
 
     switch (_typeof(teardown)) {
       case 'function':
@@ -2759,22 +2741,32 @@ function () {
 
       default:
         {
-          if (!teardown) {
-            return Subscription.EMPTY;
-          }
-
           throw new Error('unrecognized teardown ' + teardown + ' added to Subscription.');
         }
     }
 
-    if (subscription._addParent(this)) {
-      var subscriptions = this._subscriptions;
+    var _parentOrParents = subscription._parentOrParents;
 
-      if (subscriptions) {
-        subscriptions.push(subscription);
-      } else {
-        this._subscriptions = [subscription];
+    if (_parentOrParents === null) {
+      subscription._parentOrParents = this;
+    } else if (_parentOrParents instanceof Subscription) {
+      if (_parentOrParents === this) {
+        return subscription;
       }
+
+      subscription._parentOrParents = [_parentOrParents, this];
+    } else if (_parentOrParents.indexOf(this) === -1) {
+      _parentOrParents.push(this);
+    } else {
+      return subscription;
+    }
+
+    var subscriptions = this._subscriptions;
+
+    if (subscriptions === null) {
+      this._subscriptions = [subscription];
+    } else {
+      subscriptions.push(subscription);
     }
 
     return subscription;
@@ -2790,28 +2782,6 @@ function () {
         subscriptions.splice(subscriptionIndex, 1);
       }
     }
-  };
-
-  Subscription.prototype._addParent = function (parent) {
-    var _a = this,
-        _parent = _a._parent,
-        _parents = _a._parents;
-
-    if (_parent === parent) {
-      return false;
-    } else if (!_parent) {
-      this._parent = parent;
-      return true;
-    } else if (!_parents) {
-      this._parents = [parent];
-      return true;
-    } else if (_parents.indexOf(parent) === -1) {
-      _parents.push(parent);
-
-      return true;
-    }
-
-    return false;
   };
 
   Subscription.EMPTY = function (empty) {
@@ -2849,9 +2819,7 @@ var config = {
 
   set useDeprecatedSynchronousErrorHandling(value) {
     if (value) {
-      var error =
-      /*@__PURE__*/
-      new Error();
+      var error = /*@__PURE__*/new Error();
       /*@__PURE__*/
 
       console.warn('DEPRECATED! RxJS was set to use deprecated synchronous error handling behavior by code at: \n' + error.stack);
@@ -2896,9 +2864,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ConnectableObservable =
-/*@__PURE__*/
-function (_super) {
+var ConnectableObservable = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ConnectableObservable, _super);
 
   function ConnectableObservable(source, subjectFactory) {
@@ -2936,8 +2902,6 @@ function (_super) {
       if (connection.closed) {
         this._connection = null;
         connection = _Subscription__WEBPACK_IMPORTED_MODULE_4__["Subscription"].EMPTY;
-      } else {
-        this._connection = connection;
       }
     }
 
@@ -2952,44 +2916,44 @@ function (_super) {
 }(_Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]);
 
 
-var connectableProto = ConnectableObservable.prototype;
-var connectableObservableDescriptor = {
-  operator: {
-    value: null
-  },
-  _refCount: {
-    value: 0,
-    writable: true
-  },
-  _subject: {
-    value: null,
-    writable: true
-  },
-  _connection: {
-    value: null,
-    writable: true
-  },
-  _subscribe: {
-    value: connectableProto._subscribe
-  },
-  _isComplete: {
-    value: connectableProto._isComplete,
-    writable: true
-  },
-  getSubject: {
-    value: connectableProto.getSubject
-  },
-  connect: {
-    value: connectableProto.connect
-  },
-  refCount: {
-    value: connectableProto.refCount
-  }
-};
+var connectableObservableDescriptor = /*@__PURE__*/function () {
+  var connectableProto = ConnectableObservable.prototype;
+  return {
+    operator: {
+      value: null
+    },
+    _refCount: {
+      value: 0,
+      writable: true
+    },
+    _subject: {
+      value: null,
+      writable: true
+    },
+    _connection: {
+      value: null,
+      writable: true
+    },
+    _subscribe: {
+      value: connectableProto._subscribe
+    },
+    _isComplete: {
+      value: connectableProto._isComplete,
+      writable: true
+    },
+    getSubject: {
+      value: connectableProto.getSubject
+    },
+    connect: {
+      value: connectableProto.connect
+    },
+    refCount: {
+      value: connectableProto.refCount
+    }
+  };
+}();
 
-var ConnectableSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ConnectableSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ConnectableSubscriber, _super);
 
   function ConnectableSubscriber(destination, connectable) {
@@ -3032,9 +2996,7 @@ function (_super) {
   return ConnectableSubscriber;
 }(_Subject__WEBPACK_IMPORTED_MODULE_1__["SubjectSubscriber"]);
 
-var RefCountOperator =
-/*@__PURE__*/
-function () {
+var RefCountOperator = /*@__PURE__*/function () {
   function RefCountOperator(connectable) {
     this.connectable = connectable;
   }
@@ -3055,9 +3017,7 @@ function () {
   return RefCountOperator;
 }();
 
-var RefCountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RefCountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RefCountSubscriber, _super);
 
   function RefCountSubscriber(destination, connectable) {
@@ -3124,9 +3084,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var SubscribeOnObservable =
-/*@__PURE__*/
-function (_super) {
+var SubscribeOnObservable = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubscribeOnObservable, _super);
 
   function SubscribeOnObservable(source, delayTime, scheduler) {
@@ -3564,9 +3522,7 @@ function combineLatest() {
   return Object(_fromArray__WEBPACK_IMPORTED_MODULE_5__["fromArray"])(observables, scheduler).lift(new CombineLatestOperator(resultSelector));
 }
 
-var CombineLatestOperator =
-/*@__PURE__*/
-function () {
+var CombineLatestOperator = /*@__PURE__*/function () {
   function CombineLatestOperator(resultSelector) {
     this.resultSelector = resultSelector;
   }
@@ -3580,9 +3536,7 @@ function () {
 
 
 
-var CombineLatestSubscriber =
-/*@__PURE__*/
-function (_super) {
+var CombineLatestSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](CombineLatestSubscriber, _super);
 
   function CombineLatestSubscriber(destination, resultSelector) {
@@ -3724,25 +3678,23 @@ function defer(observableFactory) {
 /*!**************************************************************!*\
   !*** ./node_modules/rxjs/_esm5/internal/observable/empty.js ***!
   \**************************************************************/
-/*! exports provided: EMPTY, empty, emptyScheduled */
+/*! exports provided: EMPTY, empty */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EMPTY", function() { return EMPTY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "empty", function() { return empty; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emptyScheduled", function() { return emptyScheduled; });
 /* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
 /** PURE_IMPORTS_START _Observable PURE_IMPORTS_END */
 
-var EMPTY =
-/*@__PURE__*/
-new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
+var EMPTY = /*@__PURE__*/new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
   return subscriber.complete();
 });
 function empty(scheduler) {
   return scheduler ? emptyScheduled(scheduler) : EMPTY;
 }
+
 function emptyScheduled(scheduler) {
   return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
     return scheduler.schedule(function () {
@@ -3763,16 +3715,12 @@ function emptyScheduled(scheduler) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forkJoin", function() { return forkJoin; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isArray */ "./node_modules/rxjs/_esm5/internal/util/isArray.js");
-/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./empty */ "./node_modules/rxjs/_esm5/internal/observable/empty.js");
-/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/subscribeToResult */ "./node_modules/rxjs/_esm5/internal/util/subscribeToResult.js");
-/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../OuterSubscriber */ "./node_modules/rxjs/_esm5/internal/OuterSubscriber.js");
-/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../operators/map */ "./node_modules/rxjs/_esm5/internal/operators/map.js");
-/** PURE_IMPORTS_START tslib,_Observable,_util_isArray,_empty,_util_subscribeToResult,_OuterSubscriber,_operators_map PURE_IMPORTS_END */
-
-
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isArray */ "./node_modules/rxjs/_esm5/internal/util/isArray.js");
+/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/map */ "./node_modules/rxjs/_esm5/internal/operators/map.js");
+/* harmony import */ var _util_isObject__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isObject */ "./node_modules/rxjs/_esm5/internal/util/isObject.js");
+/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./from */ "./node_modules/rxjs/_esm5/internal/observable/from.js");
+/** PURE_IMPORTS_START _Observable,_util_isArray,_operators_map,_util_isObject,_from PURE_IMPORTS_END */
 
 
 
@@ -3785,94 +3733,81 @@ function forkJoin() {
     sources[_i] = arguments[_i];
   }
 
-  var resultSelector;
+  if (sources.length === 1) {
+    var first_1 = sources[0];
+
+    if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(first_1)) {
+      return forkJoinInternal(first_1, null);
+    }
+
+    if (Object(_util_isObject__WEBPACK_IMPORTED_MODULE_3__["isObject"])(first_1) && Object.getPrototypeOf(first_1) === Object.prototype) {
+      var keys = Object.keys(first_1);
+      return forkJoinInternal(keys.map(function (key) {
+        return first_1[key];
+      }), keys);
+    }
+  }
 
   if (typeof sources[sources.length - 1] === 'function') {
-    resultSelector = sources.pop();
-  }
-
-  if (sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_2__["isArray"])(sources[0])) {
-    sources = sources[0];
-  }
-
-  if (sources.length === 0) {
-    return _empty__WEBPACK_IMPORTED_MODULE_3__["EMPTY"];
-  }
-
-  if (resultSelector) {
-    return forkJoin(sources).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_6__["map"])(function (args) {
-      return resultSelector.apply(void 0, args);
+    var resultSelector_1 = sources.pop();
+    sources = sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(sources[0]) ? sources[0] : sources;
+    return forkJoinInternal(sources, null).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_2__["map"])(function (args) {
+      return resultSelector_1.apply(void 0, args);
     }));
   }
 
-  return new _Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"](function (subscriber) {
-    return new ForkJoinSubscriber(subscriber, sources);
-  });
+  return forkJoinInternal(sources, null);
 }
 
-var ForkJoinSubscriber =
-/*@__PURE__*/
-function (_super) {
-  tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ForkJoinSubscriber, _super);
-
-  function ForkJoinSubscriber(destination, sources) {
-    var _this = _super.call(this, destination) || this;
-
-    _this.sources = sources;
-    _this.completed = 0;
-    _this.haveValues = 0;
+function forkJoinInternal(sources, keys) {
+  return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
     var len = sources.length;
-    _this.values = new Array(len);
+
+    if (len === 0) {
+      subscriber.complete();
+      return;
+    }
+
+    var values = new Array(len);
+    var completed = 0;
+    var emitted = 0;
+
+    var _loop_1 = function _loop_1(i) {
+      var source = Object(_from__WEBPACK_IMPORTED_MODULE_4__["from"])(sources[i]);
+      var hasValue = false;
+      subscriber.add(source.subscribe({
+        next: function next(value) {
+          if (!hasValue) {
+            hasValue = true;
+            emitted++;
+          }
+
+          values[i] = value;
+        },
+        error: function error(err) {
+          return subscriber.error(err);
+        },
+        complete: function complete() {
+          completed++;
+
+          if (completed === len || !hasValue) {
+            if (emitted === len) {
+              subscriber.next(keys ? keys.reduce(function (result, key, i) {
+                return result[key] = values[i], result;
+              }, {}) : values);
+            }
+
+            subscriber.complete();
+          }
+        }
+      }));
+    };
 
     for (var i = 0; i < len; i++) {
-      var source = sources[i];
-      var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_4__["subscribeToResult"])(_this, source, null, i);
-
-      if (innerSubscription) {
-        _this.add(innerSubscription);
-      }
+      _loop_1(i);
     }
-
-    return _this;
-  }
-
-  ForkJoinSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-    this.values[outerIndex] = innerValue;
-
-    if (!innerSub._hasValue) {
-      innerSub._hasValue = true;
-      this.haveValues++;
-    }
-  };
-
-  ForkJoinSubscriber.prototype.notifyComplete = function (innerSub) {
-    var _a = this,
-        destination = _a.destination,
-        haveValues = _a.haveValues,
-        values = _a.values;
-
-    var len = values.length;
-
-    if (!innerSub._hasValue) {
-      destination.complete();
-      return;
-    }
-
-    this.completed++;
-
-    if (this.completed !== len) {
-      return;
-    }
-
-    if (haveValues === len) {
-      destination.next(values);
-    }
-
-    destination.complete();
-  };
-
-  return ForkJoinSubscriber;
-}(_OuterSubscriber__WEBPACK_IMPORTED_MODULE_5__["OuterSubscriber"]);
+  });
+}
 
 /***/ }),
 
@@ -3887,25 +3822,9 @@ function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "from", function() { return from; });
 /* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _util_isPromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isPromise */ "./node_modules/rxjs/_esm5/internal/util/isPromise.js");
-/* harmony import */ var _util_isArrayLike__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isArrayLike */ "./node_modules/rxjs/_esm5/internal/util/isArrayLike.js");
-/* harmony import */ var _util_isInteropObservable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isInteropObservable */ "./node_modules/rxjs/_esm5/internal/util/isInteropObservable.js");
-/* harmony import */ var _util_isIterable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isIterable */ "./node_modules/rxjs/_esm5/internal/util/isIterable.js");
-/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./fromArray */ "./node_modules/rxjs/_esm5/internal/observable/fromArray.js");
-/* harmony import */ var _fromPromise__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./fromPromise */ "./node_modules/rxjs/_esm5/internal/observable/fromPromise.js");
-/* harmony import */ var _fromIterable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fromIterable */ "./node_modules/rxjs/_esm5/internal/observable/fromIterable.js");
-/* harmony import */ var _fromObservable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./fromObservable */ "./node_modules/rxjs/_esm5/internal/observable/fromObservable.js");
-/* harmony import */ var _util_subscribeTo__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/subscribeTo */ "./node_modules/rxjs/_esm5/internal/util/subscribeTo.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-/** PURE_IMPORTS_START _Observable,_util_isPromise,_util_isArrayLike,_util_isInteropObservable,_util_isIterable,_fromArray,_fromPromise,_fromIterable,_fromObservable,_util_subscribeTo PURE_IMPORTS_END */
-
-
-
-
-
-
-
+/* harmony import */ var _util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeTo */ "./node_modules/rxjs/_esm5/internal/util/subscribeTo.js");
+/* harmony import */ var _scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduled */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduled.js");
+/** PURE_IMPORTS_START _Observable,_util_subscribeTo,_scheduled_scheduled PURE_IMPORTS_END */
 
 
 
@@ -3915,22 +3834,10 @@ function from(input, scheduler) {
       return input;
     }
 
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_9__["subscribeTo"])(input));
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(input));
+  } else {
+    return Object(_scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__["scheduled"])(input, scheduler);
   }
-
-  if (input != null) {
-    if (Object(_util_isInteropObservable__WEBPACK_IMPORTED_MODULE_3__["isInteropObservable"])(input)) {
-      return Object(_fromObservable__WEBPACK_IMPORTED_MODULE_8__["fromObservable"])(input, scheduler);
-    } else if (Object(_util_isPromise__WEBPACK_IMPORTED_MODULE_1__["isPromise"])(input)) {
-      return Object(_fromPromise__WEBPACK_IMPORTED_MODULE_6__["fromPromise"])(input, scheduler);
-    } else if (Object(_util_isArrayLike__WEBPACK_IMPORTED_MODULE_2__["isArrayLike"])(input)) {
-      return Object(_fromArray__WEBPACK_IMPORTED_MODULE_5__["fromArray"])(input, scheduler);
-    } else if (Object(_util_isIterable__WEBPACK_IMPORTED_MODULE_4__["isIterable"])(input) || typeof input === 'string') {
-      return Object(_fromIterable__WEBPACK_IMPORTED_MODULE_7__["fromIterable"])(input, scheduler);
-    }
-  }
-
-  throw new TypeError((input !== null && _typeof(input) || input) + ' is not observable');
 }
 
 /***/ }),
@@ -3946,33 +3853,17 @@ function from(input, scheduler) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromArray", function() { return fromArray; });
 /* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
-/* harmony import */ var _util_subscribeToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/subscribeToArray */ "./node_modules/rxjs/_esm5/internal/util/subscribeToArray.js");
-/** PURE_IMPORTS_START _Observable,_Subscription,_util_subscribeToArray PURE_IMPORTS_END */
+/* harmony import */ var _util_subscribeToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeToArray */ "./node_modules/rxjs/_esm5/internal/util/subscribeToArray.js");
+/* harmony import */ var _scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduleArray */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleArray.js");
+/** PURE_IMPORTS_START _Observable,_util_subscribeToArray,_scheduled_scheduleArray PURE_IMPORTS_END */
 
 
 
 function fromArray(input, scheduler) {
   if (!scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeToArray__WEBPACK_IMPORTED_MODULE_2__["subscribeToArray"])(input));
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeToArray__WEBPACK_IMPORTED_MODULE_1__["subscribeToArray"])(input));
   } else {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
-      var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-      var i = 0;
-      sub.add(scheduler.schedule(function () {
-        if (i === input.length) {
-          subscriber.complete();
-          return;
-        }
-
-        subscriber.next(input[i++]);
-
-        if (!subscriber.closed) {
-          sub.add(this.schedule());
-        }
-      }));
-      return sub;
-    });
+    return Object(_scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__["scheduleArray"])(input, scheduler);
   }
 }
 
@@ -3997,7 +3888,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var toString = Object.prototype.toString;
+
+var toString = /*@__PURE__*/function () {
+  return Object.prototype.toString;
+}();
+
 function fromEvent(target, eventName, options, resultSelector) {
   if (Object(_util_isFunction__WEBPACK_IMPORTED_MODULE_2__["isFunction"])(options)) {
     resultSelector = options;
@@ -4126,171 +4021,6 @@ function fromEventPattern(addHandler, removeHandler, resultSelector) {
       return removeHandler(handler, retValue);
     };
   });
-}
-
-/***/ }),
-
-/***/ "./node_modules/rxjs/_esm5/internal/observable/fromIterable.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm5/internal/observable/fromIterable.js ***!
-  \*********************************************************************/
-/*! exports provided: fromIterable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromIterable", function() { return fromIterable; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
-/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/iterator */ "./node_modules/rxjs/_esm5/internal/symbol/iterator.js");
-/* harmony import */ var _util_subscribeToIterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToIterable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToIterable.js");
-/** PURE_IMPORTS_START _Observable,_Subscription,_symbol_iterator,_util_subscribeToIterable PURE_IMPORTS_END */
-
-
-
-
-function fromIterable(input, scheduler) {
-  if (!input) {
-    throw new Error('Iterable cannot be null');
-  }
-
-  if (!scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeToIterable__WEBPACK_IMPORTED_MODULE_3__["subscribeToIterable"])(input));
-  } else {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
-      var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-      var iterator;
-      sub.add(function () {
-        if (iterator && typeof iterator.return === 'function') {
-          iterator.return();
-        }
-      });
-      sub.add(scheduler.schedule(function () {
-        iterator = input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_2__["iterator"]]();
-        sub.add(scheduler.schedule(function () {
-          if (subscriber.closed) {
-            return;
-          }
-
-          var value;
-          var done;
-
-          try {
-            var result = iterator.next();
-            value = result.value;
-            done = result.done;
-          } catch (err) {
-            subscriber.error(err);
-            return;
-          }
-
-          if (done) {
-            subscriber.complete();
-          } else {
-            subscriber.next(value);
-            this.schedule();
-          }
-        }));
-      }));
-      return sub;
-    });
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/rxjs/_esm5/internal/observable/fromObservable.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm5/internal/observable/fromObservable.js ***!
-  \***********************************************************************/
-/*! exports provided: fromObservable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromObservable", function() { return fromObservable; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
-/* harmony import */ var _util_subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToObservable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToObservable.js");
-/** PURE_IMPORTS_START _Observable,_Subscription,_symbol_observable,_util_subscribeToObservable PURE_IMPORTS_END */
-
-
-
-
-function fromObservable(input, scheduler) {
-  if (!scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__["subscribeToObservable"])(input));
-  } else {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
-      var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-      sub.add(scheduler.schedule(function () {
-        var observable = input[_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]]();
-        sub.add(observable.subscribe({
-          next: function next(value) {
-            sub.add(scheduler.schedule(function () {
-              return subscriber.next(value);
-            }));
-          },
-          error: function error(err) {
-            sub.add(scheduler.schedule(function () {
-              return subscriber.error(err);
-            }));
-          },
-          complete: function complete() {
-            sub.add(scheduler.schedule(function () {
-              return subscriber.complete();
-            }));
-          }
-        }));
-      }));
-      return sub;
-    });
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/rxjs/_esm5/internal/observable/fromPromise.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm5/internal/observable/fromPromise.js ***!
-  \********************************************************************/
-/*! exports provided: fromPromise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromPromise", function() { return fromPromise; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
-/* harmony import */ var _util_subscribeToPromise__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/subscribeToPromise */ "./node_modules/rxjs/_esm5/internal/util/subscribeToPromise.js");
-/** PURE_IMPORTS_START _Observable,_Subscription,_util_subscribeToPromise PURE_IMPORTS_END */
-
-
-
-function fromPromise(input, scheduler) {
-  if (!scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeToPromise__WEBPACK_IMPORTED_MODULE_2__["subscribeToPromise"])(input));
-  } else {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
-      var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-      sub.add(scheduler.schedule(function () {
-        return input.then(function (value) {
-          sub.add(scheduler.schedule(function () {
-            subscriber.next(value);
-            sub.add(scheduler.schedule(function () {
-              return subscriber.complete();
-            }));
-          }));
-        }, function (err) {
-          sub.add(scheduler.schedule(function () {
-            return subscriber.error(err);
-          }));
-        });
-      }));
-      return sub;
-    });
-  }
 }
 
 /***/ }),
@@ -4606,9 +4336,7 @@ __webpack_require__.r(__webpack_exports__);
 /** PURE_IMPORTS_START _Observable,_util_noop PURE_IMPORTS_END */
 
 
-var NEVER =
-/*@__PURE__*/
-new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](_util_noop__WEBPACK_IMPORTED_MODULE_1__["noop"]);
+var NEVER = /*@__PURE__*/new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](_util_noop__WEBPACK_IMPORTED_MODULE_1__["noop"]);
 function never() {
   return NEVER;
 }
@@ -4627,10 +4355,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "of", function() { return of; });
 /* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isScheduler */ "./node_modules/rxjs/_esm5/internal/util/isScheduler.js");
 /* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fromArray */ "./node_modules/rxjs/_esm5/internal/observable/fromArray.js");
-/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./empty */ "./node_modules/rxjs/_esm5/internal/observable/empty.js");
-/* harmony import */ var _scalar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scalar */ "./node_modules/rxjs/_esm5/internal/observable/scalar.js");
-/** PURE_IMPORTS_START _util_isScheduler,_fromArray,_empty,_scalar PURE_IMPORTS_END */
-
+/* harmony import */ var _scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduleArray */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleArray.js");
+/** PURE_IMPORTS_START _util_isScheduler,_fromArray,_scheduled_scheduleArray PURE_IMPORTS_END */
 
 
 
@@ -4645,19 +4371,9 @@ function of() {
 
   if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_0__["isScheduler"])(scheduler)) {
     args.pop();
+    return Object(_scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__["scheduleArray"])(args, scheduler);
   } else {
-    scheduler = undefined;
-  }
-
-  switch (args.length) {
-    case 0:
-      return Object(_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])(scheduler);
-
-    case 1:
-      return scheduler ? Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(args, scheduler) : Object(_scalar__WEBPACK_IMPORTED_MODULE_3__["scalar"])(args[0]);
-
-    default:
-      return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(args, scheduler);
+    return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(args);
   }
 }
 
@@ -4789,6 +4505,31 @@ function dispatch(state) {
 
 /***/ }),
 
+/***/ "./node_modules/rxjs/_esm5/internal/observable/partition.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/observable/partition.js ***!
+  \******************************************************************/
+/*! exports provided: partition */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return partition; });
+/* harmony import */ var _util_not__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/not */ "./node_modules/rxjs/_esm5/internal/util/not.js");
+/* harmony import */ var _util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeTo */ "./node_modules/rxjs/_esm5/internal/util/subscribeTo.js");
+/* harmony import */ var _operators_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/filter */ "./node_modules/rxjs/_esm5/internal/operators/filter.js");
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/** PURE_IMPORTS_START _util_not,_util_subscribeTo,_operators_filter,_Observable PURE_IMPORTS_END */
+
+
+
+
+function partition(source, predicate, thisArg) {
+  return [Object(_operators_filter__WEBPACK_IMPORTED_MODULE_2__["filter"])(predicate, thisArg)(new _Observable__WEBPACK_IMPORTED_MODULE_3__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(source))), Object(_operators_filter__WEBPACK_IMPORTED_MODULE_2__["filter"])(Object(_util_not__WEBPACK_IMPORTED_MODULE_0__["not"])(predicate, thisArg))(new _Observable__WEBPACK_IMPORTED_MODULE_3__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(source)))];
+}
+
+/***/ }),
+
 /***/ "./node_modules/rxjs/_esm5/internal/observable/race.js":
 /*!*************************************************************!*\
   !*** ./node_modules/rxjs/_esm5/internal/observable/race.js ***!
@@ -4830,9 +4571,7 @@ function race() {
   return Object(_fromArray__WEBPACK_IMPORTED_MODULE_2__["fromArray"])(observables, undefined).lift(new RaceOperator());
 }
 
-var RaceOperator =
-/*@__PURE__*/
-function () {
+var RaceOperator = /*@__PURE__*/function () {
   function RaceOperator() {}
 
   RaceOperator.prototype.call = function (subscriber, source) {
@@ -4844,9 +4583,7 @@ function () {
 
 
 
-var RaceSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RaceSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RaceSubscriber, _super);
 
   function RaceSubscriber(destination) {
@@ -4982,31 +4719,6 @@ function dispatch(state) {
   state.index = index + 1;
   state.start = start + 1;
   this.schedule(state);
-}
-
-/***/ }),
-
-/***/ "./node_modules/rxjs/_esm5/internal/observable/scalar.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm5/internal/observable/scalar.js ***!
-  \***************************************************************/
-/*! exports provided: scalar */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scalar", function() { return scalar; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/** PURE_IMPORTS_START _Observable PURE_IMPORTS_END */
-
-function scalar(value) {
-  var result = new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
-    subscriber.next(value);
-    subscriber.complete();
-  });
-  result._isScalar = true;
-  result.value = value;
-  return result;
 }
 
 /***/ }),
@@ -5205,9 +4917,7 @@ function zip() {
   return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(observables, undefined).lift(new ZipOperator(resultSelector));
 }
 
-var ZipOperator =
-/*@__PURE__*/
-function () {
+var ZipOperator = /*@__PURE__*/function () {
   function ZipOperator(resultSelector) {
     this.resultSelector = resultSelector;
   }
@@ -5221,9 +4931,7 @@ function () {
 
 
 
-var ZipSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ZipSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ZipSubscriber, _super);
 
   function ZipSubscriber(destination, resultSelector, values) {
@@ -5345,9 +5053,7 @@ function (_super) {
 
 
 
-var StaticIterator =
-/*@__PURE__*/
-function () {
+var StaticIterator = /*@__PURE__*/function () {
   function StaticIterator(iterator) {
     this.iterator = iterator;
     this.nextResult = iterator.next();
@@ -5371,9 +5077,7 @@ function () {
   return StaticIterator;
 }();
 
-var StaticArrayIterator =
-/*@__PURE__*/
-function () {
+var StaticArrayIterator = /*@__PURE__*/function () {
   function StaticArrayIterator(array) {
     this.array = array;
     this.index = 0;
@@ -5408,9 +5112,7 @@ function () {
   return StaticArrayIterator;
 }();
 
-var ZipBufferIterator =
-/*@__PURE__*/
-function (_super) {
+var ZipBufferIterator = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ZipBufferIterator, _super);
 
   function ZipBufferIterator(destination, parent, observable) {
@@ -5498,9 +5200,7 @@ function audit(durationSelector) {
   };
 }
 
-var AuditOperator =
-/*@__PURE__*/
-function () {
+var AuditOperator = /*@__PURE__*/function () {
   function AuditOperator(durationSelector) {
     this.durationSelector = durationSelector;
   }
@@ -5512,9 +5212,7 @@ function () {
   return AuditOperator;
 }();
 
-var AuditSubscriber =
-/*@__PURE__*/
-function (_super) {
+var AuditSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AuditSubscriber, _super);
 
   function AuditSubscriber(destination, durationSelector) {
@@ -5633,9 +5331,7 @@ function buffer(closingNotifier) {
   };
 }
 
-var BufferOperator =
-/*@__PURE__*/
-function () {
+var BufferOperator = /*@__PURE__*/function () {
   function BufferOperator(closingNotifier) {
     this.closingNotifier = closingNotifier;
   }
@@ -5647,9 +5343,7 @@ function () {
   return BufferOperator;
 }();
 
-var BufferSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferSubscriber, _super);
 
   function BufferSubscriber(destination, closingNotifier) {
@@ -5702,9 +5396,7 @@ function bufferCount(bufferSize, startBufferEvery) {
   };
 }
 
-var BufferCountOperator =
-/*@__PURE__*/
-function () {
+var BufferCountOperator = /*@__PURE__*/function () {
   function BufferCountOperator(bufferSize, startBufferEvery) {
     this.bufferSize = bufferSize;
     this.startBufferEvery = startBufferEvery;
@@ -5723,9 +5415,7 @@ function () {
   return BufferCountOperator;
 }();
 
-var BufferCountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferCountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferCountSubscriber, _super);
 
   function BufferCountSubscriber(destination, bufferSize) {
@@ -5759,9 +5449,7 @@ function (_super) {
   return BufferCountSubscriber;
 }(_Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"]);
 
-var BufferSkipCountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferSkipCountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferSkipCountSubscriber, _super);
 
   function BufferSkipCountSubscriber(destination, bufferSize, startBufferEvery) {
@@ -5864,9 +5552,7 @@ function bufferTime(bufferTimeSpan) {
   };
 }
 
-var BufferTimeOperator =
-/*@__PURE__*/
-function () {
+var BufferTimeOperator = /*@__PURE__*/function () {
   function BufferTimeOperator(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
     this.bufferTimeSpan = bufferTimeSpan;
     this.bufferCreationInterval = bufferCreationInterval;
@@ -5881,9 +5567,7 @@ function () {
   return BufferTimeOperator;
 }();
 
-var Context =
-/*@__PURE__*/
-function () {
+var Context = /*@__PURE__*/function () {
   function Context() {
     this.buffer = [];
   }
@@ -5891,9 +5575,7 @@ function () {
   return Context;
 }();
 
-var BufferTimeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferTimeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferTimeSubscriber, _super);
 
   function BufferTimeSubscriber(destination, bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
@@ -6081,9 +5763,7 @@ function bufferToggle(openings, closingSelector) {
   };
 }
 
-var BufferToggleOperator =
-/*@__PURE__*/
-function () {
+var BufferToggleOperator = /*@__PURE__*/function () {
   function BufferToggleOperator(openings, closingSelector) {
     this.openings = openings;
     this.closingSelector = closingSelector;
@@ -6096,9 +5776,7 @@ function () {
   return BufferToggleOperator;
 }();
 
-var BufferToggleSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferToggleSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferToggleSubscriber, _super);
 
   function BufferToggleSubscriber(destination, openings, closingSelector) {
@@ -6237,9 +5915,7 @@ function bufferWhen(closingSelector) {
   };
 }
 
-var BufferWhenOperator =
-/*@__PURE__*/
-function () {
+var BufferWhenOperator = /*@__PURE__*/function () {
   function BufferWhenOperator(closingSelector) {
     this.closingSelector = closingSelector;
   }
@@ -6251,9 +5927,7 @@ function () {
   return BufferWhenOperator;
 }();
 
-var BufferWhenSubscriber =
-/*@__PURE__*/
-function (_super) {
+var BufferWhenSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BufferWhenSubscriber, _super);
 
   function BufferWhenSubscriber(destination, closingSelector) {
@@ -6362,9 +6036,7 @@ function catchError(selector) {
   };
 }
 
-var CatchOperator =
-/*@__PURE__*/
-function () {
+var CatchOperator = /*@__PURE__*/function () {
   function CatchOperator(selector) {
     this.selector = selector;
   }
@@ -6376,9 +6048,7 @@ function () {
   return CatchOperator;
 }();
 
-var CatchSubscriber =
-/*@__PURE__*/
-function (_super) {
+var CatchSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](CatchSubscriber, _super);
 
   function CatchSubscriber(destination, selector, caught) {
@@ -6405,7 +6075,11 @@ function (_super) {
 
       var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_2__["InnerSubscriber"](this, undefined, undefined);
       this.add(innerSubscriber);
-      Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, undefined, undefined, innerSubscriber);
+      var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, undefined, undefined, innerSubscriber);
+
+      if (innerSubscription !== innerSubscriber) {
+        this.add(innerSubscription);
+      }
     }
   };
 
@@ -6584,9 +6258,7 @@ function count(predicate) {
   };
 }
 
-var CountOperator =
-/*@__PURE__*/
-function () {
+var CountOperator = /*@__PURE__*/function () {
   function CountOperator(predicate, source) {
     this.predicate = predicate;
     this.source = source;
@@ -6599,9 +6271,7 @@ function () {
   return CountOperator;
 }();
 
-var CountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var CountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](CountSubscriber, _super);
 
   function CountSubscriber(destination, predicate, source) {
@@ -6670,9 +6340,7 @@ function debounce(durationSelector) {
   };
 }
 
-var DebounceOperator =
-/*@__PURE__*/
-function () {
+var DebounceOperator = /*@__PURE__*/function () {
   function DebounceOperator(durationSelector) {
     this.durationSelector = durationSelector;
   }
@@ -6684,9 +6352,7 @@ function () {
   return DebounceOperator;
 }();
 
-var DebounceSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DebounceSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DebounceSubscriber, _super);
 
   function DebounceSubscriber(destination, durationSelector) {
@@ -6790,9 +6456,7 @@ function debounceTime(dueTime, scheduler) {
   };
 }
 
-var DebounceTimeOperator =
-/*@__PURE__*/
-function () {
+var DebounceTimeOperator = /*@__PURE__*/function () {
   function DebounceTimeOperator(dueTime, scheduler) {
     this.dueTime = dueTime;
     this.scheduler = scheduler;
@@ -6805,9 +6469,7 @@ function () {
   return DebounceTimeOperator;
 }();
 
-var DebounceTimeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DebounceTimeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DebounceTimeSubscriber, _super);
 
   function DebounceTimeSubscriber(destination, dueTime, scheduler) {
@@ -6888,9 +6550,7 @@ function defaultIfEmpty(defaultValue) {
   };
 }
 
-var DefaultIfEmptyOperator =
-/*@__PURE__*/
-function () {
+var DefaultIfEmptyOperator = /*@__PURE__*/function () {
   function DefaultIfEmptyOperator(defaultValue) {
     this.defaultValue = defaultValue;
   }
@@ -6902,9 +6562,7 @@ function () {
   return DefaultIfEmptyOperator;
 }();
 
-var DefaultIfEmptySubscriber =
-/*@__PURE__*/
-function (_super) {
+var DefaultIfEmptySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DefaultIfEmptySubscriber, _super);
 
   function DefaultIfEmptySubscriber(destination, defaultValue) {
@@ -6966,9 +6624,7 @@ function delay(delay, scheduler) {
   };
 }
 
-var DelayOperator =
-/*@__PURE__*/
-function () {
+var DelayOperator = /*@__PURE__*/function () {
   function DelayOperator(delay, scheduler) {
     this.delay = delay;
     this.scheduler = scheduler;
@@ -6981,9 +6637,7 @@ function () {
   return DelayOperator;
 }();
 
-var DelaySubscriber =
-/*@__PURE__*/
-function (_super) {
+var DelaySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DelaySubscriber, _super);
 
   function DelaySubscriber(destination, delay, scheduler) {
@@ -7059,9 +6713,7 @@ function (_super) {
   return DelaySubscriber;
 }(_Subscriber__WEBPACK_IMPORTED_MODULE_3__["Subscriber"]);
 
-var DelayMessage =
-/*@__PURE__*/
-function () {
+var DelayMessage = /*@__PURE__*/function () {
   function DelayMessage(time, notification) {
     this.time = time;
     this.notification = notification;
@@ -7105,9 +6757,7 @@ function delayWhen(delayDurationSelector, subscriptionDelay) {
   };
 }
 
-var DelayWhenOperator =
-/*@__PURE__*/
-function () {
+var DelayWhenOperator = /*@__PURE__*/function () {
   function DelayWhenOperator(delayDurationSelector) {
     this.delayDurationSelector = delayDurationSelector;
   }
@@ -7119,9 +6769,7 @@ function () {
   return DelayWhenOperator;
 }();
 
-var DelayWhenSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DelayWhenSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DelayWhenSubscriber, _super);
 
   function DelayWhenSubscriber(destination, delayDurationSelector) {
@@ -7204,9 +6852,7 @@ function (_super) {
   return DelayWhenSubscriber;
 }(_OuterSubscriber__WEBPACK_IMPORTED_MODULE_3__["OuterSubscriber"]);
 
-var SubscriptionDelayObservable =
-/*@__PURE__*/
-function (_super) {
+var SubscriptionDelayObservable = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubscriptionDelayObservable, _super);
 
   function SubscriptionDelayObservable(source, subscriptionDelay) {
@@ -7224,9 +6870,7 @@ function (_super) {
   return SubscriptionDelayObservable;
 }(_Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]);
 
-var SubscriptionDelaySubscriber =
-/*@__PURE__*/
-function (_super) {
+var SubscriptionDelaySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubscriptionDelaySubscriber, _super);
 
   function SubscriptionDelaySubscriber(parent, source) {
@@ -7286,9 +6930,7 @@ function dematerialize() {
   };
 }
 
-var DeMaterializeOperator =
-/*@__PURE__*/
-function () {
+var DeMaterializeOperator = /*@__PURE__*/function () {
   function DeMaterializeOperator() {}
 
   DeMaterializeOperator.prototype.call = function (subscriber, source) {
@@ -7298,9 +6940,7 @@ function () {
   return DeMaterializeOperator;
 }();
 
-var DeMaterializeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DeMaterializeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DeMaterializeSubscriber, _super);
 
   function DeMaterializeSubscriber(destination) {
@@ -7340,9 +6980,7 @@ function distinct(keySelector, flushes) {
   };
 }
 
-var DistinctOperator =
-/*@__PURE__*/
-function () {
+var DistinctOperator = /*@__PURE__*/function () {
   function DistinctOperator(keySelector, flushes) {
     this.keySelector = keySelector;
     this.flushes = flushes;
@@ -7355,9 +6993,7 @@ function () {
   return DistinctOperator;
 }();
 
-var DistinctSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DistinctSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DistinctSubscriber, _super);
 
   function DistinctSubscriber(destination, keySelector, flushes) {
@@ -7440,9 +7076,7 @@ function distinctUntilChanged(compare, keySelector) {
   };
 }
 
-var DistinctUntilChangedOperator =
-/*@__PURE__*/
-function () {
+var DistinctUntilChangedOperator = /*@__PURE__*/function () {
   function DistinctUntilChangedOperator(compare, keySelector) {
     this.compare = compare;
     this.keySelector = keySelector;
@@ -7455,9 +7089,7 @@ function () {
   return DistinctUntilChangedOperator;
 }();
 
-var DistinctUntilChangedSubscriber =
-/*@__PURE__*/
-function (_super) {
+var DistinctUntilChangedSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DistinctUntilChangedSubscriber, _super);
 
   function DistinctUntilChangedSubscriber(destination, compare, keySelector) {
@@ -7580,15 +7212,9 @@ function elementAt(index, defaultValue) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "endWith", function() { return endWith; });
-/* harmony import */ var _observable_fromArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/fromArray */ "./node_modules/rxjs/_esm5/internal/observable/fromArray.js");
-/* harmony import */ var _observable_scalar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/scalar */ "./node_modules/rxjs/_esm5/internal/observable/scalar.js");
-/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "./node_modules/rxjs/_esm5/internal/observable/empty.js");
-/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../observable/concat */ "./node_modules/rxjs/_esm5/internal/observable/concat.js");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isScheduler */ "./node_modules/rxjs/_esm5/internal/util/isScheduler.js");
-/** PURE_IMPORTS_START _observable_fromArray,_observable_scalar,_observable_empty,_observable_concat,_util_isScheduler PURE_IMPORTS_END */
-
-
-
+/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "./node_modules/rxjs/_esm5/internal/observable/concat.js");
+/* harmony import */ var _observable_of__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/of */ "./node_modules/rxjs/_esm5/internal/observable/of.js");
+/** PURE_IMPORTS_START _observable_concat,_observable_of PURE_IMPORTS_END */
 
 
 function endWith() {
@@ -7599,23 +7225,7 @@ function endWith() {
   }
 
   return function (source) {
-    var scheduler = array[array.length - 1];
-
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(scheduler)) {
-      array.pop();
-    } else {
-      scheduler = null;
-    }
-
-    var len = array.length;
-
-    if (len === 1 && !scheduler) {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(source, Object(_observable_scalar__WEBPACK_IMPORTED_MODULE_1__["scalar"])(array[0]));
-    } else if (len > 0) {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(source, Object(_observable_fromArray__WEBPACK_IMPORTED_MODULE_0__["fromArray"])(array, scheduler));
-    } else {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(source, Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])(scheduler));
-    }
+    return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(source, _observable_of__WEBPACK_IMPORTED_MODULE_1__["of"].apply(void 0, array));
   };
 }
 
@@ -7642,9 +7252,7 @@ function every(predicate, thisArg) {
   };
 }
 
-var EveryOperator =
-/*@__PURE__*/
-function () {
+var EveryOperator = /*@__PURE__*/function () {
   function EveryOperator(predicate, thisArg, source) {
     this.predicate = predicate;
     this.thisArg = thisArg;
@@ -7658,9 +7266,7 @@ function () {
   return EveryOperator;
 }();
 
-var EverySubscriber =
-/*@__PURE__*/
-function (_super) {
+var EverySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](EverySubscriber, _super);
 
   function EverySubscriber(destination, predicate, thisArg, source) {
@@ -7726,9 +7332,7 @@ function exhaust() {
   };
 }
 
-var SwitchFirstOperator =
-/*@__PURE__*/
-function () {
+var SwitchFirstOperator = /*@__PURE__*/function () {
   function SwitchFirstOperator() {}
 
   SwitchFirstOperator.prototype.call = function (subscriber, source) {
@@ -7738,9 +7342,7 @@ function () {
   return SwitchFirstOperator;
 }();
 
-var SwitchFirstSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SwitchFirstSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SwitchFirstSubscriber, _super);
 
   function SwitchFirstSubscriber(destination) {
@@ -7819,9 +7421,7 @@ function exhaustMap(project, resultSelector) {
   };
 }
 
-var ExhaustMapOperator =
-/*@__PURE__*/
-function () {
+var ExhaustMapOperator = /*@__PURE__*/function () {
   function ExhaustMapOperator(project) {
     this.project = project;
   }
@@ -7833,9 +7433,7 @@ function () {
   return ExhaustMapOperator;
 }();
 
-var ExhaustMapSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ExhaustMapSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ExhaustMapSubscriber, _super);
 
   function ExhaustMapSubscriber(destination, project) {
@@ -7871,10 +7469,14 @@ function (_super) {
   };
 
   ExhaustMapSubscriber.prototype._innerSub = function (result, value, index) {
-    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_2__["InnerSubscriber"](this, undefined, undefined);
+    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_2__["InnerSubscriber"](this, value, index);
     var destination = this.destination;
     destination.add(innerSubscriber);
-    Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, value, index, innerSubscriber);
+    var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, undefined, undefined, innerSubscriber);
+
+    if (innerSubscription !== innerSubscriber) {
+      destination.add(innerSubscription);
+    }
   };
 
   ExhaustMapSubscriber.prototype._complete = function () {
@@ -7944,9 +7546,7 @@ function expand(project, concurrent, scheduler) {
   };
 }
 
-var ExpandOperator =
-/*@__PURE__*/
-function () {
+var ExpandOperator = /*@__PURE__*/function () {
   function ExpandOperator(project, concurrent, scheduler) {
     this.project = project;
     this.concurrent = concurrent;
@@ -7962,9 +7562,7 @@ function () {
 
 
 
-var ExpandSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ExpandSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ExpandSubscriber, _super);
 
   function ExpandSubscriber(destination, project, concurrent, scheduler) {
@@ -8093,9 +7691,7 @@ function filter(predicate, thisArg) {
   };
 }
 
-var FilterOperator =
-/*@__PURE__*/
-function () {
+var FilterOperator = /*@__PURE__*/function () {
   function FilterOperator(predicate, thisArg) {
     this.predicate = predicate;
     this.thisArg = thisArg;
@@ -8108,9 +7704,7 @@ function () {
   return FilterOperator;
 }();
 
-var FilterSubscriber =
-/*@__PURE__*/
-function (_super) {
+var FilterSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](FilterSubscriber, _super);
 
   function FilterSubscriber(destination, predicate, thisArg) {
@@ -8165,9 +7759,7 @@ function finalize(callback) {
   };
 }
 
-var FinallyOperator =
-/*@__PURE__*/
-function () {
+var FinallyOperator = /*@__PURE__*/function () {
   function FinallyOperator(callback) {
     this.callback = callback;
   }
@@ -8179,9 +7771,7 @@ function () {
   return FinallyOperator;
 }();
 
-var FinallySubscriber =
-/*@__PURE__*/
-function (_super) {
+var FinallySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](FinallySubscriber, _super);
 
   function FinallySubscriber(destination, callback) {
@@ -8224,9 +7814,7 @@ function find(predicate, thisArg) {
   };
 }
 
-var FindValueOperator =
-/*@__PURE__*/
-function () {
+var FindValueOperator = /*@__PURE__*/function () {
   function FindValueOperator(predicate, source, yieldIndex, thisArg) {
     this.predicate = predicate;
     this.source = source;
@@ -8243,9 +7831,7 @@ function () {
 
 
 
-var FindValueSubscriber =
-/*@__PURE__*/
-function (_super) {
+var FindValueSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](FindValueSubscriber, _super);
 
   function FindValueSubscriber(destination, predicate, source, yieldIndex, thisArg) {
@@ -8380,9 +7966,7 @@ function groupBy(keySelector, elementSelector, durationSelector, subjectSelector
   };
 }
 
-var GroupByOperator =
-/*@__PURE__*/
-function () {
+var GroupByOperator = /*@__PURE__*/function () {
   function GroupByOperator(keySelector, elementSelector, durationSelector, subjectSelector) {
     this.keySelector = keySelector;
     this.elementSelector = elementSelector;
@@ -8397,9 +7981,7 @@ function () {
   return GroupByOperator;
 }();
 
-var GroupBySubscriber =
-/*@__PURE__*/
-function (_super) {
+var GroupBySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](GroupBySubscriber, _super);
 
   function GroupBySubscriber(destination, keySelector, elementSelector, durationSelector, subjectSelector) {
@@ -8500,7 +8082,7 @@ function (_super) {
   };
 
   GroupBySubscriber.prototype.removeGroup = function (key) {
-    this.groups.delete(key);
+    this.groups["delete"](key);
   };
 
   GroupBySubscriber.prototype.unsubscribe = function () {
@@ -8516,9 +8098,7 @@ function (_super) {
   return GroupBySubscriber;
 }(_Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"]);
 
-var GroupDurationSubscriber =
-/*@__PURE__*/
-function (_super) {
+var GroupDurationSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](GroupDurationSubscriber, _super);
 
   function GroupDurationSubscriber(key, group, parent) {
@@ -8549,9 +8129,7 @@ function (_super) {
   return GroupDurationSubscriber;
 }(_Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"]);
 
-var GroupedObservable =
-/*@__PURE__*/
-function (_super) {
+var GroupedObservable = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](GroupedObservable, _super);
 
   function GroupedObservable(key, groupSubject, refCountSubscription) {
@@ -8583,9 +8161,7 @@ function (_super) {
 
 
 
-var InnerRefCountSubscription =
-/*@__PURE__*/
-function (_super) {
+var InnerRefCountSubscription = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](InnerRefCountSubscription, _super);
 
   function InnerRefCountSubscription(parent) {
@@ -8636,9 +8212,7 @@ function ignoreElements() {
   };
 }
 
-var IgnoreElementsOperator =
-/*@__PURE__*/
-function () {
+var IgnoreElementsOperator = /*@__PURE__*/function () {
   function IgnoreElementsOperator() {}
 
   IgnoreElementsOperator.prototype.call = function (subscriber, source) {
@@ -8648,9 +8222,7 @@ function () {
   return IgnoreElementsOperator;
 }();
 
-var IgnoreElementsSubscriber =
-/*@__PURE__*/
-function (_super) {
+var IgnoreElementsSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](IgnoreElementsSubscriber, _super);
 
   function IgnoreElementsSubscriber() {
@@ -8685,9 +8257,7 @@ function isEmpty() {
   };
 }
 
-var IsEmptyOperator =
-/*@__PURE__*/
-function () {
+var IsEmptyOperator = /*@__PURE__*/function () {
   function IsEmptyOperator() {}
 
   IsEmptyOperator.prototype.call = function (observer, source) {
@@ -8697,9 +8267,7 @@ function () {
   return IsEmptyOperator;
 }();
 
-var IsEmptySubscriber =
-/*@__PURE__*/
-function (_super) {
+var IsEmptySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](IsEmptySubscriber, _super);
 
   function IsEmptySubscriber(destination) {
@@ -8787,9 +8355,7 @@ function map(project, thisArg) {
   };
 }
 
-var MapOperator =
-/*@__PURE__*/
-function () {
+var MapOperator = /*@__PURE__*/function () {
   function MapOperator(project, thisArg) {
     this.project = project;
     this.thisArg = thisArg;
@@ -8804,9 +8370,7 @@ function () {
 
 
 
-var MapSubscriber =
-/*@__PURE__*/
-function (_super) {
+var MapSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](MapSubscriber, _super);
 
   function MapSubscriber(destination, project, thisArg) {
@@ -8857,9 +8421,7 @@ function mapTo(value) {
   };
 }
 
-var MapToOperator =
-/*@__PURE__*/
-function () {
+var MapToOperator = /*@__PURE__*/function () {
   function MapToOperator(value) {
     this.value = value;
   }
@@ -8871,9 +8433,7 @@ function () {
   return MapToOperator;
 }();
 
-var MapToSubscriber =
-/*@__PURE__*/
-function (_super) {
+var MapToSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](MapToSubscriber, _super);
 
   function MapToSubscriber(destination, value) {
@@ -8915,9 +8475,7 @@ function materialize() {
   };
 }
 
-var MaterializeOperator =
-/*@__PURE__*/
-function () {
+var MaterializeOperator = /*@__PURE__*/function () {
   function MaterializeOperator() {}
 
   MaterializeOperator.prototype.call = function (subscriber, source) {
@@ -8927,9 +8485,7 @@ function () {
   return MaterializeOperator;
 }();
 
-var MaterializeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var MaterializeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](MaterializeSubscriber, _super);
 
   function MaterializeSubscriber(destination) {
@@ -9080,9 +8636,7 @@ function mergeMap(project, resultSelector, concurrent) {
   };
 }
 
-var MergeMapOperator =
-/*@__PURE__*/
-function () {
+var MergeMapOperator = /*@__PURE__*/function () {
   function MergeMapOperator(project, concurrent) {
     if (concurrent === void 0) {
       concurrent = Number.POSITIVE_INFINITY;
@@ -9101,9 +8655,7 @@ function () {
 
 
 
-var MergeMapSubscriber =
-/*@__PURE__*/
-function (_super) {
+var MergeMapSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](MergeMapSubscriber, _super);
 
   function MergeMapSubscriber(destination, project, concurrent) {
@@ -9147,10 +8699,14 @@ function (_super) {
   };
 
   MergeMapSubscriber.prototype._innerSub = function (ish, value, index) {
-    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_3__["InnerSubscriber"](this, undefined, undefined);
+    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_3__["InnerSubscriber"](this, value, index);
     var destination = this.destination;
     destination.add(innerSubscriber);
-    Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, ish, value, index, innerSubscriber);
+    var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, ish, undefined, undefined, innerSubscriber);
+
+    if (innerSubscription !== innerSubscriber) {
+      destination.add(innerSubscription);
+    }
   };
 
   MergeMapSubscriber.prototype._complete = function () {
@@ -9252,9 +8808,7 @@ function mergeScan(accumulator, seed, concurrent) {
   };
 }
 
-var MergeScanOperator =
-/*@__PURE__*/
-function () {
+var MergeScanOperator = /*@__PURE__*/function () {
   function MergeScanOperator(accumulator, seed, concurrent) {
     this.accumulator = accumulator;
     this.seed = seed;
@@ -9270,9 +8824,7 @@ function () {
 
 
 
-var MergeScanSubscriber =
-/*@__PURE__*/
-function (_super) {
+var MergeScanSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](MergeScanSubscriber, _super);
 
   function MergeScanSubscriber(destination, accumulator, acc, concurrent) {
@@ -9311,10 +8863,14 @@ function (_super) {
   };
 
   MergeScanSubscriber.prototype._innerSub = function (ish, value, index) {
-    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_3__["InnerSubscriber"](this, undefined, undefined);
+    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_3__["InnerSubscriber"](this, value, index);
     var destination = this.destination;
     destination.add(innerSubscriber);
-    Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, ish, value, index, innerSubscriber);
+    var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, ish, undefined, undefined, innerSubscriber);
+
+    if (innerSubscription !== innerSubscriber) {
+      destination.add(innerSubscription);
+    }
   };
 
   MergeScanSubscriber.prototype._complete = function () {
@@ -9423,9 +8979,7 @@ function multicast(subjectOrSubjectFactory, selector) {
   };
 }
 
-var MulticastOperator =
-/*@__PURE__*/
-function () {
+var MulticastOperator = /*@__PURE__*/function () {
   function MulticastOperator(subjectFactory, selector) {
     this.subjectFactory = subjectFactory;
     this.selector = selector;
@@ -9476,9 +9030,7 @@ function observeOn(scheduler, delay) {
   };
 }
 
-var ObserveOnOperator =
-/*@__PURE__*/
-function () {
+var ObserveOnOperator = /*@__PURE__*/function () {
   function ObserveOnOperator(scheduler, delay) {
     if (delay === void 0) {
       delay = 0;
@@ -9497,9 +9049,7 @@ function () {
 
 
 
-var ObserveOnSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ObserveOnSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ObserveOnSubscriber, _super);
 
   function ObserveOnSubscriber(destination, scheduler, delay) {
@@ -9545,9 +9095,7 @@ function (_super) {
 
 
 
-var ObserveOnMessage =
-/*@__PURE__*/
-function () {
+var ObserveOnMessage = /*@__PURE__*/function () {
   function ObserveOnMessage(notification, destination) {
     this.notification = notification;
     this.destination = destination;
@@ -9616,9 +9164,7 @@ function onErrorResumeNextStatic() {
   return Object(_observable_from__WEBPACK_IMPORTED_MODULE_1__["from"])(source, null).lift(new OnErrorResumeNextOperator(nextSources));
 }
 
-var OnErrorResumeNextOperator =
-/*@__PURE__*/
-function () {
+var OnErrorResumeNextOperator = /*@__PURE__*/function () {
   function OnErrorResumeNextOperator(nextSources) {
     this.nextSources = nextSources;
   }
@@ -9630,9 +9176,7 @@ function () {
   return OnErrorResumeNextOperator;
 }();
 
-var OnErrorResumeNextSubscriber =
-/*@__PURE__*/
-function (_super) {
+var OnErrorResumeNextSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](OnErrorResumeNextSubscriber, _super);
 
   function OnErrorResumeNextSubscriber(destination, nextSources) {
@@ -9668,7 +9212,11 @@ function (_super) {
       var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_4__["InnerSubscriber"](this, undefined, undefined);
       var destination = this.destination;
       destination.add(innerSubscriber);
-      Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_5__["subscribeToResult"])(this, next, undefined, undefined, innerSubscriber);
+      var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_5__["subscribeToResult"])(this, next, undefined, undefined, innerSubscriber);
+
+      if (innerSubscription !== innerSubscriber) {
+        destination.add(innerSubscription);
+      }
     } else {
       this.destination.complete();
     }
@@ -9700,9 +9248,7 @@ function pairwise() {
   };
 }
 
-var PairwiseOperator =
-/*@__PURE__*/
-function () {
+var PairwiseOperator = /*@__PURE__*/function () {
   function PairwiseOperator() {}
 
   PairwiseOperator.prototype.call = function (subscriber, source) {
@@ -9712,9 +9258,7 @@ function () {
   return PairwiseOperator;
 }();
 
-var PairwiseSubscriber =
-/*@__PURE__*/
-function (_super) {
+var PairwiseSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](PairwiseSubscriber, _super);
 
   function PairwiseSubscriber(destination) {
@@ -9725,13 +9269,19 @@ function (_super) {
   }
 
   PairwiseSubscriber.prototype._next = function (value) {
+    var pair;
+
     if (this.hasPrev) {
-      this.destination.next([this.prev, value]);
+      pair = [this.prev, value];
     } else {
       this.hasPrev = true;
     }
 
     this.prev = value;
+
+    if (pair) {
+      this.destination.next(pair);
+    }
   };
 
   return PairwiseSubscriber;
@@ -10004,9 +9554,7 @@ function refCount() {
   };
 }
 
-var RefCountOperator =
-/*@__PURE__*/
-function () {
+var RefCountOperator = /*@__PURE__*/function () {
   function RefCountOperator(connectable) {
     this.connectable = connectable;
   }
@@ -10027,9 +9575,7 @@ function () {
   return RefCountOperator;
 }();
 
-var RefCountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RefCountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RefCountSubscriber, _super);
 
   function RefCountSubscriber(destination, connectable) {
@@ -10109,9 +9655,7 @@ function repeat(count) {
   };
 }
 
-var RepeatOperator =
-/*@__PURE__*/
-function () {
+var RepeatOperator = /*@__PURE__*/function () {
   function RepeatOperator(count, source) {
     this.count = count;
     this.source = source;
@@ -10124,9 +9668,7 @@ function () {
   return RepeatOperator;
 }();
 
-var RepeatSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RepeatSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RepeatSubscriber, _super);
 
   function RepeatSubscriber(destination, count, source) {
@@ -10183,9 +9725,7 @@ function repeatWhen(notifier) {
   };
 }
 
-var RepeatWhenOperator =
-/*@__PURE__*/
-function () {
+var RepeatWhenOperator = /*@__PURE__*/function () {
   function RepeatWhenOperator(notifier) {
     this.notifier = notifier;
   }
@@ -10197,9 +9737,7 @@ function () {
   return RepeatWhenOperator;
 }();
 
-var RepeatWhenSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RepeatWhenSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RepeatWhenSubscriber, _super);
 
   function RepeatWhenSubscriber(destination, notifier, source) {
@@ -10313,9 +9851,7 @@ function retry(count) {
   };
 }
 
-var RetryOperator =
-/*@__PURE__*/
-function () {
+var RetryOperator = /*@__PURE__*/function () {
   function RetryOperator(count, source) {
     this.count = count;
     this.source = source;
@@ -10328,9 +9864,7 @@ function () {
   return RetryOperator;
 }();
 
-var RetrySubscriber =
-/*@__PURE__*/
-function (_super) {
+var RetrySubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RetrySubscriber, _super);
 
   function RetrySubscriber(destination, count, source) {
@@ -10387,9 +9921,7 @@ function retryWhen(notifier) {
   };
 }
 
-var RetryWhenOperator =
-/*@__PURE__*/
-function () {
+var RetryWhenOperator = /*@__PURE__*/function () {
   function RetryWhenOperator(notifier, source) {
     this.notifier = notifier;
     this.source = source;
@@ -10402,9 +9934,7 @@ function () {
   return RetryWhenOperator;
 }();
 
-var RetryWhenSubscriber =
-/*@__PURE__*/
-function (_super) {
+var RetryWhenSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RetryWhenSubscriber, _super);
 
   function RetryWhenSubscriber(destination, notifier, source) {
@@ -10502,9 +10032,7 @@ function sample(notifier) {
   };
 }
 
-var SampleOperator =
-/*@__PURE__*/
-function () {
+var SampleOperator = /*@__PURE__*/function () {
   function SampleOperator(notifier) {
     this.notifier = notifier;
   }
@@ -10519,9 +10047,7 @@ function () {
   return SampleOperator;
 }();
 
-var SampleSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SampleSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SampleSubscriber, _super);
 
   function SampleSubscriber() {
@@ -10583,9 +10109,7 @@ function sampleTime(period, scheduler) {
   };
 }
 
-var SampleTimeOperator =
-/*@__PURE__*/
-function () {
+var SampleTimeOperator = /*@__PURE__*/function () {
   function SampleTimeOperator(period, scheduler) {
     this.period = period;
     this.scheduler = scheduler;
@@ -10598,9 +10122,7 @@ function () {
   return SampleTimeOperator;
 }();
 
-var SampleTimeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SampleTimeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SampleTimeSubscriber, _super);
 
   function SampleTimeSubscriber(destination, period, scheduler) {
@@ -10669,9 +10191,7 @@ function scan(accumulator, seed) {
   };
 }
 
-var ScanOperator =
-/*@__PURE__*/
-function () {
+var ScanOperator = /*@__PURE__*/function () {
   function ScanOperator(accumulator, seed, hasSeed) {
     if (hasSeed === void 0) {
       hasSeed = false;
@@ -10689,9 +10209,7 @@ function () {
   return ScanOperator;
 }();
 
-var ScanSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ScanSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ScanSubscriber, _super);
 
   function ScanSubscriber(destination, accumulator, _seed, hasSeed) {
@@ -10767,9 +10285,7 @@ function sequenceEqual(compareTo, comparator) {
   };
 }
 
-var SequenceEqualOperator =
-/*@__PURE__*/
-function () {
+var SequenceEqualOperator = /*@__PURE__*/function () {
   function SequenceEqualOperator(compareTo, comparator) {
     this.compareTo = compareTo;
     this.comparator = comparator;
@@ -10784,9 +10300,7 @@ function () {
 
 
 
-var SequenceEqualSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SequenceEqualSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SequenceEqualSubscriber, _super);
 
   function SequenceEqualSubscriber(destination, compareTo, comparator) {
@@ -10877,9 +10391,7 @@ function (_super) {
 
 
 
-var SequenceEqualCompareToSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SequenceEqualCompareToSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SequenceEqualCompareToSubscriber, _super);
 
   function SequenceEqualCompareToSubscriber(destination, parent) {
@@ -10949,7 +10461,7 @@ function share() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shareReplay", function() { return shareReplay; });
 /* harmony import */ var _ReplaySubject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ReplaySubject */ "./node_modules/rxjs/_esm5/internal/ReplaySubject.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /** PURE_IMPORTS_START _ReplaySubject PURE_IMPORTS_END */
 
@@ -11000,6 +10512,7 @@ function shareReplayOperator(_a) {
         },
         complete: function complete() {
           isComplete = true;
+          subscription = undefined;
           subject.complete();
         }
       });
@@ -11044,9 +10557,7 @@ function single(predicate) {
   };
 }
 
-var SingleOperator =
-/*@__PURE__*/
-function () {
+var SingleOperator = /*@__PURE__*/function () {
   function SingleOperator(predicate, source) {
     this.predicate = predicate;
     this.source = source;
@@ -11059,9 +10570,7 @@ function () {
   return SingleOperator;
 }();
 
-var SingleSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SingleSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SingleSubscriber, _super);
 
   function SingleSubscriber(destination, predicate, source) {
@@ -11140,9 +10649,7 @@ function skip(count) {
   };
 }
 
-var SkipOperator =
-/*@__PURE__*/
-function () {
+var SkipOperator = /*@__PURE__*/function () {
   function SkipOperator(total) {
     this.total = total;
   }
@@ -11154,9 +10661,7 @@ function () {
   return SkipOperator;
 }();
 
-var SkipSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SkipSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SkipSubscriber, _super);
 
   function SkipSubscriber(destination, total) {
@@ -11201,9 +10706,7 @@ function skipLast(count) {
   };
 }
 
-var SkipLastOperator =
-/*@__PURE__*/
-function () {
+var SkipLastOperator = /*@__PURE__*/function () {
   function SkipLastOperator(_skipCount) {
     this._skipCount = _skipCount;
 
@@ -11223,9 +10726,7 @@ function () {
   return SkipLastOperator;
 }();
 
-var SkipLastSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SkipLastSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SkipLastSubscriber, _super);
 
   function SkipLastSubscriber(destination, _skipCount) {
@@ -11282,9 +10783,7 @@ function skipUntil(notifier) {
   };
 }
 
-var SkipUntilOperator =
-/*@__PURE__*/
-function () {
+var SkipUntilOperator = /*@__PURE__*/function () {
   function SkipUntilOperator(notifier) {
     this.notifier = notifier;
   }
@@ -11296,9 +10795,7 @@ function () {
   return SkipUntilOperator;
 }();
 
-var SkipUntilSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SkipUntilSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SkipUntilSubscriber, _super);
 
   function SkipUntilSubscriber(destination, notifier) {
@@ -11310,7 +10807,14 @@ function (_super) {
     _this.add(innerSubscriber);
 
     _this.innerSubscription = innerSubscriber;
-    Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(_this, notifier, undefined, undefined, innerSubscriber);
+    var innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(_this, notifier, undefined, undefined, innerSubscriber);
+
+    if (innerSubscription !== innerSubscriber) {
+      _this.add(innerSubscription);
+
+      _this.innerSubscription = innerSubscription;
+    }
+
     return _this;
   }
 
@@ -11356,9 +10860,7 @@ function skipWhile(predicate) {
   };
 }
 
-var SkipWhileOperator =
-/*@__PURE__*/
-function () {
+var SkipWhileOperator = /*@__PURE__*/function () {
   function SkipWhileOperator(predicate) {
     this.predicate = predicate;
   }
@@ -11370,9 +10872,7 @@ function () {
   return SkipWhileOperator;
 }();
 
-var SkipWhileSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SkipWhileSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SkipWhileSubscriber, _super);
 
   function SkipWhileSubscriber(destination, predicate) {
@@ -11420,15 +10920,9 @@ function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "startWith", function() { return startWith; });
-/* harmony import */ var _observable_fromArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/fromArray */ "./node_modules/rxjs/_esm5/internal/observable/fromArray.js");
-/* harmony import */ var _observable_scalar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/scalar */ "./node_modules/rxjs/_esm5/internal/observable/scalar.js");
-/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "./node_modules/rxjs/_esm5/internal/observable/empty.js");
-/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../observable/concat */ "./node_modules/rxjs/_esm5/internal/observable/concat.js");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isScheduler */ "./node_modules/rxjs/_esm5/internal/util/isScheduler.js");
-/** PURE_IMPORTS_START _observable_fromArray,_observable_scalar,_observable_empty,_observable_concat,_util_isScheduler PURE_IMPORTS_END */
-
-
-
+/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "./node_modules/rxjs/_esm5/internal/observable/concat.js");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isScheduler */ "./node_modules/rxjs/_esm5/internal/util/isScheduler.js");
+/** PURE_IMPORTS_START _observable_concat,_util_isScheduler PURE_IMPORTS_END */
 
 
 function startWith() {
@@ -11438,25 +10932,18 @@ function startWith() {
     array[_i] = arguments[_i];
   }
 
-  return function (source) {
-    var scheduler = array[array.length - 1];
+  var scheduler = array[array.length - 1];
 
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(scheduler)) {
-      array.pop();
-    } else {
-      scheduler = null;
-    }
-
-    var len = array.length;
-
-    if (len === 1 && !scheduler) {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(Object(_observable_scalar__WEBPACK_IMPORTED_MODULE_1__["scalar"])(array[0]), source);
-    } else if (len > 0) {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(Object(_observable_fromArray__WEBPACK_IMPORTED_MODULE_0__["fromArray"])(array, scheduler), source);
-    } else {
-      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_3__["concat"])(Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])(scheduler), source);
-    }
-  };
+  if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_1__["isScheduler"])(scheduler)) {
+    array.pop();
+    return function (source) {
+      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source, scheduler);
+    };
+  } else {
+    return function (source) {
+      return Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source);
+    };
+  }
 }
 
 /***/ }),
@@ -11484,9 +10971,7 @@ function subscribeOn(scheduler, delay) {
   };
 }
 
-var SubscribeOnOperator =
-/*@__PURE__*/
-function () {
+var SubscribeOnOperator = /*@__PURE__*/function () {
   function SubscribeOnOperator(scheduler, delay) {
     this.scheduler = scheduler;
     this.delay = delay;
@@ -11561,9 +11046,7 @@ function switchMap(project, resultSelector) {
   };
 }
 
-var SwitchMapOperator =
-/*@__PURE__*/
-function () {
+var SwitchMapOperator = /*@__PURE__*/function () {
   function SwitchMapOperator(project) {
     this.project = project;
   }
@@ -11575,9 +11058,7 @@ function () {
   return SwitchMapOperator;
 }();
 
-var SwitchMapSubscriber =
-/*@__PURE__*/
-function (_super) {
+var SwitchMapSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SwitchMapSubscriber, _super);
 
   function SwitchMapSubscriber(destination, project) {
@@ -11609,10 +11090,14 @@ function (_super) {
       innerSubscription.unsubscribe();
     }
 
-    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_2__["InnerSubscriber"](this, undefined, undefined);
+    var innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_2__["InnerSubscriber"](this, value, index);
     var destination = this.destination;
     destination.add(innerSubscriber);
-    this.innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, value, index, innerSubscriber);
+    this.innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, result, undefined, undefined, innerSubscriber);
+
+    if (this.innerSubscription !== innerSubscriber) {
+      destination.add(this.innerSubscription);
+    }
   };
 
   SwitchMapSubscriber.prototype._complete = function () {
@@ -11700,9 +11185,7 @@ function take(count) {
   };
 }
 
-var TakeOperator =
-/*@__PURE__*/
-function () {
+var TakeOperator = /*@__PURE__*/function () {
   function TakeOperator(total) {
     this.total = total;
 
@@ -11718,9 +11201,7 @@ function () {
   return TakeOperator;
 }();
 
-var TakeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TakeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TakeSubscriber, _super);
 
   function TakeSubscriber(destination, total) {
@@ -11779,9 +11260,7 @@ function takeLast(count) {
   };
 }
 
-var TakeLastOperator =
-/*@__PURE__*/
-function () {
+var TakeLastOperator = /*@__PURE__*/function () {
   function TakeLastOperator(total) {
     this.total = total;
 
@@ -11797,9 +11276,7 @@ function () {
   return TakeLastOperator;
 }();
 
-var TakeLastSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TakeLastSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TakeLastSubscriber, _super);
 
   function TakeLastSubscriber(destination, total) {
@@ -11869,9 +11346,7 @@ function takeUntil(notifier) {
   };
 }
 
-var TakeUntilOperator =
-/*@__PURE__*/
-function () {
+var TakeUntilOperator = /*@__PURE__*/function () {
   function TakeUntilOperator(notifier) {
     this.notifier = notifier;
   }
@@ -11891,9 +11366,7 @@ function () {
   return TakeUntilOperator;
 }();
 
-var TakeUntilSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TakeUntilSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TakeUntilSubscriber, _super);
 
   function TakeUntilSubscriber(destination) {
@@ -11940,9 +11413,7 @@ function takeWhile(predicate, inclusive) {
   };
 }
 
-var TakeWhileOperator =
-/*@__PURE__*/
-function () {
+var TakeWhileOperator = /*@__PURE__*/function () {
   function TakeWhileOperator(predicate, inclusive) {
     this.predicate = predicate;
     this.inclusive = inclusive;
@@ -11955,9 +11426,7 @@ function () {
   return TakeWhileOperator;
 }();
 
-var TakeWhileSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TakeWhileSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TakeWhileSubscriber, _super);
 
   function TakeWhileSubscriber(destination, predicate, inclusive) {
@@ -12027,9 +11496,7 @@ function tap(nextOrObserver, error, complete) {
   };
 }
 
-var DoOperator =
-/*@__PURE__*/
-function () {
+var DoOperator = /*@__PURE__*/function () {
   function DoOperator(nextOrObserver, error, complete) {
     this.nextOrObserver = nextOrObserver;
     this.error = error;
@@ -12043,9 +11510,7 @@ function () {
   return DoOperator;
 }();
 
-var TapSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TapSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TapSubscriber, _super);
 
   function TapSubscriber(destination, observerOrNext, error, complete) {
@@ -12140,9 +11605,7 @@ function throttle(durationSelector, config) {
   };
 }
 
-var ThrottleOperator =
-/*@__PURE__*/
-function () {
+var ThrottleOperator = /*@__PURE__*/function () {
   function ThrottleOperator(durationSelector, leading, trailing) {
     this.durationSelector = durationSelector;
     this.leading = leading;
@@ -12156,9 +11619,7 @@ function () {
   return ThrottleOperator;
 }();
 
-var ThrottleSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ThrottleSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ThrottleSubscriber, _super);
 
   function ThrottleSubscriber(destination, durationSelector, _leading, _trailing) {
@@ -12278,9 +11739,7 @@ function throttleTime(duration, scheduler, config) {
   };
 }
 
-var ThrottleTimeOperator =
-/*@__PURE__*/
-function () {
+var ThrottleTimeOperator = /*@__PURE__*/function () {
   function ThrottleTimeOperator(duration, scheduler, leading, trailing) {
     this.duration = duration;
     this.scheduler = scheduler;
@@ -12295,9 +11754,7 @@ function () {
   return ThrottleTimeOperator;
 }();
 
-var ThrottleTimeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var ThrottleTimeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ThrottleTimeSubscriber, _super);
 
   function ThrottleTimeSubscriber(destination, duration, scheduler, leading, trailing) {
@@ -12325,6 +11782,9 @@ function (_super) {
 
       if (this.leading) {
         this.destination.next(value);
+      } else if (this.trailing) {
+        this._trailingValue = value;
+        this._hasTrailingValue = true;
       }
     }
   };
@@ -12374,28 +11834,69 @@ function dispatchNext(arg) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throwIfEmpty", function() { return throwIfEmpty; });
-/* harmony import */ var _tap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tap */ "./node_modules/rxjs/_esm5/internal/operators/tap.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/EmptyError */ "./node_modules/rxjs/_esm5/internal/util/EmptyError.js");
-/** PURE_IMPORTS_START _tap,_util_EmptyError PURE_IMPORTS_END */
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Subscriber */ "./node_modules/rxjs/_esm5/internal/Subscriber.js");
+/** PURE_IMPORTS_START tslib,_util_EmptyError,_Subscriber PURE_IMPORTS_END */
 
 
-var throwIfEmpty = function throwIfEmpty(errorFactory) {
+
+function throwIfEmpty(errorFactory) {
   if (errorFactory === void 0) {
     errorFactory = defaultErrorFactory;
   }
 
-  return Object(_tap__WEBPACK_IMPORTED_MODULE_0__["tap"])({
-    hasValue: false,
-    next: function next() {
-      this.hasValue = true;
-    },
-    complete: function complete() {
-      if (!this.hasValue) {
-        throw errorFactory();
+  return function (source) {
+    return source.lift(new ThrowIfEmptyOperator(errorFactory));
+  };
+}
+
+var ThrowIfEmptyOperator = /*@__PURE__*/function () {
+  function ThrowIfEmptyOperator(errorFactory) {
+    this.errorFactory = errorFactory;
+  }
+
+  ThrowIfEmptyOperator.prototype.call = function (subscriber, source) {
+    return source.subscribe(new ThrowIfEmptySubscriber(subscriber, this.errorFactory));
+  };
+
+  return ThrowIfEmptyOperator;
+}();
+
+var ThrowIfEmptySubscriber = /*@__PURE__*/function (_super) {
+  tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ThrowIfEmptySubscriber, _super);
+
+  function ThrowIfEmptySubscriber(destination, errorFactory) {
+    var _this = _super.call(this, destination) || this;
+
+    _this.errorFactory = errorFactory;
+    _this.hasValue = false;
+    return _this;
+  }
+
+  ThrowIfEmptySubscriber.prototype._next = function (value) {
+    this.hasValue = true;
+    this.destination.next(value);
+  };
+
+  ThrowIfEmptySubscriber.prototype._complete = function () {
+    if (!this.hasValue) {
+      var err = void 0;
+
+      try {
+        err = this.errorFactory();
+      } catch (e) {
+        err = e;
       }
+
+      this.destination.error(err);
+    } else {
+      return this.destination.complete();
     }
-  });
-};
+  };
+
+  return ThrowIfEmptySubscriber;
+}(_Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"]);
 
 function defaultErrorFactory() {
   return new _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__["EmptyError"]();
@@ -12451,9 +11952,7 @@ function timeInterval(scheduler) {
   };
 }
 
-var TimeInterval =
-/*@__PURE__*/
-function () {
+var TimeInterval = /*@__PURE__*/function () {
   function TimeInterval(value, interval) {
     this.value = value;
     this.interval = interval;
@@ -12528,9 +12027,7 @@ function timeoutWith(due, withObservable, scheduler) {
   };
 }
 
-var TimeoutWithOperator =
-/*@__PURE__*/
-function () {
+var TimeoutWithOperator = /*@__PURE__*/function () {
   function TimeoutWithOperator(waitFor, absoluteTimeout, withObservable, scheduler) {
     this.waitFor = waitFor;
     this.absoluteTimeout = absoluteTimeout;
@@ -12545,9 +12042,7 @@ function () {
   return TimeoutWithOperator;
 }();
 
-var TimeoutWithSubscriber =
-/*@__PURE__*/
-function (_super) {
+var TimeoutWithSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TimeoutWithSubscriber, _super);
 
   function TimeoutWithSubscriber(destination, absoluteTimeout, waitFor, withObservable, scheduler) {
@@ -12627,9 +12122,7 @@ function timestamp(scheduler) {
   });
 }
 
-var Timestamp =
-/*@__PURE__*/
-function () {
+var Timestamp = /*@__PURE__*/function () {
   function Timestamp(value, timestamp) {
     this.value = value;
     this.timestamp = timestamp;
@@ -12696,9 +12189,7 @@ function window(windowBoundaries) {
   };
 }
 
-var WindowOperator =
-/*@__PURE__*/
-function () {
+var WindowOperator = /*@__PURE__*/function () {
   function WindowOperator(windowBoundaries) {
     this.windowBoundaries = windowBoundaries;
   }
@@ -12717,9 +12208,7 @@ function () {
   return WindowOperator;
 }();
 
-var WindowSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WindowSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WindowSubscriber, _super);
 
   function WindowSubscriber(destination) {
@@ -12804,9 +12293,7 @@ function windowCount(windowSize, startWindowEvery) {
   };
 }
 
-var WindowCountOperator =
-/*@__PURE__*/
-function () {
+var WindowCountOperator = /*@__PURE__*/function () {
   function WindowCountOperator(windowSize, startWindowEvery) {
     this.windowSize = windowSize;
     this.startWindowEvery = startWindowEvery;
@@ -12819,9 +12306,7 @@ function () {
   return WindowCountOperator;
 }();
 
-var WindowCountSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WindowCountSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WindowCountSubscriber, _super);
 
   function WindowCountSubscriber(destination, windowSize, startWindowEvery) {
@@ -12943,9 +12428,7 @@ function windowTime(windowTimeSpan) {
   };
 }
 
-var WindowTimeOperator =
-/*@__PURE__*/
-function () {
+var WindowTimeOperator = /*@__PURE__*/function () {
   function WindowTimeOperator(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
     this.windowTimeSpan = windowTimeSpan;
     this.windowCreationInterval = windowCreationInterval;
@@ -12960,9 +12443,7 @@ function () {
   return WindowTimeOperator;
 }();
 
-var CountedSubject =
-/*@__PURE__*/
-function (_super) {
+var CountedSubject = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](CountedSubject, _super);
 
   function CountedSubject() {
@@ -12988,9 +12469,7 @@ function (_super) {
   return CountedSubject;
 }(_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]);
 
-var WindowTimeSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WindowTimeSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WindowTimeSubscriber, _super);
 
   function WindowTimeSubscriber(destination, windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
@@ -13167,9 +12646,7 @@ function windowToggle(openings, closingSelector) {
   };
 }
 
-var WindowToggleOperator =
-/*@__PURE__*/
-function () {
+var WindowToggleOperator = /*@__PURE__*/function () {
   function WindowToggleOperator(openings, closingSelector) {
     this.openings = openings;
     this.closingSelector = closingSelector;
@@ -13182,9 +12659,7 @@ function () {
   return WindowToggleOperator;
 }();
 
-var WindowToggleSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WindowToggleSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WindowToggleSubscriber, _super);
 
   function WindowToggleSubscriber(destination, openings, closingSelector) {
@@ -13350,9 +12825,7 @@ function windowWhen(closingSelector) {
   };
 }
 
-var WindowOperator =
-/*@__PURE__*/
-function () {
+var WindowOperator = /*@__PURE__*/function () {
   function WindowOperator(closingSelector) {
     this.closingSelector = closingSelector;
   }
@@ -13364,9 +12837,7 @@ function () {
   return WindowOperator;
 }();
 
-var WindowSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WindowSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WindowSubscriber, _super);
 
   function WindowSubscriber(destination, closingSelector) {
@@ -13487,9 +12958,7 @@ function withLatestFrom() {
   };
 }
 
-var WithLatestFromOperator =
-/*@__PURE__*/
-function () {
+var WithLatestFromOperator = /*@__PURE__*/function () {
   function WithLatestFromOperator(observables, project) {
     this.observables = observables;
     this.project = project;
@@ -13502,9 +12971,7 @@ function () {
   return WithLatestFromOperator;
 }();
 
-var WithLatestFromSubscriber =
-/*@__PURE__*/
-function (_super) {
+var WithLatestFromSubscriber = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](WithLatestFromSubscriber, _super);
 
   function WithLatestFromSubscriber(destination, observables, project) {
@@ -13622,6 +13089,237 @@ function zipAll(project) {
 
 /***/ }),
 
+/***/ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleArray.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/scheduled/scheduleArray.js ***!
+  \*********************************************************************/
+/*! exports provided: scheduleArray */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleArray", function() { return scheduleArray; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
+/** PURE_IMPORTS_START _Observable,_Subscription PURE_IMPORTS_END */
+
+
+function scheduleArray(input, scheduler) {
+  return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
+    var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+    var i = 0;
+    sub.add(scheduler.schedule(function () {
+      if (i === input.length) {
+        subscriber.complete();
+        return;
+      }
+
+      subscriber.next(input[i++]);
+
+      if (!subscriber.closed) {
+        sub.add(this.schedule());
+      }
+    }));
+    return sub;
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleIterable.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/scheduled/scheduleIterable.js ***!
+  \************************************************************************/
+/*! exports provided: scheduleIterable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleIterable", function() { return scheduleIterable; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
+/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/iterator */ "./node_modules/rxjs/_esm5/internal/symbol/iterator.js");
+/** PURE_IMPORTS_START _Observable,_Subscription,_symbol_iterator PURE_IMPORTS_END */
+
+
+
+function scheduleIterable(input, scheduler) {
+  if (!input) {
+    throw new Error('Iterable cannot be null');
+  }
+
+  return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
+    var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+    var iterator;
+    sub.add(function () {
+      if (iterator && typeof iterator["return"] === 'function') {
+        iterator["return"]();
+      }
+    });
+    sub.add(scheduler.schedule(function () {
+      iterator = input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_2__["iterator"]]();
+      sub.add(scheduler.schedule(function () {
+        if (subscriber.closed) {
+          return;
+        }
+
+        var value;
+        var done;
+
+        try {
+          var result = iterator.next();
+          value = result.value;
+          done = result.done;
+        } catch (err) {
+          subscriber.error(err);
+          return;
+        }
+
+        if (done) {
+          subscriber.complete();
+        } else {
+          subscriber.next(value);
+          this.schedule();
+        }
+      }));
+    }));
+    return sub;
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleObservable.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/scheduled/scheduleObservable.js ***!
+  \**************************************************************************/
+/*! exports provided: scheduleObservable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleObservable", function() { return scheduleObservable; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
+/** PURE_IMPORTS_START _Observable,_Subscription,_symbol_observable PURE_IMPORTS_END */
+
+
+
+function scheduleObservable(input, scheduler) {
+  return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
+    var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+    sub.add(scheduler.schedule(function () {
+      var observable = input[_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]]();
+      sub.add(observable.subscribe({
+        next: function next(value) {
+          sub.add(scheduler.schedule(function () {
+            return subscriber.next(value);
+          }));
+        },
+        error: function error(err) {
+          sub.add(scheduler.schedule(function () {
+            return subscriber.error(err);
+          }));
+        },
+        complete: function complete() {
+          sub.add(scheduler.schedule(function () {
+            return subscriber.complete();
+          }));
+        }
+      }));
+    }));
+    return sub;
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/internal/scheduled/schedulePromise.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/scheduled/schedulePromise.js ***!
+  \***********************************************************************/
+/*! exports provided: schedulePromise */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "schedulePromise", function() { return schedulePromise; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "./node_modules/rxjs/_esm5/internal/Subscription.js");
+/** PURE_IMPORTS_START _Observable,_Subscription PURE_IMPORTS_END */
+
+
+function schedulePromise(input, scheduler) {
+  return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](function (subscriber) {
+    var sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+    sub.add(scheduler.schedule(function () {
+      return input.then(function (value) {
+        sub.add(scheduler.schedule(function () {
+          subscriber.next(value);
+          sub.add(scheduler.schedule(function () {
+            return subscriber.complete();
+          }));
+        }));
+      }, function (err) {
+        sub.add(scheduler.schedule(function () {
+          return subscriber.error(err);
+        }));
+      });
+    }));
+    return sub;
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/rxjs/_esm5/internal/scheduled/scheduled.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm5/internal/scheduled/scheduled.js ***!
+  \*****************************************************************/
+/*! exports provided: scheduled */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduled", function() { return scheduled; });
+/* harmony import */ var _scheduleObservable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scheduleObservable */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleObservable.js");
+/* harmony import */ var _schedulePromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./schedulePromise */ "./node_modules/rxjs/_esm5/internal/scheduled/schedulePromise.js");
+/* harmony import */ var _scheduleArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scheduleArray */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleArray.js");
+/* harmony import */ var _scheduleIterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scheduleIterable */ "./node_modules/rxjs/_esm5/internal/scheduled/scheduleIterable.js");
+/* harmony import */ var _util_isInteropObservable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isInteropObservable */ "./node_modules/rxjs/_esm5/internal/util/isInteropObservable.js");
+/* harmony import */ var _util_isPromise__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/isPromise */ "./node_modules/rxjs/_esm5/internal/util/isPromise.js");
+/* harmony import */ var _util_isArrayLike__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../util/isArrayLike */ "./node_modules/rxjs/_esm5/internal/util/isArrayLike.js");
+/* harmony import */ var _util_isIterable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/isIterable */ "./node_modules/rxjs/_esm5/internal/util/isIterable.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/** PURE_IMPORTS_START _scheduleObservable,_schedulePromise,_scheduleArray,_scheduleIterable,_util_isInteropObservable,_util_isPromise,_util_isArrayLike,_util_isIterable PURE_IMPORTS_END */
+
+
+
+
+
+
+
+
+function scheduled(input, scheduler) {
+  if (input != null) {
+    if (Object(_util_isInteropObservable__WEBPACK_IMPORTED_MODULE_4__["isInteropObservable"])(input)) {
+      return Object(_scheduleObservable__WEBPACK_IMPORTED_MODULE_0__["scheduleObservable"])(input, scheduler);
+    } else if (Object(_util_isPromise__WEBPACK_IMPORTED_MODULE_5__["isPromise"])(input)) {
+      return Object(_schedulePromise__WEBPACK_IMPORTED_MODULE_1__["schedulePromise"])(input, scheduler);
+    } else if (Object(_util_isArrayLike__WEBPACK_IMPORTED_MODULE_6__["isArrayLike"])(input)) {
+      return Object(_scheduleArray__WEBPACK_IMPORTED_MODULE_2__["scheduleArray"])(input, scheduler);
+    } else if (Object(_util_isIterable__WEBPACK_IMPORTED_MODULE_7__["isIterable"])(input) || typeof input === 'string') {
+      return Object(_scheduleIterable__WEBPACK_IMPORTED_MODULE_3__["scheduleIterable"])(input, scheduler);
+    }
+  }
+
+  throw new TypeError((input !== null && _typeof(input) || input) + ' is not observable');
+}
+
+/***/ }),
+
 /***/ "./node_modules/rxjs/_esm5/internal/scheduler/Action.js":
 /*!**************************************************************!*\
   !*** ./node_modules/rxjs/_esm5/internal/scheduler/Action.js ***!
@@ -13638,9 +13336,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var Action =
-/*@__PURE__*/
-function (_super) {
+var Action = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Action, _super);
 
   function Action(scheduler, work) {
@@ -13678,9 +13374,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AnimationFrameAction =
-/*@__PURE__*/
-function (_super) {
+var AnimationFrameAction = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AnimationFrameAction, _super);
 
   function AnimationFrameAction(scheduler, work) {
@@ -13746,9 +13440,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AnimationFrameScheduler =
-/*@__PURE__*/
-function (_super) {
+var AnimationFrameScheduler = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AnimationFrameScheduler, _super);
 
   function AnimationFrameScheduler() {
@@ -13806,9 +13498,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AsapAction =
-/*@__PURE__*/
-function (_super) {
+var AsapAction = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AsapAction, _super);
 
   function AsapAction(scheduler, work) {
@@ -13872,9 +13562,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AsapScheduler =
-/*@__PURE__*/
-function (_super) {
+var AsapScheduler = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AsapScheduler, _super);
 
   function AsapScheduler() {
@@ -13930,9 +13618,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AsyncAction =
-/*@__PURE__*/
-function (_super) {
+var AsyncAction = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AsyncAction, _super);
 
   function AsyncAction(scheduler, work) {
@@ -14065,9 +13751,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var AsyncScheduler =
-/*@__PURE__*/
-function (_super) {
+var AsyncScheduler = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AsyncScheduler, _super);
 
   function AsyncScheduler(SchedulerAction, now) {
@@ -14152,9 +13836,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var QueueAction =
-/*@__PURE__*/
-function (_super) {
+var QueueAction = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](QueueAction, _super);
 
   function QueueAction(scheduler, work) {
@@ -14219,9 +13901,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var QueueScheduler =
-/*@__PURE__*/
-function (_super) {
+var QueueScheduler = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](QueueScheduler, _super);
 
   function QueueScheduler() {
@@ -14254,9 +13934,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var VirtualTimeScheduler =
-/*@__PURE__*/
-function (_super) {
+var VirtualTimeScheduler = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](VirtualTimeScheduler, _super);
 
   function VirtualTimeScheduler(SchedulerAction, maxFrames) {
@@ -14309,9 +13987,7 @@ function (_super) {
 
 
 
-var VirtualAction =
-/*@__PURE__*/
-function (_super) {
+var VirtualAction = /*@__PURE__*/function (_super) {
   tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](VirtualAction, _super);
 
   function VirtualAction(scheduler, work, index) {
@@ -14408,9 +14084,7 @@ __webpack_require__.r(__webpack_exports__);
 /** PURE_IMPORTS_START _AnimationFrameAction,_AnimationFrameScheduler PURE_IMPORTS_END */
 
 
-var animationFrame =
-/*@__PURE__*/
-new _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__["AnimationFrameScheduler"](_AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__["AnimationFrameAction"]);
+var animationFrame = /*@__PURE__*/new _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__["AnimationFrameScheduler"](_AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__["AnimationFrameAction"]);
 
 /***/ }),
 
@@ -14429,9 +14103,7 @@ __webpack_require__.r(__webpack_exports__);
 /** PURE_IMPORTS_START _AsapAction,_AsapScheduler PURE_IMPORTS_END */
 
 
-var asap =
-/*@__PURE__*/
-new _AsapScheduler__WEBPACK_IMPORTED_MODULE_1__["AsapScheduler"](_AsapAction__WEBPACK_IMPORTED_MODULE_0__["AsapAction"]);
+var asap = /*@__PURE__*/new _AsapScheduler__WEBPACK_IMPORTED_MODULE_1__["AsapScheduler"](_AsapAction__WEBPACK_IMPORTED_MODULE_0__["AsapAction"]);
 
 /***/ }),
 
@@ -14450,9 +14122,7 @@ __webpack_require__.r(__webpack_exports__);
 /** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
 
 
-var async =
-/*@__PURE__*/
-new _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__["AsyncScheduler"](_AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"]);
+var async = /*@__PURE__*/new _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__["AsyncScheduler"](_AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"]);
 
 /***/ }),
 
@@ -14471,9 +14141,7 @@ __webpack_require__.r(__webpack_exports__);
 /** PURE_IMPORTS_START _QueueAction,_QueueScheduler PURE_IMPORTS_END */
 
 
-var queue =
-/*@__PURE__*/
-new _QueueScheduler__WEBPACK_IMPORTED_MODULE_1__["QueueScheduler"](_QueueAction__WEBPACK_IMPORTED_MODULE_0__["QueueAction"]);
+var queue = /*@__PURE__*/new _QueueScheduler__WEBPACK_IMPORTED_MODULE_1__["QueueScheduler"](_QueueAction__WEBPACK_IMPORTED_MODULE_0__["QueueAction"]);
 
 /***/ }),
 
@@ -14497,9 +14165,7 @@ function getSymbolIterator() {
 
   return Symbol.iterator;
 }
-var iterator =
-/*@__PURE__*/
-getSymbolIterator();
+var iterator = /*@__PURE__*/getSymbolIterator();
 var $$iterator = iterator;
 
 /***/ }),
@@ -14515,7 +14181,9 @@ var $$iterator = iterator;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "observable", function() { return observable; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-var observable = typeof Symbol === 'function' && Symbol.observable || '@@observable';
+var observable = /*@__PURE__*/function () {
+  return typeof Symbol === 'function' && Symbol.observable || '@@observable';
+}();
 
 /***/ }),
 
@@ -14531,11 +14199,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rxSubscriber", function() { return rxSubscriber; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "$$rxSubscriber", function() { return $$rxSubscriber; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-var rxSubscriber = typeof Symbol === 'function' ?
-/*@__PURE__*/
-Symbol('rxSubscriber') : '@@rxSubscriber_' +
-/*@__PURE__*/
-Math.random();
+var rxSubscriber = /*@__PURE__*/function () {
+  return typeof Symbol === 'function' ? /*@__PURE__*/Symbol('rxSubscriber') : '@@rxSubscriber_' + /*@__PURE__*/Math.random();
+}();
 var $$rxSubscriber = rxSubscriber;
 
 /***/ }),
@@ -14551,16 +14217,18 @@ var $$rxSubscriber = rxSubscriber;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArgumentOutOfRangeError", function() { return ArgumentOutOfRangeError; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function ArgumentOutOfRangeErrorImpl() {
-  Error.call(this);
-  this.message = 'argument out of range';
-  this.name = 'ArgumentOutOfRangeError';
-  return this;
-}
+var ArgumentOutOfRangeErrorImpl = /*@__PURE__*/function () {
+  function ArgumentOutOfRangeErrorImpl() {
+    Error.call(this);
+    this.message = 'argument out of range';
+    this.name = 'ArgumentOutOfRangeError';
+    return this;
+  }
 
-ArgumentOutOfRangeErrorImpl.prototype =
-/*@__PURE__*/
-Object.create(Error.prototype);
+  ArgumentOutOfRangeErrorImpl.prototype = /*@__PURE__*/Object.create(Error.prototype);
+  return ArgumentOutOfRangeErrorImpl;
+}();
+
 var ArgumentOutOfRangeError = ArgumentOutOfRangeErrorImpl;
 
 /***/ }),
@@ -14576,16 +14244,18 @@ var ArgumentOutOfRangeError = ArgumentOutOfRangeErrorImpl;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EmptyError", function() { return EmptyError; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function EmptyErrorImpl() {
-  Error.call(this);
-  this.message = 'no elements in sequence';
-  this.name = 'EmptyError';
-  return this;
-}
+var EmptyErrorImpl = /*@__PURE__*/function () {
+  function EmptyErrorImpl() {
+    Error.call(this);
+    this.message = 'no elements in sequence';
+    this.name = 'EmptyError';
+    return this;
+  }
 
-EmptyErrorImpl.prototype =
-/*@__PURE__*/
-Object.create(Error.prototype);
+  EmptyErrorImpl.prototype = /*@__PURE__*/Object.create(Error.prototype);
+  return EmptyErrorImpl;
+}();
+
 var EmptyError = EmptyErrorImpl;
 
 /***/ }),
@@ -14594,35 +14264,47 @@ var EmptyError = EmptyErrorImpl;
 /*!************************************************************!*\
   !*** ./node_modules/rxjs/_esm5/internal/util/Immediate.js ***!
   \************************************************************/
-/*! exports provided: Immediate */
+/*! exports provided: Immediate, TestTools */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Immediate", function() { return Immediate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TestTools", function() { return TestTools; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var nextHandle = 1;
-var tasksByHandle = {};
 
-function runIfPresent(handle) {
-  var cb = tasksByHandle[handle];
+var RESOLVED = /*@__PURE__*/function () {
+  return /*@__PURE__*/Promise.resolve();
+}();
 
-  if (cb) {
-    cb();
+var activeHandles = {};
+
+function findAndClearHandle(handle) {
+  if (handle in activeHandles) {
+    delete activeHandles[handle];
+    return true;
   }
+
+  return false;
 }
 
 var Immediate = {
   setImmediate: function setImmediate(cb) {
     var handle = nextHandle++;
-    tasksByHandle[handle] = cb;
-    Promise.resolve().then(function () {
-      return runIfPresent(handle);
+    activeHandles[handle] = true;
+    RESOLVED.then(function () {
+      return findAndClearHandle(handle) && cb();
     });
     return handle;
   },
   clearImmediate: function clearImmediate(handle) {
-    delete tasksByHandle[handle];
+    findAndClearHandle(handle);
+  }
+};
+var TestTools = {
+  pending: function pending() {
+    return Object.keys(activeHandles).length;
   }
 };
 
@@ -14639,16 +14321,18 @@ var Immediate = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObjectUnsubscribedError", function() { return ObjectUnsubscribedError; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function ObjectUnsubscribedErrorImpl() {
-  Error.call(this);
-  this.message = 'object unsubscribed';
-  this.name = 'ObjectUnsubscribedError';
-  return this;
-}
+var ObjectUnsubscribedErrorImpl = /*@__PURE__*/function () {
+  function ObjectUnsubscribedErrorImpl() {
+    Error.call(this);
+    this.message = 'object unsubscribed';
+    this.name = 'ObjectUnsubscribedError';
+    return this;
+  }
 
-ObjectUnsubscribedErrorImpl.prototype =
-/*@__PURE__*/
-Object.create(Error.prototype);
+  ObjectUnsubscribedErrorImpl.prototype = /*@__PURE__*/Object.create(Error.prototype);
+  return ObjectUnsubscribedErrorImpl;
+}();
+
 var ObjectUnsubscribedError = ObjectUnsubscribedErrorImpl;
 
 /***/ }),
@@ -14664,16 +14348,18 @@ var ObjectUnsubscribedError = ObjectUnsubscribedErrorImpl;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeoutError", function() { return TimeoutError; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function TimeoutErrorImpl() {
-  Error.call(this);
-  this.message = 'Timeout has occurred';
-  this.name = 'TimeoutError';
-  return this;
-}
+var TimeoutErrorImpl = /*@__PURE__*/function () {
+  function TimeoutErrorImpl() {
+    Error.call(this);
+    this.message = 'Timeout has occurred';
+    this.name = 'TimeoutError';
+    return this;
+  }
 
-TimeoutErrorImpl.prototype =
-/*@__PURE__*/
-Object.create(Error.prototype);
+  TimeoutErrorImpl.prototype = /*@__PURE__*/Object.create(Error.prototype);
+  return TimeoutErrorImpl;
+}();
+
 var TimeoutError = TimeoutErrorImpl;
 
 /***/ }),
@@ -14689,19 +14375,21 @@ var TimeoutError = TimeoutErrorImpl;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UnsubscriptionError", function() { return UnsubscriptionError; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function UnsubscriptionErrorImpl(errors) {
-  Error.call(this);
-  this.message = errors ? errors.length + " errors occurred during unsubscription:\n" + errors.map(function (err, i) {
-    return i + 1 + ") " + err.toString();
-  }).join('\n  ') : '';
-  this.name = 'UnsubscriptionError';
-  this.errors = errors;
-  return this;
-}
+var UnsubscriptionErrorImpl = /*@__PURE__*/function () {
+  function UnsubscriptionErrorImpl(errors) {
+    Error.call(this);
+    this.message = errors ? errors.length + " errors occurred during unsubscription:\n" + errors.map(function (err, i) {
+      return i + 1 + ") " + err.toString();
+    }).join('\n  ') : '';
+    this.name = 'UnsubscriptionError';
+    this.errors = errors;
+    return this;
+  }
 
-UnsubscriptionErrorImpl.prototype =
-/*@__PURE__*/
-Object.create(Error.prototype);
+  UnsubscriptionErrorImpl.prototype = /*@__PURE__*/Object.create(Error.prototype);
+  return UnsubscriptionErrorImpl;
+}();
+
 var UnsubscriptionError = UnsubscriptionErrorImpl;
 
 /***/ }),
@@ -14754,7 +14442,7 @@ __webpack_require__.r(__webpack_exports__);
 function hostReportError(err) {
   setTimeout(function () {
     throw err;
-  });
+  }, 0);
 }
 
 /***/ }),
@@ -14787,9 +14475,11 @@ function identity(x) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-var isArray = Array.isArray || function (x) {
-  return x && typeof x.length === 'number';
-};
+var isArray = /*@__PURE__*/function () {
+  return Array.isArray || function (x) {
+    return x && typeof x.length === 'number';
+  };
+}();
 
 /***/ }),
 
@@ -14911,7 +14601,7 @@ function isNumeric(val) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 function isObject(x) {
@@ -15022,8 +14712,8 @@ function not(pred, thisArg) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pipe", function() { return pipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pipeFromArray", function() { return pipeFromArray; });
-/* harmony import */ var _noop__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noop */ "./node_modules/rxjs/_esm5/internal/util/noop.js");
-/** PURE_IMPORTS_START _noop PURE_IMPORTS_END */
+/* harmony import */ var _identity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./identity */ "./node_modules/rxjs/_esm5/internal/util/identity.js");
+/** PURE_IMPORTS_START _identity PURE_IMPORTS_END */
 
 function pipe() {
   var fns = [];
@@ -15035,8 +14725,8 @@ function pipe() {
   return pipeFromArray(fns);
 }
 function pipeFromArray(fns) {
-  if (!fns) {
-    return _noop__WEBPACK_IMPORTED_MODULE_0__["noop"];
+  if (fns.length === 0) {
+    return _identity__WEBPACK_IMPORTED_MODULE_0__["identity"];
   }
 
   if (fns.length === 1) {
@@ -15062,18 +14752,16 @@ function pipeFromArray(fns) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeTo", function() { return subscribeTo; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
-/* harmony import */ var _subscribeToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeToArray */ "./node_modules/rxjs/_esm5/internal/util/subscribeToArray.js");
-/* harmony import */ var _subscribeToPromise__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./subscribeToPromise */ "./node_modules/rxjs/_esm5/internal/util/subscribeToPromise.js");
-/* harmony import */ var _subscribeToIterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./subscribeToIterable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToIterable.js");
-/* harmony import */ var _subscribeToObservable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./subscribeToObservable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToObservable.js");
-/* harmony import */ var _isArrayLike__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isArrayLike */ "./node_modules/rxjs/_esm5/internal/util/isArrayLike.js");
-/* harmony import */ var _isPromise__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./isPromise */ "./node_modules/rxjs/_esm5/internal/util/isPromise.js");
-/* harmony import */ var _isObject__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./isObject */ "./node_modules/rxjs/_esm5/internal/util/isObject.js");
-/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../symbol/iterator */ "./node_modules/rxjs/_esm5/internal/symbol/iterator.js");
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
-/** PURE_IMPORTS_START _Observable,_subscribeToArray,_subscribeToPromise,_subscribeToIterable,_subscribeToObservable,_isArrayLike,_isPromise,_isObject,_symbol_iterator,_symbol_observable PURE_IMPORTS_END */
-
+/* harmony import */ var _subscribeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./subscribeToArray */ "./node_modules/rxjs/_esm5/internal/util/subscribeToArray.js");
+/* harmony import */ var _subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeToPromise */ "./node_modules/rxjs/_esm5/internal/util/subscribeToPromise.js");
+/* harmony import */ var _subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./subscribeToIterable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToIterable.js");
+/* harmony import */ var _subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./subscribeToObservable */ "./node_modules/rxjs/_esm5/internal/util/subscribeToObservable.js");
+/* harmony import */ var _isArrayLike__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./isArrayLike */ "./node_modules/rxjs/_esm5/internal/util/isArrayLike.js");
+/* harmony import */ var _isPromise__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isPromise */ "./node_modules/rxjs/_esm5/internal/util/isPromise.js");
+/* harmony import */ var _isObject__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./isObject */ "./node_modules/rxjs/_esm5/internal/util/isObject.js");
+/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../symbol/iterator */ "./node_modules/rxjs/_esm5/internal/symbol/iterator.js");
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../symbol/observable */ "./node_modules/rxjs/_esm5/internal/symbol/observable.js");
+/** PURE_IMPORTS_START _subscribeToArray,_subscribeToPromise,_subscribeToIterable,_subscribeToObservable,_isArrayLike,_isPromise,_isObject,_symbol_iterator,_symbol_observable PURE_IMPORTS_END */
 
 
 
@@ -15084,26 +14772,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var subscribeTo = function subscribeTo(result) {
-  if (result instanceof _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]) {
-    return function (subscriber) {
-      if (result._isScalar) {
-        subscriber.next(result.value);
-        subscriber.complete();
-        return undefined;
-      } else {
-        return result.subscribe(subscriber);
-      }
-    };
-  } else if (!!result && typeof result[_symbol_observable__WEBPACK_IMPORTED_MODULE_9__["observable"]] === 'function') {
-    return Object(_subscribeToObservable__WEBPACK_IMPORTED_MODULE_4__["subscribeToObservable"])(result);
-  } else if (Object(_isArrayLike__WEBPACK_IMPORTED_MODULE_5__["isArrayLike"])(result)) {
-    return Object(_subscribeToArray__WEBPACK_IMPORTED_MODULE_1__["subscribeToArray"])(result);
-  } else if (Object(_isPromise__WEBPACK_IMPORTED_MODULE_6__["isPromise"])(result)) {
-    return Object(_subscribeToPromise__WEBPACK_IMPORTED_MODULE_2__["subscribeToPromise"])(result);
-  } else if (!!result && typeof result[_symbol_iterator__WEBPACK_IMPORTED_MODULE_8__["iterator"]] === 'function') {
-    return Object(_subscribeToIterable__WEBPACK_IMPORTED_MODULE_3__["subscribeToIterable"])(result);
+  if (!!result && typeof result[_symbol_observable__WEBPACK_IMPORTED_MODULE_8__["observable"]] === 'function') {
+    return Object(_subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__["subscribeToObservable"])(result);
+  } else if (Object(_isArrayLike__WEBPACK_IMPORTED_MODULE_4__["isArrayLike"])(result)) {
+    return Object(_subscribeToArray__WEBPACK_IMPORTED_MODULE_0__["subscribeToArray"])(result);
+  } else if (Object(_isPromise__WEBPACK_IMPORTED_MODULE_5__["isPromise"])(result)) {
+    return Object(_subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__["subscribeToPromise"])(result);
+  } else if (!!result && typeof result[_symbol_iterator__WEBPACK_IMPORTED_MODULE_7__["iterator"]] === 'function') {
+    return Object(_subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__["subscribeToIterable"])(result);
   } else {
-    var value = Object(_isObject__WEBPACK_IMPORTED_MODULE_7__["isObject"])(result) ? 'an invalid object' : "'" + result + "'";
+    var value = Object(_isObject__WEBPACK_IMPORTED_MODULE_6__["isObject"])(result) ? 'an invalid object' : "'" + result + "'";
     var msg = "You provided " + value + " where a stream was expected." + ' You can provide an Observable, Promise, Array, or Iterable.';
     throw new TypeError(msg);
   }
@@ -15128,9 +14806,7 @@ var subscribeToArray = function subscribeToArray(array) {
       subscriber.next(array[i]);
     }
 
-    if (!subscriber.closed) {
-      subscriber.complete();
-    }
+    subscriber.complete();
   };
 };
 
@@ -15168,10 +14844,10 @@ var subscribeToIterable = function subscribeToIterable(iterable) {
       }
     } while (true);
 
-    if (typeof iterator.return === 'function') {
+    if (typeof iterator["return"] === 'function') {
       subscriber.add(function () {
-        if (iterator.return) {
-          iterator.return();
+        if (iterator["return"]) {
+          iterator["return"]();
         }
       });
     }
@@ -15250,19 +14926,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToResult", function() { return subscribeToResult; });
 /* harmony import */ var _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../InnerSubscriber */ "./node_modules/rxjs/_esm5/internal/InnerSubscriber.js");
 /* harmony import */ var _subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeTo */ "./node_modules/rxjs/_esm5/internal/util/subscribeTo.js");
-/** PURE_IMPORTS_START _InnerSubscriber,_subscribeTo PURE_IMPORTS_END */
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observable */ "./node_modules/rxjs/_esm5/internal/Observable.js");
+/** PURE_IMPORTS_START _InnerSubscriber,_subscribeTo,_Observable PURE_IMPORTS_END */
 
 
-function subscribeToResult(outerSubscriber, result, outerValue, outerIndex, destination) {
-  if (destination === void 0) {
-    destination = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__["InnerSubscriber"](outerSubscriber, outerValue, outerIndex);
+
+function subscribeToResult(outerSubscriber, result, outerValue, outerIndex, innerSubscriber) {
+  if (innerSubscriber === void 0) {
+    innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__["InnerSubscriber"](outerSubscriber, outerValue, outerIndex);
   }
 
-  if (destination.closed) {
-    return;
+  if (innerSubscriber.closed) {
+    return undefined;
   }
 
-  return Object(_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(result)(destination);
+  if (result instanceof _Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]) {
+    return result.subscribe(innerSubscriber);
+  }
+
+  return Object(_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(result)(innerSubscriber);
 }
 
 /***/ }),
@@ -15736,7 +15418,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./node_modules/tslib/tslib.es6.js ***!
   \*****************************************/
-/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
+/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __createBinding, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15749,10 +15431,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__createBinding", function() { return __createBinding; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
@@ -15760,21 +15444,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
 /* global Reflect, Promise */
@@ -15827,7 +15513,7 @@ function __rest(s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 }
@@ -15849,6 +15535,12 @@ function __metadata(metadataKey, metadataValue) {
   if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 function __awaiter(thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -15867,9 +15559,7 @@ function __awaiter(thisArg, _arguments, P, generator) {
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -15985,16 +15675,21 @@ function __generator(thisArg, body) {
     };
   }
 }
+function __createBinding(o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+}
 function __exportStar(m, exports) {
   for (var p in m) {
-    if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
   }
 }
 function __values(o) {
-  var m = typeof Symbol === "function" && o[Symbol.iterator],
+  var s = typeof Symbol === "function" && Symbol.iterator,
+      m = s && o[s],
       i = 0;
   if (m) return m.call(o);
-  return {
+  if (o && typeof o.length === "number") return {
     next: function next() {
       if (o && i >= o.length) o = void 0;
       return {
@@ -16003,6 +15698,7 @@ function __values(o) {
       };
     }
   };
+  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 function __read(o, n) {
   var m = typeof Symbol === "function" && o[Symbol.iterator];
@@ -16037,6 +15733,20 @@ function __spread() {
 
   return ar;
 }
+function __spreadArrays() {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
+    s += arguments[i].length;
+  }
+
+  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
+    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
+      r[k] = a[j];
+    }
+  }
+
+  return r;
+}
+;
 function __await(v) {
   return this instanceof __await ? (this.v = v, this) : new __await(v);
 }
@@ -16141,13 +15851,28 @@ function __importStar(mod) {
   if (mod != null) for (var k in mod) {
     if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
   }
-  result.default = mod;
+  result["default"] = mod;
   return result;
 }
 function __importDefault(mod) {
   return mod && mod.__esModule ? mod : {
-    default: mod
+    "default": mod
   };
+}
+function __classPrivateFieldGet(receiver, privateMap) {
+  if (!privateMap.has(receiver)) {
+    throw new TypeError("attempted to get private field on non-instance");
+  }
+
+  return privateMap.get(receiver);
+}
+function __classPrivateFieldSet(receiver, privateMap, value) {
+  if (!privateMap.has(receiver)) {
+    throw new TypeError("attempted to set private field on non-instance");
+  }
+
+  privateMap.set(receiver, value);
+  return value;
 }
 
 /***/ }),
@@ -16199,7 +15924,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Set", function() { return hy_component_src_define_jquery_component__WEBPACK_IMPORTED_MODULE_1__["Set"]; });
 
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixin */ "./src/mixin/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16207,23 +15932,31 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 // # src / jquery / index.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -16246,17 +15979,17 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 var JQUERY_FEATURE_TESTS = new hy_component_src_define_jquery_component__WEBPACK_IMPORTED_MODULE_1__["Set"](_toConsumableArray(_mixin__WEBPACK_IMPORTED_MODULE_2__["MIXIN_FEATURE_TESTS"]));
-JQUERY_FEATURE_TESTS.delete("customevent");
+JQUERY_FEATURE_TESTS["delete"]("customevent");
 
-Object(hy_component_src_define_jquery_component__WEBPACK_IMPORTED_MODULE_1__["defineJQueryComponent"])("hy.drawer",
-/*#__PURE__*/
-function (_drawerMixin) {
+Object(hy_component_src_define_jquery_component__WEBPACK_IMPORTED_MODULE_1__["defineJQueryComponent"])("hy.drawer", /*#__PURE__*/function (_drawerMixin) {
   _inherits(_class, _drawerMixin);
+
+  var _super = _createSuper(_class);
 
   function _class() {
     _classCallCheck(this, _class);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(_class, [{
@@ -16284,13 +16017,17 @@ function (_drawerMixin) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calcMixin", function() { return calcMixin; });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./src/mixin/constants.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -16300,15 +16037,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 // # src / mixin / calc.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -16330,127 +16071,126 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var min = Math.min.bind(Math);
 var max = Math.max.bind(Math);
 var calcMixin = function calcMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_C) {
-      _inherits(_class, _C);
+  return /*#__PURE__*/function (_C) {
+    _inherits(_class, _C);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
-      }
+    function _class() {
+      _classCallCheck(this, _class);
 
-      _createClass(_class, [{
-        key: "calcIsInRange",
-        // #### Is in range?
-        // Given a x-coordinate, `isInRange` will  determine whether it is within range from where
-        // to pull the drawer. The x-coordinate *must* be larger than the lower bound,
-        // but when the drawer is opened it may be anywhere on the screen.
-        // Otherwise it must be below the upper bound.
-        value: function calcIsInRange(clientX, opened) {
-          switch (this.align) {
-            case "left":
-              {
-                var lower = this.range[0];
-                var upper = this.range[1];
-                return clientX > lower && (opened || clientX < upper);
-              }
+      return _super.apply(this, arguments);
+    }
 
-            case "right":
-              {
-                var _upper = window.innerWidth - this.range[0];
+    _createClass(_class, [{
+      key: "calcIsInRange",
+      // #### Is in range?
+      // Given a x-coordinate, `isInRange` will  determine whether it is within range from where
+      // to pull the drawer. The x-coordinate *must* be larger than the lower bound,
+      // but when the drawer is opened it may be anywhere on the screen.
+      // Otherwise it must be below the upper bound.
+      value: function calcIsInRange(clientX, opened) {
+        switch (this.align) {
+          case "left":
+            {
+              var lower = this.range[0];
+              var upper = this.range[1];
+              return clientX > lower && (opened || clientX < upper);
+            }
 
-                var _lower = window.innerWidth - this.range[1];
+          case "right":
+            {
+              var _upper = window.innerWidth - this.range[0];
 
-                return clientX < _upper && (opened || clientX > _lower);
-              }
+              var _lower = window.innerWidth - this.range[1];
 
-            default:
-              throw Error();
-          }
-        } // #### Calculate 'Is swipe?'
-        // If the start and end position are not the same x-coordinate, we call it a 'swipe'.
-        // However, if a tap occures during an animation (i.e. `translateX` not in a resting position)
-        // we treat it as a swipe as well. The reasons for this are pretty complex:
-        // Basically, we want users the be able to stop the animation by putting a finger on the screen.
-        // However, if they lift the finger again without swiping, the animation would not continue,
-        // because it would not pass the condition below, unless we introduce the second term.
-        // TODO: reuse isSlidign observable?
+              return clientX < _upper && (opened || clientX > _lower);
+            }
 
-      }, {
-        key: "calcIsSwipe",
-        value: function calcIsSwipe(_ref) {
-          var _ref2 = _slicedToArray(_ref, 4),
-              endX = _ref2[0].clientX,
-              startX = _ref2[1].clientX,
-              translateX = _ref2[2],
-              drawerWidth = _ref2[3];
-
-          return endX !== startX || translateX > 0 && translateX < drawerWidth;
-        } // #### Calculate 'Will open?'
-        // Based on current velocity and position of the drawer,
-        // should the drawer slide open, or snap back?
-        // TODO: could incorporate the current open state of the drawer.
-
-      }, {
-        key: "calcWillOpen",
-        value: function calcWillOpen(_ref3) {
-          var _ref4 = _slicedToArray(_ref3, 5),
-              translateX = _ref4[2],
-              drawerWidth = _ref4[3],
-              velocity = _ref4[4];
-
-          switch (this.align) {
-            case "left":
-              {
-                if (velocity > _constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return true;else if (velocity < -_constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return false;else if (translateX >= drawerWidth / 2) return true;else return false;
-              }
-
-            case "right":
-              {
-                if (-velocity > _constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return true;else if (-velocity < -_constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return false;else if (translateX <= -drawerWidth / 2) return true;else return false;
-              }
-
-            default:
-              throw Error();
-          }
-        } // #### Calculate translate X
-        // Calcuate the current position of the drawer,
-        // by taking the difference between the current and starting postion of the finger,
-        // then adding that difference to the starting position of the drawer.
-        // This way, we avoid the drawer jumping to the finger, when "catching" it during an animation.
-        // The function will also clip the position at 0 and the width of the drawer.
-
-      }, {
-        key: "calcTranslateX",
-        value: function calcTranslateX(clientX, startX, startTranslateX, drawerWidth) {
-          switch (this.align) {
-            case "left":
-              {
-                var deltaX = clientX - startX;
-                var translateX = startTranslateX + deltaX;
-                return max(0, min(drawerWidth, translateX));
-              }
-
-            case "right":
-              {
-                var _deltaX = clientX - startX;
-
-                var _translateX = startTranslateX + _deltaX;
-
-                return min(0, max(-drawerWidth, _translateX));
-              }
-
-            default:
-              throw Error();
-          }
+          default:
+            throw Error();
         }
-      }]);
+      } // #### Calculate 'Is swipe?'
+      // If the start and end position are not the same x-coordinate, we call it a 'swipe'.
+      // However, if a tap occures during an animation (i.e. `translateX` not in a resting position)
+      // we treat it as a swipe as well. The reasons for this are pretty complex:
+      // Basically, we want users the be able to stop the animation by putting a finger on the screen.
+      // However, if they lift the finger again without swiping, the animation would not continue,
+      // because it would not pass the condition below, unless we introduce the second term.
+      // TODO: reuse isSlidign observable?
 
-      return _class;
-    }(C)
-  );
+    }, {
+      key: "calcIsSwipe",
+      value: function calcIsSwipe(_ref) {
+        var _ref2 = _slicedToArray(_ref, 4),
+            endX = _ref2[0].clientX,
+            startX = _ref2[1].clientX,
+            translateX = _ref2[2],
+            drawerWidth = _ref2[3];
+
+        return endX !== startX || translateX > 0 && translateX < drawerWidth;
+      } // #### Calculate 'Will open?'
+      // Based on current velocity and position of the drawer,
+      // should the drawer slide open, or snap back?
+      // TODO: could incorporate the current open state of the drawer.
+
+    }, {
+      key: "calcWillOpen",
+      value: function calcWillOpen(_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 5),
+            translateX = _ref4[2],
+            drawerWidth = _ref4[3],
+            velocity = _ref4[4];
+
+        switch (this.align) {
+          case "left":
+            {
+              if (velocity > _constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return true;else if (velocity < -_constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return false;else if (translateX >= drawerWidth / 2) return true;else return false;
+            }
+
+          case "right":
+            {
+              if (-velocity > _constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return true;else if (-velocity < -_constants__WEBPACK_IMPORTED_MODULE_0__["VELOCITY_THRESHOLD"]) return false;else if (translateX <= -drawerWidth / 2) return true;else return false;
+            }
+
+          default:
+            throw Error();
+        }
+      } // #### Calculate translate X
+      // Calcuate the current position of the drawer,
+      // by taking the difference between the current and starting postion of the finger,
+      // then adding that difference to the starting position of the drawer.
+      // This way, we avoid the drawer jumping to the finger, when "catching" it during an animation.
+      // The function will also clip the position at 0 and the width of the drawer.
+
+    }, {
+      key: "calcTranslateX",
+      value: function calcTranslateX(clientX, startX, startTranslateX, drawerWidth) {
+        switch (this.align) {
+          case "left":
+            {
+              var deltaX = clientX - startX;
+              var translateX = startTranslateX + deltaX;
+              return max(0, min(drawerWidth, translateX));
+            }
+
+          case "right":
+            {
+              var _deltaX = clientX - startX;
+
+              var _translateX = startTranslateX + _deltaX;
+
+              return min(0, max(-drawerWidth, _translateX));
+            }
+
+          default:
+            throw Error();
+        }
+      }
+    }]);
+
+    return _class;
+  }(C);
 };
 
 /***/ }),
@@ -16513,7 +16253,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! hy-component/src/types */ "./node_modules/hy-component/src/types.js");
 /* harmony import */ var rxjs_esm5__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/_esm5 */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _setup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./setup */ "./src/mixin/setup.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16521,27 +16261,35 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 // # src / mixin / index.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -16582,101 +16330,100 @@ var MIXIN_FEATURE_TESTS = new hy_component_src_component__WEBPACK_IMPORTED_MODUL
  // ## Drawer Mixin
 
 var drawerMixin = function drawerMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_setupObservablesMixi) {
-      _inherits(_class, _setupObservablesMixi);
+  return /*#__PURE__*/function (_setupObservablesMixi) {
+    _inherits(_class, _setupObservablesMixi);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
+    function _class() {
+      _classCallCheck(this, _class);
+
+      return _super.apply(this, arguments);
+    }
+
+    _createClass(_class, [{
+      key: "setupComponent",
+      // ### Setup
+      // Overriding the setup function.
+      value: function setupComponent(el, props) {
+        _get(_getPrototypeOf(_class.prototype), "setupComponent", this).call(this, el, props);
+
+        this.animateTo$ = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_3__["Subject"](); // Cache DOM elements.
+
+        this.scrimEl = this.sroot.querySelector(".hy-drawer-scrim");
+        this.contentEl = this.sroot.querySelector(".hy-drawer-content"); // Set the initial alignment class.
+
+        this.contentEl.classList.add("hy-drawer-".concat(this.align));
+      } // Calling the [setup observables function](./setup.md) function.
+
+    }, {
+      key: "connectComponent",
+      value: function connectComponent() {
+        this.setupObservables(); // TODO: meh..
+
+        _get(_getPrototypeOf(_class.prototype), "connectComponent", this).call(this);
+      } // ### Methods
+      // Public methods of this component. See [Methods](../../methods.md) for more.
+
+    }, {
+      key: "open",
+      value: function open() {
+        var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        if (animated) this.animateTo$.next(true);else this.opened = true;
       }
+    }, {
+      key: "close",
+      value: function close() {
+        var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        if (animated) this.animateTo$.next(false);else this.opened = false;
+      }
+    }, {
+      key: "toggle",
+      value: function toggle() {
+        var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        if (animated) this.animateTo$.next(!this.opened);else this.opened = !this.opened;
+      }
+    }], [{
+      key: "componentName",
+      // The name of the component (required by hy-component)
+      get: function get() {
+        return "hy-drawer";
+      } // ### Options
+      // The default values (and types) of the configuration options (required by hy-component)
+      // See [Options](../../options.md) for usage information.
 
-      _createClass(_class, [{
-        key: "setupComponent",
-        // ### Setup
-        // Overriding the setup function.
-        value: function setupComponent(el, props) {
-          _get(_getPrototypeOf(_class.prototype), "setupComponent", this).call(this, el, props);
+    }, {
+      key: "types",
+      get: function get() {
+        return {
+          opened: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
+          align: Object(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["oneOf"])(["left", "right"]),
+          persistent: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
+          range: Object(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"])(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
+          threshold: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["number"],
+          preventDefault: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
+          touchEvents: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
+          mouseEvents: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"]
+        };
+      }
+    }, {
+      key: "defaults",
+      get: function get() {
+        return {
+          opened: false,
+          align: "left",
+          persistent: false,
+          range: [0, 100],
+          threshold: 10,
+          preventDefault: false,
+          touchEvents: false,
+          mouseEvents: false
+        };
+      }
+    }]);
 
-          this.animateTo$ = new rxjs_esm5__WEBPACK_IMPORTED_MODULE_3__["Subject"](); // Cache DOM elements.
-
-          this.scrimEl = this.sroot.querySelector(".hy-drawer-scrim");
-          this.contentEl = this.sroot.querySelector(".hy-drawer-content"); // Set the initial alignment class.
-
-          this.contentEl.classList.add("hy-drawer-".concat(this.align));
-        } // Calling the [setup observables function](./setup.md) function.
-
-      }, {
-        key: "connectComponent",
-        value: function connectComponent() {
-          this.setupObservables(); // TODO: meh..
-
-          _get(_getPrototypeOf(_class.prototype), "connectComponent", this).call(this);
-        } // ### Methods
-        // Public methods of this component. See [Methods](../../methods.md) for more.
-
-      }, {
-        key: "open",
-        value: function open() {
-          var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-          if (animated) this.animateTo$.next(true);else this.opened = true;
-        }
-      }, {
-        key: "close",
-        value: function close() {
-          var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-          if (animated) this.animateTo$.next(false);else this.opened = false;
-        }
-      }, {
-        key: "toggle",
-        value: function toggle() {
-          var animated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-          if (animated) this.animateTo$.next(!this.opened);else this.opened = !this.opened;
-        }
-      }], [{
-        key: "componentName",
-        // The name of the component (required by hy-component)
-        get: function get() {
-          return "hy-drawer";
-        } // ### Options
-        // The default values (and types) of the configuration options (required by hy-component)
-        // See [Options](../../options.md) for usage information.
-
-      }, {
-        key: "types",
-        get: function get() {
-          return {
-            opened: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-            align: Object(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["oneOf"])(["left", "right"]),
-            persistent: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-            range: Object(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"])(hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-            threshold: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-            preventDefault: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-            touchEvents: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-            mouseEvents: hy_component_src_types__WEBPACK_IMPORTED_MODULE_2__["bool"]
-          };
-        }
-      }, {
-        key: "defaults",
-        get: function get() {
-          return {
-            opened: false,
-            align: "left",
-            persistent: false,
-            range: [0, 100],
-            threshold: 10,
-            preventDefault: false,
-            touchEvents: false,
-            mouseEvents: false
-          };
-        }
-      }]);
-
-      return _class;
-    }(Object(_setup__WEBPACK_IMPORTED_MODULE_4__["setupObservablesMixin"])(Object(hy_component_src_rxjs__WEBPACK_IMPORTED_MODULE_1__["rxjsMixin"])(Object(hy_component_src_component__WEBPACK_IMPORTED_MODULE_0__["componentMixin"])(C))))
-  );
+    return _class;
+  }(Object(_setup__WEBPACK_IMPORTED_MODULE_4__["setupObservablesMixin"])(Object(hy_component_src_rxjs__WEBPACK_IMPORTED_MODULE_1__["rxjsMixin"])(Object(hy_component_src_component__WEBPACK_IMPORTED_MODULE_0__["componentMixin"])(C))));
 }; // [rxjs]: https://github.com/ReactiveX/rxjs
 // [esmixins]: http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
 // [modernizr]: https://modernizr.com/
@@ -16696,13 +16443,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs/_esm5 */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/_esm5/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./operators */ "./src/mixin/operators.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -16712,15 +16463,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 // # src / mixin / observables.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -16748,181 +16503,180 @@ var abs = Math.abs.bind(Math); // #### Get start observable
 // we may listen for `mousedown` events.
 
 var baseObservablesMixin = function baseObservablesMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_C) {
-      _inherits(_class, _C);
+  return /*#__PURE__*/function (_C) {
+    _inherits(_class, _C);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
+    function _class() {
+      _classCallCheck(this, _class);
+
+      return _super.apply(this, arguments);
+    }
+
+    _createClass(_class, [{
+      key: "getStartObservable",
+      value: function getStartObservable() {
+        // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
+        return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 3),
+              document = _ref2[0],
+              touchEvents = _ref2[1],
+              mouseEvents = _ref2[2];
+
+          // The touchstart observable is passive since we won't be calling `preventDefault`.
+          // Also, we're only interested in the first `touchstart`.
+          var touchstart$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchstart", {
+            passive: true
+          }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref3) {
+            var touches = _ref3.touches;
+            return touches.length === 1;
+          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref4) {
+            var touches = _ref4.touches;
+            return touches[0];
+          })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we also include `mousedown` events in the output.
+
+          var mousedown$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mousedown").pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (event) {
+            return event.event = event, event;
+          })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
+          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchstart$, mousedown$);
+        }));
+      } // #### Get move observable
+      // This function returns an observable of all move events. Usually that's just `touchmove`,
+      // but may also include `mousemove` events while the mouse button is down.
+
+    }, {
+      key: "getMoveObservable",
+      value: function getMoveObservable(start$, end$) {
+        // Since the `mouseEvents` or `preventDefault` option may change at any point,
+        // we `switchMap` to reflect the changes.
+        // Nice: `combineLatest` provides us with the functionality of emitting
+        // when either of the inputs change, but not before all inputs have their first value set.
+        return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents, this.subjects.preventDefault).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref5) {
+          var _ref6 = _slicedToArray(_ref5, 4),
+              document = _ref6[0],
+              touchEvents = _ref6[1],
+              mouseEvents = _ref6[2],
+              preventDefault = _ref6[3];
+
+          // We're only keeping track of the first finger.
+          // Should the user remove the finger that started the interaction, we use the next instead.
+          // Note that this doesn't occur under normal circumstances,
+          // and exists primarliy to ensure that the interaction continues without hiccups.
+          // Note that the event listener is only passive when the `preventDefault` option is falsy.
+          var touchmove$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchmove", {
+            passive: !preventDefault
+          }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (e) {
+            return e.touches[0].event = e, e.touches[0];
+          })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we listen for `mousemove` events,
+          // but only those between a `start` and `end` event, i.e. while the user is sliding.
+          // We unsubscribe form the source observable outside of those contraints.
+          // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
+
+          var mousemove$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mousemove", {
+            passive: !preventDefault
+          }).pipe(Object(_operators__WEBPACK_IMPORTED_MODULE_2__["subscribeWhen"])(Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["mapTo"])(true)), end$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["mapTo"])(false)))), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (event) {
+            return event.event = event, event;
+          })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
+          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchmove$, mousemove$);
+        }));
+      } // #### Get end observable
+      // This function returns an observable of end events.
+      // Usually, this is the `touchend` event of the last finger, but may also include `mouseup` events,
+      // when the `mouseEvents` option is enabled.
+
+    }, {
+      key: "getEndObservable",
+      value: function getEndObservable() {
+        // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
+        return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref7) {
+          var _ref8 = _slicedToArray(_ref7, 3),
+              document = _ref8[0],
+              touchEvents = _ref8[1],
+              mouseEvents = _ref8[2];
+
+          // We're only interested in the last `touchend`.
+          // Otherwise there's at least one finger left on the screen,
+          // that can be used to slide the drawer.
+          var touchend$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchend", {
+            passive: true
+          }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref9) {
+            var touches = _ref9.touches;
+            return touches.length === 0;
+          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (event) {
+            return event.changedTouches[0];
+          })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we include `mouseup` events.
+
+          var mouseup$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mouseup", {
+            passive: true
+          }) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
+          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchend$, mouseup$);
+        }));
+      } // #### Get "Is sliding?" observable
+      // An observable that emits `true` when the user is *sliding* the drawer,
+      // (i.e. moving the finger along the x-axis), or `false` when *scrolling* the page
+      // (i.e. moving the finger along the y-axis).
+
+    }, {
+      key: "getIsSlidingObservable",
+      value: function getIsSlidingObservable(move$, start$, end$) {
+        return this.getIsSlidingObservable2(move$, start$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["take"])(1), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(undefined), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["repeatWhen"])(function () {
+          return end$;
+        }));
       }
+    }, {
+      key: "getIsSlidingObservable2",
+      value: function getIsSlidingObservable2(move$, start$) {
+        var _this = this;
 
-      _createClass(_class, [{
-        key: "getStartObservable",
-        value: function getStartObservable() {
-          // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 3),
-                document = _ref2[0],
-                touchEvents = _ref2[1],
-                mouseEvents = _ref2[2];
+        // If the threshold options is set, we delay the decision until
+        // the finger has moved at least `threshold` pixels in either direction.
+        if (this.threshold) {
+          return move$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["skipWhile"])(function (_ref10) {
+            var _ref11 = _slicedToArray(_ref10, 2),
+                _ref11$ = _ref11[0],
+                clientX = _ref11$.clientX,
+                clientY = _ref11$.clientY,
+                _ref11$2 = _ref11[1],
+                startX = _ref11$2.clientX,
+                startY = _ref11$2.clientY;
 
-            // The touchstart observable is passive since we won't be calling `preventDefault`.
-            // Also, we're only interested in the first `touchstart`.
-            var touchstart$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchstart", {
-              passive: true
-            }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref3) {
-              var touches = _ref3.touches;
-              return touches.length === 1;
-            }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref4) {
-              var touches = _ref4.touches;
-              return touches[0];
-            })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we also include `mousedown` events in the output.
+            return abs(startY - clientY) < _this.threshold && abs(startX - clientX) < _this.threshold;
+          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref12) {
+            var _ref13 = _slicedToArray(_ref12, 2),
+                _ref13$ = _ref13[0],
+                clientX = _ref13$.clientX,
+                clientY = _ref13$.clientY,
+                _ref13$2 = _ref13[1],
+                startX = _ref13$2.clientX,
+                startY = _ref13$2.clientY;
 
-            var mousedown$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mousedown").pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (event) {
-              return event.event = event, event;
-            })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
-            return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchstart$, mousedown$);
-          }));
-        } // #### Get move observable
-        // This function returns an observable of all move events. Usually that's just `touchmove`,
-        // but may also include `mousemove` events while the mouse button is down.
+            return abs(startX - clientX) >= abs(startY - clientY);
+          })); // If the threshold option is set to `0` (or `false`) we make a decision immediately.
+          // This is intended for Safari and possibly other browsers that have a built-in threshold.
+          // Additionally, Safari ignores all calls to `preventDefault`, except on the first move event
+          // after a start event, so that we *have to* make a decision immediately.
+        } else {
+          return move$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref14) {
+            var _ref15 = _slicedToArray(_ref14, 2),
+                _ref15$ = _ref15[0],
+                clientX = _ref15$.clientX,
+                clientY = _ref15$.clientY,
+                event = _ref15$.event,
+                _ref15$2 = _ref15[1],
+                startX = _ref15$2.clientX,
+                startY = _ref15$2.clientY;
 
-      }, {
-        key: "getMoveObservable",
-        value: function getMoveObservable(start$, end$) {
-          // Since the `mouseEvents` or `preventDefault` option may change at any point,
-          // we `switchMap` to reflect the changes.
-          // Nice: `combineLatest` provides us with the functionality of emitting
-          // when either of the inputs change, but not before all inputs have their first value set.
-          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents, this.subjects.preventDefault).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref5) {
-            var _ref6 = _slicedToArray(_ref5, 4),
-                document = _ref6[0],
-                touchEvents = _ref6[1],
-                mouseEvents = _ref6[2],
-                preventDefault = _ref6[3];
-
-            // We're only keeping track of the first finger.
-            // Should the user remove the finger that started the interaction, we use the next instead.
-            // Note that this doesn't occur under normal circumstances,
-            // and exists primarliy to ensure that the interaction continues without hiccups.
-            // Note that the event listener is only passive when the `preventDefault` option is falsy.
-            var touchmove$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchmove", {
-              passive: !preventDefault
-            }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (e) {
-              return e.touches[0].event = e, e.touches[0];
-            })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we listen for `mousemove` events,
-            // but only those between a `start` and `end` event, i.e. while the user is sliding.
-            // We unsubscribe form the source observable outside of those contraints.
-            // Again, the listener is only marked as passive when the `preventDefault` option is falsy.
-
-            var mousemove$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mousemove", {
-              passive: !preventDefault
-            }).pipe(Object(_operators__WEBPACK_IMPORTED_MODULE_2__["subscribeWhen"])(Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["mapTo"])(true)), end$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["mapTo"])(false)))), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (event) {
-              return event.event = event, event;
-            })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
-            return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchmove$, mousemove$);
-          }));
-        } // #### Get end observable
-        // This function returns an observable of end events.
-        // Usually, this is the `touchend` event of the last finger, but may also include `mouseup` events,
-        // when the `mouseEvents` option is enabled.
-
-      }, {
-        key: "getEndObservable",
-        value: function getEndObservable() {
-          // Since the `mouseEvents` option may change at any point, we `switchMap` to reflect the changes.
-          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(this.subjects.document, this.subjects.touchEvents, this.subjects.mouseEvents).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref7) {
-            var _ref8 = _slicedToArray(_ref7, 3),
-                document = _ref8[0],
-                touchEvents = _ref8[1],
-                mouseEvents = _ref8[2];
-
-            // We're only interested in the last `touchend`.
-            // Otherwise there's at least one finger left on the screen,
-            // that can be used to slide the drawer.
-            var touchend$ = touchEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "touchend", {
-              passive: true
-            }).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref9) {
-              var touches = _ref9.touches;
-              return touches.length === 0;
-            }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (event) {
-              return event.changedTouches[0];
-            })) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"]; // Otherwise we include `mouseup` events.
-
-            var mouseup$ = mouseEvents ? Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(document, "mouseup", {
-              passive: true
-            }) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
-            return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(touchend$, mouseup$);
-          }));
-        } // #### Get "Is sliding?" observable
-        // An observable that emits `true` when the user is *sliding* the drawer,
-        // (i.e. moving the finger along the x-axis), or `false` when *scrolling* the page
-        // (i.e. moving the finger along the y-axis).
-
-      }, {
-        key: "getIsSlidingObservable",
-        value: function getIsSlidingObservable(move$, start$, end$) {
-          return this.getIsSlidingObservable2(move$, start$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["take"])(1), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(undefined), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["repeatWhen"])(function () {
-            return end$;
+            var isSliding = abs(startX - clientX) >= abs(startY - clientY);
+            if (_this.preventDefault && isSliding) event.preventDefault();
+            return isSliding;
           }));
         }
-      }, {
-        key: "getIsSlidingObservable2",
-        value: function getIsSlidingObservable2(move$, start$) {
-          var _this = this;
+      }
+    }]);
 
-          // If the threshold options is set, we delay the decision until
-          // the finger has moved at least `threshold` pixels in either direction.
-          if (this.threshold) {
-            return move$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["skipWhile"])(function (_ref10) {
-              var _ref11 = _slicedToArray(_ref10, 2),
-                  _ref11$ = _ref11[0],
-                  clientX = _ref11$.clientX,
-                  clientY = _ref11$.clientY,
-                  _ref11$2 = _ref11[1],
-                  startX = _ref11$2.clientX,
-                  startY = _ref11$2.clientY;
-
-              return abs(startY - clientY) < _this.threshold && abs(startX - clientX) < _this.threshold;
-            }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref12) {
-              var _ref13 = _slicedToArray(_ref12, 2),
-                  _ref13$ = _ref13[0],
-                  clientX = _ref13$.clientX,
-                  clientY = _ref13$.clientY,
-                  _ref13$2 = _ref13[1],
-                  startX = _ref13$2.clientX,
-                  startY = _ref13$2.clientY;
-
-              return abs(startX - clientX) >= abs(startY - clientY);
-            })); // If the threshold option is set to `0` (or `false`) we make a decision immediately.
-            // This is intended for Safari and possibly other browsers that have a built-in threshold.
-            // Additionally, Safari ignores all calls to `preventDefault`, except on the first move event
-            // after a start event, so that we *have to* make a decision immediately.
-          } else {
-            return move$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref14) {
-              var _ref15 = _slicedToArray(_ref14, 2),
-                  _ref15$ = _ref15[0],
-                  clientX = _ref15$.clientX,
-                  clientY = _ref15$.clientY,
-                  event = _ref15$.event,
-                  _ref15$2 = _ref15[1],
-                  startX = _ref15$2.clientX,
-                  startY = _ref15$2.clientY;
-
-              var isSliding = abs(startX - clientX) >= abs(startY - clientY);
-              if (_this.preventDefault && isSliding) event.preventDefault();
-              return isSliding;
-            }));
-          }
-        }
-      }]);
-
-      return _class;
-    }(C)
-  );
+    return _class;
+  }(C);
 };
 
 /***/ }),
@@ -16940,15 +16694,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filterWhen", function() { return filterWhen; });
 /* harmony import */ var rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs/_esm5 */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/_esm5/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-function _toArray(arr) { return _arrayWithHoles(arr) || _iterableToArray(arr) || _nonIterableRest(); }
+function _toArray(arr) { return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest(); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -17043,13 +16801,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calc__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./calc */ "./src/mixin/calc.js");
 /* harmony import */ var _update__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./update */ "./src/mixin/update.js");
 /* harmony import */ var _observables__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./observables */ "./src/mixin/observables.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -17059,15 +16821,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 // # src / mixin / setup.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -17098,288 +16864,287 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 // This function sets up the observable "pipeline".
 
 var setupObservablesMixin = function setupObservablesMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_baseObservablesMixin) {
-      _inherits(_class, _baseObservablesMixin);
+  return /*#__PURE__*/function (_baseObservablesMixin) {
+    _inherits(_class, _baseObservablesMixin);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
-      }
+    function _class() {
+      _classCallCheck(this, _class);
 
-      _createClass(_class, [{
-        key: "setupObservables",
-        value: function setupObservables() {
-          var _this = this;
+      return _super.apply(this, arguments);
+    }
 
-          var initialRect = {
-            contentRect: this.contentEl.getBoundingClientRect()
-          };
-          var resize$ = "ResizeObserver" in window ? Object(hy_component_src_rxjs__WEBPACK_IMPORTED_MODULE_3__["createXObservable"])(ResizeObserver)(this.contentEl).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(initialRect)) : Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["of"])(initialRect);
-          var drawerWidth$ = resize$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref) {
-            var contentRect = _ref.contentRect;
-            return contentRect.width;
-          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])(), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(initialRect.contentRect.width)); // HACK: peek feature has been removed, but still needed for hydejack...
+    _createClass(_class, [{
+      key: "setupObservables",
+      value: function setupObservables() {
+        var _this = this;
 
-          if (
-          /* process.env.HYDEJACK && */
-          this._peek$) {
-            drawerWidth$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(drawerWidth$, this._peek$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref2) {
-              var _ref3 = _slicedToArray(_ref2, 2),
-                  drawerWidth = _ref3[0],
-                  peek = _ref3[1];
+        var initialRect = {
+          contentRect: this.contentEl.getBoundingClientRect()
+        };
+        var resize$ = "ResizeObserver" in window ? Object(hy_component_src_rxjs__WEBPACK_IMPORTED_MODULE_3__["createXObservable"])(ResizeObserver)(this.contentEl).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(initialRect)) : Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["of"])(initialRect);
+        var drawerWidth$ = resize$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref) {
+          var contentRect = _ref.contentRect;
+          return contentRect.width;
+        }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])(), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(initialRect.contentRect.width)); // HACK: peek feature has been removed, but still needed for hydejack...
 
-              return drawerWidth - peek;
-            }));
-          } // Emitts a value every time you change the `persistent` property of the drawer.
-          // Interally, we invert it and call it `active`.
+        if (
+        /* process.env.HYDEJACK && */
+        this._peek$) {
+          drawerWidth$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(drawerWidth$, this._peek$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref2) {
+            var _ref3 = _slicedToArray(_ref2, 2),
+                drawerWidth = _ref3[0],
+                peek = _ref3[1];
+
+            return drawerWidth - peek;
+          }));
+        } // Emitts a value every time you change the `persistent` property of the drawer.
+        // Interally, we invert it and call it `active`.
 
 
-          var active$ = this.subjects.persistent.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (x) {
-            return !x;
-          })); // #### Start observable
-          // Emits a value every time a start event *could* intiate an interaction.
-          // Each emitted value is a hash containing a `clientX` and `clientY` key.
+        var active$ = this.subjects.persistent.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (x) {
+          return !x;
+        })); // #### Start observable
+        // Emits a value every time a start event *could* intiate an interaction.
+        // Each emitted value is a hash containing a `clientX` and `clientY` key.
 
-          var start$ = this.getStartObservable().pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // An observable that emits `true`, as long as the drawer isn't fully closed
-          // (as long as the scrim is visible the user can still "catch" the drawer).
-          // It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside a `defer`.
+        var start$ = this.getStartObservable().pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // An observable that emits `true`, as long as the drawer isn't fully closed
+        // (as long as the scrim is visible the user can still "catch" the drawer).
+        // It references the yet-to-be-defined `translateX` obsevable, so we wrap it inside a `defer`.
 
-          var isScrimVisible$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["defer"])(function () {
-            return _this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (translateX) {
-              return translateX != 0;
-            }));
-          }); // TODO: ...
+        var isScrimVisible$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["defer"])(function () {
+          return _this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (translateX) {
+            return translateX != 0;
+          }));
+        }); // TODO: ...
 
-          var isInRange$ = start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(isScrimVisible$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref4) {
-            var _ref5 = _slicedToArray(_ref4, 2),
-                clientX = _ref5[0].clientX,
-                isScrimVisible = _ref5[1];
+        var isInRange$ = start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(isScrimVisible$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref4) {
+          var _ref5 = _slicedToArray(_ref4, 2),
+              clientX = _ref5[0].clientX,
+              isScrimVisible = _ref5[1];
 
-            return _this.calcIsInRange(clientX, isScrimVisible);
-          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (inRange) {
-            if (inRange) {
-              if (_this.mouseEvents) _this.contentEl.classList.add("hy-drawer-grabbing");
+          return _this.calcIsInRange(clientX, isScrimVisible);
+        }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (inRange) {
+          if (inRange) {
+            if (_this.mouseEvents) _this.contentEl.classList.add("hy-drawer-grabbing");
 
-              _this.prepareInteraction();
-            }
-          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### End observable
-          // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
-
-          var end$ = this.getEndObservable().pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$, isInRange$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### Move observable
-          // The observable of all relevant "move" events.
-
-          var move$ = this.getMoveObservable(start$, end$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$, isInRange$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### 'Is sliding?' observable
-          // An observable that emits `true` when the user is *sliding* the drawer,
-          // (i.e. moving the finger along the x-axis), or `false` when *scrolling* the page
-          // (i.e. moving the finger along the y-axis), and `undefined` while we aren't sure yet.
-          //
-          // See [`getIsSlidingObservable`](./observables.md#get-is-sliding-observable).
-
-          var isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (isSliding) {
-            if (isSliding) _this.fireEvent("slidestart", {
-              detail: _this.opened
-            });
-          })); // #### Translate X observable
-          // The `translateX` observable is the central observable of this component.
-          // It emits the current x-coordinate of the drawer, which
-          // can be modified by either of 3 incoming observables:
-          //
-          // 1. the animation/tween observable, and
-          // 2. The move observable (the user's finger/mouse moving across the screen),
-          // 3. direct modifications of the `opened` state.
-          //
-          // It is wrapped in a `defer` because it depends on previous values of itself.
-
-          this.translateX$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["defer"])(function () {
-            return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])( // 1)
-            // The tween observable can be used unmodified (see below),
-            // but isn't defined yet, because it depends on previous values of `translateX$`.
-            _this.tween$, // 2)
-            // We only let move events modify the drawer's position when we are sure
-            // that the user is sliding. In case the `preventDefault` option is enabled,
-            // this is also when we're sure to call `preventDefault`.
-            move$.pipe(Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(isSliding$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (_ref6) {
-              var event = _ref6.event;
-              return _this.preventDefault && event.preventDefault();
-            }), // Finally, we take the start position of the finger, the start position of the drawer,
-            // and the current position of the finger to calculate the next `translateX` value.
-            Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$, _this.startTranslateX$, drawerWidth$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["observeOn"])(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["animationFrameScheduler"]), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref7) {
-              var _ref8 = _slicedToArray(_ref7, 4),
-                  clientX = _ref8[0].clientX,
-                  startX = _ref8[1].clientX,
-                  startTranslateX = _ref8[2],
-                  drawerWidth = _ref8[3];
-
-              return _this.calcTranslateX(clientX, startX, startTranslateX, drawerWidth);
-            })), // 3)
-            // When the `opened` state changes, we "jump" to the new position,
-            // which is either 0 (when closed) or the width of the drawer (when open).
-            Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(_this.subjects.opened, _this.subjects.align, drawerWidth$).pipe( // Usually the cleanup code would run at the end of the fling animation,
-            // but since there is no animation in this case, we call it directly.
-            Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (_ref9) {
-              var _ref10 = _slicedToArray(_ref9, 1),
-                  opened = _ref10[0];
-
-              return _this.cleanupInteraction(opened);
-            }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref11) {
-              var _ref12 = _slicedToArray(_ref11, 3),
-                  opened = _ref12[0],
-                  align = _ref12[1],
-                  drawerWidth = _ref12[2];
-
-              return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
-            })));
-          }) // `share`ing the observable between many subscribers:
-          .pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // The `translateX` value at the start of an interaction.
-          // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
-          // an interaction *during the animation*, it could also be any value inbetween.
-          // We obtain it by sampling the translate-x observable at the beginning of each interaction.
-
-          this.startTranslateX$ = this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["sample"])(start$)); // #### Tween observable
-          // For the tween animations we first need an observable that tracks
-          // the current velocity of the drawer,
-          // which we will use to determine whether the drawer should flinging in its direction,
-          // or snap back into place.
-
-          var velocity$ = this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["timestamp"])(), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["pairwise"])(), // Since we are at the mercy of the browser firing move events,
-          // we make sure that some time has passed since the last move event.
-          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref13) {
-            var _ref14 = _slicedToArray(_ref13, 2),
-                prevTime = _ref14[0].timestamp,
-                time = _ref14[1].timestamp;
-
-            return time - prevTime > 0;
-          }), // Now we are save to calculate the current velocity without divide by zero errors.
-          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref15) {
-            var _ref16 = _slicedToArray(_ref15, 2),
-                _ref16$ = _ref16[0],
-                prevX = _ref16$.value,
-                prevTime = _ref16$.timestamp,
-                _ref16$2 = _ref16[1],
-                x = _ref16$2.value,
-                time = _ref16$2.timestamp;
-
-            return (x - prevX) / (time - prevTime);
-          }), // The initial velocity is zero.
-          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(0)); // TODO
-
-          var willOpen$ = end$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function () {
-            return _this.contentEl.classList.remove("hy-drawer-grabbing");
-          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$, this.translateX$, drawerWidth$, velocity$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(this.calcIsSwipe.bind(this)), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(this.calcWillOpen.bind(this)), // TODO: only fire `slideend` event when slidestart fired as well?
-          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (willOpen) {
-            return _this.fireEvent("slideend", {
-              detail: willOpen
-            });
-          })); // There are 2 things that can trigger an animation:
-          // 1. The end of an interaction, i.e. the user releases the finger/mouse while moving the slider.
-          // 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
-          //    Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
-          //    prior `touchdown`/`mousedown` event in this case.
-
-          var willOpen2$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(willOpen$, this.animateTo$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(this.prepareInteraction.bind(this)))); // We silently set the new `opened` state here,
-          // so that the next interaction will do the right thing even while the animation is
-          // still playing, e.g. a call to `toggle` will cancel the current animation
-          // and initiate an animation to the opposite state.
-
-          this.tween$ = willOpen2$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (willOpen) {
-            return _this.setInternalState("opened", willOpen);
-          }), // By using `switchMap` we ensure that subsequent events that trigger an animation
-          // don't cause more than one animation to be played at a time.
-          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(this.translateX$, drawerWidth$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref17) {
-            var _ref18 = _slicedToArray(_ref17, 3),
-                opened = _ref18[0],
-                translateX = _ref18[1],
-                drawerWidth = _ref18[2];
-
-            // We return a tween observable that runs cleanup code when it completes
-            // --- unless a new interaction is initiated, in which case it is canceled.
-            var inv = _this.align === "left" ? 1 : -1;
-            var endTranslateX = opened ? drawerWidth * inv : 0;
-            var diffTranslateX = endTranslateX - translateX;
-            var duration = _constants__WEBPACK_IMPORTED_MODULE_5__["BASE_DURATION"] + drawerWidth * _constants__WEBPACK_IMPORTED_MODULE_5__["WIDTH_CONTRIBUTION"];
-            return Object(rxjs_create_tween__WEBPACK_IMPORTED_MODULE_2__["createTween"])(_common__WEBPACK_IMPORTED_MODULE_4__["easeOutSine"], translateX, diffTranslateX, duration).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])({
-              complete: function complete() {
-                return _this.subjects.opened.next(opened);
-              }
-            }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(_this.subjects.align.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["skip"])(1))), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])());
-          })); // #### Subscriptions
-          // Now we are ready to cause some side effects.
-          //
-          // The end result is always to update the (shadow) DOM, which happens here.
-          // Note that the call to subscribe sets the whole process in motion,
-          // and causes the code inside the above `defer` observables to run.
-
-          this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(drawerWidth$)).subscribe(function (_ref19) {
-            var _ref20 = _slicedToArray(_ref19, 2),
-                translateX = _ref20[0],
-                drawerWidth = _ref20[1];
-
-            return _this.updateDOM(translateX, drawerWidth);
-          }); // A click on the scrim should close the drawer.
-
-          Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(this.scrimEl, "click").pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function () {
-            return _this.close();
-          }); // Other than preventing sliding, setting `persistent` will also hide the scrim.
-
-          active$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function (active) {
-            _this.scrimEl.style.display = active ? "block" : "none";
-          }); // Whenever the alignment of the drawer changes, update the CSS classes.
-
-          this.subjects.align.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function (align) {
-            _this.contentEl.classList.remove("hy-drawer-left");
-
-            _this.contentEl.classList.remove("hy-drawer-right");
-
-            _this.contentEl.classList.add("hy-drawer-".concat(align));
-          }); // If the experimental back button feature is enabled, handle popstate events...
-
-          /*
-          fromEvent(window, "popstate")
-            .pipe(
-              takeUntil(this.subjects.disconnect),
-              subscribeWhen(this.backButton$)
-            )
-            .subscribe(() => {
-              const hash = `#${histId.call(this)}--opened`;
-              const willOpen = window.location.hash === hash;
-              if (willOpen !== this.opened) this.animateTo$.next(willOpen);
-            });
-          */
-          // When drawing with mouse is enabled, we add the grab cursor to the drawer.
-          // We also want to call `preventDefault` when `mousedown` is within the drawer range
-          // to prevent text selection while sliding.
-
-          this.subjects.mouseEvents.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (mouseEvents) {
-            if (mouseEvents) _this.contentEl.classList.add("hy-drawer-grab");else _this.contentEl.classList.remove("hy-drawer-grab");
-            return mouseEvents ? start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(isInRange$)) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
-          })).subscribe(function (_ref21) {
-            var _ref22 = _slicedToArray(_ref21, 2),
-                event = _ref22[0].event,
-                isInRange = _ref22[1];
-
-            return isInRange && event && event.preventDefault();
-          }); // If the experimental back button feature is enabled, we check the location hash...
-
-          /*
-          if (this._backButton) {
-            const hash = `#${histId.call(this)}--opened`;
-            if (window.location.hash === hash) this.setInternalState('opened', true);
+            _this.prepareInteraction();
           }
-          */
-          // Firing an event to let the outside world know the drawer is ready.
+        }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### End observable
+        // The observable of all relevant "end" events, i.e. the last `touchend` (or `mouseup`),
 
-          this.fireEvent("init", {
-            detail: this.opened
+        var end$ = this.getEndObservable().pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$, isInRange$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### Move observable
+        // The observable of all relevant "move" events.
+
+        var move$ = this.getMoveObservable(start$, end$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(active$, isInRange$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // #### 'Is sliding?' observable
+        // An observable that emits `true` when the user is *sliding* the drawer,
+        // (i.e. moving the finger along the x-axis), or `false` when *scrolling* the page
+        // (i.e. moving the finger along the y-axis), and `undefined` while we aren't sure yet.
+        //
+        // See [`getIsSlidingObservable`](./observables.md#get-is-sliding-observable).
+
+        var isSliding$ = this.getIsSlidingObservable(move$, start$, end$).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (isSliding) {
+          if (isSliding) _this.fireEvent("slidestart", {
+            detail: _this.opened
           });
-        }
-      }]);
+        })); // #### Translate X observable
+        // The `translateX` observable is the central observable of this component.
+        // It emits the current x-coordinate of the drawer, which
+        // can be modified by either of 3 incoming observables:
+        //
+        // 1. the animation/tween observable, and
+        // 2. The move observable (the user's finger/mouse moving across the screen),
+        // 3. direct modifications of the `opened` state.
+        //
+        // It is wrapped in a `defer` because it depends on previous values of itself.
 
-      return _class;
-    }(Object(_observables__WEBPACK_IMPORTED_MODULE_9__["baseObservablesMixin"])(Object(_update__WEBPACK_IMPORTED_MODULE_8__["updateMixin"])(Object(_calc__WEBPACK_IMPORTED_MODULE_7__["calcMixin"])(C))))
-  );
+        this.translateX$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["defer"])(function () {
+          return Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])( // 1)
+          // The tween observable can be used unmodified (see below),
+          // but isn't defined yet, because it depends on previous values of `translateX$`.
+          _this.tween$, // 2)
+          // We only let move events modify the drawer's position when we are sure
+          // that the user is sliding. In case the `preventDefault` option is enabled,
+          // this is also when we're sure to call `preventDefault`.
+          move$.pipe(Object(_operators__WEBPACK_IMPORTED_MODULE_6__["filterWhen"])(isSliding$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (_ref6) {
+            var event = _ref6.event;
+            return _this.preventDefault && event.preventDefault();
+          }), // Finally, we take the start position of the finger, the start position of the drawer,
+          // and the current position of the finger to calculate the next `translateX` value.
+          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$, _this.startTranslateX$, drawerWidth$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["observeOn"])(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["animationFrameScheduler"]), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref7) {
+            var _ref8 = _slicedToArray(_ref7, 4),
+                clientX = _ref8[0].clientX,
+                startX = _ref8[1].clientX,
+                startTranslateX = _ref8[2],
+                drawerWidth = _ref8[3];
+
+            return _this.calcTranslateX(clientX, startX, startTranslateX, drawerWidth);
+          })), // 3)
+          // When the `opened` state changes, we "jump" to the new position,
+          // which is either 0 (when closed) or the width of the drawer (when open).
+          Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])(_this.subjects.opened, _this.subjects.align, drawerWidth$).pipe( // Usually the cleanup code would run at the end of the fling animation,
+          // but since there is no animation in this case, we call it directly.
+          Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (_ref9) {
+            var _ref10 = _slicedToArray(_ref9, 1),
+                opened = _ref10[0];
+
+            return _this.cleanupInteraction(opened);
+          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref11) {
+            var _ref12 = _slicedToArray(_ref11, 3),
+                opened = _ref12[0],
+                align = _ref12[1],
+                drawerWidth = _ref12[2];
+
+            return !opened ? 0 : drawerWidth * (align === "left" ? 1 : -1);
+          })));
+        }) // `share`ing the observable between many subscribers:
+        .pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])()); // The `translateX` value at the start of an interaction.
+        // Typically this would be either 0 or `drawerWidth`, but since the user can initiate
+        // an interaction *during the animation*, it could also be any value inbetween.
+        // We obtain it by sampling the translate-x observable at the beginning of each interaction.
+
+        this.startTranslateX$ = this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["sample"])(start$)); // #### Tween observable
+        // For the tween animations we first need an observable that tracks
+        // the current velocity of the drawer,
+        // which we will use to determine whether the drawer should flinging in its direction,
+        // or snap back into place.
+
+        var velocity$ = this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["timestamp"])(), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["pairwise"])(), // Since we are at the mercy of the browser firing move events,
+        // we make sure that some time has passed since the last move event.
+        Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(function (_ref13) {
+          var _ref14 = _slicedToArray(_ref13, 2),
+              prevTime = _ref14[0].timestamp,
+              time = _ref14[1].timestamp;
+
+          return time - prevTime > 0;
+        }), // Now we are save to calculate the current velocity without divide by zero errors.
+        Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (_ref15) {
+          var _ref16 = _slicedToArray(_ref15, 2),
+              _ref16$ = _ref16[0],
+              prevX = _ref16$.value,
+              prevTime = _ref16$.timestamp,
+              _ref16$2 = _ref16[1],
+              x = _ref16$2.value,
+              time = _ref16$2.timestamp;
+
+          return (x - prevX) / (time - prevTime);
+        }), // The initial velocity is zero.
+        Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["startWith"])(0)); // TODO
+
+        var willOpen$ = end$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function () {
+          return _this.contentEl.classList.remove("hy-drawer-grabbing");
+        }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(start$, this.translateX$, drawerWidth$, velocity$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["filter"])(this.calcIsSwipe.bind(this)), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(this.calcWillOpen.bind(this)), // TODO: only fire `slideend` event when slidestart fired as well?
+        Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (willOpen) {
+          return _this.fireEvent("slideend", {
+            detail: willOpen
+          });
+        })); // There are 2 things that can trigger an animation:
+        // 1. The end of an interaction, i.e. the user releases the finger/mouse while moving the slider.
+        // 2. A call to a method like `open` or `close` (represented by a value on the animate observable)
+        //    Note that we call `prepareInteraction` manually here, because it wasn't triggered by a
+        //    prior `touchdown`/`mousedown` event in this case.
+
+        var willOpen2$ = Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["merge"])(willOpen$, this.animateTo$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(this.prepareInteraction.bind(this)))); // We silently set the new `opened` state here,
+        // so that the next interaction will do the right thing even while the animation is
+        // still playing, e.g. a call to `toggle` will cancel the current animation
+        // and initiate an animation to the opposite state.
+
+        this.tween$ = willOpen2$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (willOpen) {
+          return _this.setInternalState("opened", willOpen);
+        }), // By using `switchMap` we ensure that subsequent events that trigger an animation
+        // don't cause more than one animation to be played at a time.
+        Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(this.translateX$, drawerWidth$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (_ref17) {
+          var _ref18 = _slicedToArray(_ref17, 3),
+              opened = _ref18[0],
+              translateX = _ref18[1],
+              drawerWidth = _ref18[2];
+
+          // We return a tween observable that runs cleanup code when it completes
+          // --- unless a new interaction is initiated, in which case it is canceled.
+          var inv = _this.align === "left" ? 1 : -1;
+          var endTranslateX = opened ? drawerWidth * inv : 0;
+          var diffTranslateX = endTranslateX - translateX;
+          var duration = _constants__WEBPACK_IMPORTED_MODULE_5__["BASE_DURATION"] + drawerWidth * _constants__WEBPACK_IMPORTED_MODULE_5__["WIDTH_CONTRIBUTION"];
+          return Object(rxjs_create_tween__WEBPACK_IMPORTED_MODULE_2__["createTween"])(_common__WEBPACK_IMPORTED_MODULE_4__["easeOutSine"], translateX, diffTranslateX, duration).pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])({
+            complete: function complete() {
+              return _this.subjects.opened.next(opened);
+            }
+          }), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(start$), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(_this.subjects.align.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["skip"])(1))), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["share"])());
+        })); // #### Subscriptions
+        // Now we are ready to cause some side effects.
+        //
+        // The end result is always to update the (shadow) DOM, which happens here.
+        // Note that the call to subscribe sets the whole process in motion,
+        // and causes the code inside the above `defer` observables to run.
+
+        this.translateX$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(drawerWidth$)).subscribe(function (_ref19) {
+          var _ref20 = _slicedToArray(_ref19, 2),
+              translateX = _ref20[0],
+              drawerWidth = _ref20[1];
+
+          return _this.updateDOM(translateX, drawerWidth);
+        }); // A click on the scrim should close the drawer.
+
+        Object(rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["fromEvent"])(this.scrimEl, "click").pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function () {
+          return _this.close();
+        }); // Other than preventing sliding, setting `persistent` will also hide the scrim.
+
+        active$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function (active) {
+          _this.scrimEl.style.display = active ? "block" : "none";
+        }); // Whenever the alignment of the drawer changes, update the CSS classes.
+
+        this.subjects.align.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect)).subscribe(function (align) {
+          _this.contentEl.classList.remove("hy-drawer-left");
+
+          _this.contentEl.classList.remove("hy-drawer-right");
+
+          _this.contentEl.classList.add("hy-drawer-".concat(align));
+        }); // If the experimental back button feature is enabled, handle popstate events...
+
+        /*
+        fromEvent(window, "popstate")
+          .pipe(
+            takeUntil(this.subjects.disconnect),
+            subscribeWhen(this.backButton$)
+          )
+          .subscribe(() => {
+            const hash = `#${histId.call(this)}--opened`;
+            const willOpen = window.location.hash === hash;
+            if (willOpen !== this.opened) this.animateTo$.next(willOpen);
+          });
+        */
+        // When drawing with mouse is enabled, we add the grab cursor to the drawer.
+        // We also want to call `preventDefault` when `mousedown` is within the drawer range
+        // to prevent text selection while sliding.
+
+        this.subjects.mouseEvents.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this.subjects.disconnect), Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(function (mouseEvents) {
+          if (mouseEvents) _this.contentEl.classList.add("hy-drawer-grab");else _this.contentEl.classList.remove("hy-drawer-grab");
+          return mouseEvents ? start$.pipe(Object(rxjs_esm5_operators__WEBPACK_IMPORTED_MODULE_1__["withLatestFrom"])(isInRange$)) : rxjs_esm5__WEBPACK_IMPORTED_MODULE_0__["NEVER"];
+        })).subscribe(function (_ref21) {
+          var _ref22 = _slicedToArray(_ref21, 2),
+              event = _ref22[0].event,
+              isInRange = _ref22[1];
+
+          return isInRange && event && event.preventDefault();
+        }); // If the experimental back button feature is enabled, we check the location hash...
+
+        /*
+        if (this._backButton) {
+          const hash = `#${histId.call(this)}--opened`;
+          if (window.location.hash === hash) this.setInternalState('opened', true);
+        }
+        */
+        // Firing an event to let the outside world know the drawer is ready.
+
+        this.fireEvent("init", {
+          detail: this.opened
+        });
+      }
+    }]);
+
+    return _class;
+  }(Object(_observables__WEBPACK_IMPORTED_MODULE_9__["baseObservablesMixin"])(Object(_update__WEBPACK_IMPORTED_MODULE_8__["updateMixin"])(Object(_calc__WEBPACK_IMPORTED_MODULE_7__["calcMixin"])(C))));
 };
 
 /***/ }),
@@ -17394,7 +17159,7 @@ var setupObservablesMixin = function setupObservablesMixin(C) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMixin", function() { return updateMixin; });
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -17402,15 +17167,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 // # src / mixin / update.js
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
@@ -17429,119 +17198,118 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && CSS.number;
 var updateMixin = function updateMixin(C) {
-  return (
-    /*#__PURE__*/
-    function (_C) {
-      _inherits(_class, _C);
+  return /*#__PURE__*/function (_C) {
+    _inherits(_class, _C);
 
-      function _class() {
-        _classCallCheck(this, _class);
+    var _super = _createSuper(_class);
 
-        return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
-      }
+    function _class() {
+      _classCallCheck(this, _class);
 
-      _createClass(_class, [{
-        key: "histId",
-        value: function histId() {
-          return this.el.id || this.constructor.componentName;
-        } // #### Prepare and cleanup interaction
-        // `prepareInteraction` causes various side effects before sliding the drawer.
-        //
-        // Note that the drawer receives the `hy-drawer-opened` CSS class when it is opened.
-        // This class makes the drawer appear open by setting the CSS `left` (`right`) property, instead
-        // of an absoulte `transform` value.
-        // This way, the drawer's width can change while it is open without having to
-        // recalculate `translateX` on every `resize`.
-        // However, it has to be removed before we move the drawer via `translateX` again.
+      return _super.apply(this, arguments);
+    }
 
-      }, {
-        key: "prepareInteraction",
-        value: function prepareInteraction() {
-          if (hasCSSOM) {
-            this.contentEl.attributeStyleMap.set("will-change", "transform");
-            this.scrimEl.attributeStyleMap.set("will-change", "opacity");
+    _createClass(_class, [{
+      key: "histId",
+      value: function histId() {
+        return this.el.id || this.constructor.componentName;
+      } // #### Prepare and cleanup interaction
+      // `prepareInteraction` causes various side effects before sliding the drawer.
+      //
+      // Note that the drawer receives the `hy-drawer-opened` CSS class when it is opened.
+      // This class makes the drawer appear open by setting the CSS `left` (`right`) property, instead
+      // of an absoulte `transform` value.
+      // This way, the drawer's width can change while it is open without having to
+      // recalculate `translateX` on every `resize`.
+      // However, it has to be removed before we move the drawer via `translateX` again.
+
+    }, {
+      key: "prepareInteraction",
+      value: function prepareInteraction() {
+        if (hasCSSOM) {
+          this.contentEl.attributeStyleMap.set("will-change", "transform");
+          this.scrimEl.attributeStyleMap.set("will-change", "opacity");
+        } else {
+          this.contentEl.style.willChange = "transform";
+          this.scrimEl.style.willChange = "opacity";
+        }
+
+        this.fireEvent("prepare");
+      } // Cleanup code after a completed interaction.
+      // Will add/remove the beforementioned `hy-drawer-opened` class.
+
+    }, {
+      key: "cleanupInteraction",
+      value: function cleanupInteraction(opened) {
+        if (hasCSSOM) {
+          this.contentEl.attributeStyleMap["delete"]("will-change");
+          this.scrimEl.attributeStyleMap["delete"]("will-change");
+
+          if (opened) {
+            this.scrimEl.attributeStyleMap.set("pointer-events", new CSSKeywordValue("all"));
           } else {
-            this.contentEl.style.willChange = "transform";
-            this.scrimEl.style.willChange = "opacity";
+            this.scrimEl.attributeStyleMap["delete"]("pointer-events");
           }
+        } else {
+          this.scrimEl.style.willChange = "";
+          this.contentEl.style.willChange = "";
 
-          this.fireEvent("prepare");
-        } // Cleanup code after a completed interaction.
-        // Will add/remove the beforementioned `hy-drawer-opened` class.
-
-      }, {
-        key: "cleanupInteraction",
-        value: function cleanupInteraction(opened) {
-          if (hasCSSOM) {
-            this.contentEl.attributeStyleMap.delete("will-change");
-            this.scrimEl.attributeStyleMap.delete("will-change");
-
-            if (opened) {
-              this.scrimEl.attributeStyleMap.set("pointer-events", new CSSKeywordValue("all"));
-            } else {
-              this.scrimEl.attributeStyleMap.delete("pointer-events");
-            }
+          if (opened) {
+            this.scrimEl.style.pointerEvents = "all";
           } else {
-            this.scrimEl.style.willChange = "";
-            this.contentEl.style.willChange = "";
-
-            if (opened) {
-              this.scrimEl.style.pointerEvents = "all";
-            } else {
-              this.scrimEl.style.pointerEvents = "";
-            }
-          } // If the xperimental back button feature is enabled we hack the history API,
-          // so that it matches the state of the drawer...
-
-          /*
-          if (this._backButton) {
-            const id = histId.call(this);
-            const hash = `#${id}--opened`;
-             if (opened && window.location.hash !== hash) {
-              window.history.pushState({ [id]: true }, document.title, hash);
-            }
-             if (!opened
-                && (window.history.state && window.history.state[histId.call(this)])
-                && window.location.hash !== '') {
-              window.history.back();
-            }
+            this.scrimEl.style.pointerEvents = "";
           }
-          */
-          // Once we're finished cleaning up, we fire the `transitioned` event.
+        } // If the xperimental back button feature is enabled we hack the history API,
+        // so that it matches the state of the drawer...
 
-
-          this.fireEvent("transitioned", {
-            detail: opened
-          });
-        } // #### Update DOM
-        // In the end, we only modify two properties: The x-coordinate of the drawer,
-        // and the opacity of the scrim, which is handled by `updateDOM`.
-
-      }, {
-        key: "updateDOM",
-        value: function updateDOM(translateX, drawerWidth) {
-          this.translateX = translateX;
-          var inv = this.align === "left" ? 1 : -1;
-          var opacity = this.opacity = translateX / drawerWidth * inv;
-          if (this.moveCallback) this.moveCallback({
-            translateX: translateX,
-            opacity: opacity
-          });
-          /* this.fireEvent("move", { detail: { translateX, opacity } }); */
-
-          if (hasCSSOM) {
-            this.contentEl.attributeStyleMap.set("transform", new CSSTransformValue([new CSSTranslate(CSS.px(translateX), CSS.px(0))]));
-            this.scrimEl.attributeStyleMap.set("opacity", this.opacity);
-          } else {
-            this.contentEl.style.transform = "translateX(".concat(translateX, "px)");
-            this.scrimEl.style.opacity = this.opacity;
+        /*
+        if (this._backButton) {
+          const id = histId.call(this);
+          const hash = `#${id}--opened`;
+           if (opened && window.location.hash !== hash) {
+            window.history.pushState({ [id]: true }, document.title, hash);
+          }
+           if (!opened
+              && (window.history.state && window.history.state[histId.call(this)])
+              && window.location.hash !== '') {
+            window.history.back();
           }
         }
-      }]);
+        */
+        // Once we're finished cleaning up, we fire the `transitioned` event.
 
-      return _class;
-    }(C)
-  );
+
+        this.fireEvent("transitioned", {
+          detail: opened
+        });
+      } // #### Update DOM
+      // In the end, we only modify two properties: The x-coordinate of the drawer,
+      // and the opacity of the scrim, which is handled by `updateDOM`.
+
+    }, {
+      key: "updateDOM",
+      value: function updateDOM(translateX, drawerWidth) {
+        this.translateX = translateX;
+        var inv = this.align === "left" ? 1 : -1;
+        var opacity = this.opacity = translateX / drawerWidth * inv;
+        if (this.moveCallback) this.moveCallback({
+          translateX: translateX,
+          opacity: opacity
+        });
+        /* this.fireEvent("move", { detail: { translateX, opacity } }); */
+
+        if (hasCSSOM) {
+          this.contentEl.attributeStyleMap.set("transform", new CSSTransformValue([new CSSTranslate(CSS.px(translateX), CSS.px(0))]));
+          this.scrimEl.attributeStyleMap.set("opacity", this.opacity);
+        } else {
+          this.contentEl.style.transform = "translateX(".concat(translateX, "px)");
+          this.scrimEl.style.opacity = this.opacity;
+        }
+      }
+    }]);
+
+    return _class;
+  }(C);
 };
 
 /***/ }),

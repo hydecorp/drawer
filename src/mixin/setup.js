@@ -188,10 +188,7 @@ export const setupObservablesMixin = C =>
         )
       )
         // `share`ing the observable between many subscribers:
-        .pipe(
-          takeUntil(this.subjects.disconnect),
-          share()
-        );
+        .pipe(takeUntil(this.subjects.disconnect), share());
 
       // The `translateX` value at the start of an interaction.
       // Typically this would be either 0 or `drawerWidth`, but since the user can initiate

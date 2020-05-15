@@ -259,10 +259,7 @@ but since there is no animation in this case, we call it directly.
 
 
 ```js
-        .pipe(
-          takeUntil(this.subjects.disconnect),
-          share()
-        );
+        .pipe(takeUntil(this.subjects.disconnect), share());
 ```
 
 The `translateX` value at the start of an interaction.
