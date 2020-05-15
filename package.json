@@ -1,6 +1,6 @@
 {
   "name": "hy-drawer",
-  "version": "1.0.0-pre.27",
+  "version": "1.0.0-uvw",
   "description": "A drawer component for the modern web.",
   "main": "src/index.js",
   "scripts": {
@@ -27,27 +27,27 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-loader": "^8.0.5",
-    "camelcase": "^5.2.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "babel-loader": "^8.1.0",
+    "camelcase": "^5.3.1",
     "docco": "0.7.0",
     "html-webpack-plugin": "^3.2.0",
     "onchange": "^5.2.0",
-    "prettier": "^1.16.4",
+    "prettier": "^1.19.1",
     "raw-loader": "^1.0.0",
-    "underscore-template-loader": "^1.0.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-merge": "^4.2.1",
-    "yargs": "^13.2.2"
+    "underscore-template-loader": "^1.1.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2",
+    "yargs": "^13.3.2"
   },
   "dependencies": {
     "create-element-x": "^1.1.1",
     "hy-component": "^1.0.0-pre.27",
-    "rxjs": "^6.4.0",
-    "rxjs-create-tween": "^2.0.1"
+    "rxjs": "^6.5.5",
+    "rxjs-create-tween": "^2.0.3"
   },
   "optionalDependencies": {
     "jquery": "^3.3.1"
