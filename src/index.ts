@@ -124,8 +124,10 @@ export class HyDrawer
 
   // HyDrawer
   getDrawerWidth() {
-    const content$ = observeWidth(this.contentEl);
-    const peek$ = observeWidth(this.peekEl);
+    const content$ = observeWidth(this.contentEl)
+      .pipe(tap(px => this.fireEvent('content-width-change', { detail: px })));
+    const peek$ = observeWidth(this.peekEl)
+      .pipe(tap(px => this.fireEvent('peek-width-change', { detail: px })));
 
     return combineLatest(content$, peek$).pipe(
       // takeUntil(this.subjects.disconnect),
