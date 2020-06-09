@@ -79,7 +79,7 @@ export class HyDrawer
   @property({ type: Number, reflect: true }) threshold: number = 10;
   @property({ type: Boolean, reflect: true }) noScroll: boolean = false;
   @property({ type: Boolean, reflect: true }) mouseEvents: boolean = false;
-  @property({ type: Boolean, reflect: true }) hashChange: boolean = false;
+  // @property({ type: Boolean, reflect: true }) hashChange: boolean = false;
   @property({ reflect: true, converter: rangeConverter, hasChanged: rangeHasChanged }) range: [number, number] = [0, 100];
 
   // State
@@ -100,7 +100,7 @@ export class HyDrawer
     persistent?: Subject<boolean>;
     preventDefault?: Subject<boolean>;
     mouseEvents?: Subject<boolean>;
-    hashChange?: Subject<boolean>;
+    // hashChange?: Subject<boolean>;
   } = {};
 
   animateTo$: Subject<boolean>;
@@ -136,49 +136,48 @@ export class HyDrawer
     );
   }
 
-  consolidateState() {
-    const hashOpened = location.hash === this.hashId;
-    const isReload = history.state && history.state[this.histId];
-    if (isReload) {
-      if (hashOpened !== this.opened) {
-        this.opened = hashOpened;
-      }
-    } else {
-      if (hashOpened && !this.opened) {
-        const url = new URL(location.href);
+  // private consolidateState() {
+  //   const hashOpened = location.hash === this.hashId;
+  //   const isReload = history.state && history.state[this.histId];
+  //   if (isReload) {
+  //     if (hashOpened !== this.opened) {
+  //       this.opened = hashOpened;
+  //     }
+  //   } else {
+  //     const url = new URL(location.href);
+  //     const newState = { ...history.state, [this.histId]: { backable: false } };
+  //     if (hashOpened && !this.opened) {
+  //       url.hash = '';
+  //       history.replaceState(newState, document.title, url.href);
 
-        url.hash = '';
-        const newState = Object.assign(history.state || {}, { [this.histId]: { backable: false } })
-        history.replaceState(newState, document.title, url.href);
+  //       url.hash = this.hashId;
+  //       history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
 
-        url.hash = this.hashId;
-        history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
+  //       this.opened = true;
+  //     }
+  //     else if (!hashOpened && this.opened) {
+  //       history.replaceState(newState, document.title, url.href);
 
-        this.opened = true;
-      }
-      else if (!hashOpened && this.opened) {
-        const url = new URL(location.href);
-
-        const newState = Object.assign(history.state || {}, { [this.histId]: { backable: false } })
-        history.replaceState(newState, document.title, url.href);
-
-        url.hash = this.hashId;
-        history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
-      }
-    }
-  }
+  //       url.hash = this.hashId;
+  //       history.pushState({ [this.histId]: { backable: true } }, document.title, url.href);
+  //     }
+  //     else {
+  //       history.replaceState(newState, document.title, url.href);
+  //     }
+  //   }
+  // }
 
   connectedCallback() {
     super.connectedCallback();
 
-    if (this.hashChange) this.consolidateState()
+    // if (this.hashChange) this.consolidateState()
 
     this.$.opened = new BehaviorSubject(this.opened);
     this.$.side = new BehaviorSubject(this.side);
     this.$.persistent = new BehaviorSubject(this.persistent);
     this.$.preventDefault = new BehaviorSubject(this.noScroll);
     this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
-    this.$.hashChange = new BehaviorSubject(this.hashChange)
+    // this.$.hashChange = new BehaviorSubject(this.hashChange)
 
     this.scrimClickable = this.opened
 
@@ -335,19 +334,19 @@ export class HyDrawer
       tap(([{ event }]) => event.preventDefault()),
     ).subscribe();
 
-    fromEvent(window, 'hashchange').pipe(
-      // takeUntil(this.subjects.disconnect),
-      subscribeWhen(this.$.hashChange),
-      tap(() => {
-        const opened = location.hash === this.hashId;
-        if (!history.state && opened) {
-          history.replaceState({ [this.histId]: { backable: true } }, document.title)
-        }
+    // fromEvent(window, 'hashchange').pipe(
+    //   // takeUntil(this.subjects.disconnect),
+    //   subscribeWhen(this.$.hashChange),
+    //   tap(() => {
+    //     const opened = location.hash === this.hashId;
+    //     if (!history.state && opened) {
+    //       history.replaceState({ [this.histId]: { backable: true } }, document.title)
+    //     }
 
-        // If the state doesn't match open/close the drawer
-        if (opened !== this.opened) this.animateTo$.next(opened);
-      }),
-    ).subscribe();
+    //     // If the state doesn't match open/close the drawer
+    //     if (opened !== this.opened) this.animateTo$.next(opened);
+    //   }),
+    // ).subscribe();
 
     this.fireEvent("init", { detail: this.opened });
   }
@@ -356,21 +355,21 @@ export class HyDrawer
     this.opened = this.scrimClickable = hasOpened;
     this.willChange = false;
 
-    if (this.hashChange) this.transitionedHash(hasOpened)
+    // if (this.hashChange) this.transitionedHash(hasOpened)
 
     this.fireEvent('transitioned', { detail: hasOpened });
   }
 
-  private transitionedHash(hasOpened: boolean) {
-    const hasClosed = !hasOpened;
-    const { backable } = history.state && history.state[this.histId] || { backable: false }
-    if (hasClosed && backable) {
-      history.back()
-    } 
-    if (hasOpened && location.hash !== this.hashId) {
-      location.hash = this.hashId;
-    }
-  }
+  // private transitionedHash(hasOpened: boolean) {
+  //   const hasClosed = !hasOpened;
+  //   const { backable } = history.state && history.state[this.histId] || { backable: false }
+  //   if (hasClosed && backable) {
+  //     history.back()
+  //   } 
+  //   if (hasOpened && location.hash !== this.hashId) {
+  //     location.hash = this.hashId;
+  //   }
+  // }
 
   render() {
     return html`
