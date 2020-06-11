@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2019 Florian Klampfer <https://qwtel.com/>
+ * Copyright (c) 2020 Florian Klampfer <https://qwtel.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,48 +17,22 @@
  * @license 
  * @nocompile
  */
-import { LitElement, html, property, customElement, query } from 'lit-element';
+import { html, property, customElement, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { styleMap } from 'lit-html/directives/style-map';
 
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, fromEvent } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip, finalize } from 'rxjs/operators';
 
+import { RxLitElement } from '@hydecorp/component';
+
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
-import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, subscribeWhen, tween } from './common';
+import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, tween } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
 import { styles } from './styles';
 
-class RxLitElement extends LitElement {
-  $connected = new Subject<boolean>();
-
-  connectedCallback() { 
-    super.connectedCallback();
-    this.$connected.next(true);
-  }
-
-  disconnectedCallback() { 
-    super.disconnectedCallback();
-    this.$connected.next(false);
-  }
-
-  private firstUpdate: boolean;
-
-  $: {};
-
-  firstUpdated() {
-    this.firstUpdate = true;
-  }
-
-  updated(changedProperties: Map<string, any>) {
-    if (!this.firstUpdate) for (const prop of changedProperties.keys()) {
-      if (prop in this.$) this.$[prop].next(this[prop]);
-    }
-    this.firstUpdate = false;
-  }
-}
 
 @customElement('hy-drawer')
 export class HyDrawer 

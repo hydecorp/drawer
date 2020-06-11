@@ -1,50 +1,11 @@
-import { Observable, of, NEVER, PartialObserver, animationFrames } from "rxjs";
+import { of } from "rxjs";
+import { map } from "rxjs/operators";
+import { createResizeObservable } from '@hydecorp/component';
 
-import { filter, map, switchMap, withLatestFrom, takeWhile, endWith, tap } from "rxjs/operators";
+export { applyMixins, subscribeWhen, filterWhen, tween } from '@hydecorp/component';
 
 export function easeOutSine(t: number, b: number, c: number, d: number) {
   return c * Math.sin((t / d) * (Math.PI / 2)) + b;
-}
-
-export function applyMixins<T>(derivedCtor: Constructor<T>, baseCtors: Constructor<any>[]) {
-  baseCtors.forEach(baseCtor => {
-    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
-      derivedCtor.prototype[name] = baseCtor.prototype[name];
-    });
-  });
-  return derivedCtor;
-}
-
-export function subscribeWhen<T>(p$: Observable<boolean>) {
-  return (source: Observable<T>) => {
-    return p$.pipe(switchMap(p => (p ? source : NEVER)));
-  };
-}
-
-export function filterWhen<T>(p$: Observable<boolean>, ...others: Observable<boolean>[]) {
-  return (source: Observable<T>) => {
-    if (others.length === 0) {
-      return source.pipe(
-        withLatestFrom(p$),
-        filter(([, p]) => p),
-        map(([x]) => x)
-      );
-    }
-
-    return source.pipe(
-      withLatestFrom(p$, ...others),
-      filter(([, ...ps]) => ps.every(p => p)),
-      map(([x]) => x as T)
-    );
-  };
-};
-
-export function createResizeObservable(el: HTMLElement): Observable<ResizeObserverEntry> {
-  return Observable.create((obs: PartialObserver<ResizeObserverEntry>) => {
-    const observer = new window.ResizeObserver(xs => xs.forEach(x => obs.next(x)));
-    observer.observe(el);
-    return () => { observer.unobserve(el); };
-  });
 }
 
 export function observeWidth(el: HTMLElement) {
@@ -71,12 +32,4 @@ export const rangeConverter = {
 
 export function rangeHasChanged(curr: number[], prev: number[] = []) {
   return curr.length !== prev.length || curr.some((v, i) => v !== prev[i]);
-}
-
-export function tween(easingFn: (t: number, b: number, c: number, d: number, s?: number) => number, b: number, c: number, d: number, s?: number): Observable<number> {
-  return animationFrames().pipe(
-    takeWhile(t => t < d),
-    endWith(d),
-    map(t => easingFn(t, b, c, d, s)),
-  )
 }
