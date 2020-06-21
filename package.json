@@ -1,6 +1,6 @@
 {
   "name": "@hydecorp/drawer",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "A touch-enabled drawer component for the modern web",
   "main": "lib/index.js",
   "module": "lib/index.js",
