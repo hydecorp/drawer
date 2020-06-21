@@ -24,7 +24,7 @@ import { styleMap } from 'lit-html/directives/style-map';
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, NEVER, defer, fromEvent } from "rxjs";
 import { startWith, takeUntil, map, share, withLatestFrom, tap, sample, timestamp, pairwise, filter, switchMap, skip, finalize } from 'rxjs/operators';
 
-import { RxLitElement } from '@hydecorp/component';
+import { RxLitElement, createResolvablePromise } from '@hydecorp/component';
 
 import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
 import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, tween } from './common';
@@ -32,7 +32,6 @@ import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
 import { UpdateMixin, Updater } from './update';
 import { styles } from './styles';
-
 
 @customElement('hy-drawer')
 export class HyDrawer 
@@ -60,6 +59,11 @@ export class HyDrawer
   @property() scrimClickable: boolean;
   @property() grabbing: boolean;
   @property() willChange: boolean = false;
+
+  private _initialized = createResolvablePromise();
+  get initialized() {
+    return this._initialized;
+  }
  
   get histId() { return this.id || this.tagName; }
   get hashId() { return `#${this.histId}--opened`; }
@@ -323,6 +327,7 @@ export class HyDrawer
     // ).subscribe();
 
     this.fireEvent("init", { detail: this.opened });
+    this._initialized.resolve(this);
   }
 
   private transitioned = (hasOpened: boolean) => {
@@ -375,11 +380,6 @@ export class HyDrawer
         </div>
       </div>
     `;
-  }
-
-  fireEvent<T>(name: string, eventInitDict?: CustomEventInit<T>) {
-    this.dispatchEvent(new CustomEvent(name, eventInitDict));
-    this.dispatchEvent(new CustomEvent(`hy-drawer-${name}`, eventInitDict));
   }
 
   @property()
