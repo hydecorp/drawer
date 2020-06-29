@@ -2,6 +2,7 @@
   "name": "@hydecorp/drawer",
   "version": "1.0.0-alpha.5",
   "description": "A touch-enabled drawer component for the modern web",
+  "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "files": [
@@ -29,14 +30,14 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "rollup": "^2.8.2",
+    "rollup": "^2.18.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript": "^1.0.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@hydecorp/component": "^1.0.0-alpha.2",
+    "@hydecorp/component": "^1.0.0-alpha.3",
     "lit-element": "^2.3.1",
     "lit-html": "^1.2.1",
     "rxjs": "^7.0.0-beta.0"
