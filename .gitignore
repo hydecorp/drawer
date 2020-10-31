@@ -18,4 +18,5 @@ node_modules
 
 # Build artifacts
 lib
+module
 docs/assets/hy-*

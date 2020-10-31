@@ -6,7 +6,10 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "files": [
-    "lib"
+    "src",
+    "lib",
+    "module",
+    "tsconfig.json"
   ],
   "publishConfig": {
     "access": "public"
@@ -32,6 +35,7 @@
     "rollup": "^2.32.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
     "typescript": "^4.0.5"
   },
