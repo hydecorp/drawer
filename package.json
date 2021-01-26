@@ -15,15 +15,16 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib module",
     "test": "exit 0",
-    "build:tsc": "tsc -d --outDir lib",
-    "watch:tsc": "tsc -d --outDir lib -w",
+    "build:tsc": "tsc -d",
+    "watch:tsc": "tsc -d -w",
     "build:rollup": "rollup -c",
     "watch:rollup": "rollup -c -w",
     "build": "npm run build:tsc & npm run build:rollup & wait",
     "watch": "npm run watch:tsc & npm run watch:rollup",
-    "dev": "npm run watch & http-server -p 3337",
+    "serve": "serve -l 3337",
+    "dev": "npm run watch & npm run serve",
     "preversion": "sed -i '' -E 's:^(lib|docs/assets/hy-\\*)$:#<removed temporarily>\\1:' .gitignore",
     "version": "npm run build && git add .",
     "postversion": "sed -i '' -E 's:^#<removed temporarily>(lib|docs/assets/hy-\\*)$:\\1:' .gitignore && git rm --cached -r lib docs/assets/hy-* && git add . && git commit -m 'Restore preversion .gitignore'",
@@ -32,19 +33,21 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "rollup": "^2.32.1",
+    "rollup": "^2.38.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.5"
+    "serve": "^11.3.2",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
   },
   "dependencies": {
     "@hydecorp/component": "^1.0.0-alpha.5",
+    "@types/w3c-css-typed-object-model-level-1": "^20180410.0.2",
     "lit-element": "^2.4.0",
     "lit-html": "^1.3.0",
-    "rxjs": "^7.0.0-beta.8"
+    "rxjs": "^7.0.0-beta.9"
   },
   "repository": {
     "type": "git",

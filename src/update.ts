@@ -1,15 +1,14 @@
 export type CallbackValue = { translateX: number, opacity: number };
 
 export class UpdateMixin {
-  el: HTMLElement;
-  contentEl: HTMLElement;
-  scrimEl: HTMLElement;
+  contentEl!: HTMLElement;
+  scrimEl!: HTMLElement;
 
-  translateX: number;
-  side: string;
-  opacity: number;
+  translateX!: number;
+  side!: string;
+  opacity!: number;
 
-  updater: Updater;
+  updater!: DOMUpdater;
 
   updateDOM(translateX: number, drawerWidth: number) {
     const inv = this.side === "left" ? 1 : -1;
@@ -22,7 +21,7 @@ export class UpdateMixin {
   }
 }
 
-export abstract class Updater {
+export abstract class DOMUpdater {
   static getUpdaterForPlatform(parent: UpdateMixin) {
     const hasCSSOM = "attributeStyleMap" in Element.prototype && "CSS" in window && "number" in CSS;
     return hasCSSOM
@@ -40,7 +39,7 @@ export abstract class Updater {
   abstract updateDOM(translateX: number, opacity: number): void;
 }
 
-export class StyleUpdater extends Updater {
+export class StyleUpdater extends DOMUpdater {
   constructor(parent: UpdateMixin) { super(parent); }
 
   updateDOM(translateX: number, opacity: number) {
@@ -49,29 +48,21 @@ export class StyleUpdater extends Updater {
   }
 }
 
-export class AttributeStyleMapUpdater extends Updater {
-  // @ts-ignore
+export class AttributeStyleMapUpdater extends DOMUpdater {
   private tvalue: CSSTransformValue;
-  // @ts-ignore
   private ovalue: CSSUnitValue;
 
   constructor(parent: UpdateMixin) {
     super(parent);
-    // @ts-ignore
     this.tvalue = new CSSTransformValue([new CSSTranslate(CSS.px(0), CSS.px(0))]);
-    // @ts-ignore
     this.ovalue = CSS.number(1);
   }
 
   updateDOM(translateX: number, opacity: number) {
-    // @ts-ignore
-    this.tvalue[0].x.value = translateX;
-    // @ts-ignore
+    ((this.tvalue[0] as CSSTranslate).x as CSSUnitValue).value = translateX;
     this.ovalue.value = opacity;
 
-    // @ts-ignore
     this.contentEl.attributeStyleMap.set("transform", this.tvalue);
-    // @ts-ignore
     this.scrimEl.attributeStyleMap.set("opacity", this.ovalue);
   }
 }

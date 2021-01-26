@@ -7,8 +7,8 @@ const min = Math.min.bind(Math);
 const max = Math.max.bind(Math);
 
 export class CalcMixin {
-  side: 'left' | 'right';
-  range: [number, number];
+  side!: 'left' | 'right';
+  range!: [number, number];
 
   calcIsInRange({ clientX }: Coord, opened: boolean) {
     // console.log(this.range, this.align);

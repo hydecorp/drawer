@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "es2018"
-    ],
-    "moduleResolution": "node",
-    "module": "esnext",
-    "target": "esnext",
-    "outDir": "dist",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "moduleResolution": "Node",
+    "module": "ES2020",
+    "target": "ES2018",
+    "outDir": "lib",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "inlineSources": true,
+    "strict": true,
   },
   "include": [
     "typings/**/*.ts",

@@ -30,7 +30,7 @@ import { BASE_DURATION, WIDTH_CONTRIBUTION } from './constants';
 import { applyMixins, filterWhen, easeOutSine, observeWidth, rangeConverter, rangeHasChanged, tween } from './common';
 import { ObservablesMixin, Coord } from './observables';
 import { CalcMixin } from './calc';
-import { UpdateMixin, Updater } from './update';
+import { UpdateMixin, DOMUpdater } from './update';
 import { styles } from './styles';
 
 @customElement('hy-drawer')
@@ -40,11 +40,9 @@ export class HyDrawer
 
   static styles = styles;
 
-  el: HTMLElement = this;
-
-  @query('.scrim') scrimEl: HTMLElement;
-  @query('.wrapper') contentEl: HTMLElement;
-  @query('.peek') peekEl: HTMLElement;
+  @query('.scrim') scrimEl!: HTMLElement;
+  @query('.wrapper') contentEl!: HTMLElement;
+  @query('.peek') peekEl!: HTMLElement;
 
   @property({ type: Boolean, reflect: true }) opened: boolean = false;
   @property({ type: String, reflect: true }) side: "left" | "right" = "left";
@@ -56,60 +54,62 @@ export class HyDrawer
   @property({ reflect: true, converter: rangeConverter, hasChanged: rangeHasChanged }) range: [number, number] = [0, 100];
 
   // State
-  @property() scrimClickable: boolean;
-  @property() grabbing: boolean;
+  @property() scrimClickable!: boolean;
+  @property() grabbing!: boolean;
   @property() willChange: boolean = false;
 
-  private _initialized = createResolvablePromise();
+  #initialized = createResolvablePromise();
   get initialized() {
-    return this._initialized;
+    return this.#initialized;
   }
  
-  get histId() { return this.id || this.tagName; }
-  get hashId() { return `#${this.histId}--opened`; }
+  // get histId() { return this.id || this.tagName; }
+  // get hashId() { return `#${this.histId}--opened`; }
 
-  translateX: number;
-  opacity: number;
-  isSliding: boolean;
+  translateX!: number;
+  opacity!: number;
+  isSliding!: boolean;
 
-  $: {
-    opened?: Subject<boolean>;
-    side?: Subject<"left" | "right">;
-    persistent?: Subject<boolean>;
-    preventDefault?: Subject<boolean>;
-    mouseEvents?: Subject<boolean>;
-    // hashChange?: Subject<boolean>;
-  } = {};
+  $!: {
+    opened: Subject<boolean>;
+    side: Subject<"left" | "right">;
+    persistent: Subject<boolean>;
+    preventDefault: Subject<boolean>;
+    mouseEvents: Subject<boolean>;
+    // hashChange: Subject<boolean>;
+  };
 
-  animateTo$: Subject<boolean>;
+  animateTo$!: Subject<boolean>;
 
+  // TODO: Prefer composition to mixins...
   // ObservablesMixin
-  getStartObservable: () => Observable<Coord>;
-  getMoveObservable: (start$: Observable<Coord>, end$: Observable<Coord>) => Observable<Coord>;
-  getEndObservable: () => Observable<Coord>;
-  getIsSlidingObservable: (move$: Observable<Coord>, start$: Observable<Coord>, end$: Observable<Coord>) => Observable<boolean>;
-  getIsSlidingObservableInner: (move$: Observable<Coord>, start$: Observable<Coord>) => Observable<boolean>;
+  getStartObservable!: () => Observable<Coord>;
+  getMoveObservable!: (start: Observable<Coord>, end: Observable<Coord>) => Observable<Coord>;
+  getEndObservable!: () => Observable<Coord>;
+  getIsSlidingObservable!: (move: Observable<Coord>, start: Observable<Coord>, end: Observable<Coord>) => Observable<boolean>;
+  getIsSlidingObservableInner!: (move: Observable<Coord>, start: Observable<Coord>) => Observable<boolean>;
 
   // CalcMixin
-  calcIsInRange: (start: Coord, opened: boolean) => boolean;
-  calcIsSwipe: (start: Coord, end: Coord, translateX: number, drawerWidth: number, _: number) => boolean;
-  calcWillOpen: (start: {}, end: {}, translateX: number, drawerWidth: number, velocity: number) => boolean;
-  calcTranslateX: (move: Coord, start: Coord, startTranslateX: number, drawerWidth: number) => number;
+  calcIsInRange!: (start: Coord, opened: boolean) => boolean;
+  calcIsSwipe!: (start: Coord, end: Coord, translateX: number, drawerWidth: number, _: number) => boolean;
+  calcWillOpen!: (start: {}, end: {}, translateX: number, drawerWidth: number, velocity: number) => boolean;
+  calcTranslateX!: (move: Coord, start: Coord, startTranslateX: number, drawerWidth: number) => number;
 
   // UpdateMixin
-  updateDOM: (translateX: number, drawerWidth: number) => void;
-  updater: Updater;
+  updateDOM!: (translateX: number, drawerWidth: number) => void;
+  updater!: DOMUpdater;
 
   // HyDrawer
-  getDrawerWidth() {
+  getDrawerWidth(): Observable<number> {
     const content$ = observeWidth(this.contentEl)
       .pipe(tap(px => this.fireEvent('content-width-change', { detail: px })));
     const peek$ = observeWidth(this.peekEl)
       .pipe(tap(px => this.fireEvent('peek-width-change', { detail: px })));
 
-    return combineLatest(content$, peek$).pipe(
+    return combineLatest([content$, peek$]).pipe(
       // takeUntil(this.subjects.disconnect),
       map(([contentWidth, peekWidth]) => contentWidth - peekWidth),
+      tap(console.log.bind(console)),
       share(),
     );
   }
@@ -150,21 +150,24 @@ export class HyDrawer
 
     // if (this.hashChange) this.consolidateState()
 
-    this.$.opened = new BehaviorSubject(this.opened);
-    this.$.side = new BehaviorSubject(this.side);
-    this.$.persistent = new BehaviorSubject(this.persistent);
-    this.$.preventDefault = new BehaviorSubject(this.noScroll);
-    this.$.mouseEvents = new BehaviorSubject(this.mouseEvents);
-    // this.$.hashChange = new BehaviorSubject(this.hashChange)
+    this.$ = {
+      opened: new BehaviorSubject(this.opened),
+      side: new BehaviorSubject(this.side),
+      persistent: new BehaviorSubject(this.persistent),
+      preventDefault: new BehaviorSubject(this.noScroll),
+      mouseEvents: new BehaviorSubject(this.mouseEvents),
+      // hashChange: new BehaviorSubject(this.hashChange),
+    };
 
     this.scrimClickable = this.opened
-
     this.animateTo$ = new Subject<boolean>();
-
-    this.updater = Updater.getUpdaterForPlatform(this);
-
+    this.updater = DOMUpdater.getUpdaterForPlatform(this);
     this.updateComplete.then(this.upgrade);
   }
+
+  #translateX$!: Observable<number>;
+  #startTranslateX$!: Observable<number>;
+  #tweenTranslateX$!: Observable<number>;
 
   upgrade = () => {
     const drawerWidth$ = this.getDrawerWidth();
@@ -176,14 +179,8 @@ export class HyDrawer
       share(),
     );
 
-    const deferred: {
-      translateX$?: Observable<number>
-      startTranslateX$?: Observable<number>;
-      tweenTranslateX$?: Observable<number>;
-    } = {};
-
     const isScrimVisible$ = defer(() => {
-      return deferred.translateX$.pipe(map(translateX => translateX !== 0))
+      return this.#translateX$.pipe(map(translateX => translateX !== 0))
     });
 
     const isInRange$ = start$.pipe(
@@ -219,8 +216,8 @@ export class HyDrawer
       })
     );
 
-    const translateX$ = deferred.translateX$ = defer(() => {
-      const jumpTranslateX$ = combineLatest(this.$.opened, this.$.side, drawerWidth$).pipe(
+    const translateX$ = this.#translateX$ = defer(() => {
+      const jumpTranslateX$ = combineLatest([this.$.opened, this.$.side, drawerWidth$]).pipe(
         map(([opened, side, drawerWidth]) => {
           return !opened ? 0 : drawerWidth * (side === "left" ? 1 : -1);
         }),
@@ -229,15 +226,15 @@ export class HyDrawer
       const moveTranslateX$ = move$.pipe(
         filterWhen(isSliding$),
         tap(() => (this.scrimClickable = false)),
-        tap(({ event }) => this.noScroll && event.preventDefault()),
-        withLatestFrom(start$, deferred.startTranslateX$, drawerWidth$),
+        tap(({ event }) => event && this.noScroll && event.preventDefault()),
+        withLatestFrom(start$, this.#startTranslateX$, drawerWidth$),
         map(args => this.calcTranslateX(...args))
       );
 
-      return merge(deferred.tweenTranslateX$, jumpTranslateX$, moveTranslateX$);
+      return merge(this.#tweenTranslateX$, jumpTranslateX$, moveTranslateX$);
     }).pipe(share());
 
-    deferred.startTranslateX$ = translateX$.pipe(sample(start$));
+    this.#startTranslateX$ = translateX$.pipe(sample(start$));
 
     const velocity$ = translateX$.pipe(
       timestamp(),
@@ -263,7 +260,7 @@ export class HyDrawer
       this.fireEvent('prepare');
     }));
 
-    deferred.tweenTranslateX$ = merge(willOpen$, animateTo$).pipe(
+    this.#tweenTranslateX$ = merge(willOpen$, animateTo$).pipe(
       withLatestFrom(translateX$, drawerWidth$),
       switchMap(([willOpen, translateX, drawerWidth]) => {
         const inv = this.side === "left" ? 1 : -1;
@@ -309,7 +306,7 @@ export class HyDrawer
           : NEVER;
       }),
       filter(([coord, isInRange]) => isInRange && coord.event != null),
-      tap(([{ event }]) => event.preventDefault()),
+      tap(([{ event }]) => event && event.preventDefault()),
     ).subscribe();
 
     // fromEvent(window, 'hashchange').pipe(
@@ -327,7 +324,7 @@ export class HyDrawer
     // ).subscribe();
 
     this.fireEvent("init", { detail: this.opened });
-    this._initialized.resolve(this);
+    this.#initialized.resolve(this);
   }
 
   private transitioned = (hasOpened: boolean) => {

@@ -1,6 +1,7 @@
 import { of } from "rxjs";
 import { map } from "rxjs/operators";
 import { createResizeObservable } from '@hydecorp/component';
+import { ComplexAttributeConverter } from "lit-element";
 
 export { applyMixins, subscribeWhen, filterWhen, tween } from '@hydecorp/component';
 
@@ -17,18 +18,17 @@ export function observeWidth(el: HTMLElement) {
   return resize$.pipe(map(({ contentRect: { width } }) => width));
 }
 
-export const rangeConverter = {
-  fromAttribute(attr: string = '') {
-    return attr
-      .replace(/[\[\]]/g, '')
-      .split(",")
+export const rangeConverter: ComplexAttributeConverter<number[]> = {
+  fromAttribute(attr) {
+    return (attr ?? '').replace(/[\[\]]/g, '')
+      .split(',')
       .map(Number);
   },
 
-  toAttribute(range: number[] = []) {
+  toAttribute(range) {
     return range.join(',');
   },
-}
+};
 
 export function rangeHasChanged(curr: number[], prev: number[] = []) {
   return curr.length !== prev.length || curr.some((v, i) => v !== prev[i]);

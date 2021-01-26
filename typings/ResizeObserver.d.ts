@@ -9,7 +9,7 @@ interface Window {
  * It is modeled after MutationObserver and IntersectionObserver.
  */
 interface ResizeObserver {
-    new(callback: ResizeObserverCallback);
+    new(callback: ResizeObserverCallback): ResizeObserver;
 
     /**
      * Adds target to the list of observed elements.
@@ -39,7 +39,7 @@ interface ResizeObserverEntry {
     /**
      * @param target The Element whose size has changed.
      */
-    new(target: Element);
+    new(target: Element): ResizeObserverEntry;
 
     /**
      * The Element whose size has changed.

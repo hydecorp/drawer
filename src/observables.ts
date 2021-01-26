@@ -1,4 +1,4 @@
-import { Observable, combineLatest, fromEvent, merge, NEVER } from "rxjs";
+import { Observable, combineLatest, fromEvent, merge, NEVER, ObservedValueOf } from "rxjs";
 
 import {
   // tap,
@@ -18,38 +18,36 @@ import { subscribeWhen } from "./common";
 const abs = Math.abs.bind(Math);
 
 export type Coord = {
-  target: EventTarget;
-  clientX?: number;
-  clientY?: number;
-  pageX?: number;
-  pageY?: number;
-  screenX?: number;
-  screenY?: number;
+  readonly target: EventTarget;
+  readonly clientX: number;
+  readonly clientY: number;
+  readonly pageX: number;
+  readonly pageY: number;
+  readonly screenX: number;
+  readonly screenY: number;
   event?: Event;
 }
 
 export class ObservablesMixin {
-  $: {
-    mouseEvents?: Observable<boolean>;
-    preventDefault?: Observable<boolean>;
+  $!: {
+    mouseEvents: Observable<boolean>;
+    preventDefault: Observable<boolean>;
   }
 
-  threshold: number;
-  noScroll: boolean;
+  threshold!: number;
+  noScroll!: boolean;
 
   getStartObservable() {
-    return combineLatest(this.$.mouseEvents).pipe(
+    return combineLatest([this.$.mouseEvents]).pipe(
       switchMap(([mouseEvents]) => {
-        const touchstart$ = (fromEvent(document, "touchstart", {
-            passive: true,
-          }) as Observable<TouchEvent>).pipe(
-            filter(({ touches }) => touches.length === 1),
-            map(({ touches }) => touches[0] as Coord)
-          );
+        const touchstart$ = (<Observable<TouchEvent>>fromEvent(document, "touchstart", { passive: true })).pipe(
+          filter(({ touches }) => touches.length === 1),
+          map(({ touches }) => touches[0] as Coord)
+        );
 
         const mousedown$ = !mouseEvents
           ? NEVER
-          : (fromEvent(document, "mousedown") as Observable<MouseEvent>).pipe(
+          : (<Observable<MouseEvent>>fromEvent(document, "mousedown")).pipe(
             map((e) => (((e as Coord).event = e), e as Coord)),
           );
 
@@ -59,19 +57,15 @@ export class ObservablesMixin {
   }
 
   getMoveObservable(start$: Observable<Coord>, end$: Observable<Coord>) {
-    return combineLatest(this.$.mouseEvents, this.$.preventDefault).pipe(
+    return combineLatest([this.$.mouseEvents, this.$.preventDefault]).pipe(
       switchMap(([mouseEvents, preventDefault]) => {
-        const touchmove$ = (fromEvent(document, "touchmove", { 
-            passive: !preventDefault 
-          }) as Observable<TouchEvent>).pipe(
-            map(e => (((e.touches[0] as Coord).event = e), e.touches[0] as Coord))
-          );
+        const touchmove$ = (<Observable<TouchEvent>>fromEvent(document, "touchmove", { passive: !preventDefault })).pipe(
+          map(e => (((e.touches[0] as Coord).event = e), e.touches[0] as Coord))
+        );
 
         const mousemove$ = !mouseEvents
           ? NEVER
-          : (fromEvent(document, "mousemove", {
-            passive: !preventDefault,
-          }) as Observable<TouchEvent>).pipe(
+          : (<Observable<MouseEvent>>fromEvent(document, "mousemove", { passive: !preventDefault })).pipe(
             subscribeWhen(merge(start$.pipe(mapTo(true)), end$.pipe(mapTo(false)))),
             map(e => (((e as Coord).event = e), e as Coord))
           );
@@ -82,16 +76,18 @@ export class ObservablesMixin {
   }
 
   getEndObservable() {
-    return combineLatest(this.$.mouseEvents).pipe(
+    return combineLatest([this.$.mouseEvents]).pipe(
       switchMap(([mouseEvents]) => {
-        const touchend$ = (fromEvent(document, "touchend", { passive: true }) as Observable<TouchEvent>).pipe(
-            filter(({ touches }) => touches.length === 0),
-            map(event => event.changedTouches[0] as Coord)
-          );
+        const touchend$ = (<Observable<TouchEvent>>fromEvent(document, "touchend", { passive: true })).pipe(
+          filter(({ touches }) => touches.length === 0),
+          map(event => event.changedTouches[0] as Coord)
+        );
 
         const mouseup$ = !mouseEvents
           ? NEVER
-          : fromEvent(document, "mouseup", { passive: true }) as Observable<Coord>;
+          : (<Observable<MouseEvent>>fromEvent(document, "mouseup", { passive: true })).pipe(
+            map(e => (((e as Coord).event = e), e as Coord)),
+          );
 
         return merge(touchend$, mouseup$);
       })
@@ -124,7 +120,7 @@ export class ObservablesMixin {
         withLatestFrom(start$),
         map(([{ clientX, clientY, event }, { clientX: startX, clientY: startY }]) => {
           const isSliding = abs(startX - clientX) >= abs(startY - clientY);
-          if (this.noScroll && isSliding) event.preventDefault();
+          if (this.noScroll && isSliding && event) event.preventDefault();
           return isSliding;
         })
       );
