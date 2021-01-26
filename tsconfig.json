@@ -11,6 +11,7 @@
     "sourceMap": true,
     "inlineSources": true,
     "strict": true,
+    "importHelpers": true,
   },
   "include": [
     "typings/**/*.ts",

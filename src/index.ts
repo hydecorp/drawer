@@ -109,7 +109,6 @@ export class HyDrawer
     return combineLatest([content$, peek$]).pipe(
       // takeUntil(this.subjects.disconnect),
       map(([contentWidth, peekWidth]) => contentWidth - peekWidth),
-      tap(console.log.bind(console)),
       share(),
     );
   }
