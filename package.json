@@ -33,22 +33,22 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "GPL-3.0",
   "devDependencies": {
-    "rollup": "^2.38.0",
+    "rollup": "^2.60.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
     "serve": "^11.3.2",
-    "typescript": "^4.1.3"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@hydecorp/component": "^1.0.0-alpha.7",
-    "@types/resize-observer-browser": "^0.1.5",
-    "@types/w3c-css-typed-object-model-level-1": "^20180410.0.2",
-    "lit-element": "^2.4.0",
-    "lit-html": "^1.3.0",
-    "rxjs": "^7.0.0-beta.9",
-    "tslib": "^2.1.0"
+    "@types/resize-observer-browser": "^0.1.6",
+    "@types/w3c-css-typed-object-model-level-1": "^20180410.0.4",
+    "lit-element": "^2.5.1",
+    "lit-html": "^1.4.1",
+    "rxjs": "^7.4.0",
+    "tslib": "^2.3.1"
   },
   "repository": {
     "type": "git",
